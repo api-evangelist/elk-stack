@@ -52,6 +52,8 @@ apis:
       - type: Documentation
         url: https://www.elastic.co/guide/en/kibana/current/index.html
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/elastic-co
   - type: Website
     url: https://www.elastic.co/elastic-stack/
   - type: Documentation
