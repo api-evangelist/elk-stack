@@ -1,0 +1,407 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Elasticsearch REST API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Cluster",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Cluster info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/"
+          },
+          "docs": "Returns basic information about the cluster."
+        },
+        {
+          "info": {
+            "name": "Cluster information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_info"
+          },
+          "docs": "Cluster information"
+        },
+        {
+          "info": {
+            "name": "Cluster health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_cluster/health"
+          },
+          "docs": "Cluster health"
+        },
+        {
+          "info": {
+            "name": "Cluster state",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_cluster/state"
+          },
+          "docs": "Cluster state"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cat",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List indices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_cat/indices"
+          },
+          "docs": "List indices"
+        },
+        {
+          "info": {
+            "name": "List nodes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_cat/nodes"
+          },
+          "docs": "List nodes"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Index",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create index",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "http://localhost:9200/:index",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ]
+          },
+          "docs": "Create index"
+        },
+        {
+          "info": {
+            "name": "Delete index",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:9200/:index",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ]
+          },
+          "docs": "Delete index"
+        },
+        {
+          "info": {
+            "name": "Get index mappings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/:index/_mapping",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ]
+          },
+          "docs": "Get index mappings"
+        },
+        {
+          "info": {
+            "name": "Update index settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "http://localhost:9200/:index/_settings",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update index settings"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Document",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Index document (auto-generated id)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/:index/_doc",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Index document (auto-generated id)"
+        },
+        {
+          "info": {
+            "name": "Get document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/:index/_doc/:id",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Document id"
+              }
+            ]
+          },
+          "docs": "Get document"
+        },
+        {
+          "info": {
+            "name": "Delete document",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:9200/:index/_doc/:id",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Document id"
+              }
+            ]
+          },
+          "docs": "Delete document"
+        },
+        {
+          "info": {
+            "name": "Update document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/:index/_update/:id",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Document id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update document"
+        },
+        {
+          "info": {
+            "name": "Bulk operations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/:index/_bulk",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk operations"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute search query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/_search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute search query"
+        },
+        {
+          "info": {
+            "name": "Multi-search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/_msearch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Multi-search"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Ingest",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Simulate ingest pipeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/_ingest/pipeline/:id/_simulate",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate ingest pipeline"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Snapshot",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List snapshot repositories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_snapshot"
+          },
+          "docs": "List snapshot repositories"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
