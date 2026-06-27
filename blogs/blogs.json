@@ -2,8 +2,11 @@
   "repo": "elk-stack",
   "feeds": [
     {
-      "source": "https://www.elastic.co/blog/feed/",
-      "error": "HTTPError"
+      "source": "https://www.elastic.co/blog/feed",
+      "feed_url": "https://www.elastic.co/blog/feed",
+      "title": "",
+      "saved": 2,
+      "method": "feed"
     },
     {
       "source": "https://www.elastic.co/guide/index.html",
@@ -13,6 +16,6 @@
       "method": "none"
     }
   ],
-  "post_count": 50,
-  "fetched": "2026-06-14T20:42:17Z"
+  "fetched": "2026-06-27T12:03:07Z",
+  "post_count": 57
 }
