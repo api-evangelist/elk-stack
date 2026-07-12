@@ -52,6 +52,12 @@ apis:
       - type: Documentation
         url: https://www.elastic.co/guide/en/kibana/current/index.html
 common:
+  - type: TrustCenter
+    url: security/elk-stack-trust-center.yml
+  - type: DomainSecurity
+    url: security/elk-stack-domain-security.yml
+  - type: Authentication
+    url: authentication/elk-stack-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/elastic-co
   - type: Website

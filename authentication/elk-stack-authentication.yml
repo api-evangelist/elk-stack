@@ -1,0 +1,22 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/elk-stack-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  sources:
+  - openapi/elk-stack-openapi.yml
+- name: apiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: ApiKey <base64-encoded-id:api_key>
+  sources:
+  - openapi/elk-stack-openapi.yml
