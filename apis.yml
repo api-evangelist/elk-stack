@@ -52,6 +52,8 @@ apis:
       - type: Documentation
         url: https://www.elastic.co/guide/en/kibana/current/index.html
 common:
+  - type: AgenticAccess
+    url: agentic-access/elk-stack-agentic-access.yml
   - type: TrustCenter
     url: security/elk-stack-trust-center.yml
   - type: DomainSecurity
