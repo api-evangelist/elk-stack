@@ -1,0 +1,126 @@
+openapi: 3.1.0
+info:
+  title: Elasticsearch REST Cat Document API
+  description: 'The Elasticsearch REST API exposes the core operations of the distributed search and analytics engine at the heart of the Elastic Stack. It allows clients to manage indices, ingest and retrieve documents, run search and aggregation queries, inspect cluster and node health, and operate snapshots and ingest pipelines.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Elastic
+    url: https://www.elastic.co
+servers:
+- url: http://localhost:9200
+  description: Default local Elasticsearch endpoint
+- url: https://{host}:{port}
+  description: Self-hosted or Elastic Cloud cluster endpoint
+  variables:
+    host:
+      default: localhost
+    port:
+      default: '9200'
+security:
+- basicAuth: []
+- apiKeyAuth: []
+tags:
+- name: Document
+paths:
+  /{index}/_doc:
+    post:
+      summary: Index document (auto-generated id)
+      operationId: indexDocument
+      tags:
+      - Document
+      parameters:
+      - $ref: '#/components/parameters/IndexName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Document indexed
+  /{index}/_doc/{id}:
+    get:
+      summary: Get document
+      operationId: getDocument
+      tags:
+      - Document
+      parameters:
+      - $ref: '#/components/parameters/IndexName'
+      - $ref: '#/components/parameters/DocumentId'
+      responses:
+        '200':
+          description: Document
+    delete:
+      summary: Delete document
+      operationId: deleteDocument
+      tags:
+      - Document
+      parameters:
+      - $ref: '#/components/parameters/IndexName'
+      - $ref: '#/components/parameters/DocumentId'
+      responses:
+        '200':
+          description: Document deleted
+  /{index}/_update/{id}:
+    post:
+      summary: Update document
+      operationId: updateDocument
+      tags:
+      - Document
+      parameters:
+      - $ref: '#/components/parameters/IndexName'
+      - $ref: '#/components/parameters/DocumentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Document updated
+  /{index}/_bulk:
+    post:
+      summary: Bulk operations
+      operationId: bulk
+      tags:
+      - Document
+      parameters:
+      - $ref: '#/components/parameters/IndexName'
+      requestBody:
+        required: true
+        content:
+          application/x-ndjson:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Bulk results
+components:
+  parameters:
+    IndexName:
+      name: index
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Index name
+    DocumentId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Document id
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: ApiKey <base64-encoded-id:api_key>

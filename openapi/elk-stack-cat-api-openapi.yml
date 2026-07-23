@@ -1,0 +1,54 @@
+openapi: 3.1.0
+info:
+  title: Elasticsearch REST Cat API
+  description: 'The Elasticsearch REST API exposes the core operations of the distributed search and analytics engine at the heart of the Elastic Stack. It allows clients to manage indices, ingest and retrieve documents, run search and aggregation queries, inspect cluster and node health, and operate snapshots and ingest pipelines.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Elastic
+    url: https://www.elastic.co
+servers:
+- url: http://localhost:9200
+  description: Default local Elasticsearch endpoint
+- url: https://{host}:{port}
+  description: Self-hosted or Elastic Cloud cluster endpoint
+  variables:
+    host:
+      default: localhost
+    port:
+      default: '9200'
+security:
+- basicAuth: []
+- apiKeyAuth: []
+tags:
+- name: Cat
+paths:
+  /_cat/indices:
+    get:
+      summary: List indices
+      operationId: catIndices
+      tags:
+      - Cat
+      responses:
+        '200':
+          description: Human-readable list of indices
+  /_cat/nodes:
+    get:
+      summary: List nodes
+      operationId: catNodes
+      tags:
+      - Cat
+      responses:
+        '200':
+          description: Human-readable list of nodes
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: ApiKey <base64-encoded-id:api_key>
