@@ -7,7 +7,20 @@ description: >-
   searching, analyzing, and visualizing it in real time. Widely used for log
   management, observability, and security analytics.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/elk-stack.png
 tags:
   - Analytics
   - Logging
@@ -21,36 +34,104 @@ position: Consumer
 access: 3rd-Party
 specificationVersion: '0.19'
 apis:
-  - aid: elk-stack:elasticsearch-api
-    name: Elasticsearch API
-    description: >-
-      Distributed, RESTful search and analytics engine serving as the heart
-      of the Elastic Stack for centralized storage and search.
-    humanURL: https://www.elastic.co/elasticsearch/
-    baseURL: https://localhost:9200
-    tags:
-      - Analytics
-      - Database
-      - Search
-    properties:
-      - type: Documentation
-        url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-      - type: OpenAPI
-        url: https://raw.githubusercontent.com/elastic/elasticsearch-specification/main/output/openapi/elasticsearch-serverless-openapi.json
-  - aid: elk-stack:kibana-api
-    name: Kibana API
-    description: >-
-      Data visualization and exploration tool for reviewing logs and events,
-      providing real-time dashboards and analytics for Elasticsearch data.
-    humanURL: https://www.elastic.co/kibana/
-    baseURL: https://localhost:5601
-    tags:
-      - Analytics
-      - Dashboard
-      - Visualization
-    properties:
-      - type: Documentation
-        url: https://www.elastic.co/guide/en/kibana/current/index.html
+- aid: elk-stack:kibana-api
+  name: Kibana API
+  description: >-
+    Data visualization and exploration tool for reviewing logs and events, providing real-time dashboards
+    and analytics for Elasticsearch data.
+  humanURL: https://www.elastic.co/kibana/
+  baseURL: https://localhost:5601
+  tags:
+  - Analytics
+  - Dashboard
+  - Visualization
+  properties:
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/kibana/current/index.html
+- aid: elk-stack:elk-stack-cat-api
+  name: Elastic Stack (ELK Stack) Cat API
+  description: The Cat API from Elastic Stack (ELK Stack) — 2 operation(s) for cat.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Cat
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-cat-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- aid: elk-stack:elk-stack-cluster-api
+  name: Elastic Stack (ELK Stack) Cluster API
+  description: The Cluster API from Elastic Stack (ELK Stack) — 4 operation(s) for cluster.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Cluster
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-cluster-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- aid: elk-stack:elk-stack-document-api
+  name: Elastic Stack (ELK Stack) Document API
+  description: The Document API from Elastic Stack (ELK Stack) — 4 operation(s) for document.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Document
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-document-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- aid: elk-stack:elk-stack-index-api
+  name: Elastic Stack (ELK Stack) Index API
+  description: The Index API from Elastic Stack (ELK Stack) — 3 operation(s) for index.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Index
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-index-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- aid: elk-stack:elk-stack-ingest-api
+  name: Elastic Stack (ELK Stack) Ingest API
+  description: The Ingest API from Elastic Stack (ELK Stack) — 1 operation(s) for ingest.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Ingest
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ingest-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- aid: elk-stack:elk-stack-search-api
+  name: Elastic Stack (ELK Stack) Search API
+  description: The Search API from Elastic Stack (ELK Stack) — 2 operation(s) for search.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-search-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- aid: elk-stack:elk-stack-snapshot-api
+  name: Elastic Stack (ELK Stack) Snapshot API
+  description: The Snapshot API from Elastic Stack (ELK Stack) — 1 operation(s) for snapshot.
+  humanURL: https://www.elastic.co/elasticsearch/
+  baseURL: https://localhost:9200
+  tags:
+  - Snapshot
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-snapshot-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
 common:
   - type: AgenticAccess
     url: agentic-access/elk-stack-agentic-access.yml
