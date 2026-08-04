@@ -1,0 +1,26 @@
+{
+  "provider": "elk-stack",
+  "sources": [
+    "elk-stack-cat-api-openapi.yml",
+    "elk-stack-cluster-api-openapi.yml",
+    "elk-stack-document-api-openapi.yml",
+    "elk-stack-index-api-openapi.yml",
+    "elk-stack-ingest-api-openapi.yml",
+    "elk-stack-search-api-openapi.yml",
+    "elk-stack-snapshot-api-openapi.yml"
+  ],
+  "outputs": [
+    "elk-stack-cat-api-openapi.yml",
+    "elk-stack-cluster-api-openapi.yml",
+    "elk-stack-document-api-openapi.yml",
+    "elk-stack-index-api-openapi.yml",
+    "elk-stack-ingest-api-openapi.yml",
+    "elk-stack-search-api-openapi.yml",
+    "elk-stack-snapshot-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

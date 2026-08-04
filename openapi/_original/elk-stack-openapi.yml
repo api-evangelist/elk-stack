@@ -1,0 +1,272 @@
+openapi: 3.1.0
+info:
+  title: Elasticsearch REST API
+  description: >
+    The Elasticsearch REST API exposes the core operations of the
+    distributed search and analytics engine at the heart of the
+    Elastic Stack. It allows clients to manage indices, ingest and
+    retrieve documents, run search and aggregation queries, inspect
+    cluster and node health, and operate snapshots and ingest pipelines.
+  version: "1.0.0"
+  contact:
+    name: Elastic
+    url: https://www.elastic.co
+servers:
+  - url: http://localhost:9200
+    description: Default local Elasticsearch endpoint
+  - url: https://{host}:{port}
+    description: Self-hosted or Elastic Cloud cluster endpoint
+    variables:
+      host:
+        default: localhost
+      port:
+        default: "9200"
+security:
+  - basicAuth: []
+  - apiKeyAuth: []
+paths:
+  /:
+    get:
+      summary: Cluster info
+      description: Returns basic information about the cluster.
+      operationId: getRoot
+      tags: [Cluster]
+      responses:
+        "200":
+          description: Cluster info
+  /_info:
+    get:
+      summary: Cluster information
+      operationId: getInfo
+      tags: [Cluster]
+      responses:
+        "200":
+          description: Cluster information
+  /_cluster/health:
+    get:
+      summary: Cluster health
+      operationId: getClusterHealth
+      tags: [Cluster]
+      responses:
+        "200":
+          description: Cluster health status
+  /_cluster/state:
+    get:
+      summary: Cluster state
+      operationId: getClusterState
+      tags: [Cluster]
+      responses:
+        "200":
+          description: Current cluster state
+  /_cat/indices:
+    get:
+      summary: List indices
+      operationId: catIndices
+      tags: [Cat]
+      responses:
+        "200":
+          description: Human-readable list of indices
+  /_cat/nodes:
+    get:
+      summary: List nodes
+      operationId: catNodes
+      tags: [Cat]
+      responses:
+        "200":
+          description: Human-readable list of nodes
+  /{index}:
+    put:
+      summary: Create index
+      operationId: createIndex
+      tags: [Index]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+      responses:
+        "200":
+          description: Index created
+    delete:
+      summary: Delete index
+      operationId: deleteIndex
+      tags: [Index]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+      responses:
+        "200":
+          description: Index deleted
+  /{index}/_mapping:
+    get:
+      summary: Get index mappings
+      operationId: getIndexMapping
+      tags: [Index]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+      responses:
+        "200":
+          description: Index mappings
+  /{index}/_settings:
+    put:
+      summary: Update index settings
+      operationId: updateIndexSettings
+      tags: [Index]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Settings updated
+  /{index}/_doc:
+    post:
+      summary: Index document (auto-generated id)
+      operationId: indexDocument
+      tags: [Document]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "201":
+          description: Document indexed
+  /{index}/_doc/{id}:
+    get:
+      summary: Get document
+      operationId: getDocument
+      tags: [Document]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: Document
+    delete:
+      summary: Delete document
+      operationId: deleteDocument
+      tags: [Document]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: Document deleted
+  /{index}/_update/{id}:
+    post:
+      summary: Update document
+      operationId: updateDocument
+      tags: [Document]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+        - $ref: "#/components/parameters/DocumentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Document updated
+  /{index}/_bulk:
+    post:
+      summary: Bulk operations
+      operationId: bulk
+      tags: [Document]
+      parameters:
+        - $ref: "#/components/parameters/IndexName"
+      requestBody:
+        required: true
+        content:
+          application/x-ndjson:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Bulk results
+  /_search:
+    post:
+      summary: Execute search query
+      operationId: search
+      tags: [Search]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Search results
+  /_msearch:
+    post:
+      summary: Multi-search
+      operationId: multiSearch
+      tags: [Search]
+      requestBody:
+        required: true
+        content:
+          application/x-ndjson:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Multi-search results
+  /_ingest/pipeline/{id}/_simulate:
+    post:
+      summary: Simulate ingest pipeline
+      operationId: simulateIngestPipeline
+      tags: [Ingest]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Simulation result
+  /_snapshot:
+    get:
+      summary: List snapshot repositories
+      operationId: listSnapshotRepositories
+      tags: [Snapshot]
+      responses:
+        "200":
+          description: Snapshot repositories
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'ApiKey <base64-encoded-id:api_key>'
+  parameters:
+    IndexName:
+      name: index
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Index name
+    DocumentId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Document id
