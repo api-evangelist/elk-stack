@@ -1,0 +1,105 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Elasticsearch REST Cat Index API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Index",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create index",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "http://localhost:9200/:index",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ]
+          },
+          "docs": "Create index"
+        },
+        {
+          "info": {
+            "name": "Delete index",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:9200/:index",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ]
+          },
+          "docs": "Delete index"
+        },
+        {
+          "info": {
+            "name": "Get index mappings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/:index/_mapping",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ]
+          },
+          "docs": "Get index mappings"
+        },
+        {
+          "info": {
+            "name": "Update index settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "http://localhost:9200/:index/_settings",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update index settings"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,36 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Elasticsearch REST Cat Snapshot API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Snapshot",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List snapshot repositories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_snapshot"
+          },
+          "docs": "List snapshot repositories"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

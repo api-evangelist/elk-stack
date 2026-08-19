@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Elasticsearch REST Cat Cluster API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Cluster",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Cluster info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/"
+          },
+          "docs": "Returns basic information about the cluster."
+        },
+        {
+          "info": {
+            "name": "Cluster information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_info"
+          },
+          "docs": "Cluster information"
+        },
+        {
+          "info": {
+            "name": "Cluster health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_cluster/health"
+          },
+          "docs": "Cluster health"
+        },
+        {
+          "info": {
+            "name": "Cluster state",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/_cluster/state"
+          },
+          "docs": "Cluster state"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

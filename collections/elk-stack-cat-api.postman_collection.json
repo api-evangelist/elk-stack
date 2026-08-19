@@ -1,0 +1,179 @@
+{
+  "item": [
+    {
+      "id": "9b2a1e79-c6a9-424d-a42b-9fbb1287100a",
+      "name": "Cat",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8c8c9532-f692-4c93-8080-392c0717de7d",
+          "name": "List indices",
+          "request": {
+            "name": "List indices",
+            "description": {},
+            "url": {
+              "path": [
+                "_cat",
+                "indices"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bbfc7b56-4bd9-4565-90ef-fadcfde4230b",
+              "name": "Human-readable list of indices",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "_cat",
+                    "indices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "da545960-6ee9-41ae-bc83-4cc54f6165e7",
+          "name": "List nodes",
+          "request": {
+            "name": "List nodes",
+            "description": {},
+            "url": {
+              "path": [
+                "_cat",
+                "nodes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0a607ecf-c9d6-4a6a-9666-ccb928b23875",
+              "name": "Human-readable list of nodes",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "_cat",
+                    "nodes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "http://localhost:9200",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f4da61d2-704b-45ff-a42e-d9fe70307ad4",
+    "name": "Elasticsearch REST Cat API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Elasticsearch REST API exposes the core operations of the distributed search and analytics engine at the heart of the Elastic Stack. It allows clients to manage indices, ingest and retrieve documents, run search and aggregation queries, inspect cluster and node health, and operate snapshots and ingest pipelines.\n\n\nContact Support:\n Name: Elastic",
+      "type": "text/plain"
+    }
+  }
+}

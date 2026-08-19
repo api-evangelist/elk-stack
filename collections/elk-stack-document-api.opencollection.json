@@ -1,0 +1,150 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Elasticsearch REST Cat Document API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Document",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Index document (auto-generated id)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/:index/_doc",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Index document (auto-generated id)"
+        },
+        {
+          "info": {
+            "name": "Get document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:9200/:index/_doc/:id",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Document id"
+              }
+            ]
+          },
+          "docs": "Get document"
+        },
+        {
+          "info": {
+            "name": "Delete document",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:9200/:index/_doc/:id",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Document id"
+              }
+            ]
+          },
+          "docs": "Delete document"
+        },
+        {
+          "info": {
+            "name": "Update document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/:index/_update/:id",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Document id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update document"
+        },
+        {
+          "info": {
+            "name": "Bulk operations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:9200/:index/_bulk",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk operations"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
