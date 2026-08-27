@@ -1,0 +1,66 @@
+generated: '2026-08-27'
+method: generated
+source: >-
+  Generated from the operationIds published in
+  openapi/elk-stack-elasticsearch-openapi.json and
+  openapi/elk-stack-elastic-cloud-swagger.json, cross-referenced against
+  conventions/elk-stack-conventions.yml and errors/elk-stack-problem-types.yml.
+  Every operationId named in every skill was grepped out of those contracts —
+  none was invented.
+searched_first: true
+searched_result: >-
+  Elastic does publish AGENTS.md files (HTTP 200 at
+  raw.githubusercontent.com/elastic/elasticsearch/main/AGENTS.md and
+  .../elastic/kibana/main/AGENTS.md), but they are CONTRIBUTOR guides — Gradle
+  tasks, yarn kbn bootstrap, Jest config discovery, repo layout — aimed at an
+  agent writing code INSIDE the Elastic codebase, not at one calling the API
+  from outside. They were deliberately not saved here as consumption skills,
+  because doing so would misrepresent what Elastic published. No
+  provider-published Agent Skills for API consumers were found.
+note: >-
+  Four skills, chosen to mirror the marquee flows and weighted toward the
+  places this API can hurt you. The Elastic surface is unusually asymmetric:
+  1,873 published operations, a read path that is completely safe, and a write
+  path where the single most reachable destructive call — delete_by_query — has
+  no undo at all. Two of the four skills exist mainly to put a snapshot or a
+  restore check in front of that.
+skills:
+- name: elk-stack-index-and-search
+  file: elk-stack-index-and-search.md
+  api: elk-stack:elasticsearch-api
+  operations: 8
+  summary: >-
+    Create an index with an explicit mapping, bulk-load documents idempotently
+    via caller-chosen _id, and read them back. Covers the two traps that bite
+    every new integration: near-real-time visibility, and a bulk response that
+    returns 200 while individual items failed.
+  risk: write
+- name: elk-stack-esql-query
+  file: elk-stack-esql-query.md
+  api: elk-stack:elasticsearch-api
+  operations: 6
+  summary: >-
+    Run ES|QL synchronously and asynchronously, poll, and stop a long query to
+    recover partial results. The columnar response shape is far easier for an
+    agent to consume than Query DSL and nested _source.
+  risk: read-only
+- name: elk-stack-snapshot-before-destructive-change
+  file: elk-stack-snapshot-before-destructive-change.md
+  api: elk-stack:elasticsearch-api
+  operations: 9
+  summary: >-
+    Take, verify and restore a snapshot around a destructive change, and prefer
+    indices-close (fully symmetric, no window) over indices-delete. Stops
+    outright if no snapshot repository is registered, because without one there
+    is no reversal path.
+  risk: destructive
+- name: elk-stack-provision-cloud-deployment
+  file: elk-stack-provision-cloud-deployment.md
+  api: elk-stack:elastic-cloud-api
+  operations: 9
+  summary: >-
+    Create, poll, resize and tear down an Elastic Cloud deployment, branching
+    on the 186 structured error codes. Spells out that restore-deployment
+    returns the configuration but not the data, and that Elastic states no
+    restore window.
+  risk: destructive

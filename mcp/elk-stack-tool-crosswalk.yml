@@ -1,0 +1,123 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived by binding the six built-in Elastic Agent Builder tool ids recorded in
+  mcp/elk-stack-mcp.yml to the operationIds published in
+  openapi/elk-stack-elasticsearch-openapi.json and
+  openapi/elk-stack-kibana-openapi.yaml. Every operationId below was read out of
+  those two files, not guessed.
+note: >-
+  Confidence is deliberately capped at medium for the data tools. Elastic's live
+  MCP endpoint is deployment-hosted and authenticated, so no tools/list handshake
+  was possible and the tools' real inputSchemas were never observed. The binding
+  is by name and documented semantics only. Where a tool clearly has no single
+  backing REST operation it is listed under mcp_only rather than force-mapped.
+surfaces:
+  openapi:
+  - api: elk-stack:elasticsearch-api
+    file: openapi/elk-stack-elasticsearch-openapi.json
+    operations: 845
+    gated: false
+  - api: elk-stack:kibana-api
+    file: openapi/elk-stack-kibana-openapi.yaml
+    operations: 731
+    gated: false
+  graphql: null
+  mcp:
+    url: https://{kibana_url}/api/agent_builder/mcp
+    gated: true
+    gated_reason: >-
+      Deployment-hosted and authenticated (ApiKey, or OAuth 2.1 on Serverless).
+      No anonymous Elastic-operated MCP URL exists to introspect.
+  a2a:
+    url: https://{kibana_url}/api/agent_builder/a2a/{agentId}.json
+    gated: true
+    gated_reason: Deployment-hosted; Elastic's own hosts 404 on /.well-known/agent-card.json.
+crosswalk:
+- tool: platform.core.search
+  category: search
+  rest:
+  - search
+  - search-1
+  - search-2
+  - search-3
+  binding: direct
+  confidence: medium
+  note: >-
+    Backs onto the Elasticsearch _search API (GET/POST, cluster-wide and
+    per-index). The tool inherits that operation's query/body parameters as its
+    real input schema; the four operationIds are the same operation across
+    method and index-scoping variants.
+- tool: platform.core.list_indices
+  category: metadata
+  rest:
+  - cat-indices
+  - cat-indices-1
+  - indices-get
+  binding: direct
+  confidence: medium
+  note: >-
+    _cat/indices is the human/agent-readable listing; GET /{index} is the
+    structured equivalent. Which one the tool calls internally was not observed.
+- tool: platform.core.get_index_mapping
+  category: metadata
+  rest:
+  - indices-get-mapping
+  - indices-get-mapping-1
+  binding: direct
+  confidence: high
+  note: One-to-one with the _mapping API; the tool name states the operation.
+- tool: platform.core.get_document_by_id
+  category: document
+  rest:
+  - get
+  binding: direct
+  confidence: high
+  note: One-to-one with GET /{index}/_doc/{id}.
+- tool: platform.core.execute_esql
+  category: query
+  rest:
+  - esql-query
+  binding: direct
+  confidence: high
+  note: One-to-one with POST /_query, the ES|QL query endpoint.
+mcp_only:
+- tool: platform.core.generate_esql
+  reason: >-
+    Natural-language-to-ES|QL generation. There is no ES|QL generation operation
+    in either published OpenAPI; this is an LLM-backed capability of Agent
+    Builder, not a REST endpoint. Deliberately NOT mapped to esql-query, which
+    executes a query rather than writing one.
+rest_only:
+- note: >-
+    The overwhelming majority of Elastic's REST surface has no built-in MCP tool.
+    1,873 published operations (845 Elasticsearch + 731 Kibana + 297 Elastic
+    Cloud) against six built-in tools means index lifecycle, security/RBAC,
+    snapshots, ingest pipelines, machine learning, transforms, connectors,
+    Fleet, alerting, cases, Elastic Security detections and the entire Cloud
+    control plane are reachable only over REST unless an operator authors a
+    custom tool via POST /api/agent_builder/tools.
+  families_uncovered:
+  - indices (104 operations)
+  - security (99)
+  - ml anomaly (70)
+  - inference (48)
+  - cat (47)
+  - cluster (38)
+  - connector (30)
+  - watcher (24)
+  - ingest (22)
+  - snapshot (18)
+  - transform (17)
+  - ilm (12)
+coverage:
+  mcp_tools_total: 6
+  mcp_tools_bound_to_rest: 5
+  mcp_tools_unbound: 1
+  rest_operations_total: 1873
+  rest_operations_covered_by_a_tool: 11
+  rest_coverage_pct: 0.6
+  note: >-
+    rest_operations_covered_by_a_tool counts distinct operationIds named in
+    crosswalk[].rest. The built-in tool set is a read/query surface only — no
+    built-in tool writes, deletes or reconfigures anything.

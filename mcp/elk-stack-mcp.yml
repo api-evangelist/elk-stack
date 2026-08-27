@@ -1,0 +1,88 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/mcp-server
+  (Agent Builder MCP endpoint), https://github.com/elastic/mcp-server-elasticsearch
+  (standalone server, README fetched 2026-08-27), and the published Kibana
+  OpenAPI (openapi/elk-stack-kibana-openapi.yaml), which declares
+  POST /api/agent_builder/mcp with operationId post-agent-builder-mcp and
+  carries the built-in tool ids verbatim in its examples.
+status: published
+note: >-
+  Elastic ships TWO distinct MCP products and they are not interchangeable.
+  (1) The Agent Builder MCP endpoint is built into Kibana from 9.2.0 and into
+  every Elasticsearch Serverless project — an MCP client POSTs to it directly,
+  so it is a remote surface, but the host is the customer's OWN Kibana or
+  Serverless project, not an Elastic-operated URL. There is no single hosted
+  mcp.elastic.co endpoint, which is why the endpoint below is templated rather
+  than absolute; no URL was guessed. (2) The standalone Elasticsearch MCP
+  Server is a local container (docker.elastic.co/mcp/elasticsearch) run in
+  stdio or streamable-HTTP mode. Elastic has DEPRECATED it — the README states
+  it "will only receive critical security updates" and points at the Agent
+  Builder endpoint instead. Its npm distribution
+  (@elastic/mcp-server-elasticsearch) has not shipped since 0.3.1 on 2025-07-01.
+deployment:
+  mode: both
+  endpoint: https://{kibana_url}/api/agent_builder/mcp
+  endpoint_note: >-
+    Deployment-hosted, not Elastic-hosted. The space-scoped form is
+    https://{kibana_url}/s/{space_id}/api/agent_builder/mcp. Elastic Cloud
+    Serverless projects expose the same path on their own project URL.
+    Available from Elastic 9.2.0; marked Experimental in the contract
+    (x-state: "Experimental; added in 9.2.0").
+  install: >-
+    docker run -i --rm -e ES_URL -e ES_API_KEY docker.elastic.co/mcp/elasticsearch stdio
+  package: https://github.com/elastic/mcp-server-elasticsearch
+  auth: api-key
+  auth_note: >-
+    Agent Builder MCP accepts an Elasticsearch API key
+    (Authorization: ApiKey <key>) on both Stack and Serverless, and OAuth 2.1
+    for interactive clients on Serverless projects only. The standalone
+    container takes ES_API_KEY or ES_USERNAME/ES_PASSWORD.
+  verified: searched
+  verified_note: >-
+    Not probed live. Both surfaces are deployment-hosted — there is no
+    anonymous Elastic-operated MCP URL to POST tools/list at — so no
+    tools/list handshake was attempted and none is recorded as observed.
+transports:
+- streamable-http
+- stdio
+tools:
+- name: platform.core.search
+  description: >-
+    A powerful tool for searching and analyzing data within your Elasticsearch
+    cluster. (Description quoted verbatim from the agent-card example embedded
+    in the Kibana OpenAPI at GET /api/agent_builder/a2a/{agentId}.json.)
+  source: published Kibana OpenAPI examples
+- name: platform.core.list_indices
+  description: List the indices available in the connected Elasticsearch cluster.
+  source: published Kibana OpenAPI examples
+- name: platform.core.get_index_mapping
+  description: Retrieve the field mapping for one or more indices.
+  source: published Kibana OpenAPI examples
+- name: platform.core.get_document_by_id
+  description: Fetch a single document from an index by its document id.
+  source: published Kibana OpenAPI examples
+- name: platform.core.generate_esql
+  description: Generate an ES|QL query from a natural-language request.
+  source: published Kibana OpenAPI examples
+- name: platform.core.execute_esql
+  description: Execute an ES|QL query against the cluster and return results.
+  source: published Kibana OpenAPI examples
+tools_note: >-
+  These six ids are the built-in Agent Builder tool set as named in Elastic's
+  own published OpenAPI. They are NOT the full catalog: Agent Builder also
+  exposes user-defined tools created through POST /api/agent_builder/tools and,
+  per Elastic's documentation, Elastic Workflows. Full inputSchema for each
+  tool requires an authenticated tools/list against a live deployment; only
+  names and descriptions are recorded here rather than invented schemas.
+related_surfaces:
+- name: A2A Agent Card (deployment-hosted)
+  path: GET /api/agent_builder/a2a/{agentId}.json
+  note: >-
+    Kibana serves an A2A agent card per Agent Builder agent, and accepts A2A
+    tasks at POST /api/agent_builder/a2a/{agentId}. This is a genuine A2A
+    surface, but it lives on the customer's deployment — every
+    /.well-known/agent-card.json and /.well-known/agent.json probe against
+    Elastic's own hosts returned 404 — so no a2a/ artifact is claimed for this
+    provider. See well-known/elk-stack-well-known.yml for the probe record.

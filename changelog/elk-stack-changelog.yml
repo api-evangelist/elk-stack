@@ -1,0 +1,85 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.elastic.co/docs/release-notes (index),
+  https://www.elastic.co/docs/release-notes/elasticsearch,
+  https://www.elastic.co/docs/release-notes/elasticsearch/breaking-changes,
+  https://www.elastic.co/docs/release-notes/kibana,
+  https://www.elastic.co/docs/release-notes/cloud-hosted — all HTTP 200 on
+  2026-08-27. Version currency cross-checked against the client release dates
+  in packages/elk-stack-packages.yml.
+url: https://www.elastic.co/docs/release-notes
+scheme: semver
+scheme_note: >-
+  MAJOR.MINOR.PATCH across the whole stack. Release notes are organised per
+  PRODUCT (Elasticsearch, Kibana, Logstash, Beats, Elastic Agent, Cloud Hosted,
+  Cloud Serverless, ECE, ECK, each APM agent and EDOT SDK), not as one stack
+  changelog — an integrator tracking API drift has to watch several pages.
+current_version: 9.5.2
+current_version_note: >-
+  Newest Elasticsearch release named on the release-notes page. The
+  co.elastic.clients:elasticsearch-java artifact for 9.5.2 published to Maven
+  Central on 2026-08-25, which is the closest reliable date available; Elastic
+  does not print release dates on the release-notes page itself.
+next_version_in_flight: '9.6'
+next_version_evidence: >-
+  openapi/elk-stack-kibana-openapi.yaml already carries operations annotated
+  `x-state: Experimental; added in 9.6.0` — the published contract is ahead of
+  the released stack.
+structure:
+  breaking_changes_separated: true
+  breaking_changes_url: https://www.elastic.co/docs/release-notes/elasticsearch/breaking-changes
+  deprecations_separated: true
+  deprecations_url: https://www.elastic.co/docs/release-notes/elasticsearch/deprecations
+  known_issues_separated: true
+  dated_entries: false
+  dated_entries_note: >-
+    The release-notes pages do not print a date against any version. This is a
+    real gap for anyone assessing API currency: the changelog says WHAT changed
+    but not WHEN, so release dates have to be inferred from package registries
+    or GitHub tags.
+entries:
+- version: 9.5.2
+  date: null
+  breaking: false
+  highlights:
+  - Bouncy Castle FIPS upgrades
+  - Lucene 10.5.1
+  - Bug fixes across ES|QL, aggregations and vector search
+- version: 9.5.1
+  date: null
+  breaking: false
+  highlights:
+  - Machine learning enhancements
+  - PyTorch upgraded to 2.7.1
+  - CVE fixes in Apache HttpComponents
+- version: 9.5.0
+  date: '2026-08-04'
+  date_note: Date taken from the coordinated 9.5.0 client releases to npm, PyPI, RubyGems, Packagist and NuGet on 2026-08-04, not from Elastic's changelog.
+  breaking: false
+  additions: true
+  highlights:
+  - Batched query execution
+  - Data stream lifecycle support for the frozen tier
+  - Columnar index modes (technical preview)
+  - ES|QL data federation
+- version: 9.4.5
+  date: null
+  breaking: false
+  highlights:
+  - Machine learning improvements
+  - Security library upgrades
+  - Fixes for ES|QL, inference and search
+- version: 9.4.4
+  date: null
+  breaking: false
+  highlights:
+  - Watchdog timeout for GROK
+  - Jackson library upgrades
+per_product_feeds:
+  elasticsearch: https://www.elastic.co/docs/release-notes/elasticsearch
+  kibana: https://www.elastic.co/docs/release-notes/kibana
+  cloud_hosted: https://www.elastic.co/docs/release-notes/cloud-hosted
+  eol_json: https://www.elastic.co/support/eol.json
+  eol_rss: https://www.elastic.co/support/eol/feed
+  security_advisories_rss: https://discuss.elastic.co/c/announcements/security-announcements.rss

@@ -1,0 +1,160 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  Elastic's published client-library documentation
+  (https://www.elastic.co/docs/reference/elasticsearch/clients) plus the
+  elastic/* GitHub organization, with every version and release date read
+  live from the package registry metadata endpoint named in each entry on
+  2026-08-27.
+note: >-
+  Elastic maintains first-party Elasticsearch clients in eight languages and
+  ships them in lockstep with the Elasticsearch minor version, which is why
+  the majority of these read 9.5.x published within the last month. Two
+  entries are the exceptions worth reading as decay signals: the Rust client
+  has not left alpha since 2025-08 and Elastic labels it experimental, and
+  @elastic/mcp-server-elasticsearch is frozen at 0.3.1 (2025-07-01) because
+  Elastic deprecated the npm distribution in favour of a Docker image and,
+  from Elastic 9.2.0, the Agent Builder MCP endpoint built into Kibana.
+packages:
+- name: '@elastic/elasticsearch'
+  language: JavaScript/TypeScript
+  registry: npm
+  url: https://www.npmjs.com/package/@elastic/elasticsearch
+  repository: https://github.com/elastic/elasticsearch-js
+  official: true
+  version: 9.5.0
+  published: '2026-08-04'
+  covers: elk-stack:elasticsearch-api
+- name: '@elastic/transport'
+  language: JavaScript/TypeScript
+  registry: npm
+  url: https://www.npmjs.com/package/@elastic/transport
+  repository: https://github.com/elastic/elastic-transport-js
+  official: true
+  version: 9.4.0
+  published: '2026-07-29'
+  note: Shared HTTP transport layer under the JavaScript client, not a client itself.
+- name: elasticsearch
+  language: Python
+  registry: pypi
+  url: https://pypi.org/project/elasticsearch/
+  repository: https://github.com/elastic/elasticsearch-py
+  official: true
+  version: 9.5.0
+  published: '2026-08-04'
+  covers: elk-stack:elasticsearch-api
+- name: co.elastic.clients:elasticsearch-java
+  language: Java
+  registry: maven
+  url: https://central.sonatype.com/artifact/co.elastic.clients/elasticsearch-java
+  repository: https://github.com/elastic/elasticsearch-java
+  official: true
+  version: 9.5.2
+  published: '2026-08-25'
+  covers: elk-stack:elasticsearch-api
+- name: org.elasticsearch.client:elasticsearch-rest-client
+  language: Java
+  registry: maven
+  url: https://central.sonatype.com/artifact/org.elasticsearch.client/elasticsearch-rest-client
+  repository: https://github.com/elastic/elasticsearch
+  official: true
+  version: 9.5.2
+  published: '2026-08-20'
+  note: Low-level REST transport that the typed Java client builds on.
+- name: Elastic.Clients.Elasticsearch
+  language: .NET
+  registry: nuget
+  url: https://www.nuget.org/packages/Elastic.Clients.Elasticsearch
+  repository: https://github.com/elastic/elasticsearch-net
+  official: true
+  version: 9.5.0
+  published: '2026-08-04'
+  covers: elk-stack:elasticsearch-api
+- name: github.com/elastic/go-elasticsearch/v9
+  language: Go
+  registry: go
+  url: https://pkg.go.dev/github.com/elastic/go-elasticsearch/v9
+  repository: https://github.com/elastic/go-elasticsearch
+  official: true
+  version: v9.5.1
+  published: '2026-08-25'
+  covers: elk-stack:elasticsearch-api
+- name: elasticsearch
+  language: Ruby
+  registry: rubygems
+  url: https://rubygems.org/gems/elasticsearch
+  repository: https://github.com/elastic/elasticsearch-ruby
+  official: true
+  version: 9.5.0
+  published: '2026-08-04'
+  covers: elk-stack:elasticsearch-api
+- name: elasticsearch/elasticsearch
+  language: PHP
+  registry: packagist
+  url: https://packagist.org/packages/elasticsearch/elasticsearch
+  repository: https://github.com/elastic/elasticsearch-php
+  official: true
+  version: v9.5.0
+  published: '2026-08-04'
+  covers: elk-stack:elasticsearch-api
+- name: elasticsearch
+  language: Rust
+  registry: crates.io
+  url: https://crates.io/crates/elasticsearch
+  repository: https://github.com/elastic/elasticsearch-rs
+  official: true
+  version: 9.1.0-alpha.1
+  published: '2025-08-08'
+  note: >-
+    Elastic labels the Rust client experimental. The newest published release
+    is a pre-release alpha over a year older than every other first-party
+    client, which now trails the current 9.5.x Elasticsearch line by four
+    minor versions.
+- name: '@elastic/mcp-server-elasticsearch'
+  language: JavaScript/TypeScript
+  registry: npm
+  url: https://www.npmjs.com/package/@elastic/mcp-server-elasticsearch
+  repository: https://github.com/elastic/mcp-server-elasticsearch
+  official: true
+  version: 0.3.1
+  published: '2025-07-01'
+  note: >-
+    Deprecated by Elastic. The README states the server "will only receive
+    critical security updates" and has been superseded by the Elastic Agent
+    Builder MCP endpoint in Elastic 9.2.0+. Distribution moved from npm to
+    the Docker image docker.elastic.co/mcp/elasticsearch (registry: cdn/OCI,
+    tag floats — no registry metadata endpoint answers for it, so no version
+    can be pinned from the published instructions).
+- name: '@elastic/eui'
+  language: JavaScript/TypeScript
+  registry: npm
+  url: https://www.npmjs.com/package/@elastic/eui
+  repository: https://github.com/elastic/eui
+  official: true
+  version: 119.1.0
+  published: '2026-08-24'
+  note: Elastic UI Framework — the React component library behind Kibana. See components/elk-stack-components.yml.
+- name: '@elastic/apm-rum'
+  language: JavaScript/TypeScript
+  registry: npm
+  url: https://www.npmjs.com/package/@elastic/apm-rum
+  repository: https://github.com/elastic/apm-agent-rum-js
+  official: true
+  version: 5.17.5
+  published: '2026-06-30'
+  note: Real User Monitoring agent for Elastic APM/Observability.
+- name: docker.elastic.co/mcp/elasticsearch
+  language: Container
+  registry: cdn
+  url: https://github.com/elastic/mcp-server-elasticsearch
+  official: true
+  version: null
+  published: null
+  note: >-
+    Elastic's published run instructions pull the image with no tag
+    (docker run -i --rm ... docker.elastic.co/mcp/elasticsearch stdio), so the
+    distribution floats to latest and a consumer cannot tell which build they
+    get. docker.elastic.co is an OCI registry with no public metadata endpoint
+    that answered anonymously, so no version or date could be read — recorded
+    as null rather than guessed. The README notes the instructions apply to
+    Elasticsearch MCP Server 0.4.0 and later.

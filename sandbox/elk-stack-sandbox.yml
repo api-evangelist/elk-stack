@@ -1,0 +1,88 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.elastic.co/cloud/cloud-trial-overview (HTTP 200),
+  https://www.elastic.co/docs/deploy-manage/deploy/self-managed/local-development-installation-quickstart
+  (HTTP 200), https://elastic.co/start-local (HTTP 200,
+  application/octet-stream, 34,000-byte shell script served from GitHub
+  release assets), and https://demo.elastic.co/ (HTTP 200) — all probed
+  2026-08-27.
+note: >-
+  Elastic has no test-mode-vs-live-mode split of the kind a payments API has.
+  There are no test key prefixes, no sandbox host, no test fixtures and no time
+  simulation, because there is nothing to simulate — the API operates on the
+  customer's own data in the customer's own cluster. What Elastic offers
+  instead is three ways to get a REAL, disposable stack: a time-boxed cloud
+  trial, a one-command local stack, and a read-only hosted demo. Recorded that
+  way rather than forced into a test/live shape it does not have.
+test_live_split:
+  exists: false
+  key_prefixes: []
+  detail: >-
+    A single credential type across trial and production. Elasticsearch API
+    keys are base64(id:api_key) with no environment prefix, so a key gives no
+    hint whether it points at a throwaway trial cluster or production — the
+    only discriminator is the endpoint host. An agent holding an Elastic API
+    key cannot tell from the key alone what it is about to write to.
+environments:
+- name: Elastic Cloud free trial
+  kind: hosted trial
+  url: https://www.elastic.co/cloud/elasticsearch-service/signup
+  overview: https://www.elastic.co/cloud/cloud-trial-overview
+  duration_days: 14
+  credit_card_required: false
+  detail: >-
+    A full-feature Elastic Cloud deployment — Search, Observability and
+    Security solutions, Kibana, ML and vector search — for 14 days with no
+    card. Elastic states there are "some resource limitations" without
+    publishing the numbers, so no quota is recorded here. Converts to
+    pay-as-you-go at the end rather than shutting off.
+  caveat: >-
+    Elastic states that signing up through the Microsoft Azure and Google Cloud
+    marketplaces does NOT include the free trial; the offer is AWS-only.
+  same_api_as_production: true
+- name: start-local
+  kind: local one-command stack
+  url: https://elastic.co/start-local
+  docs: https://www.elastic.co/docs/deploy-manage/deploy/self-managed/local-development-installation-quickstart
+  install: curl -fsSL https://elastic.co/start-local | sh
+  detail: >-
+    A 34KB Apache-2.0 shell script, distributed from the elastic/start-local
+    GitHub release assets, that brings up Elasticsearch and Kibana in Docker on
+    localhost and prints the generated credentials. Its own header says "do not
+    use this script in a production environment" — this is the closest thing
+    Elastic has to a developer sandbox, and it is the fastest route to a live
+    endpoint to run the operations in openapi/ against.
+  default_endpoints:
+  - http://localhost:9200
+  - http://localhost:5601
+  same_api_as_production: true
+  time_boxed: false
+- name: demo.elastic.co
+  kind: hosted read-only demo
+  url: https://demo.elastic.co/
+  detail: >-
+    A public Kibana instance preloaded with Elastic's sample datasets for
+    Observability, Security and Search. Useful for seeing the UI and the shape
+    of the data; not a writable API sandbox and no API credentials are issued.
+  same_api_as_production: false
+test_data:
+  test_cards: []
+  test_accounts: []
+  fixtures:
+  - name: Kibana sample data sets
+    detail: >-
+      Kibana ships loadable sample data sets (flight, ecommerce, web logs) with
+      their dashboards and data views, which are the nearest published
+      equivalent to fixtures. They are installed into a real index like any
+      other data.
+  triggers: []
+  note: >-
+    No test cards, test bank accounts, hosted test tokens or trigger endpoints
+    exist for this provider, and none were invented. Empty is the correct value.
+time_simulation:
+  supported: false
+  detail: >-
+    No test clock. The nearest capability is genuine rather than simulated:
+    Elasticsearch date math (now-7d/d) and ILM's rollover conditions let an
+    agent query and age data by time, but neither moves the clock.

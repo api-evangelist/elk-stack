@@ -1,0 +1,61 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Kibana APIs
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  extends: openapi/elk-stack-kibana-openapi.yaml
+  source: >-
+    https://raw.githubusercontent.com/elastic/kibana/main/oas_docs/output/kibana.yaml
+    harvested verbatim 2026-08-27 (HTTP 200, 5,863,306 bytes).
+  note: >-
+    Kibana's published contract is in better shape than the Elasticsearch one —
+    it declares a templated servers block, 61 root tags and per-operation
+    x-state maturity labels. What it does not carry is the version it describes
+    (info.version is an empty string), a pointer to the space-scoped routing
+    rule that governs almost every path, or the kbn-xsrf requirement that trips
+    up the first write.
+actions:
+- target: $.info
+  description: Stamp the stack line and the terms of service.
+  update:
+    version: 9.x
+    x-version-note: >-
+      Elastic publishes this file with info.version set to "". Harvested from
+      the main branch of elastic/kibana on 2026-08-27; the document already
+      contains operations annotated "Experimental; added in 9.6.0".
+    termsOfService: https://www.elastic.co/legal/terms-of-use
+- target: $.info
+  description: >-
+    Surface the two rules that are documented per-operation in prose but never
+    stated once at the document level, plus links to the cross-cutting
+    artifacts.
+  update:
+    x-space-scoping: >-
+      Almost every path has a space-scoped twin at /s/{space_id}/<path>. The
+      unscoped form operates on the default space. An agent working in a
+      multi-space deployment that ignores this will silently read and write the
+      wrong tenant's saved objects.
+    x-csrf-header: >-
+      State-changing Kibana requests require the kbn-xsrf header; 356
+      operations state this requirement. It has no value semantics — its
+      presence is what is checked.
+    x-maturity-labels: >-
+      Operations carry an x-state value of "Generally available", "Technical
+      Preview" or "Experimental", frequently with the minor version that
+      introduced them. The entire Agent Builder surface, including the MCP and
+      A2A endpoints, is Experimental as of 9.2.0.
+    x-conventions: conventions/elk-stack-conventions.yml
+    x-error-catalog: errors/elk-stack-problem-types.yml
+    x-lifecycle: lifecycle/elk-stack-lifecycle.yml
+    x-mcp: mcp/elk-stack-mcp.yml
+    x-tool-crosswalk: mcp/elk-stack-tool-crosswalk.yml
+- target: $.paths['/api/agent_builder/mcp'].post
+  description: >-
+    Mark the MCP endpoint as the agent-facing surface it is, so tooling that
+    scans for MCP does not have to infer it from the path string.
+  update:
+    x-agent-surface: mcp
+    x-mcp-transport: streamable-http
+    x-mcp-artifact: mcp/elk-stack-mcp.yml

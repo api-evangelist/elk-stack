@@ -1,22 +1,86 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/elk-stack-openapi.yml
+generated: '2026-08-27'
+method: searched
+source: >-
+  Derived from the securitySchemes declared in
+  openapi/elk-stack-elastic-cloud-swagger.json and
+  openapi/elk-stack-kibana-openapi.yaml, then upgraded from the provider's own
+  documentation at https://www.elastic.co/docs/deploy-manage/api-keys
+  (HTTP 200) and
+  https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/mcp-server.
+docs: https://www.elastic.co/docs/deploy-manage/api-keys
 summary:
   types:
   - apiKey
   - http
   api_key_in:
   - header
+  oauth2: false
+  mutual_tls: false
+note: >-
+  One credential shape across the whole stack — an API key in an Authorization
+  header — but THREE separate credential scopes that are not interchangeable.
+  An Elasticsearch cluster key reads and writes data. A Kibana key acts on
+  saved objects and Kibana features. An Elastic Cloud key manages deployments
+  and cannot touch data. Holding one implies nothing about the others, and this
+  is the most common integration mistake against Elastic. There is no
+  environment prefix on any of them, so a key does not reveal whether it points
+  at a trial or at production.
 schemes:
-- name: basicAuth
-  type: http
-  scheme: basic
-  sources:
-  - openapi/elk-stack-openapi.yml
-- name: apiKeyAuth
+- name: apiKey
   type: apiKey
   in: header
   parameter: Authorization
-  description: ApiKey <base64-encoded-id:api_key>
+  format: 'ApiKey <base64(id:api_key)>'
+  preferred: true
   sources:
-  - openapi/elk-stack-openapi.yml
+  - openapi/elk-stack-elastic-cloud-swagger.json
+  - openapi/elk-stack-kibana-openapi.yaml
+  docs: https://www.elastic.co/docs/deploy-manage/api-keys
+  scopes:
+  - scope: Elasticsearch cluster
+    created_by: 'security-create-api-key (POST/PUT /_security/api_key)'
+    detail: >-
+      Can carry role descriptors that restrict it below the creating user's own
+      privileges, and an optional expiration. This is the mechanism to use when
+      handing a credential to an agent — issue a narrowed, expiring key rather
+      than reusing an operator's.
+  - scope: Kibana
+    detail: Created in Kibana Stack Management; governs Kibana feature privileges, scoped by space.
+  - scope: Elastic Cloud control plane
+    created_by: 'create-api-key (POST /users/auth/keys)'
+    detail: Manages deployments and organization resources. Cannot read cluster data.
+- name: basicAuth
+  type: http
+  scheme: basic
+  format: 'Basic <base64(username:password)>'
+  preferred: false
+  sources:
+  - openapi/elk-stack-elastic-cloud-swagger.json
+  - openapi/elk-stack-kibana-openapi.yaml
+  note: >-
+    Supported everywhere but discouraged for automation — it carries the user's
+    full privileges with no expiry and no scoping. Use an API key instead.
+federated_identity:
+  note: >-
+    Elastic is a relying party for external identity providers, which is
+    distinct from how its own API is authenticated. Elasticsearch publishes
+    first-class SAML 2.0 (nine operations, including SP metadata at
+    GET /_security/saml/metadata/{realm_name}) and OpenID Connect
+    (prepare/authenticate/logout) surfaces for signing HUMANS in. Neither is a
+    way to authenticate an API call.
+  saml: true
+  oidc: true
+oauth:
+  rest_api: false
+  mcp: true
+  mcp_detail: >-
+    OAuth 2.1 is accepted by the Agent Builder MCP endpoint for interactive
+    clients (Claude Desktop, Cursor) on Elastic Cloud Serverless projects only.
+    Everywhere else — including Agent Builder MCP on a self-managed or Hosted
+    Stack deployment — the credential is an Elasticsearch API key.
+  source: https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/mcp-server
+additional_headers:
+- header: kbn-xsrf
+  surface: Kibana
+  required_for: state-changing requests (356 operations declare it)
+  detail: CSRF protection. Presence is checked, not the value. See conventions/elk-stack-conventions.yml.

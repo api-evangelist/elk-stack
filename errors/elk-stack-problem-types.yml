@@ -1,0 +1,172 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived from the 4xx/5xx responses and error schemas published in
+  openapi/elk-stack-elastic-cloud-swagger.json,
+  openapi/elk-stack-kibana-openapi.yaml and
+  openapi/elk-stack-elasticsearch-openapi.json, enriched from
+  https://www.elastic.co/docs/reference/elasticsearch/rest-apis/common-options
+format: vendor-json
+format_note: >-
+  None of the three contracts uses RFC 9457 application/problem+json — zero
+  occurrences across all three files. Each surface ships its own JSON error
+  envelope instead, and the envelopes differ from each other, which is the
+  single most important thing for an agent integrating across the stack to know.
+envelopes:
+- surface: Elastic Cloud API
+  schema: BasicFailedReply
+  shape: '{ "errors": [ { "code": "<structured.error.code>", "message": "<human readable>", "fields": ["<field>"] } ] }'
+  source: openapi/elk-stack-elastic-cloud-swagger.json#/definitions/BasicFailedReply
+  note: >-
+    An ARRAY of errors, each carrying a machine-readable dotted code. This is
+    the most agent-friendly of the three envelopes: 186 distinct structured
+    codes are documented inline in the contract's response descriptions.
+- surface: Elasticsearch REST API
+  schema: _types.ErrorResponseBase
+  shape: '{ "error": { "type": "<error type>", "reason": "<human readable>", "root_cause": [...], "stack_trace": "..." }, "status": <int> }'
+  source: openapi/elk-stack-elasticsearch-openapi.json#/components/schemas/_types.ErrorResponseBase
+  note: >-
+    A single error object with a `type` discriminator plus a numeric `status`
+    that repeats the HTTP status inside the body. The published spec declares
+    NO 4xx/5xx responses on any of its 845 operations — the error contract is
+    schema-only, so an agent cannot learn from the spec which operations can
+    return which status.
+- surface: Kibana APIs
+  schema: inline per-operation
+  shape: 'varies; commonly { "statusCode": <int>, "error": "<reason phrase>", "message": "<human readable>" }'
+  source: openapi/elk-stack-kibana-openapi.yaml
+  note: >-
+    No shared named error schema; Kibana declares error responses inline per
+    operation. 1,141 error responses are declared across 731 operations.
+status_codes:
+- code: 400
+  count: 501
+  meaning: Bad Request — invalid schema, parameters, or body.
+  remediation: Validate the request against the operation schema before retrying; retrying unchanged will fail identically.
+  retryable: false
+- code: 401
+  count: 206
+  meaning: Request was not authenticated.
+  remediation: Supply Authorization ApiKey <base64 id:api_key> or HTTP Basic credentials. See authentication/elk-stack-authentication.yml.
+  retryable: false
+- code: 403
+  count: 211
+  meaning: Authenticated but the user lacks the required privilege for the operation.
+  remediation: >-
+    Grant the named cluster/index privilege or Kibana feature privilege. Kibana
+    operations state the required privilege inline (for example "Route required
+    privileges: agentBuilder:read").
+  retryable: false
+- code: 404
+  count: 369
+  meaning: Named resource does not exist.
+  remediation: Confirm the id. Elastic Cloud returns a structured code such as deployments.deployment_not_found or organization.not_found.
+  retryable: false
+- code: 405
+  count: 3
+  meaning: Method not allowed for this route.
+  retryable: false
+- code: 409
+  count: 79
+  meaning: >-
+    Version/state conflict — the resource was concurrently modified, or an id
+    already exists.
+  remediation: >-
+    Re-read the resource and retry with the current version. Elasticsearch
+    surfaces this as version_conflict_engine_exception when if_seq_no /
+    if_primary_term optimistic concurrency control fails.
+  retryable: true
+- code: 412
+  count: 4
+  meaning: Precondition failed — the resource was in a state the operation refuses to act on.
+  retryable: false
+- code: 413
+  count: 3
+  meaning: Payload too large.
+  remediation: Reduce the request body; for bulk indexing, split the batch.
+  retryable: false
+- code: 417
+  count: 2
+  meaning: Expectation failed — health status worse than the expected one.
+  retryable: false
+- code: 422
+  count: 2
+  meaning: Unprocessable — the resource was found in an illegal state for the command.
+  retryable: false
+- code: 429
+  count: 4
+  meaning: >-
+    Too many requests. Elastic Cloud documents this as
+    billing_service.rate_limited and as an organization-invitation creation
+    rate limit; Elasticsearch returns it for bulk rejection when the write
+    thread pool queue is full (es_rejected_execution_exception).
+  remediation: Back off and retry with exponential backoff. See rate-limits/elk-stack-rate-limits.yml.
+  retryable: true
+- code: 449
+  count: 3
+  meaning: >-
+    Retry With — Elastic Cloud-specific. "Please retry"
+    (deployments.metadata_internal_error) and unverifiable challenge.
+  remediation: Retry the identical request after a short delay.
+  retryable: true
+- code: 500
+  count: 180
+  meaning: Unexpected server-side error.
+  retryable: true
+- code: 501
+  count: 8
+  meaning: Not implemented — commonly authc.no_authentication_cluster on Elastic Cloud Enterprise.
+  retryable: false
+- code: 502
+  count: 5
+  meaning: The authentication cluster failed to process the request.
+  retryable: true
+- code: 503
+  count: 53
+  meaning: >-
+    Service unavailable — Kibana or an essential service is degraded, or a
+    feature is disabled by an advanced setting (for example
+    alerting:v2:enabled).
+  retryable: true
+structured_codes:
+  surface: Elastic Cloud API
+  total_distinct: 186
+  convention: '<domain>.<condition>, lowercase, dot-separated'
+  most_frequent:
+  - code: deployments.deployment_not_found
+    occurrences: 63
+    http: 404
+  - code: deployments.deployment_resource_not_found
+    occurrences: 47
+    http: 404
+  - code: deployments.deployment_resource_no_longer_exists
+    occurrences: 25
+    http: 500
+  - code: organization.not_found
+    occurrences: 24
+    http: 404
+  - code: allocators.allocator_not_found
+    occurrences: 11
+    http: 404
+  - code: deployments.instances_missing_on_update_error
+    occurrences: 10
+    http: 400
+  - code: deployments.metadata_internal_error
+    occurrences: 10
+    http: 449
+  - code: traffic_filter.request_execution_failed
+    occurrences: 9
+    http: 500
+  - code: user.not_found
+    occurrences: 9
+    http: 404
+  - code: security_realm.version_conflict
+    occurrences: 6
+    http: 409
+  - code: billing_service.rate_limited
+    occurrences: 1
+    http: 429
+  note: >-
+    Extracted verbatim from the `(code: \`...\`)` annotations Elastic embeds in
+    its Swagger response descriptions. The full set of 186 is in the contract
+    itself; the eleven above are the highest-frequency plus the rate-limit code.

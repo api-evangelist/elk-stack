@@ -1,0 +1,88 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://eui.elastic.co/ (HTTP 200),
+  https://www.elastic.co/docs/solutions/search/site-or-app/search-ui (HTTP 200),
+  https://elastic.github.io/elastic-charts/ (HTTP 200), and the npm registry
+  metadata for each package, read 2026-08-27.
+note: >-
+  Distinct from packages/elk-stack-packages.yml, which lists the SDKs that call
+  the API. These are client-side UI libraries a developer renders in their own
+  application. Two of the three families are current; Search UI has not shipped
+  in over a year, which matters because it is the one aimed at end-user-facing
+  search experiences rather than at Elastic's own console.
+families:
+- family: Elastic UI Framework (EUI)
+  kind: design-system component library
+  framework: React
+  docs: https://eui.elastic.co/
+  repository: https://github.com/elastic/eui
+  official: true
+  loader:
+  - package: '@elastic/eui'
+    registry: npm
+    version: 119.1.0
+    published: '2026-08-24'
+  - package: '@elastic/eui-theme-borealis'
+    registry: npm
+    version: 8.0.0
+    published: '2026-05-11'
+    note: The Borealis theme package, split out from the main library.
+  detail: >-
+    The component system Kibana itself is built from — forms, tables, data
+    grids, flyouts, search bars, accessibility primitives and the theming
+    layer. Actively released (119.x, shipped three days before this pass).
+  embeds_elastic_data: false
+  embeds_note: EUI is presentation only; it does not talk to Elasticsearch.
+- family: Elastic Charts
+  kind: charting / visualization components
+  framework: React
+  docs: https://elastic.github.io/elastic-charts/
+  repository: https://github.com/elastic/elastic-charts
+  official: true
+  loader:
+  - package: '@elastic/charts'
+    registry: npm
+    version: 72.0.1
+    published: '2026-07-31'
+  detail: >-
+    The charting library behind Kibana visualizations — time series, partition,
+    heatmap, goal, metric, flame and waffle charts, with the same theming as
+    EUI.
+  embeds_elastic_data: false
+- family: Search UI
+  kind: prebuilt search-experience components
+  framework: React (plus framework-agnostic core)
+  docs: https://www.elastic.co/docs/solutions/search/site-or-app/search-ui
+  repository: https://github.com/elastic/search-ui
+  official: true
+  loader:
+  - package: '@elastic/search-ui'
+    registry: npm
+    version: 1.24.2
+    published: '2025-08-04'
+    note: Framework-agnostic core.
+  - package: '@elastic/react-search-ui'
+    registry: npm
+    version: 1.24.2
+    published: '2025-08-04'
+    note: React bindings and components.
+  detail: >-
+    Drop-in SearchBox, Results, Facet, Sorting, Paging and ResultsPerPage
+    components that bind straight to an Elasticsearch connector — the one
+    Elastic component family that DOES query Elastic data from the browser.
+  embeds_elastic_data: true
+  currency_note: >-
+    Last published 2025-08-04, more than a year before this pass, while EUI and
+    Elastic Charts both shipped within the last month. The gap is the clearest
+    signal in this artifact of where Elastic's front-end investment is going.
+embedding:
+- name: Kibana dashboard embed
+  kind: hosted/iframe embed
+  detail: >-
+    Kibana dashboards, visualizations and saved searches can be embedded into
+    a third-party page via the share menu's embed code, and short URLs for
+    those embeds are created through the Kibana API (the `short url` tag in
+    openapi/elk-stack-kibana-openapi.yaml).
+  requires: An authenticated Kibana deployment reachable from the embedding page.
+  official: true

@@ -1,97 +1,108 @@
 specification: API Commons Rate Limits
 specificationVersion: '0.1'
-schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Elastic Stack (ELK Stack)
 providerId: elk-stack
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.elastic.co/docs/reference/elasticsearch (API reference),
+  https://www.elastic.co/pricing/, and a direct read of the three published
+  contracts in openapi/ for rate-limit headers, 429 responses and documented
+  429 error codes. All 2026-08-27.
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-tags:
-  - Analytics
-  - Logging
-  - Monitoring
-  - Observability
-  - Search
-  - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Elastic Stack (ELK Stack) API surface. Captures
-  per-tier quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values
-  to be replaced with published provider limits.
+modified: '2026-08-27'
+supersedes: >-
+  A generated scaffold dated 2026-05-04 asserting a "free tier, 10 requests per
+  minute, burst 20" limit and a full set of X-RateLimit-* response headers.
+  None of that exists. Elastic publishes no request-rate limit and returns no
+  rate-limit header on any of its three surfaces.
+limit_count: 0
+description: >-
+  Elastic publishes NO request-rate limits for the Elasticsearch REST API, the
+  Kibana APIs or the Elastic Cloud API, and returns no rate-limit headers. This
+  is not an oversight in our research — it follows from the deployment model.
+  Elasticsearch and Kibana run on the customer's own cluster, so the ceiling is
+  that cluster's capacity, not a contractual quota; there is no shared tenant to
+  protect. What replaces a rate limit is BACKPRESSURE: bounded thread pools and
+  queues that reject work with 429 when saturated.
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
-responseCodes:
+  limit: null
+  remaining: null
+  reset: null
+  retry_after: null
+  policy: null
+  note: >-
+    Zero occurrences of X-RateLimit-*, RateLimit-* or Retry-After in
+    openapi/elk-stack-elasticsearch-openapi.json,
+    openapi/elk-stack-kibana-openapi.yaml or
+    openapi/elk-stack-elastic-cloud-swagger.json. An agent gets a 429 with no
+    machine-readable budget, no reset time and no back-off hint, so it must
+    implement exponential backoff with jitter blindly. This is the single
+    biggest runtime-signal gap in Elastic's contract.
+response_codes:
   throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Elasticsearch API
-      - Kibana API
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Elasticsearch API
-      - Kibana API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Elasticsearch API
-      - Kibana API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Elasticsearch API
-      - Kibana API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Elasticsearch API
-      - Kibana API
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+  note: >-
+    429 IS returned — it is declared on 4 operations across the Kibana and
+    Cloud contracts and is Elasticsearch's standard bulk-rejection status — but
+    always without headers.
+backpressure:
+- surface: Elasticsearch
+  mechanism: Thread pool queue rejection
+  status: 429
+  error_type: es_rejected_execution_exception
+  scope: per-node, per-thread-pool (write, search, etc.)
+  detail: >-
+    Each node sizes its thread pools from its CPU count and gives each a bounded
+    queue. When the queue for a pool is full, further requests to that pool are
+    rejected with 429 rather than queued indefinitely. The practical limit
+    therefore moves with node size and current load and cannot be stated as a
+    number.
+  agent_guidance: >-
+    Treat 429 here as "slow down and retry the same request", not as "quota
+    exhausted". Exponential backoff with jitter. For bulk indexing, reduce the
+    batch size as well as the rate — a smaller batch is often accepted where a
+    larger one is rejected.
+- surface: Elasticsearch
+  mechanism: Indexing pressure limits
+  status: 429
+  detail: >-
+    Elasticsearch bounds the total bytes of in-flight indexing work per node and
+    rejects writes above it, independently of thread pool queues.
+- surface: Elasticsearch
+  mechanism: Circuit breakers
+  status: 429
+  error_type: circuit_breaking_exception
+  detail: >-
+    Parent and per-component circuit breakers reject requests projected to
+    exceed a memory bound — typically a very large aggregation or a fielddata
+    load rather than a high request rate.
+  agent_guidance: >-
+    Retrying a circuit-broken request unchanged will fail identically. Reduce
+    the query's scope (narrower time range, smaller aggregation cardinality,
+    fewer buckets) rather than backing off.
+- surface: Elastic Cloud
+  mechanism: Control-plane rate limiting
+  status: 429
+  error_code: billing_service.rate_limited
+  detail: >-
+    The only place Elastic names a rate limit in a published contract. Declared
+    on the billing costs operations. A second documented 429 covers
+    organization-invitation creation ("Request exceeds organization invitation
+    creation rate limits"). Neither states the numeric limit or the window.
+  source: openapi/elk-stack-elastic-cloud-swagger.json
+- surface: Elastic Cloud
+  mechanism: Plan concurrency
+  status: 429
+  detail: >-
+    "Already in progress" — a deployment accepts one pending plan at a time.
+    Not a rate limit so much as a concurrency lock, but it surfaces as 429.
+  agent_guidance: Poll get-deployment until the current plan settles rather than retrying the change.
+limits: []
+limits_note: >-
+  Deliberately empty. limit_count is 0 because Elastic publishes no numeric
+  limit for any scope on any surface — an honest zero, not an unresearched one.
+  Every constraint above is a capacity signal, not a published quota.
+related:
+  errors: errors/elk-stack-problem-types.yml
+  conventions: conventions/elk-stack-conventions.yml
+  plans: plans/elk-stack-plans-pricing.yml

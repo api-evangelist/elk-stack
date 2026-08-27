@@ -1,0 +1,61 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Elastic Cloud API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  extends: openapi/elk-stack-elastic-cloud-swagger.json
+  source: >-
+    https://api.elastic-cloud.com/api/v1/api-docs/swagger.json harvested
+    verbatim 2026-08-27 (HTTP 200, application/json, 1,191,717 bytes) — served
+    live from the control plane itself.
+  note: >-
+    This is the only one of Elastic's three contracts served from a live API
+    host rather than a source repository, and the only one still on Swagger
+    2.0. Its `host` is the template literal "{{hostname}}", which is a
+    placeholder syntax no OpenAPI tool understands, so the effective base URL
+    has to be reconstructed from the fetch host plus basePath.
+actions:
+- target: $.info
+  description: >-
+    Name the document properly and record the real base. info.title says
+    "Elastic Cloud Enterprise API" even though this copy is served by Elastic
+    Cloud Hosted at api.elastic-cloud.com — the same document backs both
+    products.
+  update:
+    x-effective-base-url: https://api.elastic-cloud.com/api/v1
+    x-title-note: >-
+      info.title reads "Elastic Cloud Enterprise API". The document is shared
+      between Elastic Cloud Hosted (api.elastic-cloud.com, where this copy was
+      fetched) and Elastic Cloud Enterprise (customer-hosted). Some operations
+      — allocators, constructors, runners, proxies — apply only to ECE.
+    termsOfService: https://www.elastic.co/legal/terms-of-use
+    contact:
+      name: Elastic
+      url: https://www.elastic.co/docs/api/doc/cloud/
+- target: $
+  description: >-
+    Replace the unusable "{{hostname}}" host placeholder with a real host for
+    the hosted product, keeping the published basePath.
+  update:
+    x-servers:
+    - url: https://api.elastic-cloud.com/api/v1
+      description: Elastic Cloud Hosted control plane — the host this document is served from.
+    - url: https://{ece_coordinator_host}/api/v1
+      description: Elastic Cloud Enterprise, installed on customer infrastructure.
+  x-note: >-
+    Emitted as x-servers rather than servers because the document is Swagger
+    2.0, where `servers` is not a valid root key. Applying this overlay to a
+    3.x conversion should promote it.
+- target: $.info
+  description: Link the cross-cutting artifacts, especially the structured error codes.
+  update:
+    x-error-catalog: errors/elk-stack-problem-types.yml
+    x-error-codes-note: >-
+      186 distinct structured error codes are documented inline in this
+      document's response descriptions as "(code: `domain.condition`)". They
+      are the most machine-actionable error surface Elastic publishes and are
+      catalogued in errors/elk-stack-problem-types.yml.
+    x-conventions: conventions/elk-stack-conventions.yml
+    x-cli: cli/elk-stack-cli.yml

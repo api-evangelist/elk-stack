@@ -1,0 +1,245 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived from the path parameters, $ref graph and schema/definition names in
+  openapi/elk-stack-elasticsearch-openapi.json (2,683 schemas),
+  openapi/elk-stack-kibana-openapi.yaml and
+  openapi/elk-stack-elastic-cloud-swagger.json (516 definitions). Entity
+  identifiers were taken from the path parameters Elastic actually uses; the
+  counts below are occurrence counts of those parameters across the contract.
+note: >-
+  The Elastic Stack has three separate object graphs that meet at exactly one
+  point. Elasticsearch's graph is data (index → document → field mapping);
+  Kibana's graph is application state persisted as saved objects inside a
+  space; Elastic Cloud's graph is infrastructure (organization → deployment →
+  resource). They join where an Elastic Cloud deployment PROVISIONS an
+  Elasticsearch cluster and a Kibana instance — which is why an agent holding
+  Cloud credentials still cannot read a document, and one holding cluster
+  credentials cannot resize a deployment.
+domains:
+- domain: Elasticsearch (data plane)
+  root: index
+  identifier_style: >-
+    Caller-chosen strings, not opaque server-generated ids. Index names,
+    document _id, job_id, model_id, transform_id and connector_id are all
+    supplied or chosen by the client. There are NO type-prefixed identifiers
+    anywhere in the Elasticsearch surface — nothing like Stripe's cus_/ch_ —
+    so an id carries no clue about what it identifies. An agent must track the
+    entity type alongside every id it holds.
+  entities:
+  - name: index
+    id_param: index
+    occurrences: 86
+    detail: The primary container. Every document, mapping and search is scoped to one or more indices (or an alias/data stream that resolves to them).
+  - name: document
+    id_param: id
+    occurrences: 41
+    detail: Addressed as /{index}/_doc/{id}. Carries system fields _index, _id, _seq_no, _primary_term, _version.
+  - name: alias
+    id_param: name
+    detail: A named pointer to one or more indices; the indirection layer that makes reindexing non-disruptive.
+  - name: data_stream
+    id_param: name
+    detail: An append-only abstraction over a series of backing indices, managed by a lifecycle policy.
+  - name: index_template / component_template
+    id_param: name
+    occurrences: 43
+    detail: Composable templates that supply settings and mappings to newly created indices.
+  - name: ml_job (anomaly detection)
+    id_param: job_id
+    occurrences: 26
+  - name: datafeed
+    id_param: datafeed_id
+    occurrences: 7
+  - name: trained_model
+    id_param: model_id
+    occurrences: 11
+  - name: inference_endpoint
+    id_param: inference_id
+    occurrences: 11
+    detail: Scoped by task_type (29 occurrences) — sparse_embedding, text_embedding, rerank, completion.
+  - name: transform
+    id_param: transform_id
+    occurrences: 9
+  - name: connector
+    id_param: connector_id
+    occurrences: 16
+  - name: connector_sync_job
+    id_param: connector_sync_job_id
+    occurrences: 6
+  - name: snapshot_repository
+    id_param: repository
+    occurrences: 12
+  - name: snapshot
+    id_param: snapshot
+    occurrences: 5
+  - name: ilm_policy / slm_policy
+    id_param: name
+  - name: ingest_pipeline
+    id_param: id
+  - name: api_key / role / role_mapping / user
+    id_param: id / name / username
+    occurrences: 4
+  - name: watch
+    id_param: watch_id
+    occurrences: 4
+  - name: task
+    id_param: task_id
+    occurrences: 7
+    detail: Long-running operations (reindex, delete_by_query, update_by_query, forcemerge) return a task id rather than blocking.
+- domain: Kibana (application plane)
+  root: space
+  identifier_style: UUID or caller-supplied slug, scoped by space.
+  entities:
+  - name: space
+    id_param: space_id
+    detail: >-
+      The outermost tenancy boundary. Almost every Kibana route has a
+      space-scoped twin at /s/{space_id}/... — including the MCP endpoint.
+      Ignoring it is the most common cause of an agent reading the wrong
+      tenant's objects.
+  - name: saved_object
+    detail: The generic persistence primitive behind dashboards, visualizations, data views, index patterns, tags and more.
+  - name: data_view
+    detail: Binds a Kibana object graph to an Elasticsearch index pattern — the join point between the two domains.
+  - name: dashboard
+  - name: rule (alerting) / connector (action) / maintenance-window
+  - name: case
+  - name: detection_rule
+    detail: Carries the MITRE ATT&CK threat mapping described in conformance/elk-stack-conformance.yml.
+  - name: fleet_agent / agent_policy / package_policy / enrollment_api_key
+  - name: agent_builder_agent / tool / skill / conversation / attachment
+    detail: Experimental as of 9.2.0; the surface behind the MCP and A2A endpoints.
+- domain: Elastic Cloud (control plane)
+  root: organization
+  identifier_style: >-
+    Server-generated hex identifiers for deployments, plus a caller-chosen
+    `ref_id` naming each resource inside a deployment. The (deployment_id,
+    resource_kind, ref_id) triple is the addressing scheme for the whole
+    control plane.
+  entities:
+  - name: organization
+    id_param: organization_id
+    occurrences: 19
+  - name: deployment
+    id_param: deployment_id
+    occurrences: 56
+  - name: deployment_resource
+    id_param: ref_id
+    occurrences: 44
+    detail: Scoped by resource_kind (21 occurrences) — elasticsearch, kibana, apm, integrations_server, enterprise_search.
+  - name: deployment_template
+  - name: traffic_filter_ruleset
+    id_param: ruleset_id
+  - name: extension
+  - name: allocator / constructor / runner / proxy
+    id_param: allocator_id / constructor_id / runner_id
+    detail: Elastic Cloud Enterprise platform primitives; not present on Elastic Cloud Hosted.
+  - name: user / role / api_key / security_realm
+    id_param: user_id / realm_id
+relationships:
+- from: index
+  to: document
+  type: has_many
+  via: path scoping /{index}/_doc/{id}
+- from: index
+  to: mapping
+  type: has_one
+  via: /{index}/_mapping
+- from: alias
+  to: index
+  type: has_many
+  via: alias definition
+- from: data_stream
+  to: index
+  type: has_many
+  via: backing indices
+- from: index_template
+  to: index
+  type: has_many
+  via: index_patterns match at creation time
+- from: ml_job
+  to: datafeed
+  type: has_one
+  via: datafeed.job_id
+- from: inference_endpoint
+  to: trained_model
+  type: belongs_to
+  via: service_settings.model_id
+- from: connector
+  to: connector_sync_job
+  type: has_many
+  via: connector_sync_job.connector_id
+- from: connector
+  to: index
+  type: belongs_to
+  via: connector.index_name
+- from: snapshot_repository
+  to: snapshot
+  type: has_many
+  via: /_snapshot/{repository}/{snapshot}
+- from: slm_policy
+  to: snapshot
+  type: has_many
+  via: policy-driven snapshot creation
+- from: space
+  to: saved_object
+  type: has_many
+  via: /s/{space_id}/ route scoping
+- from: data_view
+  to: index
+  type: belongs_to
+  via: title (an Elasticsearch index pattern)
+  note: The single structural join between the Kibana and Elasticsearch object graphs.
+- from: dashboard
+  to: data_view
+  type: has_many
+  via: saved-object references
+- from: rule
+  to: connector
+  type: has_many
+  via: rule.actions[].connector_id
+- from: detection_rule
+  to: exception_list
+  type: has_many
+  via: rule.exceptions_list[].id
+- from: agent_policy
+  to: package_policy
+  type: has_many
+  via: package_policy.policy_id
+- from: fleet_agent
+  to: agent_policy
+  type: belongs_to
+  via: agent.policy_id
+- from: agent_builder_agent
+  to: tool
+  type: has_many
+  via: agent.configuration.tools[]
+- from: conversation
+  to: attachment
+  type: has_many
+  via: /conversations/{conversation_id}/attachments/{attachment_id}
+- from: organization
+  to: deployment
+  type: has_many
+  via: organization_id
+- from: deployment
+  to: deployment_resource
+  type: has_many
+  via: (deployment_id, resource_kind, ref_id)
+- from: deployment
+  to: deployment_template
+  type: belongs_to
+  via: deployment.resources[].plan.deployment_template.id
+- from: deployment
+  to: traffic_filter_ruleset
+  type: has_many
+  via: ruleset association
+- from: deployment_resource
+  to: index
+  type: provisions
+  via: an elasticsearch resource IS the cluster the index lives in
+  note: >-
+    The only edge that crosses from the control plane into the data plane, and
+    it is a provisioning edge rather than a queryable reference — there is no
+    Cloud API operation that reads an index.

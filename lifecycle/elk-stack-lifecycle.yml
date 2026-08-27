@@ -1,0 +1,121 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.elastic.co/support/eol (policy),
+  https://www.elastic.co/support/eol.json (machine-readable feed, saved
+  verbatim as lifecycle/elk-stack-eol.json),
+  https://www.elastic.co/docs/get-started/versioning-availability,
+  https://www.elastic.co/docs/release-notes,
+  https://status.elastic.co/, plus the `deprecated` and `x-state` annotations
+  carried in the published OpenAPI files themselves.
+versioning:
+  scheme: semver-product
+  description: >-
+    Elastic versions the STACK, not the API: Elasticsearch, Kibana, Logstash,
+    Beats and Elastic Agent all ship on the same MAJOR.MINOR.PATCH line and the
+    API surface moves with it. There is no /v1/ path segment and no API-version
+    request header on the Elasticsearch REST API — the base path is the
+    resource itself (/_search, /_cluster/health). Kibana carries an
+    `elastic-api-version` header on a small number of versioned routes.
+  current_major: '9'
+  current_minor_seen_in_contract: '9.6'
+  version_in_path: false
+  version_header: elastic-api-version
+  version_header_scope: A small number of Kibana routes only; not stack-wide.
+  docs: https://www.elastic.co/docs/get-started/versioning-availability
+maturity_labels:
+  description: >-
+    Elastic annotates operations in the published OpenAPI with an `x-state`
+    value, which is the single most useful lifecycle signal in the contract:
+    an agent can tell before it calls whether an operation is GA or a preview
+    that may change under it.
+  observed_in: openapi/elk-stack-kibana-openapi.yaml
+  values:
+  - label: Generally available
+    note: Stable; safe to build on.
+  - label: Technical Preview / Technical preview
+    note: May change or be removed without following the deprecation policy.
+  - label: Experimental
+    note: >-
+      The largest single group in the Kibana contract — 69 operations are
+      "Experimental; added in 9.5.0" alone. The entire Agent Builder surface,
+      including the MCP endpoint, is Experimental as of 9.2.0.
+deprecation:
+  policy_published: true
+  policy_url: https://www.elastic.co/support/eol
+  deprecation_notes_url: https://www.elastic.co/docs/release-notes/elasticsearch/deprecations
+  headers:
+    deprecation: null
+    sunset: null
+    note: >-
+      Neither RFC 8594 `Sunset` nor the `Deprecation` header appears anywhere in
+      the three published contracts — zero occurrences. Deprecation is
+      communicated at build time (the `deprecated: true` flag in the OpenAPI and
+      the release-notes deprecation pages), not at runtime in the response. An
+      agent calling a deprecated Elasticsearch operation gets no header telling
+      it so; Elasticsearch does log a deprecation warning to its own
+      deprecation log and returns a `Warning` header on some deprecated
+      parameters, but that is not declared in the contract.
+  deprecated_operations:
+    elasticsearch: 24
+    kibana: 72
+    elastic_cloud: 0
+    total: 96
+    examples:
+    - operationId: indices-put-template
+      path: PUT /_template/{name}
+      surface: Elasticsearch
+      note: Legacy index templates, superseded by composable index templates.
+    - operationId: indices-get-template
+      path: GET /_template
+      surface: Elasticsearch
+    - operationId: indices-delete-template
+      path: DELETE /_template/{name}
+      surface: Elasticsearch
+    - operationId: inference-put-elser
+      path: PUT /_inference/{task_type}/{elser_inference_id}
+      surface: Elasticsearch
+    - operationId: ml-flush-job
+      path: POST /_ml/anomaly_detectors/{job_id}/_flush
+      surface: Elasticsearch
+    - operationId: ml-post-data
+      path: POST /_ml/anomaly_detectors/{job_id}/_data
+      surface: Elasticsearch
+end_of_life:
+  policy_url: https://www.elastic.co/support/eol
+  machine_readable_feed: https://www.elastic.co/support/eol.json
+  machine_readable_feed_local: lifecycle/elk-stack-eol.json
+  rss_feed: https://www.elastic.co/support/eol/feed
+  note: >-
+    Elastic publishes end-of-life dates as JSON, covering 14 products
+    (elasticsearch, kibana, logstash, beats, apm_server, elastic_cloud_enterprise,
+    elastic_cloud_on_kubernetes and others) with a per-minor-version
+    {version, eol_date, maintained_until} record — 67 records for Elasticsearch
+    alone. This is a genuinely machine-readable lifecycle surface and is rare in
+    this catalog; most providers publish a prose EOL table at best.
+  maintenance_term: >-
+    The longer of 30 months from a major release's GA, or 18 months after the
+    next major release launches. The two most recent minors of the current major
+    plus the final minor of the previous major are maintained.
+  support_term: Maintenance term plus a further six months.
+  current_stack_eom: '2027-10-15'
+sla:
+  published: true
+  note: >-
+    Elastic publishes support response-time targets by subscription tier on
+    https://www.elastic.co/support/welcome and Elastic Cloud availability
+    commitments in its cloud service agreement. No single numeric uptime SLA
+    document was located at https://www.elastic.co/legal/service-level-agreement
+    (404 on 2026-08-27), so no percentage is recorded here rather than one being
+    inferred.
+  probe:
+  - url: https://www.elastic.co/legal/service-level-agreement
+    status: 404
+status_page:
+  url: https://status.elastic.co/
+  status: 200
+  note: Per-region and per-service status for Elastic Cloud, with incident history and subscribable updates.
+release_notes:
+  url: https://www.elastic.co/docs/release-notes
+  elasticsearch: https://www.elastic.co/docs/release-notes/elasticsearch
+  note: See changelog/elk-stack-changelog.yml.

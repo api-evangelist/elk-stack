@@ -1,162 +1,171 @@
 specification: API Commons Plans
 specificationVersion: '0.1'
-schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
 provider: Elastic Stack (ELK Stack)
 providerId: elk-stack
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.elastic.co/pricing/ (index, HTTP 200),
+  https://www.elastic.co/pricing/cloud-hosted (subscription tiers),
+  https://www.elastic.co/pricing/serverless-search (usage rates),
+  https://www.elastic.co/cloud/cloud-trial-overview (trial). All read
+  2026-08-27.
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-tags:
-  - Analytics
-  - Logging
-  - Monitoring
-  - Observability
-  - Search
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+modified: '2026-08-27'
+supersedes: >-
+  A generated scaffold dated 2026-05-04 that invented a "Free / 1,000 requests
+  per month" tier against https://localhost:9200. Elastic sells nothing of the
+  kind. Replaced entirely with the provider's published pricing.
+description: >-
+  Elastic does not price per API call. There is no request quota, no per-call
+  overage and no API-request line item anywhere in its pricing — a fact worth
+  stating plainly, because it is the assumption most API catalogs make. Elastic
+  charges for the INFRASTRUCTURE the API runs on: a monthly subscription tier
+  on Cloud Hosted, metered VCU-hours and GB on Serverless, and node/RAM
+  licensing self-managed. The API surface itself is unmetered and identical
+  across every tier — what a tier buys is features, support and SLA.
+plan_count: 4
+pricing_models:
+- model: subscription
+  product: Elastic Cloud Hosted
+  currency: USD
+  period: month
+  note: >-
+    The prices below are the entry monthly figures Elastic advertises for each
+    tier. Actual cost scales with the deployment's provisioned resources —
+    these are a floor, not the bill.
+- model: usage-metered
+  product: Elastic Cloud Serverless
+  currency: USD
+  note: Metered by VCU-hour, GB retained per month and GB egress, plus per-token and per-execution AI rates.
+- model: license
+  product: Self-managed
+  note: Node- and RAM-based licensing. Basic tier is free; Gold/Platinum/Enterprise are commercial.
 plans:
-  - id: elk-stack-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the Elastic Stack (ELK Stack) API surface. Intended for evaluation,
-      prototyping, and low-volume integrations. Real limits and pricing must be reconciled with the provider's
-      published plan documentation.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Elasticsearch API
-      - name: Kibana API
-  - id: elk-stack-pro
-    name: Professional
-    type: paid
-    description: Production tier for Elastic Stack (ELK Stack). Provides higher quotas, priority support,
-      and access to the broader API portfolio. Pricing placeholder; align with the provider's pricing
-      page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1000
-        price: TBD
-        userMultiplied: false
-    elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Elasticsearch API
-      - name: Kibana API
-  - id: elk-stack-enterprise
-    name: Enterprise
-    type: enterprise
-    description: Custom-negotiated tier for Elastic Stack (ELK Stack). Includes dedicated capacity, contractual
-      SLAs, security review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains:
-          - https://localhost:9200
-          - https://localhost:5601
-        unit: 1
-        price: custom
-        userMultiplied: false
-    elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Elasticsearch API
-      - name: Kibana API
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- id: elk-stack-standard
+  name: Standard
+  product: Elastic Cloud Hosted
+  type: paid
+  price: '99.00'
+  currency: USD
+  period: month
+  price_note: Entry monthly price; scales with provisioned resources.
+  includes:
+  - Distributed Elasticsearch platform on AWS, Azure and GCP
+  - Monitoring and integrations
+  - Basic security features
+  api_access: full
+  support: Web-based, 2 contacts, 3-business-day response target
+  sla: null
+- id: elk-stack-gold
+  name: Gold
+  product: Elastic Cloud Hosted
+  type: paid
+  price: '114.00'
+  currency: USD
+  period: month
+  includes:
+  - Everything in Standard
+  - Reporting
+  - Third-party alerting and Watcher
+  - Enterprise Search capabilities
+  api_access: full
+  support: Phone and web, 6 contacts, 4-hour urgent response
+  sla: null
+- id: elk-stack-platinum
+  name: Platinum
+  product: Elastic Cloud Hosted
+  type: paid
+  price: '131.00'
+  currency: USD
+  period: month
+  includes:
+  - Everything in Gold
+  - Advanced Elastic Stack security features
+  - Machine learning anomaly detection
+  api_access: full
+  support: 24/7, 1-hour urgent response
+  sla: 99.95% uptime
+- id: elk-stack-enterprise
+  name: Enterprise
+  product: Elastic Cloud Hosted
+  type: paid
+  price: '184.00'
+  currency: USD
+  period: month
+  includes:
+  - Everything in Platinum
+  - GPU inference with Elastic Inference Service (EIS)
+  - AI-powered workflows
+  api_access: full
+  support: 24/7, 30-minute urgent response
+  sla: 99.95% uptime
+  contact_sales_only: false
+serverless_rates:
+  effective: '2024-12-01'
+  note: Prices are stated by Elastic as "as low as", i.e. the floor of a range that varies by region and provider.
+  compute:
+  - metric: ingest VCU-hour
+    price: '0.14'
+    currency: USD
+  - metric: search VCU-hour
+    price: '0.09'
+    currency: USD
+  - metric: machine learning VCU-hour
+    price: '0.07'
+    currency: USD
+  storage:
+  - metric: GB retained per month
+    price: '0.047'
+    currency: USD
+  - metric: GB egress per month
+    price: '0.05'
+    currency: USD
+  ai:
+  - metric: Elastic Managed LLM, per million input tokens
+    price: '4.50'
+    currency: USD
+  - metric: Elastic Managed LLM, per million output tokens
+    price: '21.00'
+    currency: USD
+  - metric: Elastic Inference Service, per million tokens
+    price: '0.08'
+    currency: USD
+  - metric: Workflows, per execution
+    price: '0.0108'
+    currency: USD
+    free_allowance: 10000 executions
+  - metric: Agent Builder, per execution
+    price: '0.025'
+    currency: USD
+    free_allowance: 1000 executions
+    note: >-
+      This is the meter behind the MCP endpoint. An agent calling Elastic's MCP
+      server on Serverless is billed per execution after the first 1,000 — the
+      one place in Elastic's pricing where agent traffic has its own line item.
+  support_uplift:
+    standard: included
+    gold: 5% of consumption
+    platinum: 10% of consumption
+    enterprise: 15% of consumption
+free_tier:
+  exists: false
+  trial:
+    days: 14
+    credit_card_required: false
+    url: https://www.elastic.co/cloud/cloud-trial-overview
+    caveat: Not available when signing up through the Microsoft Azure or Google Cloud marketplaces.
+  self_managed_free:
+    exists: true
+    name: Basic
+    note: >-
+      The self-managed Basic tier is free forever and includes the full REST API
+      surface. The genuinely free way to use this API is to run it yourself —
+      see sandbox/elk-stack-sandbox.yml for the one-command local stack.
+api_request_quota:
+  exists: false
+  note: >-
+    No plan on any product meters API requests. There is no per-call price, no
+    monthly request allowance and no request overage. Constraints on API usage
+    are resource constraints (cluster size, thread pools, VCUs), not
+    contractual quotas. See rate-limits/elk-stack-rate-limits.yml.

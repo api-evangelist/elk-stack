@@ -1,0 +1,89 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://github.com/elastic/ecctl (README fetched 2026-08-27),
+  https://www.elastic.co/docs/reference/ecctl (HTTP 200),
+  https://www.elastic.co/docs/reference/elasticsearch/command-line-tools (HTTP 200),
+  and the Go module proxy for the ecctl release version.
+note: >-
+  Elastic ships no single "elastic" CLI. There is one CLI that genuinely wraps
+  an Elastic REST API — ecctl, over the Elastic Cloud API — and a large family
+  of node-local operational binaries that ship inside the Elasticsearch and
+  Kibana distributions and do NOT talk to the REST API at all. Keeping those
+  apart matters: an agent looking for a scriptable way to drive Elastic through
+  its API wants ecctl or the Terraform provider, not elasticsearch-keystore.
+clis:
+- name: ecctl
+  full_name: Elastic Cloud Control
+  official: true
+  wraps_api: elk-stack:elastic-cloud-api
+  repository: https://github.com/elastic/ecctl
+  docs: https://www.elastic.co/docs/reference/ecctl
+  language: Go
+  version: v1.15.0
+  published: '2025-06-13'
+  version_source: https://proxy.golang.org/github.com/elastic/ecctl/@latest
+  currency_note: >-
+    Over a year without a release (v1.15.0, 2025-06-13) while the Elastic Cloud
+    API it wraps kept shipping. Elastic's own README now steers users elsewhere:
+    "While it's possible to create and manage deployments through ecctl, the
+    Elastic Cloud Terraform provider provides a better interface." Read this as
+    a soft deprecation rather than an actively developed CLI.
+  install:
+  - method: homebrew
+    command: brew install ecctl
+  - method: binary
+    command: Download the release archive for your platform from https://github.com/elastic/ecctl/releases
+  - method: go
+    command: go install github.com/elastic/ecctl@latest
+  install_note: >-
+    Install methods are the standard Go/Homebrew/binary set named on the
+    project's install page; each was read from Elastic's documentation rather
+    than assumed, but no install command was executed to verify it.
+  command_groups:
+  - group: deployment
+    detail: create, list, show, update, shutdown, restore, resync, search deployments and their Elasticsearch/Kibana/APM/Enterprise Search resources
+  - group: platform
+    detail: allocator, constructor, proxy, runner, repository, instance-configuration, enrollment-token — Elastic Cloud Enterprise platform administration
+  - group: user
+    detail: create, list, show, update, delete platform users
+  - group: auth
+    detail: key management and login for the Cloud API
+  - group: comment
+    detail: attach operator comments to platform resources
+  - group: stack
+    detail: list and manage available Elastic Stack versions
+  key_flows:
+  - Provision a deployment from a deployment template and read back its endpoints and credentials
+  - Scale or upgrade an existing deployment by submitting a plan and following it to completion
+  - Shut down and later restore a deployment (see the reversibility block in conventions/elk-stack-conventions.yml)
+- name: elasticsearch command-line tools
+  official: true
+  wraps_api: null
+  docs: https://www.elastic.co/docs/reference/elasticsearch/command-line-tools
+  language: Java/shell
+  version: null
+  published: null
+  version_note: >-
+    Versioned with the Elasticsearch distribution rather than published to any
+    package registry, so there is no metadata endpoint to read a version from.
+  detail: >-
+    Node-local operational binaries bundled in the Elasticsearch distribution —
+    elasticsearch-keystore, elasticsearch-certutil, elasticsearch-users,
+    elasticsearch-reconfigure-node, elasticsearch-create-enrollment-token,
+    elasticsearch-node, elasticsearch-shard, elasticsearch-syskeygen.
+  api_relevance: >-
+    None. These run ON a node and read/write its local files; they are not a
+    client for the REST API and cannot be used remotely.
+related_tooling:
+- name: Elastic Cloud Terraform provider
+  repository: https://github.com/elastic/terraform-provider-ec
+  official: true
+  note: >-
+    Elastic's own recommended interface for managing Elastic Cloud
+    programmatically, in preference to ecctl. Not a CLI, so recorded here
+    rather than above.
+- name: elastic-package
+  repository: https://github.com/elastic/elastic-package
+  official: true
+  note: Developer CLI for building and testing Elastic integration packages; targets the package registry, not the stack REST API.

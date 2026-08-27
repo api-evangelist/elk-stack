@@ -64,9 +64,9 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The Elastic Stack (formerly known as the ELK Stack) is a collection of open-source products from Elastic - Elasticsearch, Logstash, Kibana, and Beats - designed for taking data from any source, in any format, and searching, analyzing, and visualizing it in real time. Widely used for log management, observability, and security analytics.
+The Elastic Stack (formerly known as the ELK Stack) is the collection of open-source products from Elastic — Elasticsearch, Logstash, Kibana, and Beats/Elastic Agent — designed for taking data from any source, in any format, and searching, analyzing, and visualizing it in real time. It is widely used for log management, observability, security analytics (SIEM), and increasingly as a vector database and retrieval layer for RAG and agentic AI applications. Elastic publishes machine-readable OpenAPI descriptions for all three of its programmable surfaces: the Elasticsearch REST API, the Kibana APIs, and the Elastic Cloud control-plane API. The stack is deployment-hosted — self-managed, Elastic Cloud Hosted, or Elastic Cloud Serverless — so the Elasticsearch and Kibana base URLs are always specific to the customer's own cluster or project.
 
-**APIs.json:** [https://www.elastic.co/elastic-stack/](https://www.elastic.co/elastic-stack/)
+**Website:** [https://www.elastic.co/elastic-stack/](https://www.elastic.co/elastic-stack/)
 
 ## Scope
 
@@ -81,64 +81,137 @@ The Elastic Stack (formerly known as the ELK Stack) is a collection of open-sour
 - Monitoring
 - Observability
 - Search
+- Security
+- Vector Database
+- SIEM
+- Machine Learning
 
 ## Timestamps
 
 - **Created:** 2024-01-01
-- **Modified:** 2026-03-16
+- **Modified:** 2026-08-27
 
 ## APIs
 
-### Elasticsearch API
+### Elasticsearch REST API
 
-Distributed, RESTful search and analytics engine serving as the heart of the Elastic Stack for centralized storage and search.
+The Elasticsearch REST API is the programmable surface of the distributed search, analytics and vector engine at the heart of the Elastic Stack — 581 paths and 845 operations covering indices, documents, search, ES|QL, inference, machine learning, security, snapshots, ingest pipelines, connectors, transforms, ILM/SLM and cluster administration. Elastic publishes it as OpenAPI 3.0.3 generated from the canonical elasticsearch-specification repository.
 
-- **Human URL:** [https://www.elastic.co/elasticsearch/](https://www.elastic.co/elasticsearch/)
-- **Base URL:** `https://localhost:9200`
+- **Human URL:** [https://www.elastic.co/docs/api/doc/elasticsearch/](https://www.elastic.co/docs/api/doc/elasticsearch/)
+- **Base URL:** `https://{elasticsearch_endpoint}`
 
 #### Tags
 
-- Analytics
-- Database
 - Search
+- Indices
+- Documents
+- Machine Learning
+- Vector Database
 
 #### Properties
 
-- [Documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
-- [OpenAPI](https://raw.githubusercontent.com/elastic/elasticsearch-specification/main/output/openapi/elasticsearch-serverless-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/elk-stack.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/elk-stack.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [OpenAPI](openapi/elk-stack-elasticsearch-openapi.json)
+- [Overlay](overlays/elk-stack-elasticsearch-overlay.yaml)
+- [Documentation](https://www.elastic.co/docs/reference/elasticsearch)
+- [API Reference](https://www.elastic.co/docs/api/doc/elasticsearch/)
+- [Source Code](https://github.com/elastic/elasticsearch-specification)
 
 ### Kibana API
 
-Data visualization and exploration tool for reviewing logs and events, providing real-time dashboards and analytics for Elasticsearch data.
+The Kibana APIs expose the visualization, alerting, cases, Fleet, machine learning, Elastic Security and Elastic Observability surfaces that sit on top of Elasticsearch — 531 paths and 731 operations, including the Agent Builder MCP endpoint that turns a Kibana deployment into an MCP server. Elastic publishes it as OpenAPI 3.0.3 from the kibana repository.
 
-- **Human URL:** [https://www.elastic.co/kibana/](https://www.elastic.co/kibana/)
-- **Base URL:** `https://localhost:5601`
+- **Human URL:** [https://www.elastic.co/docs/api/doc/kibana/](https://www.elastic.co/docs/api/doc/kibana/)
+- **Base URL:** `https://{kibana_url}`
 
 #### Tags
 
 - Analytics
 - Dashboard
 - Visualization
+- Alerting
+- Fleet
+- Security
 
 #### Properties
 
-- [Documentation](https://www.elastic.co/guide/en/kibana/current/index.html)
-- [Postman Collection](collections/elk-stack.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/elk-stack.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [OpenAPI](openapi/elk-stack-kibana-openapi.yaml)
+- [Overlay](overlays/elk-stack-kibana-overlay.yaml)
+- [Documentation](https://www.elastic.co/docs/reference/kibana)
+- [API Reference](https://www.elastic.co/docs/api/doc/kibana/)
+- [Source Code](https://github.com/elastic/kibana)
+- [MCP Server](mcp/elk-stack-mcp.yml)
+- [Tool Crosswalk](mcp/elk-stack-tool-crosswalk.yml)
+
+### Elastic Cloud API
+
+The Elastic Cloud control-plane API creates, scales, upgrades and deletes Elasticsearch and Kibana deployments, and manages accounts, organizations, IAM, traffic filters, extensions, deployment templates and billing costs — 190 paths and 297 operations, published as Swagger 2.0 straight from the live control plane at api.elastic-cloud.com.
+
+- **Human URL:** [https://www.elastic.co/docs/api/doc/cloud/](https://www.elastic.co/docs/api/doc/cloud/)
+- **Base URL:** `https://api.elastic-cloud.com/api/v1`
+
+#### Tags
+
+- Cloud
+- Deployments
+- Provisioning
+- Billing
+- IAM
+
+#### Properties
+
+- [Swagger](openapi/elk-stack-elastic-cloud-swagger.json)
+- [Overlay](overlays/elk-stack-elastic-cloud-overlay.yaml)
+- [Documentation](https://www.elastic.co/docs/deploy-manage/deploy/elastic-cloud)
+- [API Reference](https://www.elastic.co/docs/api/doc/cloud/)
 
 ## Common Properties
 
-- [LinkedIn](https://www.linkedin.com/company/elastic-co)
 - [Website](https://www.elastic.co/elastic-stack/)
-- [Documentation](https://www.elastic.co/guide/index.html)
-- [Getting Started](https://www.elastic.co/guide/index.html)
-- [Blog](https://www.elastic.co/blog/)
+- [Developer Portal](https://www.elastic.co/docs)
+- [Documentation](https://www.elastic.co/docs)
+- [API Reference](https://www.elastic.co/docs/api)
+- [Getting Started](https://www.elastic.co/docs/get-started)
 - [Support](https://www.elastic.co/support)
-- [Pricing](https://www.elastic.co/pricing/)
+- [Help Center](https://discuss.elastic.co/)
+- [Blog](https://www.elastic.co/blog/)
 - [GitHub Organization](https://github.com/elastic)
+- [Pricing](https://www.elastic.co/pricing/)
+- [Sign Up](https://www.elastic.co/cloud/elasticsearch-service/signup)
+- [Terms of Service](https://www.elastic.co/legal/terms-of-use)
+- [Privacy Policy](https://www.elastic.co/legal/privacy-statement)
+- [LinkedIn](https://www.linkedin.com/company/elastic-co)
 - [Integrations](https://www.elastic.co/integrations)
+- [Status Page](https://status.elastic.co/)
+- [llms.txt](llms/elk-stack-llms.txt)
+- [Packages](packages/elk-stack-packages.yml)
+- [SDKs](packages/elk-stack-packages.yml)
+- [CLI](cli/elk-stack-cli.yml)
+- [Components](components/elk-stack-components.yml)
+- [Well-Known](well-known/elk-stack-well-known.yml)
+- [security.txt](well-known/elk-stack-security.txt)
+- [MCP Server](mcp/elk-stack-mcp.yml)
+- [Tool Crosswalk](mcp/elk-stack-tool-crosswalk.yml)
+- [Agent Skills](skills/_index.yml)
+- [Webhooks](asyncapi/elk-stack-webhooks.yml)
+- [Conformance](conformance/elk-stack-conformance.yml)
+- [Compliance](security/elk-stack-trust-center.yml)
+- [Error Catalog](errors/elk-stack-problem-types.yml)
+- [Lifecycle](lifecycle/elk-stack-lifecycle.yml)
+- [Deprecation](lifecycle/elk-stack-lifecycle.yml)
+- [Change Log](changelog/elk-stack-changelog.yml)
+- [Conventions](conventions/elk-stack-conventions.yml)
+- [Idempotency](conventions/elk-stack-conventions.yml)
+- [Data Model](data-model/elk-stack-data-model.yml)
+- [Sandbox](sandbox/elk-stack-sandbox.yml)
+- [Plans](plans/elk-stack-plans-pricing.yml)
+- [Rate Limits](rate-limits/elk-stack-rate-limits.yml)
+- [Authentication](authentication/elk-stack-authentication.yml)
+- [Domain Security](security/elk-stack-domain-security.yml)
+- [Trust Center](security/elk-stack-trust-center.yml)
+- [Vulnerability Disclosure](security/elk-stack-vulnerability-disclosure.yml)
+- [Security](security/elk-stack-vulnerability-disclosure.yml)
+- [Agentic Access](agentic-access/elk-stack-agentic-access.yml)
+- [FinOps](finops/elk-stack-finops.yml)
 
 ## Maintainers
 

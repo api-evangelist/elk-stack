@@ -1,0 +1,61 @@
+generated: '2026-08-27'
+method: probed
+source: >-
+  Direct unauthenticated GET of each /.well-known/ path on every host named in
+  apis.yml — the marketing/docs host www.elastic.co and the Elastic Cloud
+  control-plane host api.elastic-cloud.com (the baseURL of the Elastic Cloud
+  API). The Elasticsearch and Kibana base URLs are customer-deployment
+  specific, so they have no shared host to probe.
+note: >-
+  One real document was served: api.elastic-cloud.com/.well-known/security.txt
+  returns text/plain RFC 9116 content naming security@elastic.co, an OpenPGP
+  fingerprint and a disclosure policy URL. Saved verbatim as
+  elk-stack-security.txt. Every other path either 404s or returns the Elastic
+  Cloud single-page-app shell — api-catalog and oauth-authorization-server both
+  answer HTTP 200 with an identical 9,582-byte text/html document, which is an
+  SPA catch-all and NOT a served document; both are recorded as misses.
+hosts:
+- host: api.elastic-cloud.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=UTF-8
+    file: elk-stack-security.txt
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell (9,582 bytes of HTML), not an OpenID discovery document — treated as a miss
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell (9,582 bytes of HTML), identical body to /.well-known/api-catalog — treated as a miss
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell (9,582 bytes of HTML), not an RFC 9727 catalog — treated as a miss
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: www.elastic.co
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: elastic.co
+  documents:
+  - path: /.well-known/security.txt
+    status: 404

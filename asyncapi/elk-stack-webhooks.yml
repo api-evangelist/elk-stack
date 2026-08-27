@@ -1,0 +1,76 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  Probed for an AsyncAPI document at https://www.elastic.co/asyncapi.yaml (404),
+  https://www.elastic.co/docs/asyncapi.yaml (404) and
+  https://raw.githubusercontent.com/elastic/elasticsearch/main/asyncapi.yaml
+  (404). The webhook surface below was read out of
+  openapi/elk-stack-kibana-openapi.yaml (connector type `.webhook`, 81
+  occurrences) and
+  https://www.elastic.co/docs/reference/kibana/connectors-kibana/webhook-action-type.
+asyncapi:
+  published: false
+  note: >-
+    Elastic publishes no AsyncAPI document. This is a correct absence rather
+    than a gap: the Elastic Stack is not an event-driven SaaS that emits a
+    catalog of subscribable events. Nothing was fabricated to fill the slot.
+webhooks:
+  published: true
+  direction: outbound-from-deployment
+  model: configurable connector, not a subscribable event catalog
+  detail: >-
+    Elastic's webhook surface is inverted compared with a typical SaaS. There
+    is no "subscribe to elastic.deployment.updated" endpoint. Instead, Kibana
+    alerting rules take ACTIONS, and one action type is `.webhook`, which POSTs
+    a body you template to a URL you own when the rule fires. The subscription
+    is therefore expressed as a rule + connector pair created through the
+    Kibana API, and the event schema is whatever the rule author templates —
+    Elastic defines the transport, the customer defines the payload.
+  configured_via:
+  - api: elk-stack:kibana-api
+    operations:
+    - post-actions-connector-id
+    - post-actions-connector
+    - get-actions-connectors
+    - post-actions-connector-id-execute
+    detail: >-
+      Create, list and test-fire a connector. connector_type_id `.webhook` is the
+      generic HTTP one.
+  connector_types_observed:
+  - id: .webhook
+    name: Webhook
+    auth:
+    - none
+    - webhook-authentication-basic
+    - webhook-authentication-ssl
+    detail: >-
+      Generic HTTP POST/PUT with a templated body. Supports SSL client
+      certificate authentication as well as basic auth, which is unusual for a
+      webhook sender and useful for an agent receiving them.
+  - id: .cases-webhook
+    name: Webhook - Case Management
+    detail: Maps Elastic case lifecycle onto an external ticketing system's HTTP API.
+  signature_verification:
+    supported: false
+    detail: >-
+      No HMAC signature header is documented. A receiver authenticates the
+      SENDER by requiring basic auth or mutual TLS on its own endpoint rather
+      than by verifying a signature on the payload. An agent consuming these
+      must not assume a signature header exists.
+  retry_semantics:
+    detail: >-
+      Delivery is retried by the Kibana task manager on failure, but no
+      published retry schedule, maximum attempt count or dead-letter behaviour
+      was located, so none is stated here.
+  docs: https://www.elastic.co/docs/reference/kibana/connectors-kibana/webhook-action-type
+event_sources_that_are_not_webhooks:
+- name: Watcher
+  detail: >-
+    Elasticsearch's own alerting engine (24 operations, `watcher` tag) with
+    webhook, email, Slack, PagerDuty and index actions. Predates and parallels
+    Kibana alerting.
+- name: Data streams and _search
+  detail: >-
+    The pull model most integrators actually use — poll a data stream or run a
+    scheduled ES|QL query — rather than a push subscription. Worth naming
+    because it is the reason Elastic has never needed an AsyncAPI.

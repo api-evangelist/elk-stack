@@ -1,0 +1,101 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Elasticsearch REST API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  extends: openapi/elk-stack-elasticsearch-openapi.json
+  source: >-
+    https://raw.githubusercontent.com/elastic/elasticsearch-specification/main/output/openapi/elasticsearch-openapi.json
+    harvested verbatim 2026-08-27 (HTTP 200, 6,457,335 bytes). This overlay
+    records our additions WITHOUT mutating Elastic's published document.
+  note: >-
+    Three gaps in the published contract are worth an overlay. (1) info.version
+    is an EMPTY STRING, so no consumer can tell which Elasticsearch line the
+    document describes. (2) There is NO servers block at all — the document
+    describes 845 operations without saying where to send them, which is
+    defensible for deployment-hosted software but leaves a client generator
+    with nothing to target. (3) There are no root-level tag declarations even
+    though every operation is tagged, so tooling has 44 undeclared tags.
+actions:
+- target: $.info
+  description: >-
+    Record the stack line this snapshot describes and point at the terms and
+    license. Version is stated as a range because Elastic generates the
+    document from main without stamping a version into it.
+  update:
+    version: 9.x
+    x-version-note: >-
+      Elastic publishes this file with info.version set to "". Harvested from
+      the main branch of elastic/elasticsearch-specification on 2026-08-27,
+      when the current released line was 9.5.2 and 9.6.0 operations were
+      already appearing in the sibling Kibana contract.
+    termsOfService: https://www.elastic.co/legal/terms-of-use
+    contact:
+      name: Elastic
+      url: https://www.elastic.co/docs/api/doc/elasticsearch/
+- target: $
+  description: >-
+    Add the missing servers block. Templated, because Elasticsearch is
+    deployment-hosted: there is no Elastic-operated URL for this API and
+    inventing one would be worse than leaving it absent.
+  update:
+    servers:
+    - url: https://{elasticsearch_endpoint}
+      description: >-
+        The customer's own Elasticsearch endpoint — an Elastic Cloud Hosted
+        deployment endpoint, an Elastic Cloud Serverless project endpoint, or a
+        self-managed cluster. Elastic publishes no default host for this API.
+      variables:
+        elasticsearch_endpoint:
+          default: localhost:9200
+          description: Host and port of the target cluster, without a scheme.
+- target: $
+  description: Declare the 44 tags the operations already use, so tooling can group them.
+  update:
+    tags:
+    - name: search
+      description: Query execution — _search, _msearch, ES|QL, EQL, SQL, async search, point-in-time.
+    - name: indices
+      description: Index lifecycle and configuration — the largest family at 104 operations.
+    - name: document
+      description: CRUD on individual documents, bulk indexing, update/delete by query.
+    - name: security
+      description: API keys, roles, role mappings, users, SAML, OIDC, service accounts — 99 operations.
+    - name: cluster
+      description: Cluster health, state, settings, reroute, nodes.
+    - name: cat
+      description: Compact human- and agent-readable status tables.
+    - name: inference
+      description: Inference endpoints for embeddings, reranking and completion.
+    - name: ml anomaly
+      description: Anomaly detection jobs, datafeeds and calendars.
+    - name: ml trained model
+      description: Trained model management and deployment.
+    - name: snapshot
+      description: Snapshot repositories, snapshots and restore.
+    - name: ingest
+      description: Ingest pipelines and processors.
+    - name: transform
+      description: Continuous and batch transforms.
+    - name: connector
+      description: Elastic connectors and their sync jobs.
+    - name: ilm
+      description: Index lifecycle management policies.
+    - name: slm
+      description: Snapshot lifecycle management policies.
+    - name: watcher
+      description: Alerting watches.
+    - name: esql
+      description: ES|QL query and async query operations.
+    - name: data stream
+      description: Data streams and their backing indices.
+- target: $.info
+  description: Record the cross-cutting semantics that are documented outside this file.
+  update:
+    x-conventions: conventions/elk-stack-conventions.yml
+    x-error-catalog: errors/elk-stack-problem-types.yml
+    x-lifecycle: lifecycle/elk-stack-lifecycle.yml
+    x-authentication: authentication/elk-stack-authentication.yml
+    x-rate-limits: rate-limits/elk-stack-rate-limits.yml

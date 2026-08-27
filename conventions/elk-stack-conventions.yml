@@ -1,0 +1,251 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  Derived from the three published contracts in openapi/ and from
+  https://www.elastic.co/docs/reference/elasticsearch/rest-apis/common-options.
+  Every header, parameter and count below was read out of the contracts on
+  2026-08-27; nothing is asserted that could not be located in them.
+note: >-
+  The Elastic Stack is three APIs with three different conventions, and an
+  agent that assumes they behave alike will be wrong. Elasticsearch is a
+  query engine with rich common options and optimistic concurrency; Kibana is
+  an application API with CSRF protection and per-route privileges; Elastic
+  Cloud is a control plane with structured error codes and long-running plans.
+authentication:
+  styles:
+  - API key — Authorization: ApiKey <base64(id:api_key)>
+  - HTTP Basic — Authorization: Basic <base64(user:pass)>
+  preferred: API key
+  oauth: >-
+    Not used for REST. OAuth 2.1 applies only to interactive MCP clients on
+    Serverless. Details in authentication/elk-stack-authentication.yml.
+  csrf:
+    header: kbn-xsrf
+    scope: Kibana only
+    note: >-
+      356 Kibana operations require the `kbn-xsrf` header on state-changing
+      requests. It is the single most common reason a first Kibana API call
+      fails with a 400 after the credentials are already correct. Elasticsearch
+      and Elastic Cloud do not use it.
+idempotency:
+  mode: semantic
+  header: null
+  header_note: >-
+    There is NO Idempotency-Key header on any Elastic surface — zero
+    occurrences across all three contracts. An agent cannot make an arbitrary
+    Elastic write safely retryable by attaching a key.
+  mechanisms:
+  - name: Natural idempotence via explicit document id
+    surface: Elasticsearch
+    detail: >-
+      PUT /{index}/_doc/{id} with a caller-chosen id is idempotent by
+      construction — replaying it converges on the same document. POST
+      /{index}/_doc without an id is NOT, because Elasticsearch generates a new
+      id per call and a retry creates a duplicate.
+    parameter: op_type (index | create)
+  - name: Optimistic concurrency control
+    surface: Elasticsearch
+    detail: >-
+      if_seq_no and if_primary_term (28 occurrences each) make a write
+      conditional on the version the caller last read. A concurrent
+      modification returns 409 version_conflict_engine_exception rather than
+      silently overwriting — the safe-retry primitive Elastic offers in place
+      of idempotency keys.
+    parameters:
+    - if_seq_no
+    - if_primary_term
+  - name: Documented per-action idempotency
+    surface: Kibana (Security Detections bulk edit)
+    detail: >-
+      Elastic states which bulk edit actions are idempotent and which are not,
+      verbatim in the contract: "The edit action is idempotent, meaning that if
+      you add a tag to a rule that already has that tag, no changes are made...
+      The only exception is the `add_rule_actions` and `set_rule_actions`
+      action, which is non-idempotent."
+    source: openapi/elk-stack-kibana-openapi.yaml
+  retention: null
+  retention_note: No idempotency-key retention window applies, because there are no idempotency keys.
+pagination:
+  styles:
+  - style: offset
+    params:
+    - from
+    - size
+    limit: >-
+      Bounded by index.max_result_window (default 10,000). Requesting beyond it
+      returns an error rather than truncating.
+    surface: Elasticsearch
+  - style: cursor
+    params:
+    - search_after
+    detail: Stateless deep pagination keyed on the previous page's sort values. The recommended path past 10,000 hits.
+    surface: Elasticsearch
+  - style: point-in-time
+    operations:
+    - open-point-in-time
+    - close-point-in-time
+    detail: >-
+      Pins a consistent view of the index so search_after paging cannot skip or
+      duplicate documents while data changes underneath it. The correct
+      pairing for any agent walking a large result set.
+    surface: Elasticsearch
+  - style: scroll
+    params:
+    - scroll
+    - scroll_id
+    detail: Legacy cursor iteration; Elastic recommends search_after + PIT instead.
+    surface: Elasticsearch
+  - style: offset
+    params:
+    - page
+    - per_page
+    - from
+    - size
+    surface: Kibana
+    detail: Varies per route; Kibana has no single pagination contract.
+  response_fields:
+  - hits.total.value
+  - hits.total.relation
+  - hits.hits[]._id
+  - hits.hits[].sort
+field_selection:
+  sparse_fields:
+    param: filter_path
+    detail: >-
+      Comma-separated dotted paths that prune the response body to only the
+      fields named — the closest thing Elasticsearch has to sparse fieldsets,
+      and the cheapest available lever on response size for an agent working
+      against a token budget. Wildcards and `**` are supported.
+    surface: Elasticsearch
+  source_filtering:
+    params:
+    - _source
+    - _source_includes
+    - _source_excludes
+    surface: Elasticsearch
+  expansion: null
+  expansion_note: No $expand/include-style relation expansion; relations are resolved by follow-up query, not by expansion parameters.
+tracing:
+  request_id:
+    header: X-Opaque-Id
+    direction: request
+    detail: >-
+      A caller-supplied opaque identifier that Elasticsearch echoes into its
+      slow logs, deprecation logs, and the tasks API, so a specific agent call
+      can be traced through the cluster afterwards. It is a request header the
+      CALLER sets, not a response header the server returns — an agent that
+      wants its Elastic activity attributable must set it itself.
+    surface: Elasticsearch
+  response_request_id: null
+  distributed_tracing: >-
+    No traceparent/W3C Trace Context handling is declared in any of the three
+    contracts.
+diagnostics:
+  params:
+  - name: error_trace
+    detail: Include the server stack trace in the error response.
+  - name: pretty
+    detail: Pretty-print the JSON response.
+  - name: human
+    detail: Return human-readable durations and byte sizes alongside raw values.
+  surface: Elasticsearch
+dry_run:
+  supported: partial
+  detail: >-
+    A `dry_run` parameter appears on 21 Elasticsearch operations and 37 Kibana
+    operations — notably cluster reroute, ILM/migration operations, and Kibana
+    Fleet and Security rule bulk actions — letting an agent rehearse the change
+    and read back what WOULD happen. It is not a stack-wide capability: the
+    great majority of write operations, including document indexing, deletion
+    and every Elastic Cloud plan change, have no dry-run mode.
+versioning:
+  detail: See lifecycle/elk-stack-lifecycle.yml. No version in path; stack version governs the API surface.
+error_envelope:
+  detail: Three different envelopes across the three surfaces. See errors/elk-stack-problem-types.yml.
+  rfc9457: false
+rate_limit_signaling:
+  headers: []
+  detail: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is declared in any of
+    the three contracts. 429 is returned (billing_service.rate_limited on
+    Elastic Cloud; es_rejected_execution_exception on Elasticsearch write
+    rejection) with no machine-readable budget or reset hint. See
+    rate-limits/elk-stack-rate-limits.yml.
+reversibility:
+  grade: documented
+  grade_rationale: >-
+    Reversal operations exist and are named in the published contracts, but
+    Elastic states NO window for any of them — and in the one place a window
+    would matter most it explicitly declines to promise one. Under the 0.12.0
+    rule that is `documented` (0.4), not `verified` (1.0). No window is
+    recorded here that Elastic does not itself state.
+  surfaces:
+  - action: Delete an index
+    operation: indices-delete (DELETE /{index})
+    surface: Elasticsearch
+    reversal: snapshot-restore (POST /_snapshot/{repository}/{snapshot}/_restore)
+    window: null
+    window_note: >-
+      Recovery depends entirely on a snapshot existing BEFORE the delete, and
+      snapshot retention is set by the customer's own SLM policy — Elastic
+      states no window because it does not control one. With no prior snapshot,
+      an index delete is unrecoverable and immediate.
+    docs: https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore
+  - action: Close an index (take it offline)
+    operation: indices-close (POST /{index}/_close)
+    surface: Elasticsearch
+    reversal: indices-open (POST /{index}/_open)
+    window: none-required
+    window_note: Fully and symmetrically reversible at any time; closing does not destroy data.
+  - action: Run a reindex
+    operation: reindex (POST /_reindex)
+    surface: Elasticsearch
+    reversal: cancel-reindex (POST /_reindex/{task_id}/_cancel)
+    window: while-running
+    window_note: >-
+      Cancels an IN-FLIGHT task only. Documents already written to the
+      destination index are not rolled back — the cancel stops further work, it
+      does not undo completed work.
+  - action: Delete by query
+    operation: delete-by-query (POST /{index}/_delete_by_query)
+    surface: Elasticsearch
+    reversal: null
+    window: null
+    window_note: >-
+      No reversal. This is the highest-consequence write an agent can issue
+      against Elasticsearch and it has no undo short of a snapshot restore.
+  - action: Shut down an Elastic Cloud deployment
+    operation: shutdown-deployment (POST /deployments/{deployment_id}/_shutdown)
+    surface: Elastic Cloud
+    reversal: restore-deployment (POST /deployments/{deployment_id}/_restore)
+    window: null
+    window_note: >-
+      Elastic restores the deployment's CONFIGURATION but not its data:
+      "the data that was in the deployment is not restored, since it is deleted
+      as part of the termination process". On snapshots it states "Snapshots are
+      retained for very a limited amount of time post deletion and we cannot
+      guarantee that deleted deployments can be restored from snapshots for this
+      reason" — an explicit refusal to state a window, recorded verbatim rather
+      than converted into a number.
+    docs: https://www.elastic.co/docs/deploy-manage/uninstall/delete-a-cloud-deployment
+  - action: Cancel a pending Elastic Cloud plan
+    operation: cancel-deployment-resource-pending-plan (DELETE /deployments/{deployment_id}/{resource_kind}/{ref_id}/plan/pending)
+    surface: Elastic Cloud
+    reversal: self
+    window: while-pending
+    window_note: Only while the plan is still pending; once applied it must be reversed by submitting a new plan.
+  - action: Delete an Agent Builder conversation attachment
+    operation: delete-agent-builder-conversations-conversation-id-attachments-attachment-id
+    surface: Kibana
+    reversal: post-agent-builder-conversations-conversation-id-attachments-attachment-id-restore (POST .../_restore)
+    window: null
+    window_note: >-
+      A genuine soft-delete with an explicit restore route, but the contract
+      states no retention period and marks the whole surface
+      "Experimental; added in 9.2.0".
+cross_links:
+  errors: errors/elk-stack-problem-types.yml
+  lifecycle: lifecycle/elk-stack-lifecycle.yml
+  authentication: authentication/elk-stack-authentication.yml
+  rate_limits: rate-limits/elk-stack-rate-limits.yml
+  conformance: conformance/elk-stack-conformance.yml

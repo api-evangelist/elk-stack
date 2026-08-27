@@ -1,26 +1,33 @@
 aid: elk-stack
 name: Elastic Stack (ELK Stack)
 description: >-
-  The Elastic Stack (formerly known as the ELK Stack) is a collection of
-  open-source products from Elastic - Elasticsearch, Logstash, Kibana, and
-  Beats - designed for taking data from any source, in any format, and
-  searching, analyzing, and visualizing it in real time. Widely used for log
-  management, observability, and security analytics.
+  The Elastic Stack (formerly known as the ELK Stack) is the collection of
+  open-source products from Elastic — Elasticsearch, Logstash, Kibana, and
+  Beats/Elastic Agent — designed for taking data from any source, in any
+  format, and searching, analyzing, and visualizing it in real time. It is
+  widely used for log management, observability, security analytics (SIEM),
+  and increasingly as a vector database and retrieval layer for RAG and
+  agentic AI applications. Elastic publishes machine-readable OpenAPI
+  descriptions for all three of its programmable surfaces: the Elasticsearch
+  REST API, the Kibana APIs, and the Elastic Cloud control-plane API. The
+  stack is deployment-hosted — self-managed, Elastic Cloud Hosted, or Elastic
+  Cloud Serverless — so the Elasticsearch and Kibana base URLs are always
+  specific to the customer's own cluster or project.
 type: Index
 accessModel:
   pricing: freemium
   onboarding: self-serve
-  trial: false
+  trial: true
   try_now: false
-  public: false
-  label: Freemium · Self-serve signup
-  confidence: medium
-  try_now_blocked_by: loopback
+  public: true
+  label: Freemium · Self-serve signup · Free trial
+  confidence: high
   source:
   - plans
   - authentication
   - security
-  generated: '2026-08-26'
+  - sandbox
+  generated: '2026-08-27'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/elk-stack.png
 tags:
@@ -29,140 +36,206 @@ tags:
   - Monitoring
   - Observability
   - Search
-url: https://www.elastic.co/elastic-stack/
+  - Security
+  - Vector Database
+  - SIEM
+  - Machine Learning
 created: '2024-01-01'
-modified: '2026-03-16'
+modified: '2026-08-27'
+url: https://www.elastic.co/elastic-stack/
 position: Consumer
 access: 3rd-Party
 specificationVersion: '0.23'
 apis:
+- aid: elk-stack:elasticsearch-api
+  name: Elasticsearch REST API
+  description: >-
+    The Elasticsearch REST API is the programmable surface of the distributed
+    search, analytics and vector engine at the heart of the Elastic Stack —
+    581 paths and 845 operations covering indices, documents, search, ES|QL,
+    inference, machine learning, security, snapshots, ingest pipelines,
+    connectors, transforms, ILM/SLM and cluster administration. Elastic
+    publishes it as OpenAPI 3.0.3 generated from the canonical
+    elasticsearch-specification repository.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Search
+  - Indices
+  - Documents
+  - Machine Learning
+  - Vector Database
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elasticsearch-openapi.json
+  - type: Overlay
+    url: overlays/elk-stack-elasticsearch-overlay.yaml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
 - aid: elk-stack:kibana-api
   name: Kibana API
   description: >-
-    Data visualization and exploration tool for reviewing logs and events, providing real-time dashboards
-    and analytics for Elasticsearch data.
-  humanURL: https://www.elastic.co/kibana/
-  baseURL: https://localhost:5601
+    The Kibana APIs expose the visualization, alerting, cases, Fleet,
+    machine learning, Elastic Security and Elastic Observability surfaces
+    that sit on top of Elasticsearch — 531 paths and 731 operations,
+    including the Agent Builder MCP endpoint that turns a Kibana deployment
+    into an MCP server. Elastic publishes it as OpenAPI 3.0.3 from the
+    kibana repository.
+  humanURL: https://www.elastic.co/docs/api/doc/kibana/
+  baseURL: https://{kibana_url}
   tags:
   - Analytics
   - Dashboard
   - Visualization
-  properties:
-  - type: Documentation
-    url: https://www.elastic.co/guide/en/kibana/current/index.html
-- aid: elk-stack:elk-stack-cat-api
-  name: Elastic Stack (ELK Stack) Cat API
-  description: The Cat API from Elastic Stack (ELK Stack) — 2 operation(s) for cat.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
-  tags:
-  - Cat
+  - Alerting
+  - Fleet
+  - Security
   properties:
   - type: OpenAPI
-    url: openapi/elk-stack-cat-api-openapi.yml
+    url: openapi/elk-stack-kibana-openapi.yaml
+  - type: Overlay
+    url: overlays/elk-stack-kibana-overlay.yaml
   - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- aid: elk-stack:elk-stack-cluster-api
-  name: Elastic Stack (ELK Stack) Cluster API
-  description: The Cluster API from Elastic Stack (ELK Stack) — 4 operation(s) for cluster.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: MCPServer
+    url: mcp/elk-stack-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elastic-cloud-api
+  name: Elastic Cloud API
+  description: >-
+    The Elastic Cloud control-plane API creates, scales, upgrades and deletes
+    Elasticsearch and Kibana deployments, and manages accounts, organizations,
+    IAM, traffic filters, extensions, deployment templates and billing costs —
+    190 paths and 297 operations, published as Swagger 2.0 straight from the
+    live control plane at api.elastic-cloud.com.
+  humanURL: https://www.elastic.co/docs/api/doc/cloud/
+  baseURL: https://api.elastic-cloud.com/api/v1
   tags:
-  - Cluster
+  - Cloud
+  - Deployments
+  - Provisioning
+  - Billing
+  - IAM
   properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-cluster-api-openapi.yml
+  - type: Swagger
+    url: openapi/elk-stack-elastic-cloud-swagger.json
+  - type: Overlay
+    url: overlays/elk-stack-elastic-cloud-overlay.yaml
   - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- aid: elk-stack:elk-stack-document-api
-  name: Elastic Stack (ELK Stack) Document API
-  description: The Document API from Elastic Stack (ELK Stack) — 4 operation(s) for document.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
-  tags:
-  - Document
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-document-api-openapi.yml
-  - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- aid: elk-stack:elk-stack-index-api
-  name: Elastic Stack (ELK Stack) Index API
-  description: The Index API from Elastic Stack (ELK Stack) — 3 operation(s) for index.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
-  tags:
-  - Index
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-index-api-openapi.yml
-  - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- aid: elk-stack:elk-stack-ingest-api
-  name: Elastic Stack (ELK Stack) Ingest API
-  description: The Ingest API from Elastic Stack (ELK Stack) — 1 operation(s) for ingest.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
-  tags:
-  - Ingest
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-ingest-api-openapi.yml
-  - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- aid: elk-stack:elk-stack-search-api
-  name: Elastic Stack (ELK Stack) Search API
-  description: The Search API from Elastic Stack (ELK Stack) — 2 operation(s) for search.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
-  tags:
-  - Search
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-search-api-openapi.yml
-  - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- aid: elk-stack:elk-stack-snapshot-api
-  name: Elastic Stack (ELK Stack) Snapshot API
-  description: The Snapshot API from Elastic Stack (ELK Stack) — 1 operation(s) for snapshot.
-  humanURL: https://www.elastic.co/elasticsearch/
-  baseURL: https://localhost:9200
-  tags:
-  - Snapshot
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-snapshot-api-openapi.yml
-  - type: Documentation
-    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+    url: https://www.elastic.co/docs/deploy-manage/deploy/elastic-cloud
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/cloud/
 common:
-  - type: AgenticAccess
-    url: agentic-access/elk-stack-agentic-access.yml
-  - type: TrustCenter
-    url: security/elk-stack-trust-center.yml
-  - type: DomainSecurity
-    url: security/elk-stack-domain-security.yml
-  - type: Authentication
-    url: authentication/elk-stack-authentication.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/elastic-co
   - type: Website
     url: https://www.elastic.co/elastic-stack/
+  - type: DeveloperPortal
+    url: https://www.elastic.co/docs
   - type: Documentation
-    url: https://www.elastic.co/guide/index.html
+    url: https://www.elastic.co/docs
+  - type: APIReference
+    url: https://www.elastic.co/docs/api
   - type: GettingStarted
-    url: https://www.elastic.co/guide/index.html
-  - type: Blog
-    url: https://www.elastic.co/blog/
+    url: https://www.elastic.co/docs/get-started
   - type: Support
     url: https://www.elastic.co/support
-  - type: Pricing
-    url: https://www.elastic.co/pricing/
+  - type: HelpCenter
+    url: https://discuss.elastic.co/
+  - type: Blog
+    url: https://www.elastic.co/blog/
   - type: GitHubOrganization
     url: https://github.com/elastic
+  - type: Pricing
+    url: https://www.elastic.co/pricing/
+  - type: SignUp
+    url: https://www.elastic.co/cloud/elasticsearch-service/signup
+  - type: TermsOfService
+    url: https://www.elastic.co/legal/terms-of-use
+  - type: PrivacyPolicy
+    url: https://www.elastic.co/legal/privacy-statement
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/elastic-co
   - type: Integrations
     url: https://www.elastic.co/integrations
+  - type: StatusPage
+    url: https://status.elastic.co/
+  - type: LLMsTxt
+    url: llms/elk-stack-llms.txt
+  - type: Packages
+    url: packages/elk-stack-packages.yml
+  - type: SDKs
+    url: packages/elk-stack-packages.yml
+  - type: CLI
+    url: cli/elk-stack-cli.yml
+  - type: Components
+    url: components/elk-stack-components.yml
+  - type: WellKnown
+    url: well-known/elk-stack-well-known.yml
+  - type: SecurityTxt
+    url: well-known/elk-stack-security.txt
+  - type: MCPServer
+    url: mcp/elk-stack-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Webhooks
+    url: asyncapi/elk-stack-webhooks.yml
+  - type: Conformance
+    url: conformance/elk-stack-conformance.yml
+  - type: Compliance
+    url: security/elk-stack-trust-center.yml
+  - type: ErrorCatalog
+    url: errors/elk-stack-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/elk-stack-lifecycle.yml
+  - type: Deprecation
+    url: lifecycle/elk-stack-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/elk-stack-changelog.yml
+  - type: Conventions
+    url: conventions/elk-stack-conventions.yml
+  - type: Idempotency
+    url: conventions/elk-stack-conventions.yml
+  - type: DataModel
+    url: data-model/elk-stack-data-model.yml
+  - type: Sandbox
+    url: sandbox/elk-stack-sandbox.yml
+  - type: Plans
+    url: plans/elk-stack-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/elk-stack-rate-limits.yml
+  - type: Authentication
+    url: authentication/elk-stack-authentication.yml
+  - type: DomainSecurity
+    url: security/elk-stack-domain-security.yml
+  - type: TrustCenter
+    url: security/elk-stack-trust-center.yml
+  - type: VulnerabilityDisclosure
+    url: security/elk-stack-vulnerability-disclosure.yml
+  - type: Security
+    url: security/elk-stack-vulnerability-disclosure.yml
+  - type: AgenticAccess
+    url: agentic-access/elk-stack-agentic-access.yml
+  - type: FinOps
+    url: finops/elk-stack-finops.yml
 integrations:
   - name: Become a partner
+    url: https://www.elastic.co/partners
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+
+x-enrichment:
+  date: '2026-08-27'
+  status: enriched
+  artifacts_added: 29
+  pass: local-v1
