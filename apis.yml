@@ -47,76 +47,13 @@ position: Consumer
 access: 3rd-Party
 specificationVersion: '0.23'
 apis:
-- aid: elk-stack:elasticsearch-api
-  name: Elasticsearch REST API
-  description: >-
-    The Elasticsearch REST API is the programmable surface of the distributed
-    search, analytics and vector engine at the heart of the Elastic Stack —
-    581 paths and 845 operations covering indices, documents, search, ES|QL,
-    inference, machine learning, security, snapshots, ingest pipelines,
-    connectors, transforms, ILM/SLM and cluster administration. Elastic
-    publishes it as OpenAPI 3.0.3 generated from the canonical
-    elasticsearch-specification repository.
-  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
-  baseURL: https://{elasticsearch_endpoint}
-  tags:
-  - Search
-  - Indices
-  - Documents
-  - Machine Learning
-  - Vector Database
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-elasticsearch-openapi.json
-  - type: Overlay
-    url: overlays/elk-stack-elasticsearch-overlay.yaml
-  - type: Documentation
-    url: https://www.elastic.co/docs/reference/elasticsearch
-  - type: APIReference
-    url: https://www.elastic.co/docs/api/doc/elasticsearch/
-  - type: SourceCode
-    url: https://github.com/elastic/elasticsearch-specification
-- aid: elk-stack:kibana-api
-  name: Kibana API
-  description: >-
-    The Kibana APIs expose the visualization, alerting, cases, Fleet,
-    machine learning, Elastic Security and Elastic Observability surfaces
-    that sit on top of Elasticsearch — 531 paths and 731 operations,
-    including the Agent Builder MCP endpoint that turns a Kibana deployment
-    into an MCP server. Elastic publishes it as OpenAPI 3.0.3 from the
-    kibana repository.
-  humanURL: https://www.elastic.co/docs/api/doc/kibana/
-  baseURL: https://{kibana_url}
-  tags:
-  - Analytics
-  - Dashboard
-  - Visualization
-  - Alerting
-  - Fleet
-  - Security
-  properties:
-  - type: OpenAPI
-    url: openapi/elk-stack-kibana-openapi.yaml
-  - type: Overlay
-    url: overlays/elk-stack-kibana-overlay.yaml
-  - type: Documentation
-    url: https://www.elastic.co/docs/reference/kibana
-  - type: APIReference
-    url: https://www.elastic.co/docs/api/doc/kibana/
-  - type: SourceCode
-    url: https://github.com/elastic/kibana
-  - type: MCPServer
-    url: mcp/elk-stack-mcp.yml
-  - type: ToolCrosswalk
-    url: mcp/elk-stack-tool-crosswalk.yml
 - aid: elk-stack:elastic-cloud-api
   name: Elastic Cloud API
   description: >-
-    The Elastic Cloud control-plane API creates, scales, upgrades and deletes
-    Elasticsearch and Kibana deployments, and manages accounts, organizations,
-    IAM, traffic filters, extensions, deployment templates and billing costs —
-    190 paths and 297 operations, published as Swagger 2.0 straight from the
-    live control plane at api.elastic-cloud.com.
+    The Elastic Cloud control-plane API creates, scales, upgrades and deletes Elasticsearch and Kibana
+    deployments, and manages accounts, organizations, IAM, traffic filters, extensions, deployment templates
+    and billing costs — 190 paths and 297 operations, published as Swagger 2.0 straight from the live
+    control plane at api.elastic-cloud.com.
   humanURL: https://www.elastic.co/docs/api/doc/cloud/
   baseURL: https://api.elastic-cloud.com/api/v1
   tags:
@@ -134,7 +71,3462 @@ apis:
     url: https://www.elastic.co/docs/deploy-manage/deploy/elastic-cloud
   - type: APIReference
     url: https://www.elastic.co/docs/api/doc/cloud/
+- aid: elk-stack:elk-stack-accounts-api
+  name: Elastic Stack (ELK Stack) Accounts API
+  description: The Accounts API from Elastic Stack (ELK Stack) — 1 operation(s) for accounts.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-actions-api
+  name: Elastic Stack (ELK Stack) Actions API
+  description: The Actions API from Elastic Stack (ELK Stack) — 1 operation(s) for actions.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Actions
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-actions-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-agent-builder-api
+  name: Elastic Stack (ELK Stack) agent builder API
+  description: >-
+    Agent Builder is a set of AI-powered capabilities for developing and interacting with agents that
+    work with your Elasticsearch data.
+
+
+    Most users will probably want to integrate with Agent Builder using MCP or A2A, but you can also work
+    programmatically with tools, agents, and conversations using these Kibana APIs. Follow the [Agent
+    Builder API tutorial](https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/agent-builder-api-tutorial)
+    for a guided example.
+
+
+    **Elastic Agent Builder requires an Enterprise subscription.**
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - agent builder
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-agent-builder-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-alerting-api
+  name: Elastic Stack (ELK Stack) Alerting API
+  description: >-
+    Alerting enables you to define rules, which detect complex conditions within your data. When a condition
+    is met, the rule tracks it as an alert and runs the actions that are defined in the rule. Actions
+    typically involve the use of connectors to interact with Kibana services or third party integrations.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - alerting
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-alerting-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-alerting-v2-api
+  name: Elastic Stack (ELK Stack) Alerting V2 API
+  description: >-
+    Alerting V2 is an ES|QL-first alerting API for managing rules, alert actions, and action policies.
+    Use these endpoints to create and manage detection rules, act on alerts, and control when and how
+    notifications are delivered. These APIs are experimental.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - alerting-v2
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-alerting-v2-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-analytics-api
+  name: Elastic Stack (ELK Stack) Analytics API
+  description: The analytics API from Elastic Stack (ELK Stack) — 3 operation(s) for analytics.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-apm-agent-configuration-api
+  name: Elastic Stack (ELK Stack) APM agent configuration API
+  description: Adjust APM agent configuration without need to redeploy your application.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - APM agent configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-apm-agent-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-apm-agent-keys-api
+  name: Elastic Stack (ELK Stack) APM agent keys API
+  description: Configure APM agent keys to authorize requests from APM agents to the APM Server.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - APM agent keys
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-apm-agent-keys-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-apm-annotations-api
+  name: Elastic Stack (ELK Stack) APM annotations API
+  description: >-
+    Annotate visualizations in the APM app with significant events. Annotations enable you to easily see
+    how events are impacting the performance of your applications.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - APM annotations
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-apm-annotations-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-apm-server-schema-api
+  name: Elastic Stack (ELK Stack) APM server schema API
+  description: Create APM fleet server schema.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - APM server schema
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-apm-server-schema-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-apm-sourcemaps-api
+  name: Elastic Stack (ELK Stack) APM sourcemaps API
+  description: >-
+    Configure APM source maps. A source map allows minified files to be mapped back to original source
+    code--allowing you to maintain the speed advantage of minified code, without losing the ability to
+    quickly and easily debug your application.
+
+    For best results, uploading source maps should become a part of your deployment procedure, and not
+    something you only do when you see unhelpful errors. That's because uploading source maps after errors
+    happen won't make old errors magically readable--errors must occur again for source mapping to occur.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - APM sourcemaps
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-apm-sourcemaps-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-authentication-api
+  name: Elastic Stack (ELK Stack) Authentication API
+  description: >-
+    The Authentication API from Elastic Stack (ELK Stack) — 12 operation(s) for authentication.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-billingcostsanalysis-api
+  name: Elastic Stack (ELK Stack) Billing Costs Analysis API
+  description: >-
+    The BillingCostsAnalysis API from Elastic Stack (ELK Stack) — 6 operation(s) for billingcostsanalysis.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - BillingCostsAnalysis
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-billingcostsanalysis-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-cases-api
+  name: Elastic Stack (ELK Stack) Cases API
+  description: >-
+    Cases are used to open and track issues. You can add assignees and tags to your cases, set their severity
+    and status, and add alerts, comments, and visualizations. You can also send cases to external incident
+    management systems by configuring connectors.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - cases
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-cases-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-cat-api
+  name: Elastic Stack (ELK Stack) Cat API
+  description: The cat API from Elastic Stack (ELK Stack) — 45 operation(s) for cat.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - cat
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-cat-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ccr-api
+  name: Elastic Stack (ELK Stack) Ccr API
+  description: The ccr API from Elastic Stack (ELK Stack) — 12 operation(s) for ccr.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ccr
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ccr-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-cluster-api
+  name: Elastic Stack (ELK Stack) Cluster API
+  description: The cluster API from Elastic Stack (ELK Stack) — 35 operation(s) for cluster.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - cluster
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-cluster-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-comments-api
+  name: Elastic Stack (ELK Stack) Comments API
+  description: The Comments API from Elastic Stack (ELK Stack) — 2 operation(s) for comments.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-comments-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-connector-api
+  name: Elastic Stack (ELK Stack) Connector API
+  description: The connector API from Elastic Stack (ELK Stack) — 24 operation(s) for connector.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - connector
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-connector-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-connectors-api
+  name: Elastic Stack (ELK Stack) Connectors API
+  description: >-
+    Connectors provide a central place to store connection information for services and integrations with
+    Elastic or third party systems. Alerting rules can use connectors to run actions when rule conditions
+    are met.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - connectors
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-connectors-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-dashboards-api
+  name: Elastic Stack (ELK Stack) Dashboards API
+  description: >-
+    > This documentation is temporarily hosted at a separate location.
+
+    >
+
+    > **[View the full Dashboards API reference →](https://elastic.github.io/dashboards-api-spec/dashboards#tag/Dashboards)**
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Dashboards
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-dashboards-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-data-stream-api
+  name: Elastic Stack (ELK Stack) data stream API
+  description: The data stream API from Elastic Stack (ELK Stack) — 14 operation(s) for data stream.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - data stream
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-data-stream-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-data-streams-api
+  name: Elastic Stack (ELK Stack) Data streams API
+  description: >-
+    Data stream APIs enable you to manage data streams, which are collections of indices that share the
+    same index template and are managed as a single unit for time-series data.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Data streams
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-data-streams-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-data-views-api
+  name: Elastic Stack (ELK Stack) data views API
+  description: Data view APIs enable you to manage data views, formerly known as Kibana index patterns.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - data views
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-data-views-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-deployments-api
+  name: Elastic Stack (ELK Stack) Deployments API
+  description: The Deployments API from Elastic Stack (ELK Stack) — 58 operation(s) for deployments.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Deployments
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-deployments-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-deploymentstrafficfilter-api
+  name: Elastic Stack (ELK Stack) Deployments Traffic Filter API
+  description: >-
+    The DeploymentsTrafficFilter API from Elastic Stack (ELK Stack) — 8 operation(s) for deploymentstrafficfilter.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - DeploymentsTrafficFilter
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-deploymentstrafficfilter-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-deploymenttemplates-api
+  name: Elastic Stack (ELK Stack) Deployment Templates API
+  description: >-
+    The DeploymentTemplates API from Elastic Stack (ELK Stack) — 2 operation(s) for deploymenttemplates.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - DeploymentTemplates
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-deploymenttemplates-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-document-api
+  name: Elastic Stack (ELK Stack) Document API
+  description: The document API from Elastic Stack (ELK Stack) — 19 operation(s) for document.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - document
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-document-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-elastic-agent-actions-api
+  name: Elastic Stack (ELK Stack) Elastic Agent actions API
+  description: >-
+    Elastic Agent actions APIs enable you to manage actions performed on Elastic Agents, including agent
+    reassignment, diagnostics collection, enrollment management, upgrades, and bulk operations for agent
+    lifecycle management.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Elastic Agent actions
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elastic-agent-actions-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-elastic-agent-binary-download-sources-api
+  name: Elastic Stack (ELK Stack) Elastic Agent binary download sources API
+  description: >-
+    Elastic Agent binary download sources APIs enable you to manage download sources for Elastic Agent
+    binaries, including creating, updating, and deleting custom download sources for agent binaries.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Elastic Agent binary download sources
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elastic-agent-binary-download-sources-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-elastic-agent-policies-api
+  name: Elastic Stack (ELK Stack) Elastic Agent policies API
+  description: >-
+    Elastic Agent policies APIs enable you to manage agent policies, including creating, updating, and
+    deleting policies, as well as to retrieve agent policy outputs, manifests, and auto-upgrade status
+    information.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Elastic Agent policies
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elastic-agent-policies-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-elastic-agent-status-api
+  name: Elastic Stack (ELK Stack) Elastic Agent status API
+  description: >-
+    Enables you to retrieve status information about Elastic Agents, including health summaries and operational
+    status.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Elastic Agent status
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elastic-agent-status-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-elastic-agents-api
+  name: Elastic Stack (ELK Stack) Elastic Agents API
+  description: >-
+    Elastic Agents APIs enable you to manage Elastic Agents, including retrieving agent information, managing
+    agent lifecycle, handling file uploads, and initiating agent setup.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Elastic Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elastic-agents-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-elastic-package-manager-epm-api
+  name: Elastic Stack (ELK Stack) Elastic Package Manager (EPM) API
+  description: >-
+    Elastic Package Manager (EPM) APIs enable you to manage packages and integrations, including installing,
+    updating, and uninstalling packages, managing custom integrations, and handling package assets.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Elastic Package Manager (EPM)
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-elastic-package-manager-epm-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-enrich-api
+  name: Elastic Stack (ELK Stack) Enrich API
+  description: The enrich API from Elastic Stack (ELK Stack) — 4 operation(s) for enrich.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - enrich
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-enrich-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-eql-api
+  name: Elastic Stack (ELK Stack) Eql API
+  description: The eql API from Elastic Stack (ELK Stack) — 3 operation(s) for eql.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - eql
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-eql-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-esql-api
+  name: Elastic Stack (ELK Stack) Esql API
+  description: The esql API from Elastic Stack (ELK Stack) — 12 operation(s) for esql.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - esql
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-esql-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-extensions-api
+  name: Elastic Stack (ELK Stack) Extensions API
+  description: The Extensions API from Elastic Stack (ELK Stack) — 2 operation(s) for extensions.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Extensions
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-extensions-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-features-api
+  name: Elastic Stack (ELK Stack) Features API
+  description: The features API from Elastic Stack (ELK Stack) — 2 operation(s) for features.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - features
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-features-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-agentless-policies-api
+  name: Elastic Stack (ELK Stack) Fleet agentless policies API
+  description: >-
+    The Fleet agentless policies API from Elastic Stack (ELK Stack) — 4 operation(s) for fleet agentless
+    policies.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet agentless policies
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-agentless-policies-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-api
+  name: Elastic Stack (ELK Stack) Fleet API
+  description: The fleet API from Elastic Stack (ELK Stack) — 4 operation(s) for fleet.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - fleet
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-cloud-connectors-api
+  name: Elastic Stack (ELK Stack) Fleet cloud connectors API
+  description: >-
+    Fleet cloud connectors APIs enable you to manage Fleet cloud connectors, including creating, updating,
+    and deleting cloud connector configurations for Fleet integrations.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet cloud connectors
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-cloud-connectors-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-enrollment-api-keys-api
+  name: Elastic Stack (ELK Stack) Fleet enrollment API keys API
+  description: >-
+    Fleet enrollment API keys APIs enable you to manage enrollment API keys for Fleet, including creating,
+    retrieving, and revoking API keys used for agent enrollment.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet enrollment API keys
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-enrollment-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-internals-api
+  name: Elastic Stack (ELK Stack) Fleet internals API
+  description: >-
+    Fleet internals APIs enable you to manage Fleet internal operations, including checking permissions,
+    monitoring Fleet Server health, managing settings, and initiating Fleet setup.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet internals
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-internals-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-managed-integrations-api
+  name: Elastic Stack (ELK Stack) Fleet managed integrations API
+  description: >-
+    The Fleet managed integrations API from Elastic Stack (ELK Stack) — 4 operation(s) for fleet managed
+    integrations.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet managed integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-managed-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-outputs-api
+  name: Elastic Stack (ELK Stack) Fleet outputs API
+  description: >-
+    Fleet outputs APIs enable you to manage Fleet outputs, including creating, updating, and deleting
+    output configurations, generating Logstash API keys, and monitoring output health.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet outputs
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-outputs-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-package-policies-api
+  name: Elastic Stack (ELK Stack) Fleet package policies API
+  description: >-
+    Fleet package policies APIs enable you to manage Fleet package policies, including creating, updating,
+    and deleting policies, performing bulk operations, and managing policy upgrades.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet package policies
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-package-policies-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-proxies-api
+  name: Elastic Stack (ELK Stack) Fleet proxies API
+  description: >-
+    Fleet proxies APIs enable you to manage Fleet proxies, including creating, updating, and deleting
+    proxy configurations for Fleet agent communication.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet proxies
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-proxies-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-remote-synced-integrations-api
+  name: Elastic Stack (ELK Stack) Fleet remote synced integrations API
+  description: >-
+    Use the Fleet remote synced integrations API to check the status of the automatic integrations synchronization
+    on a remote cluster:
+
+    * Use the `/api/fleet/remote_synced_integrations/{outputId}/remote_status` endpoint on the management
+    cluster to query the synchronization status of the integrations installed on the remote cluster by
+    the ID of the configured remote Elasticsearch output.
+
+    * Use the `/api/fleet/remote_synced_integrations/status` endpoint on the remote cluster to query the
+    synchronization status of the installed integrations.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet remote synced integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-remote-synced-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-server-hosts-api
+  name: Elastic Stack (ELK Stack) Fleet Server hosts API
+  description: >-
+    Fleet Server hosts APIs enable you to manage Fleet Server hosts, including creating, updating, and
+    deleting Fleet Server host configurations.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet Server hosts
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-server-hosts-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-service-tokens-api
+  name: Elastic Stack (ELK Stack) Fleet service tokens API
+  description: Enables you to create tokens for Fleet service authentication and authorization.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet service tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-service-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-fleet-uninstall-tokens-api
+  name: Elastic Stack (ELK Stack) Fleet uninstall tokens API
+  description: >-
+    Fleet uninstall tokens APIs enable you to manage Fleet uninstall tokens, including retrieving metadata
+    and decrypted tokens for agent uninstallation.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Fleet uninstall tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-fleet-uninstall-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-graph-api
+  name: Elastic Stack (ELK Stack) Graph API
+  description: The graph API from Elastic Stack (ELK Stack) — 1 operation(s) for graph.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - graph
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-graph-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-health-report-api
+  name: Elastic Stack (ELK Stack) Health Report API
+  description: The health_report API from Elastic Stack (ELK Stack) — 2 operation(s) for health_report.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - health_report
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-health-report-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-iamservice-api
+  name: Elastic Stack (ELK Stack) Iam Service API
+  description: The IamService API from Elastic Stack (ELK Stack) — 31 operation(s) for iamservice.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - IamService
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-iamservice-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ilm-api
+  name: Elastic Stack (ELK Stack) Ilm API
+  description: The ilm API from Elastic Stack (ELK Stack) — 10 operation(s) for ilm.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ilm
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ilm-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-indices-api
+  name: Elastic Stack (ELK Stack) Indices API
+  description: The indices API from Elastic Stack (ELK Stack) — 63 operation(s) for indices.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - indices
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-indices-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-inference-api
+  name: Elastic Stack (ELK Stack) Inference API
+  description: The inference API from Elastic Stack (ELK Stack) — 40 operation(s) for inference.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - inference
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-inference-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-info-api
+  name: Elastic Stack (ELK Stack) Info API
+  description: The info API from Elastic Stack (ELK Stack) — 1 operation(s) for info.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - info
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-info-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ingest-api
+  name: Elastic Stack (ELK Stack) Ingest API
+  description: The ingest API from Elastic Stack (ELK Stack) — 12 operation(s) for ingest.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ingest
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ingest-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-license-api
+  name: Elastic Stack (ELK Stack) License API
+  description: The license API from Elastic Stack (ELK Stack) — 5 operation(s) for license.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - license
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-license-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-links-api
+  name: Elastic Stack (ELK Stack) Links API
+  description: The Links API from Elastic Stack (ELK Stack) — 2 operation(s) for links.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Links
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-links-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-logstash-api
+  name: Elastic Stack (ELK Stack) Logstash API
+  description: The logstash API from Elastic Stack (ELK Stack) — 4 operation(s) for logstash.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - logstash
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-logstash-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-maintenance-window-api
+  name: Elastic Stack (ELK Stack) Maintenance Window API
+  description: >-
+    You can schedule single or recurring maintenance windows to temporarily reduce rule notifications.
+    For example, a maintenance window prevents false alarms during planned outages.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - maintenance-window
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-maintenance-window-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-markdowns-api
+  name: Elastic Stack (ELK Stack) Markdowns API
+  description: The Markdowns API from Elastic Stack (ELK Stack) — 2 operation(s) for markdowns.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Markdowns
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-markdowns-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-message-signing-service-api
+  name: Elastic Stack (ELK Stack) Message Signing Service API
+  description: Enables you to rotate message signing key pairs for secure Fleet communication.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Message Signing Service
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-message-signing-service-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-migration-api
+  name: Elastic Stack (ELK Stack) Migration API
+  description: The migration API from Elastic Stack (ELK Stack) — 7 operation(s) for migration.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - migration
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-migration-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ml-anomaly-api
+  name: Elastic Stack (ELK Stack) ml anomaly API
+  description: The ml anomaly API from Elastic Stack (ELK Stack) — 45 operation(s) for ml anomaly.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ml anomaly
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ml-anomaly-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ml-api
+  name: Elastic Stack (ELK Stack) Ml API
+  description: The ml API from Elastic Stack (ELK Stack) — 7 operation(s) for ml.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ml
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ml-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ml-data-frame-api
+  name: Elastic Stack (ELK Stack) ml data frame API
+  description: >-
+    The ml data frame API from Elastic Stack (ELK Stack) — 12 operation(s) for ml data frame.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ml data frame
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ml-data-frame-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-ml-trained-model-api
+  name: Elastic Stack (ELK Stack) ml trained model API
+  description: >-
+    The ml trained model API from Elastic Stack (ELK Stack) — 12 operation(s) for ml trained model.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - ml trained model
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-ml-trained-model-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-observability-ai-assistant-api
+  name: Elastic Stack (ELK Stack) Observability AI Assistant API
+  description: Interact with the Observability AI Assistant resources.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - observability_ai_assistant
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-observability-ai-assistant-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-organizations-api
+  name: Elastic Stack (ELK Stack) Organizations API
+  description: >-
+    The Organizations API from Elastic Stack (ELK Stack) — 15 operation(s) for organizations.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platform-api
+  name: Elastic Stack (ELK Stack) Platform API
+  description: The Platform API from Elastic Stack (ELK Stack) — 3 operation(s) for platform.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Platform
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platform-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platformconfigurationinstances-api
+  name: Elastic Stack (ELK Stack) Platform Configuration Instances API
+  description: >-
+    The PlatformConfigurationInstances API from Elastic Stack (ELK Stack) — 2 operation(s) for platformconfigurationinstances.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformConfigurationInstances
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platformconfigurationinstances-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platformconfigurationnetworking-api
+  name: Elastic Stack (ELK Stack) Platform Configuration Networking API
+  description: >-
+    The PlatformConfigurationNetworking API from Elastic Stack (ELK Stack) — 2 operation(s) for platformconfigurationnetworking.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformConfigurationNetworking
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platformconfigurationnetworking-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platformconfigurationsecurity-api
+  name: Elastic Stack (ELK Stack) Platform Configuration Security API
+  description: >-
+    The PlatformConfigurationSecurity API from Elastic Stack (ELK Stack) — 12 operation(s) for platformconfigurationsecurity.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformConfigurationSecurity
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platformconfigurationsecurity-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platformconfigurationsnapshots-api
+  name: Elastic Stack (ELK Stack) Platform Configuration Snapshots API
+  description: >-
+    The PlatformConfigurationSnapshots API from Elastic Stack (ELK Stack) — 2 operation(s) for platformconfigurationsnapshots.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformConfigurationSnapshots
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platformconfigurationsnapshots-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platformconfigurationtemplates-api
+  name: Elastic Stack (ELK Stack) Platform Configuration Templates API
+  description: >-
+    The PlatformConfigurationTemplates API from Elastic Stack (ELK Stack) — 1 operation(s) for platformconfigurationtemplates.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformConfigurationTemplates
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platformconfigurationtemplates-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platformconfigurationtrustrelationships-api
+  name: Elastic Stack (ELK Stack) Platform Configuration Trust Relationships API
+  description: >-
+    The PlatformConfigurationTrustRelationships API from Elastic Stack (ELK Stack) — 2 operation(s) for
+    platformconfigurationtrustrelationships.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformConfigurationTrustRelationships
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platformconfigurationtrustrelationships-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-platforminfrastructure-api
+  name: Elastic Stack (ELK Stack) Platform Infrastructure API
+  description: >-
+    The PlatformInfrastructure API from Elastic Stack (ELK Stack) — 51 operation(s) for platforminfrastructure.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - PlatformInfrastructure
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-platforminfrastructure-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-query-rules-api
+  name: Elastic Stack (ELK Stack) Query Rules API
+  description: The query_rules API from Elastic Stack (ELK Stack) — 4 operation(s) for query_rules.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - query_rules
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-query-rules-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-reindex-api
+  name: Elastic Stack (ELK Stack) Reindex API
+  description: The reindex API from Elastic Stack (ELK Stack) — 3 operation(s) for reindex.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - reindex
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-reindex-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-roles-api
+  name: Elastic Stack (ELK Stack) Roles API
+  description: Manage the roles that grant Elasticsearch and Kibana privileges.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - roles
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-roles-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-rollup-api
+  name: Elastic Stack (ELK Stack) Rollup API
+  description: The rollup API from Elastic Stack (ELK Stack) — 8 operation(s) for rollup.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - rollup
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-rollup-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-saved-objects-api
+  name: Elastic Stack (ELK Stack) saved objects API
+  description: >-
+    Export sets of saved objects that you want to import into Kibana, resolve import errors, and rotate
+    an encryption key for encrypted saved objects with the saved objects APIs.
+
+
+    To manage a specific type of saved object, use the corresponding APIs.
+
+    For example, use:
+
+
+    * [Data views](../group/endpoint-data-views)
+
+    * [Spaces](../group/endpoint-spaces)
+
+    * [Short URLs](../group/endpoint-short-url)
+
+
+    Warning: Do not write documents directly to the `.kibana` index. When you write directly to the `.kibana`
+    index, the data becomes corrupted and permanently breaks future Kibana versions.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - saved objects
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-saved-objects-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-script-api
+  name: Elastic Stack (ELK Stack) Script API
+  description: The script API from Elastic Stack (ELK Stack) — 5 operation(s) for script.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - script
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-script-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-search-api
+  name: Elastic Stack (ELK Stack) Search API
+  description: The search API from Elastic Stack (ELK Stack) — 29 operation(s) for search.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - search
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-search-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-search-application-api
+  name: Elastic Stack (ELK Stack) Search Application API
+  description: >-
+    The search_application API from Elastic Stack (ELK Stack) — 4 operation(s) for search_application.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - search_application
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-search-application-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-searchable-snapshots-api
+  name: Elastic Stack (ELK Stack) Searchable Snapshots API
+  description: >-
+    The searchable_snapshots API from Elastic Stack (ELK Stack) — 7 operation(s) for searchable_snapshots.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - searchable_snapshots
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-searchable-snapshots-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-ai-assistant-api-api
+  name: Elastic Stack (ELK Stack) Security AI Assistant API
+  description: Manage and interact with Security Assistant resources.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security AI Assistant API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-ai-assistant-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-api
+  name: Elastic Stack (ELK Stack) Security API
+  description: The security API from Elastic Stack (ELK Stack) — 64 operation(s) for security.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - security
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-attack-discovery-api-api
+  name: Elastic Stack (ELK Stack) Security Attack discovery API
+  description: >-
+    Use the Attack discovery APIs to generate and manage Attack discoveries. Attack Discovery leverages
+    large language models (LLMs) to analyze alerts in your environment and identify threats. Each "discovery"
+    represents a potential attack and describes relationships among multiple alerts to tell you which
+    users and hosts are involved, how alerts correspond to the MITRE ATT&CK matrix, and which threat actor
+    might be responsible.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Attack discovery API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-attack-discovery-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-detections-api-api
+  name: Elastic Stack (ELK Stack) Security Detections API
+  description: >-
+    Use the detections APIs to create and manage detection rules. Detection rules search events and external
+    alerts sent to Elastic Security and generate detection alerts from any hits. Alerts are displayed
+    on the **Alerts** page and can be assigned and triaged, using the alert status to mark them as open,
+    closed, or acknowledged.
+
+
+    This API supports both key-based authentication and basic authentication.
+
+
+    To use key-based authentication, create an API key, then specify the key in the header of your API
+    calls.
+
+
+    To use basic authentication, provide a username and password; this automatically creates an API key
+    that matches the current user’s privileges.
+
+
+    In both cases, the API key is subsequently used for authorization when the rule runs.
+
+    > warn
+
+    > If the API key used for authorization has different privileges than the key that created or most
+    recently updated a rule, the rule behavior might change.
+
+
+    > If the API key that created a rule is deleted, or the user that created the rule becomes inactive,
+    the rule will stop running.
+
+
+    To create and run rules, the user must meet specific requirements for the Kibana space. Refer to the
+    [Detections requirements](https://www.elastic.co/guide/en/security/current/detections-permissions-section.html)
+    for a complete list of requirements.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Detections API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-detections-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-endpoint-exceptions-api-api
+  name: Elastic Stack (ELK Stack) Security Endpoint Exceptions API
+  description: >-
+    Endpoint Exceptions API allows you to manage detection rule endpoint exceptions to prevent a rule
+    from generating an alert from incoming events even when the rule's other criteria are met.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Endpoint Exceptions API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-endpoint-exceptions-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-endpoint-management-api-api
+  name: Elastic Stack (ELK Stack) Security Endpoint Management API
+  description: Interact with and manage endpoints running the Elastic Defend integration.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Endpoint Management API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-endpoint-management-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-entity-analytics-api-api
+  name: Elastic Stack (ELK Stack) Security Entity Analytics API
+  description: >-
+    Use the Security entity analytics APIs to manage entity analytics and risk scoring, including asset
+    criticality, privileged user monitoring, and entity engines.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Entity Analytics API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-entity-analytics-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-entity-store-api
+  name: Elastic Stack (ELK Stack) Security entity store API
+  description: >-
+    The Security entity store API from Elastic Stack (ELK Stack) — 16 operation(s) for security entity
+    store.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security entity store
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-entity-store-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-exceptions-api-api
+  name: Elastic Stack (ELK Stack) Security Exceptions API
+  description: >-
+    Exceptions are associated with detection and endpoint rules, and are used to prevent a rule from generating
+    an alert from incoming events, even when the rule's other criteria are met. They can help reduce the
+    number of false positives and prevent trusted processes and network activity from generating unnecessary
+    alerts.
+
+
+    Exceptions are made up of:
+
+
+    * **Exception containers**: A container for related exceptions. Generally, a single exception container
+    contains all the exception items relevant for a subset of rules. For example, a container can be used
+    to group together network-related exceptions that are relevant for a large number of network rules.
+    The container can then be associated with all the relevant rules.
+
+    * **Exception items**: The query (fields, values, and logic) used to prevent rules from generating
+    alerts. When an exception item's query evaluates to `true`, the rule does not generate an alert.
+
+
+    For detection rules, you can also use lists to define rule exceptions. A list holds multiple values
+    of the same Elasticsearch data type, such as IP addresses. These values are used to determine when
+    an exception prevents an alert from being generated.
+
+    > info
+
+    > You cannot use lists with endpoint rule exceptions.
+
+
+    > info
+
+    > Only exception containers can be associated with rules. You cannot directly associate an exception
+    item or a list container with a rule. To use list exceptions, create an exception item that references
+    the relevant list container.
+
+
+    ## Exceptions requirements
+
+
+    Before you can start working with exceptions that use value lists, you must create the `.lists` and
+    `.items` data streams for the relevant Kibana space. To do this, use the [Create list data streams](../operation/operation-createlistindex)
+    endpoint. Once these data streams are created, your role needs privileges to manage rules. For a complete
+    list of requirements, refer to [Enable and access detections](https://www.elastic.co/guide/en/security/current/detections-permissions-section.html#enable-detections-ui).
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Exceptions API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-exceptions-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-lists-api-api
+  name: Elastic Stack (ELK Stack) Security Lists API
+  description: >-
+    Lists can be used with detection rule exceptions to define values that prevent a rule from generating
+    alerts.
+
+
+    Lists are made up of:
+
+
+    * **List containers**: A container for values of the same Elasticsearch data type. The following data
+    types can be used:
+        * `boolean`
+        * `byte`
+        * `date`
+        * `date_nanos`
+        * `date_range`
+        * `double`
+        * `double_range`
+        * `float`
+        * `float_range`
+        * `half_float`
+        * `integer`
+        * `integer_range`
+        * `ip`
+        * `ip_range`
+        * `keyword`
+        * `long`
+        * `long_range`
+        * `short`
+        * `text`
+    * **List items**: The values used to determine whether the exception prevents an alert from being
+    generated.
+
+
+    All list items in the same list container must be of the same data type, and each item defines a single
+    value. For example, an IP list container named `internal-ip-addresses-southport` contains five items,
+    where each item defines one internal IP address:
+
+    1. `192.168.1.1`
+
+    2. `192.168.1.3`
+
+    3. `192.168.1.18`
+
+    4. `192.168.1.12`
+
+    5. `192.168.1.7`
+
+
+    To use these IP addresses as values for defining rule exceptions, use the Security exceptions API
+    to [create an exception list item](../operation/operation-createexceptionlistitem) that references
+    the `internal-ip-addresses-southport` list.
+
+    > info
+
+    > Lists cannot be added directly to rules, nor do they define the operators used to determine when
+    exceptions are applied (`is in list`, `is not in list`). Use an exception item to define the operator
+    and associate it with an [exception container](../operation/operation-createexceptionlist). You can
+    then add the exception container to a rule's `exceptions_list` object.
+
+
+    ## Lists requirements
+
+
+    Before you can start using lists, you must create the `.lists` and `.items` data streams for the relevant
+    Kibana space. To do this, use the [Create list data streams](../operation/operation-createlistindex)
+    endpoint. Once these data streams are created, your role needs privileges to manage rules. Refer to
+    [Enable and access detections](https://www.elastic.co/guide/en/security/current/detections-permissions-section.html#enable-detections-ui)
+    for a complete list of requirements.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Lists API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-lists-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-osquery-api-api
+  name: Elastic Stack (ELK Stack) Security Osquery API
+  description: Run live queries, manage packs and saved queries.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Osquery API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-osquery-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-solution-initialization-api-api
+  name: Elastic Stack (ELK Stack) Security Solution Initialization API
+  description: >-
+    Use the initialization API to set up the assets Elastic Security needs to operate in a Kibana space.
+
+
+    A single request can run one or more initialization flows. Each flow provisions a specific set of
+    assets (for example, list indices, security data views, prebuilt detection rules, endpoint protection,
+    AI prompts, or detection rule monitoring assets). The response reports a per-flow result so you can
+    tell which flows completed and which returned an error.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Solution Initialization API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-solution-initialization-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-security-timeline-api-api
+  name: Elastic Stack (ELK Stack) Security Timeline API
+  description: >-
+    You can create Timelines and Timeline templates via the API, as well as import new Timelines from
+    an ndjson file.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Security Timeline API
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-security-timeline-api-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-short-url-api
+  name: Elastic Stack (ELK Stack) short url API
+  description: Manage Kibana short URLs.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - short url
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-short-url-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-significant-events-api
+  name: Elastic Stack (ELK Stack) Significant Events API
+  description: >-
+    The significant_events API from Elastic Stack (ELK Stack) — 4 operation(s) for significant_events.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - significant_events
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-significant-events-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-slm-api
+  name: Elastic Stack (ELK Stack) Slm API
+  description: The slm API from Elastic Stack (ELK Stack) — 8 operation(s) for slm.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - slm
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-slm-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-slo-api
+  name: Elastic Stack (ELK Stack) Slo API
+  description: SLO APIs enable you to define, manage and track service-level objectives
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - slo
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-slo-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-snapshot-api
+  name: Elastic Stack (ELK Stack) Snapshot API
+  description: The snapshot API from Elastic Stack (ELK Stack) — 12 operation(s) for snapshot.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - snapshot
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-snapshot-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-spaces-api
+  name: Elastic Stack (ELK Stack) Spaces API
+  description: The Spaces API from Elastic Stack (ELK Stack) — 7 operation(s) for spaces.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Spaces
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-spaces-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-sql-api
+  name: Elastic Stack (ELK Stack) Sql API
+  description: The sql API from Elastic Stack (ELK Stack) — 6 operation(s) for sql.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - sql
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-sql-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-stack-api
+  name: Elastic Stack (ELK Stack) Stack API
+  description: The Stack API from Elastic Stack (ELK Stack) — 3 operation(s) for stack.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Stack
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-stack-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-streams-api
+  name: Elastic Stack (ELK Stack) Streams API
+  description: The streams API from Elastic Stack (ELK Stack) — 16 operation(s) for streams.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - streams
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-streams-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-synonyms-api
+  name: Elastic Stack (ELK Stack) Synonyms API
+  description: The synonyms API from Elastic Stack (ELK Stack) — 3 operation(s) for synonyms.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - synonyms
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-synonyms-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-synthetics-api
+  name: Elastic Stack (ELK Stack) Synthetics API
+  description: Synthetics APIs enable you to check the status of your services and applications.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - synthetics
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-synthetics-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-system-api
+  name: Elastic Stack (ELK Stack) System API
+  description: >-
+    Get information about the system status, resource usage, features, and installed plugins.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - system
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-system-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-tags-api
+  name: Elastic Stack (ELK Stack) Tags API
+  description: The Tags API from Elastic Stack (ELK Stack) — 2 operation(s) for tags.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-tags-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-task-manager-api
+  name: Elastic Stack (ELK Stack) task manager API
+  description: >-
+    Task manager APIs enable you to check the health of the Kibana task manager, which is used by features
+    such as alerting, actions, and reporting to run mission critical work as persistent background tasks.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - task manager
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-task-manager-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-tasks-api
+  name: Elastic Stack (ELK Stack) Tasks API
+  description: The tasks API from Elastic Stack (ELK Stack) — 4 operation(s) for tasks.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-telemetry-api
+  name: Elastic Stack (ELK Stack) Telemetry API
+  description: The Telemetry API from Elastic Stack (ELK Stack) — 1 operation(s) for telemetry.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Telemetry
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-telemetry-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-text-structure-api
+  name: Elastic Stack (ELK Stack) Text Structure API
+  description: >-
+    The text_structure API from Elastic Stack (ELK Stack) — 4 operation(s) for text_structure.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - text_structure
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-text-structure-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-transform-api
+  name: Elastic Stack (ELK Stack) Transform API
+  description: The transform API from Elastic Stack (ELK Stack) — 13 operation(s) for transform.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - transform
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-transform-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-trustedenvironments-api
+  name: Elastic Stack (ELK Stack) Trusted Environments API
+  description: >-
+    The TrustedEnvironments API from Elastic Stack (ELK Stack) — 1 operation(s) for trustedenvironments.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - TrustedEnvironments
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-trustedenvironments-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-upgrade-api
+  name: Elastic Stack (ELK Stack) Upgrade API
+  description: >-
+    The Kibana Upgrade Assistant API helps you prepare for the next major Elasticsearch release.
+
+    > warn
+
+    > This is a Kibana REST API (not an Elasticsearch API) and requests must target your Kibana URL:
+
+    > * Self-managed URL pattern: `https://localhost:5601`
+
+    > * Elastic Cloud URL pattern: `https://your-deployment.kb.us-east-1.aws.elastic.cloud:9243`
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - upgrade
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-upgrade-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-uptime-api
+  name: Elastic Stack (ELK Stack) Uptime API
+  description: Uptime APIs enable you to view and update uptime monitoring settings.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - uptime
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-uptime-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-user-session-api
+  name: Elastic Stack (ELK Stack) user session API
+  description: Enables you to invalidate user sessions for security and session management purposes.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - user session
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-user-session-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-userroleassignments-api
+  name: Elastic Stack (ELK Stack) User Role Assignments API
+  description: >-
+    The UserRoleAssignments API from Elastic Stack (ELK Stack) — 1 operation(s) for userroleassignments.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - UserRoleAssignments
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-userroleassignments-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-users-api
+  name: Elastic Stack (ELK Stack) Users API
+  description: The Users API from Elastic Stack (ELK Stack) — 3 operation(s) for users.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-users-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-visualizations-api
+  name: Elastic Stack (ELK Stack) Visualizations API
+  description: >-
+    > This documentation is temporarily hosted at a separate location.
+
+    >
+
+    > **[View the full Visualizations API reference →](https://elastic.github.io/dashboards-api-spec/visualizations#tag/Visualizations)**
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - Visualizations
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-visualizations-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-watcher-api
+  name: Elastic Stack (ELK Stack) Watcher API
+  description: The watcher API from Elastic Stack (ELK Stack) — 13 operation(s) for watcher.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - watcher
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-watcher-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-workflows-api
+  name: Elastic Stack (ELK Stack) Workflows API
+  description: >-
+    Workflows enable you to automate multi-step processes directly in Kibana. Define sequences of steps
+    in YAML to transform data insights into automated actions and outcomes, without needing external automation
+    tools.
+
+
+    Use the workflows APIs to create, manage, and run workflows programmatically. You can also search,
+    export, import, and monitor workflow executions.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-workflows-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-xpack-api
+  name: Elastic Stack (ELK Stack) Xpack API
+  description: The xpack API from Elastic Stack (ELK Stack) — 2 operation(s) for xpack.
+  humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
+  baseURL: https://{elasticsearch_endpoint}
+  tags:
+  - xpack
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-xpack-api-openapi.yml
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/elasticsearch
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/elasticsearch/
+  - type: SourceCode
+    url: https://github.com/elastic/elasticsearch-specification
+  - type: Documentation
+    url: https://www.elastic.co/docs/reference/kibana
+  - type: APIReference
+    url: https://www.elastic.co/docs/api/doc/kibana/
+  - type: SourceCode
+    url: https://github.com/elastic/kibana
+  - type: ToolCrosswalk
+    url: mcp/elk-stack-tool-crosswalk.yml
 common:
+  - type: Overlay
+    url: overlays/elk-stack-elasticsearch-overlay.yaml
+  - type: Overlay
+    url: overlays/elk-stack-kibana-overlay.yaml
   - type: Website
     url: https://www.elastic.co/elastic-stack/
   - type: DeveloperPortal
