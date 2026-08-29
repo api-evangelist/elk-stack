@@ -3536,6 +3536,9 @@ apis:
   - type: ToolCrosswalk
     url: mcp/elk-stack-tool-crosswalk.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/elk-stack-capability-edges.yml
+    name: Elastic Stack (ELK Stack) Business Capability Map
   - type: Overlay
     url: overlays/elk-stack-elasticsearch-overlay.yaml
   - type: Overlay

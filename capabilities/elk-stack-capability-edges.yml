@@ -1,0 +1,332 @@
+slug: elk-stack
+provider: Elastic Stack (ELK Stack)
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 31
+edges:
+- tag: Security Detections API
+  spec_file: elk-stack-security-detections-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.95
+  evidence: POST /api/detection_engine/rules  CreateRule  Create a detection rule; Security_Detections_API_SetAlertsStatusByQueryBase
+  reason: Full lifecycle of SIEM detection rules, alert indices and alert workflow status in Elastic Security
+    — the canonical SOC/SIEM detection and response capability.
+- tag: slo
+  spec_file: elk-stack-slo-api-openapi.yml
+  capability_id: BC-4220.10
+  capability_id_l1: BC-4220
+  capability_name: Service Reliability Engineering
+  confidence: 0.92
+  evidence: POST /s/{spaceId}/api/observability/slos  createSloOp  Create an SLO; schema SLOs_error_budget,
+    SLOs_objective
+  reason: Operations create, update and compute service-level objectives with error budgets under the
+    observability namespace — plainly the definition and stewardship of SLIs/SLOs/error budgets.
+- tag: Security Attack discovery API
+  spec_file: elk-stack-security-attack-discovery-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.9
+  evidence: POST /api/attack_discovery/_generate  PostAttackDiscoveryGenerate  Generate attack discoveries
+    from alerts
+  reason: Generates and schedules discovery of attacks from security alerts — SOC/SIEM threat detection
+    and investigation work, squarely Threat Detection & Response Management.
+- tag: Security Endpoint Management API
+  spec_file: elk-stack-security-endpoint-management-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.9
+  evidence: POST /api/endpoint/action/isolate  EndpointIsolateAction  Isolate an endpoint; POST /api/endpoint/action/kill_process  EndpointKillProcessAction  Terminate
+    a process
+  reason: Issues EDR response actions (host isolation, process termination, memory dump, script execution)
+    against managed endpoints — active security incident containment and response.
+- tag: roles
+  spec_file: elk-stack-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.9
+  evidence: '''GET /api/security/role — Get all roles'', ''PUT /api/security/role/{name} — Create or update
+    a role'', schema Kibana_HTTP_APIs_security_role_indices_privileges'
+  reason: CRUD over security roles and their index/cluster/application privileges — role-based access
+    administration, i.e. Identity & Access Management.
+- tag: security
+  spec_file: elk-stack-security-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.9
+  evidence: '''Authenticate a user'', ''Bulk create or update roles'', ''Change passwords'', ''Bulk update
+    API keys'', ''Activate a user profile'''
+  reason: Authentication, user/password administration, role management and API-key credential lifecycle
+    across Elasticsearch and Kibana — squarely Identity & Access Management.
+- tag: IamService
+  spec_file: elk-stack-iamservice-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: '"Setup organization IdP", "Get organization service provider SAML2 metadata.xml for configuring
+    the identity provider", schemas "RoleMapping", "OrganizationRoleAssignment", "AddRoleMappingRequest"'
+  reason: Operations manage organizations, member invitations, SAML identity-provider federation and role
+    mappings/assignments — squarely identity and access management.
+- tag: PlatformConfigurationSecurity
+  spec_file: elk-stack-platformconfigurationsecurity-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: POST /platform/configuration/security/realms/active-directory  create-active-directory-configuration;
+    schemas LdapSettings, SamlIdpSettings, RequestEnrollmentTokenReply
+  reason: Operations configure authentication realms (Active Directory, LDAP, SAML) and enrollment tokens
+    for the platform — this is identity provider federation and access control administration, i.e. Identity
+    & Access Management.
+- tag: ml trained model
+  spec_file: elk-stack-ml-trained-model-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.85
+  evidence: '''Create a trained model'', ''Create or update a trained model alias'', ''Evaluate a trained
+    model'', schema ''ml._types.TrainedModelDeploymentStats'''
+  reason: Operations cover trained-model registration, aliasing, deployment stats and inference — the
+    canonical ML model lifecycle / MLOps surface, mapping to Artificial Intelligence Management.
+- tag: synthetics
+  spec_file: elk-stack-synthetics-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.85
+  evidence: POST /api/synthetics/monitor/test/{monitorId}  Trigger an on-demand test run for a monitor;
+    schemas Synthetics_httpMonitorFields, Synthetics_browserMonitorFields
+  reason: Creating and running HTTP/browser/TCP/ICMP synthetic monitors is exactly synthetic monitoring
+    of a running service, part of Observability Management.
+- tag: Authentication
+  spec_file: elk-stack-authentication-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.82
+  evidence: POST /users/auth/_login  login  Login to ECE; POST /users/auth/keys  create-api-key  Create
+    API key; schemas RoleAssignments, PlatformRoleAssignment
+  reason: Login/logout, token refresh, API key issuance and revocation, and role assignments are identity
+    and access management for the platform. Maps to Identity & Access Management; some chance the better
+    home is developer credential management, hence not 0.95.
+- tag: ml anomaly
+  spec_file: elk-stack-ml-anomaly-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.82
+  evidence: '''Close anomaly detection jobs'', ''Create a datafeed'', ''Add anomaly detection job to calendar'',
+    schema ''ml._types.BucketSummary'''
+  reason: Full lifecycle of anomaly-detection ML jobs and their datafeeds — machine-learning model/job
+    lifecycle management (MLOps), which is Artificial Intelligence Management.
+- tag: ml data frame
+  spec_file: elk-stack-ml-data-frame-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.82
+  evidence: '''Create a data frame analytics job'', ''Evaluate data frame analytics'', schema ''ml._types.DataframeEvaluationRegression'''
+  reason: Creating, explaining and evaluating supervised/unsupervised data-frame analytics jobs is ML
+    model training and evaluation lifecycle — Artificial Intelligence Management.
+- tag: Organizations
+  spec_file: elk-stack-organizations-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: '"Setup organization IdP", "Verify domain claim", schemas "OrganizationMembership", "OrganizationRoleAssignment",
+    "RoleMappingRule"'
+  reason: Despite the business-sounding tag, the operations administer organization membership, domain
+    claims, SAML identity-provider federation and role assignments — identity and access administration
+    for the cloud account.
+- tag: PlatformInfrastructure
+  spec_file: elk-stack-platforminfrastructure-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: GET /platform/infrastructure/adminconsoles  get-adminconsoles; schemas AllocatorCapacityMemory,
+    ProxyInfo, CoordinatorSummary, ContainerConfigHostConfig
+  reason: Operations administer the ECE platform's runtime infrastructure — allocators, coordinators,
+    proxies, admin consoles, logging settings and config store — which is compute/cloud infrastructure
+    management, not a business process.
+- tag: Security Entity Analytics API
+  spec_file: elk-stack-security-entity-analytics-api-api-openapi.yml
+  capability_id: BC-620
+  capability_id_l1: BC-620
+  capability_name: Cybersecurity Management
+  confidence: 0.8
+  evidence: '"Upsert an asset criticality record"; "Initialize the Privilege Monitoring Engine"; schema
+    Security_Entity_Analytics_API_RiskScoreInput'
+  reason: Operations manage asset criticality, privileged-user monitoring and entity risk scoring inside
+    Elastic's SIEM — squarely cybersecurity management. Ambiguous between threat detection (risk scoring)
+    and identity/privilege monitoring, so no L2 asserted.
+- tag: UserRoleAssignments
+  spec_file: elk-stack-userroleassignments-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: POST /users/{user_id}/role_assignments  Add Role Assignments; schemas PlatformRoleAssignment,
+    DeploymentRoleAssignment
+  reason: Operations grant and revoke role assignments to users of the Elastic Cloud Enterprise platform
+    — access rights administration, i.e. identity & access management. No business-domain reading fits.
+- tag: Security Endpoint Exceptions API
+  spec_file: elk-stack-security-endpoint-exceptions-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.78
+  evidence: POST /api/endpoint_list  CreateEndpointList  Create an Elastic Endpoint rule exception list
+  reason: Manages exception lists that tune Elastic Endpoint (EDR) detection rules to suppress false positives
+    — endpoint threat detection tuning within the security operations capability.
+- tag: Users
+  spec_file: elk-stack-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.78
+  evidence: POST /users  create-user  Creates a new user; DELETE /users/{user_name}  Deletes an existing
+    user; schema UserSecurity, UserSecurityRealm
+  reason: Platform user account lifecycle with security realm/permission schemas — administrative identity
+    management, not HR employee records.
+- tag: inference
+  spec_file: elk-stack-inference-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.78
+  evidence: '''Perform chat completion inference on the service'', ''Create an inference endpoint'', schemas
+    ''inference._types.AmazonBedrockServiceSettings'', ''inference._types.DenseEmbeddingResult'''
+  reason: The surface creates, manages and invokes ML/LLM inference endpoints (embeddings, rerank, completion),
+    which is AI/ML model lifecycle and serving — Artificial Intelligence Management. Some ambiguity as
+    it is also generic platform plumbing, hence not higher.
+- tag: user session
+  spec_file: elk-stack-user-session-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.78
+  evidence: POST /api/security/session/_invalidate 'Invalidate user sessions'
+  reason: Session invalidation is an access-management control operation over authenticated user identities,
+    mapping to Identity & Access Management. Single operation limits confidence.
+- tag: Security Exceptions API
+  spec_file: elk-stack-security-exceptions-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.75
+  evidence: '"POST /api/detection_engine/rules/{id}/exceptions  CreateRuleExceptionListItems  Create rule
+    exception items"; schemas ...TrustedAppWindowsCodeSignatureEntry, ...BlocklistLinuxProperties'
+  reason: Exception lists, trusted apps and blocklists tune detection-engine rules and endpoint protection
+    — SIEM/SOC detection tuning rather than any business-domain exception handling.
+- tag: Security Timeline API
+  spec_file: elk-stack-security-timeline-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.75
+  evidence: '"POST /api/timeline  CreateTimelines  Create a Timeline or Timeline template"; "PATCH /api/pinned_event  Pin/unpin
+    an event"; "PersistNoteRoute  Add or update a note"'
+  reason: Timelines with pinned events and analyst notes are the SIEM investigation workspace — security
+    incident investigation and response.
+- tag: Dashboards
+  spec_file: elk-stack-dashboards-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.72
+  evidence: GET /api/dashboards  search-dashboards  Search dashboards; POST /api/dashboards  create-dashboard  Create
+    a dashboard
+  reason: Kibana dashboard CRUD is the delivery of visual reporting and analytics artefacts, matching
+    Analytics & BI Management. Confidence tempered because the operations are bare CRUD with no schema
+    detail and the dashboards here mostly serve observability data.
+- tag: Visualizations
+  spec_file: elk-stack-visualizations-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.72
+  evidence: POST /api/visualizations  create-visualization  Create visualization; GET /api/visualizations  Search
+    visualizations
+  reason: CRUD over Kibana visualization artefacts, which are the BI/reporting objects of the analytics
+    platform; maps to analytics & BI delivery. Thin context (no schemas) so moderate confidence.
+- tag: APM agent configuration
+  spec_file: elk-stack-apm-agent-configuration-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.7
+  evidence: GET /api/apm/settings/agent-configuration Get a list of agent configurations; GET /api/apm/settings/agent-configuration/agent_name
+    Get agent name for service
+  reason: Central configuration of APM (application performance monitoring) agents per service and environment
+    in Kibana — this is stewardship of the instrumentation that produces traces/metrics for running services,
+    i.e. Observability Management. Some ambiguity with generic IT operations tooling, hence 0.7.
+- tag: Elastic Agent actions
+  spec_file: elk-stack-elastic-agent-actions-api-openapi.yml
+  capability_id: BC-600.40
+  capability_id_l1: BC-600
+  capability_name: IT Operations Management
+  confidence: 0.7
+  evidence: POST /api/fleet/agents/{agentId}/upgrade  Upgrade an agent; POST /api/fleet/agents/{agentId}/unenroll  Unenroll
+    an agent; POST /api/fleet/agents/bulk_request_diagnostics
+  reason: Fleet operations against deployed Elastic Agents — reassign, upgrade, unenroll, rollback, collect
+    diagnostics — are day-to-day estate operations and automation, matching IT Operations Management.
+- tag: Elastic Agents
+  spec_file: elk-stack-elastic-agents-api-openapi.yml
+  capability_id: BC-600.40
+  capability_id_l1: BC-600
+  capability_name: IT Operations Management
+  confidence: 0.7
+  evidence: GET /api/fleet/agents  Get agents; POST /api/fleet/agents/bulk_migrate  Migrate multiple agents;
+    POST .../privilege_level_change  Change agent privilege level
+  reason: Lifecycle management of Elastic Agents deployed across an estate (enrol, update, migrate, upgrade
+    versions, inspect effective config) — this is day-to-day IT operations/monitoring-agent fleet administration,
+    not a customer-facing business function.
+- tag: Security Osquery API
+  spec_file: elk-stack-security-osquery-api-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: '"POST /api/osquery/live_queries  OsqueryCreateLiveQuery  Create a live query"; "Get live
+    query results"; "Create a pack"'
+  reason: Live host interrogation via osquery packs is threat hunting / investigation tooling in the security
+    solution, i.e. detection and response operations.
+- tag: Security entity store
+  spec_file: elk-stack-security-entity-store-api-openapi.yml
+  capability_id: BC-620
+  capability_id_l1: BC-620
+  capability_name: Cybersecurity Management
+  confidence: 0.7
+  evidence: '"PUT /api/security/entity_store  Update the Entity Store"; "POST /api/security/entity_store/resolution/link  Link
+    entities"; "List entity resolution rules"'
+  reason: Security-solution entity inventory and entity-resolution rules provide host/user context for
+    SIEM analytics; cybersecurity management, but which sub-capability (detection context vs identity
+    data) is unclear.
+- tag: ml
+  spec_file: elk-stack-ml-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: '''Get machine learning memory usage info'', ''Set upgrade_mode for ML indices'', ''Update
+    trained models spaces'''
+  reason: Operations administer the machine-learning subsystem (memory stats, ML index upgrade mode, trained-model/job
+    space assignment), i.e. ML operations — Artificial Intelligence Management. Surface is small and administrative,
+    so moderate confidence.
