@@ -1,0 +1,1758 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Organizations API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: Organizations
+paths:
+  /organizations:
+    get:
+      tags:
+      - Organizations
+      summary: List organizations
+      description: Fetch organizations available to the current user. Currently unavailable in self-hosted ECE.
+      operationId: list-organizations
+      responses:
+        '200':
+          description: Organizations fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationList'
+        '401':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/invitations/{invitation_token}:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization invitation
+      description: Gets a single invitation to an organization by token. Currently unavailable in self-hosted ECE.
+      operationId: get-organization-invitation
+      parameters:
+      - name: invitation_token
+        in: path
+        description: Organization invitation token
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization invitation fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvitation'
+        '404':
+          description: 'Invitation not found. (code: `organization.invitation_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.invitation_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}:
+    get:
+      tags:
+      - Organizations
+      summary: Fetch organization information
+      description: Fetch a single organization by id. Currently unavailable in self-hosted ECE.
+      operationId: get-organization
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'The current user does not have access to the requested organization. (code: `organization.invalid_access`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.invalid_access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+    put:
+      tags:
+      - Organizations
+      summary: Update organization
+      description: '> WARNING
+
+        > This endpoint is deprecated and scheduled to be removed in the next major version.
+
+
+        Updates an existing organization. Currently unavailable in self-hosted ECE.'
+      operationId: update-organization
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: '* Name must be between 2 and 30 characters. (code: `organization.invalid_name`)
+
+            * User already has an organization. (code: `organization.user_organization_already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.invalid_name
+                - organization.user_organization_already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: You are not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'The current user does not have access to the requested organization. (code: `organization.invalid_access`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.invalid_access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRequest'
+        description: The organization to update
+        required: true
+  /organizations/{organization_id}/domains:
+    get:
+      tags:
+      - Organizations
+      summary: Get domain claims
+      description: Get domain claims for the organization.
+      operationId: domain-claim-get-domain-claims
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The claimed domains for the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrganizationClaimedDomainsResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: IamService
+    delete:
+      tags:
+      - Organizations
+      summary: Delete domain claim
+      description: Delete domain claim.
+      operationId: domain-claim-delete
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: With status 200 ok to signal the domain has been unclaimed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'An IdP is configured for the organization. (code: `org.idp.idp_configured`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.idp.idp_configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'Concurrent organization modification. (code: `org.domain_claim.concurrent_organization_modification`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.domain_claim.concurrent_organization_modification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: IamService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteDomainClaimRequest'
+        description: The domain claim to remove
+        required: true
+  /organizations/{organization_id}/domains/_generate_verification_code:
+    post:
+      tags:
+      - Organizations
+      summary: Generate verification code
+      description: Generate verification code for the domain claim challenge.
+      operationId: domain-claim-generate-verification-code
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The verification code response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationCodeResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: IamService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationCodeRequest'
+        description: The verification code request
+        required: true
+  /organizations/{organization_id}/domains/_verify:
+    post:
+      tags:
+      - Organizations
+      summary: Verify domain claim
+      description: Verify domain claim challenge.
+      operationId: domain-claim-verify-domain
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: With status 200 ok to signal the domain has been claimed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '449':
+          description: The challenge can not be verified at the moment, please retry later
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: 'Domain claim already exists. (code: `org.domain_claim.already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.domain_claim.already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'Concurrent organization modification. (code: `org.domain_claim.concurrent_organization_modification`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.domain_claim.concurrent_organization_modification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: IamService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainVerificationRequest'
+        description: The verification code request
+        required: true
+  /organizations/{organization_id}/idp:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization IdP
+      description: Gets the oranization's IdP. Currently unavailable in self-hosted ECE.
+      operationId: get-organization-idp
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The IdP info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationIdp'
+        '404':
+          description: 'IdP was not configured yet. (code: `org.idp.idp_not_configured`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.idp.idp_not_configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+    put:
+      tags:
+      - Organizations
+      summary: Setup organization IdP
+      description: Sets up an organization's IdP. Currently unavailable in self-hosted ECE.
+      operationId: setup-organization-idp
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The IdP info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationIdp'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdpConfigurationRequest'
+        description: The IdP configuration
+        required: true
+    delete:
+      tags:
+      - Organizations
+      summary: Tear down organization IdP
+      description: Tear down up an organization's IdP. Currently unavailable in self-hosted ECE.
+      operationId: teardown-organization-idp
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The IdP was successfully removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Organization IdP not configured. (code: `org.idp.idp_not_configured`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.idp.idp_not_configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/idp/metadata.xml:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization service provider SAML2 metadata.xml for configuring the identity provider
+      description: Gets the oranization's IdP metadata.xml. Currently unavailable in self-hosted ECE.
+      operationId: get-organization-idp-metadata
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The IdP info
+          content:
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: 'IdP was not configured yet. (code: `org.idp.idp_not_configured`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.idp.idp_not_configured
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/invitations:
+    get:
+      tags:
+      - Organizations
+      summary: List organization invitations
+      description: Fetch open invitations to the selected organization. Currently unavailable in self-hosted ECE.
+      operationId: list-organization-invitations
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization invitations fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvitations'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+    post:
+      tags:
+      - Organizations
+      summary: Create organization invitations
+      description: Creates or refreshes organization invitations. Currently unavailable in self-hosted ECE.
+      operationId: create-organization-invitations
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Organization invitations created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvitations'
+        '400':
+          description: '* Invitation email was not valid. (code: `organization.invitation_invalid_email`)
+
+            * Invitation already sent. (code: `organization.invitation_already_exists`)
+
+            * User already belongs to organization. (code: `organization.user_organization_already_belongs`)
+
+            * Request exceeds maximum pending invitations per organization. (code: `organization.invitations_pending_limit_exceeded`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.invitation_invalid_email
+                - organization.invitation_already_exists
+                - organization.user_organization_already_belongs
+                - organization.invitations_pending_limit_exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'The current user authentication is not valid. (code: `root.invalid_authentication`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.invalid_authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: '* Organization not found. (code: `organization.not_found`)
+
+            * User not found. (code: `user.not_found`)
+
+            * Invitation sender does not belong to organization. (code: `organization.user_organization_does_not_belong`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+                - user.not_found
+                - organization.user_organization_does_not_belong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '429':
+          description: 'Request exceeds organization invitation creation rate limits. (code: `organization.invitations_rate_limit_exceeded`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.invitations_rate_limit_exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationInvitationRequest'
+        description: The organization invitations to create or refresh
+        required: true
+  /organizations/{organization_id}/invitations/{invitation_tokens}:
+    delete:
+      tags:
+      - Organizations
+      summary: Delete organization invitations
+      description: Deletes one or more organization invitations. Currently unavailable in self-hosted ECE.
+      operationId: delete-organization-invitations
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      - name: invitation_tokens
+        in: path
+        description: CSV list of Invitation tokens
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization invitations deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: 'No valid invitation token was supplied. (code: `root.invalid_data`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.invalid_data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: '* Organization not found. (code: `organization.not_found`)
+
+            * Invitation not found. (code: `organization.invitation_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+                - organization.invitation_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/members:
+    get:
+      tags:
+      - Organizations
+      summary: List organization members
+      description: Fetch users belonging to the selected organization. Currently unavailable in self-hosted ECE.
+      operationId: list-organization-members
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization members fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationMemberships'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/members/{user_ids}:
+    delete:
+      tags:
+      - Organizations
+      summary: Delete organization memberships
+      description: Deletes one or more organization memberships. Currently unavailable in self-hosted ECE.
+      operationId: delete-organization-memberships
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      - name: user_ids
+        in: path
+        description: CSV list of User identifiers
+        required: true
+        schema:
+          type: string
+      - name: force
+        in: query
+        description: Whether or not to force the removal of Org memberships (effective only for Platform Admins)
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Organization membership deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: '* User not found. (code: `user.not_found`)
+
+            * Organization not found. (code: `organization.not_found`)
+
+            * Organization membership not found. (code: `organization.membership_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+                - organization.not_found
+                - organization.membership_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/role_mappings:
+    get:
+      tags:
+      - Organizations
+      summary: Get role mappings
+      description: Gets the organization role  mappings. Currently unavailable in self-hosted ECE.
+      operationId: get-role-mappings
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The IdP info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoleMappingsResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+    post:
+      tags:
+      - Organizations
+      summary: Adds role mapping
+      description: Adds the role assignments applicable when logging via SSO. Currently unavailable in self-hosted ECE.
+      operationId: add-role-mappings-individually
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: An empty response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: '* Invalid rule. (code: `org.role_mapping_rule.ambiguous_rule`)
+
+            * Empty rule. (code: `org.role_mapping_rule.empty_rule`)
+
+            * Validation error. (code: `org.role_mapping_rule.syntax_error`)
+
+            * Validation error. (code: `org.role_mapping_rule.email_syntax_error`)
+
+            * Validation error. (code: `org.role_mapping_rule.too_many_role_mappings`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.role_mapping_rule.ambiguous_rule
+                - org.role_mapping_rule.empty_rule
+                - org.role_mapping_rule.syntax_error
+                - org.role_mapping_rule.email_syntax_error
+                - org.role_mapping_rule.too_many_role_mappings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddRoleMappingRequest'
+        description: The role mappings to add
+        required: true
+    put:
+      tags:
+      - Organizations
+      summary: Updates role mappings
+      description: Updates the role assignments applicable when logging via SSO. Currently unavailable in self-hosted ECE.
+      operationId: update-role-mappings
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: An empty response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: '* Invalid rule. (code: `org.role_mapping_rule.ambiguous_rule`)
+
+            * Empty rule. (code: `org.role_mapping_rule.empty_rule`)
+
+            * Validation error. (code: `org.role_mapping_rule.syntax_error`)
+
+            * Validation error. (code: `org.role_mapping_rule.email_syntax_error`)
+
+            * Validation error. (code: `org.role_mapping_rule.too_many_role_mappings`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.role_mapping_rule.ambiguous_rule
+                - org.role_mapping_rule.empty_rule
+                - org.role_mapping_rule.syntax_error
+                - org.role_mapping_rule.email_syntax_error
+                - org.role_mapping_rule.too_many_role_mappings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRoleMappingRequest'
+        description: The role  mappings to update
+        required: true
+    delete:
+      tags:
+      - Organizations
+      summary: Delete role mappings
+      description: Deletes the organization role  mappings. Currently unavailable in self-hosted ECE.
+      operationId: delete-role-mappings
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The mappings were successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/role_mappings/{role_names}:
+    delete:
+      tags:
+      - Organizations
+      summary: Delete role mapping
+      description: Deletes the organization role  mapping. Currently unavailable in self-hosted ECE.
+      operationId: delete-role-mappings-individually
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      - name: role_names
+        in: path
+        description: Comma separated list of role names
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The mappings were successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRoleMappingsResponse'
+        '404':
+          description: 'Organization not found. (code: `organization.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - organization.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+  /organizations/{organization_id}/role_mappings/{role_name}:
+    put:
+      tags:
+      - Organizations
+      summary: Update role mapping
+      description: Updates an existing role mapping by name. Currently unavailable in self-hosted ECE.
+      operationId: update-role-mapping
+      parameters:
+      - name: organization_id
+        in: path
+        description: Identifier for the Organization
+        required: true
+        schema:
+          type: string
+      - name: role_name
+        in: path
+        description: Role name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The updated role mapping
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Role mapping not found. (code: `org.role_mapping_rule.role_mapping_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.role_mapping_rule.role_mapping_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'Invalid rule. (code: `org.role_mapping_rule.ambiguous_rule`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - org.role_mapping_rule.ambiguous_rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRoleMappingRequest'
+        description: The updated role mapping
+        required: true
+components:
+  schemas:
+    RoleMapping:
+      type: object
+      required:
+      - enabled
+      - name
+      - role_assignments
+      - rule
+      properties:
+        enabled:
+          type: boolean
+          description: Whether or not the role mapping is enabled
+        name:
+          type: string
+          description: The name of the role mapping
+        rule:
+          description: The rule to match
+          $ref: '#/components/schemas/RoleMappingRule'
+        role_assignments:
+          description: The role assignments to apply if the rule matches
+          $ref: '#/components/schemas/RoleAssignments'
+    DeleteDomainClaimRequest:
+      type: object
+      required:
+      - domain_claim_request
+      properties:
+        domain_claim_request:
+          type: string
+          description: The request to remove a domain claim
+    OrganizationInvitation:
+      type: object
+      required:
+      - created_at
+      - email
+      - expired
+      - expires_at
+      - organization
+      - token
+      properties:
+        token:
+          type: string
+          description: The token used to accept the invitation
+        email:
+          type: string
+          description: The email address to invite to the organization
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation was created
+        expires_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation expires
+        expired:
+          type: boolean
+          description: True if the invitation is expired
+        accepted_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation was accepted
+        organization:
+          description: The organization associated with this invitation
+          $ref: '#/components/schemas/Organization'
+        role_assignments:
+          description: The roles that will be assigned to users once they accept the invitation. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: An invitation to an organization
+    OrganizationInvitationRequest:
+      type: object
+      required:
+      - emails
+      properties:
+        emails:
+          type: array
+          description: The email addresses to invite to the organization
+          items:
+            type: string
+        expires_in:
+          type: string
+          description: The date and time when the invitation expires. Defaults to three days from now.
+        role_assignments:
+          description: The roles that will be assigned to users once they accept the invitation. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: A request to create one or more invitations to an organization
+    VerificationCodeRequest:
+      type: object
+      required:
+      - domain_claim_request
+      properties:
+        domain_claim_request:
+          type: string
+          description: The domain claim request
+    OrganizationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The organization's friendly name
+        default_disk_usage_alerts_enabled:
+          type: boolean
+          description: Whether the default disk alerts are enabled
+        notifications_allowed_email_domains:
+          type: array
+          description: The list of allowed domains for notification-email recipients
+          items:
+            type: string
+        billing_contacts:
+          type: array
+          description: The list of contacts for billing notifications
+          items:
+            type: string
+        operational_contacts:
+          type: array
+          description: The list of contacts for operational notifications
+          items:
+            type: string
+      description: A request to create or update an organization
+    ProjectRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
+        project_ids:
+          type: array
+          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with project scope.
+    IdpConfigurationRequest:
+      type: object
+      required:
+      - enabled
+      - login_identifier_prefix
+      - saml_idp
+      properties:
+        enabled:
+          type: boolean
+          description: Whether or not the IdP is enabled
+        login_identifier_prefix:
+          type: string
+          description: The prefix of the login identifier that will be generated
+        saml_idp:
+          description: The SAML2 IdP configuration
+          $ref: '#/components/schemas/SamlIdp'
+      description: A request to setup an organization IdP
+    AddRoleMappingRequest:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: A rule to add to the role assignments in the organization
+          items:
+            $ref: '#/components/schemas/RoleMapping'
+    UpdateRoleMappingRequest:
+      type: object
+      required:
+      - mapping
+      properties:
+        mapping:
+          description: The content of the role mapping to update
+          $ref: '#/components/schemas/RoleMapping'
+    OrganizationRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to a deployment or project
+          items:
+            type: string
+      description: Assignment for a role with organization scope.
+    RoleMappingRule:
+      type: object
+      properties:
+        any:
+          type: array
+          description: The rules that must match. Only one rule must match for the role assignment to be applied.
+          items:
+            $ref: '#/components/schemas/RoleMappingPropertyRule'
+        all:
+          type: array
+          description: The rules that must match. All rules must match for the role assignment to be applied.
+          items:
+            $ref: '#/components/schemas/RoleMappingPropertyRule'
+    SamlIdp:
+      type: object
+      required:
+      - issuer
+      - public_certificate
+      - sso_url
+      properties:
+        public_certificate:
+          type: array
+          description: Base64-encoded PEM-format X.509 certificate
+          items:
+            type: string
+        issuer:
+          type: string
+          description: The IdP URI that identifies the issuer of a SAML2 response message assertion
+        sso_url:
+          type: string
+          description: The IdP SAML HTTP-POST endpoint URL that will receive SAML requests during SP-initiated login
+      description: SAML2 IdP configuration object
+    RoleMappingPropertyRule:
+      type: object
+      properties:
+        group:
+          type: string
+          description: The group to match. Can have wildcards. Must specify either `group` or `email` but not both.
+        email:
+          type: string
+          description: The email to match. Can have wildcards. Must specify either `group` or `email` but not both.
+    OrganizationIdpConfiguration:
+      type: object
+      required:
+      - enabled
+      - login_identifier_prefix
+      - saml_idp
+      properties:
+        enabled:
+          type: boolean
+          description: Whether or not the IdP is enabled
+        login_identifier_prefix:
+          type: string
+          description: The prefix of the login identifier that will be generated
+        saml_idp:
+          description: The SAML2 IdP configuration
+          $ref: '#/components/schemas/SamlIdp'
+      description: The organization's IdP configuration
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    OrganizationInvitations:
+      type: object
+      required:
+      - invitations
+      properties:
+        invitations:
+          type: array
+          description: The list of organization invitations
+          items:
+            $ref: '#/components/schemas/OrganizationInvitation'
+      description: A collection of invitations to an organization
+    DeleteRoleMappingsResponse:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: The list of deleted role assignments to the organization
+          items:
+            type: string
+    Organization:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          description: The organization's identifier
+        name:
+          type: string
+          description: The organization's friendly name
+        default_disk_usage_alerts_enabled:
+          type: boolean
+          description: Whether the default disk alerts are enabled
+        notifications_allowed_email_domains:
+          type: array
+          description: The list of allowed domains for notification-email recipients
+          items:
+            type: string
+        billing_contacts:
+          type: array
+          description: The list of contacts for billing notifications, if specified
+          items:
+            type: string
+        operational_contacts:
+          type: array
+          description: The list of contacts for operational notifications, if specified
+          items:
+            type: string
+        sso_login_identifier:
+          type: string
+          description: The login identifier for initiating SSO
+      description: An organization
+    OrganizationMembership:
+      type: object
+      required:
+      - member_since
+      - organization_id
+      - user_id
+      properties:
+        organization_id:
+          type: string
+          description: The organization's identifier
+        user_id:
+          type: string
+          description: The users's identifier
+        name:
+          type: string
+          description: The user's full name
+        email:
+          type: string
+          description: The user's email address
+        member_since:
+          type: string
+          format: date-time
+          description: The date and time the user was added to the organization
+        role_assignments:
+          description: The user's assigned roles. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: A user's membership to an organization
+    EmptyResponse:
+      type: object
+    UpdateOrganizationRoleMappingRequest:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: The rules for mapping role assignments in the organization
+          items:
+            $ref: '#/components/schemas/RoleMapping'
+    GetOrganizationClaimedDomainsResponse:
+      type: object
+      required:
+      - domains
+      properties:
+        domains:
+          type: array
+          description: The list of claimed domains in the organization
+          items:
+            type: string
+    PlatformRoleAssignment:
+      type: object
+      required:
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+      description: Assignment for a role with platform scope.
+    DeploymentRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
+        deployment_ids:
+          type: array
+          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with deployment scope.
+    RoleAssignments:
+      type: object
+      properties:
+        platform:
+          type: array
+          description: Assignments for roles with platform scope.
+          items:
+            $ref: '#/components/schemas/PlatformRoleAssignment'
+        organization:
+          type: array
+          description: Assignments for roles with organization scope.
+          items:
+            $ref: '#/components/schemas/OrganizationRoleAssignment'
+        deployment:
+          type: array
+          description: Assignments for roles with deployment scope.
+          items:
+            $ref: '#/components/schemas/DeploymentRoleAssignment'
+        project:
+          description: Assignments for roles with project scope.
+          $ref: '#/components/schemas/ProjectRoleAssignments'
+      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+    OrganizationMemberships:
+      type: object
+      required:
+      - members
+      properties:
+        members:
+          type: array
+          description: The list of organization memberships
+          items:
+            $ref: '#/components/schemas/OrganizationMembership'
+      description: All user memberships to an organization
+    ProjectRoleAssignments:
+      type: object
+      properties:
+        elasticsearch:
+          type: array
+          description: The Elasticsearch project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        observability:
+          type: array
+          description: The Observability project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        security:
+          type: array
+          description: The Security project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        workplaceai:
+          type: array
+          description: The WorkplaceAI project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        vectordb:
+          type: array
+          description: The VectorDB project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+      description: Assignments for roles with project scope.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    OrganizationIdp:
+      type: object
+      required:
+      - acs
+      - configuration
+      - encryption_certificate
+      - login_identifier
+      - metadata_url
+      - signing_certificate
+      - sp_entity_id
+      - sso_login_url
+      properties:
+        login_identifier:
+          type: string
+          description: The login identifier that is unique to this organization
+        sso_login_url:
+          type: string
+          description: The Elastic Cloud login URL for this IdP
+        metadata_url:
+          type: string
+          description: The SAML2 metadata url for downloading the SAML2 SP metadata XML
+        acs:
+          type: string
+          description: The SAML2 assertion consumer service of the SP
+        sp_entity_id:
+          type: string
+          description: The SP entity ID and the audience for SAML2 response assertions
+        signing_certificate:
+          type: array
+          description: The certificate that will sign SAML2 requests to the IdP
+          items:
+            type: string
+        encryption_certificate:
+          type: array
+          description: The certificate that the IdP can use to encrypt SAML assertions. Encryption is optional
+          items:
+            type: string
+        configuration:
+          description: The organization's IdP configuration
+          $ref: '#/components/schemas/OrganizationIdpConfiguration'
+      description: The organization's IdP info
+    OrganizationList:
+      type: object
+      required:
+      - organizations
+      properties:
+        organizations:
+          type: array
+          description: The list of organizations
+          items:
+            $ref: '#/components/schemas/Organization'
+        next_page:
+          type: string
+          description: A cursor to get the next page of results
+      description: A collection of Organizations
+    DomainVerificationRequest:
+      type: object
+      required:
+      - domain_claim_request
+      properties:
+        domain_claim_request:
+          type: string
+          description: The domain claim request
+    GetRoleMappingsResponse:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: The list of role assignments for the organization
+          items:
+            $ref: '#/components/schemas/RoleMapping'
+    VerificationCodeResponse:
+      type: object
+      required:
+      - verification
+      properties:
+        verification:
+          type: string
+          description: The verification code to use for the domain claim challenge
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

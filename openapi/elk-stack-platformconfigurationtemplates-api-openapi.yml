@@ -1,0 +1,134 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Platform Configuration Templates API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: PlatformConfigurationTemplates
+paths:
+  /platform/configuration/templates/deployments/global:
+    get:
+      tags:
+      - PlatformConfigurationTemplates
+      summary: Get all templates cross region.
+      description: Global deployment template endpoint which fetches the deployment templates across all region services.
+      operationId: get-global-deployment-templates
+      responses:
+        '200':
+          description: The deployment templates were returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalDeploymentTemplateInfo'
+        '204':
+          description: There are no deployment templates available.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+      x-doc:
+        tag: Templates - Deployments - Global
+components:
+  schemas:
+    KibanaDeeplink:
+      type: object
+      required:
+      - semver
+      - uri
+      properties:
+        semver:
+          type: string
+          description: Semver condition when to apply the URI.
+        uri:
+          type: string
+          description: URI to which the user should be directed.
+      description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
+    MetadataItem:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The metadata field name
+        value:
+          type: string
+          description: The metadata value
+      description: The key-value pair.
+    GlobalDeploymentTemplateRegion:
+      type: object
+      required:
+      - deployment_template_id
+      - region_id
+      - versions
+      properties:
+        region_id:
+          type: string
+          description: The region identifier.
+        deployment_template_id:
+          type: string
+          description: The (region-specific) ID of the deployment template.
+        versions:
+          type: array
+          description: Versions supported in this region.
+          items:
+            type: string
+        kibana_deeplink:
+          type: array
+          description: The Kibana Deeplink for this type of deployment.
+          items:
+            $ref: '#/components/schemas/KibanaDeeplink'
+      description: Region-specific details about a template.
+    EmptyResponse:
+      type: object
+    GlobalDeploymentTemplateInfo:
+      type: object
+      required:
+      - description
+      - name
+      - order
+      - regions
+      properties:
+        template_category_id:
+          type: string
+          description: Provider agnostic template identifier.
+        name:
+          type: string
+          description: Long name of the Template
+        description:
+          type: string
+          description: An optional description for the template.
+        order:
+          type: integer
+          format: int32
+          description: The order in which the templates should be displayed in the front-end.
+        metadata:
+          type: array
+          description: Optional arbitrary metadata to associate with this template.
+          items:
+            $ref: '#/components/schemas/MetadataItem'
+        regions:
+          type: array
+          description: List of regions this template is used in.
+          items:
+            $ref: '#/components/schemas/GlobalDeploymentTemplateRegion'
+      description: The top-level model for global (regionless) templates.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

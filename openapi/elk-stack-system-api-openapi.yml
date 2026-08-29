@@ -1,0 +1,510 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana System API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: system
+  x-displayName: System
+  description: 'Get information about the system status, resource usage, features, and installed plugins.
+
+    '
+paths:
+  /api/features:
+    get:
+      description: 'Get information about all Kibana features. Features are used by spaces and security to refine and secure access to Kibana.
+
+        '
+      operationId: get-features
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getFeaturesExample:
+                  value: "{\n  \"features\": [\n    {\n      \"name\": \"tasks\",\n      \"description\": \"Manages task results\"\n    },\n    {\n      \"name\": \"security\",\n      \"description\": \"Manages configuration for Security features, such as users and roles\"\n    },\n    {\n      \"name\": \"searchable_snapshots\",\n      \"description\": \"Manages caches and configuration for searchable snapshots\"\n    },\n    {\n      \"name\": \"logstash_management\",\n      \"description\": \"Enables Logstash Central Management pipeline storage\"\n    },\n    {\n      \"name\": \"transform\",\n      \"description\": \"Manages configuration and state for transforms\"\n    },\n    {\n      \"name\": \"kibana\",\n      \"description\": \"Manages Kibana configuration and reports\"\n    },\n    {\n      \"name\": \"synonyms\",\n      \"description\": \"Manages synonyms\"\n    },\n    {\n      \"name\": \"async_search\",\n      \"description\": \"Manages results of async searches\"\n    },\n    {\n      \"name\": \"ent_search\",\n      \"description\": \"Manages configuration for Enterprise Search features\"\n    },\n    {\n      \"name\": \"machine_learning\",\n      \"description\": \"Provides anomaly detection and forecasting functionality\"\n    },\n    {\n      \"name\": \"geoip\",\n      \"description\": \"Manages data related to GeoIP database downloader\"\n    },\n    {\n      \"name\": \"watcher\",\n      \"description\": \"Manages Watch definitions and state\"\n    },\n    {\n      \"name\": \"fleet\",\n      \"description\": \"Manages configuration for Fleet\"\n    },\n    {\n      \"name\": \"enrich\",\n      \"description\": \"Manages data related to Enrich policies\"\n    },\n    {\n      \"name\": \"inference_plugin\",\n      \"description\": \"Inference plugin for managing inference services and inference\"\n    }\n  ]\n}\n"
+              schema:
+                type: object
+          description: Indicates a successful call
+      summary: Get features
+      tags:
+      - system
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/status:
+    get:
+      description: Returns Kibana's overall operational status and a per-service breakdown for Elasticsearch, Saved Objects, and registered plugins. The endpoint is intended for liveness and readiness checks (for example, by Kubernetes probes) and for operators monitoring a Kibana deployment. Unauthenticated callers receive a redacted response that exposes only the overall status level.
+      operationId: get-status
+      parameters:
+      - description: Set to "true" to get the response in v7 format.
+        in: query
+        name: v7format
+        required: false
+        schema:
+          type: boolean
+      - description: Set to "true" to get the response in v8 format.
+        in: query
+        name: v8format
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                statusAvailableResponse:
+                  description: A successful response when Kibana and its core services are operating normally.
+                  summary: Kibana is available
+                  value:
+                    metrics:
+                      collection_interval_in_millis: 5000
+                      elasticsearch_client:
+                        totalActiveSockets: 4
+                        totalIdleSockets: 2
+                        totalQueuedRequests: 0
+                      last_updated: '2026-04-30T12:00:05.000Z'
+                    name: kibana
+                    status:
+                      core:
+                        elasticsearch:
+                          level: available
+                          summary: Elasticsearch is available
+                        savedObjects:
+                          level: available
+                          summary: SavedObjects service has completed migrations and is available
+                      overall:
+                        level: available
+                        summary: All services are available
+                      plugins: {}
+                    uuid: 5b2de169-2785-441b-ae8c-186a1936b17d
+                    version:
+                      build_date: '2026-04-30T12:00:00.000Z'
+                      build_flavor: traditional
+                      build_hash: ad8f0fa4d5022f56bbe2c4d51e9d0fcfa1ee67fc
+                      build_number: 100200
+                      build_snapshot: false
+                      number: 9.3.0
+                statusRedactedResponse:
+                  description: A redacted response returned when the caller is unauthenticated or lacks the `monitor` cluster privilege.
+                  summary: Kibana is available (redacted)
+                  value:
+                    status:
+                      overall:
+                        level: available
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_core_status_response'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_core_status_redactedResponse'
+                description: Kibana's operational status. A minimal response is sent for unauthorized users.
+          description: Overall status is OK and Kibana should be functioning normally.
+        '503':
+          content:
+            application/json:
+              examples:
+                statusUnavailableResponse:
+                  description: A response when one or more core services are unavailable.
+                  summary: Kibana is unavailable
+                  value:
+                    metrics:
+                      collection_interval_in_millis: 5000
+                      elasticsearch_client:
+                        totalActiveSockets: 0
+                        totalIdleSockets: 0
+                        totalQueuedRequests: 0
+                      last_updated: '2026-04-30T12:00:05.000Z'
+                    name: kibana
+                    status:
+                      core:
+                        elasticsearch:
+                          level: unavailable
+                          summary: Unable to connect to Elasticsearch
+                        savedObjects:
+                          level: unavailable
+                          summary: SavedObjects service depends on Elasticsearch
+                      overall:
+                        level: unavailable
+                        summary: Some services are unavailable
+                      plugins: {}
+                    uuid: 5b2de169-2785-441b-ae8c-186a1936b17d
+                    version:
+                      build_date: '2026-04-30T12:00:00.000Z'
+                      build_flavor: traditional
+                      build_hash: ad8f0fa4d5022f56bbe2c4d51e9d0fcfa1ee67fc
+                      build_number: 100200
+                      build_snapshot: false
+                      number: 9.3.0
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_core_status_response'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_core_status_redactedResponse'
+                description: Kibana's operational status. A minimal response is sent for unauthorized users.
+          description: Kibana or some of its essential services are unavailable. Kibana may be degraded or unavailable.
+      summary: Get Kibana's current status
+      tags:
+      - system
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_core_status_response:
+      additionalProperties: false
+      description: Kibana's operational status as well as a detailed breakdown of plugin statuses indication of various loads (like event loop utilization and network traffic) at time of request.
+      properties:
+        metrics:
+          additionalProperties: false
+          description: Metric groups collected by Kibana.
+          type: object
+          properties:
+            collection_interval_in_millis:
+              description: The interval at which metrics should be collected.
+              type: number
+            elasticsearch_client:
+              additionalProperties: false
+              description: Current network metrics of Kibana's Elasticsearch client.
+              type: object
+              properties:
+                totalActiveSockets:
+                  description: Count of network sockets currently in use.
+                  type: number
+                totalIdleSockets:
+                  description: Count of network sockets currently idle.
+                  type: number
+                totalQueuedRequests:
+                  description: Count of requests not yet assigned to sockets.
+                  type: number
+              required:
+              - totalActiveSockets
+              - totalIdleSockets
+              - totalQueuedRequests
+            last_updated:
+              description: The time metrics were collected.
+              type: string
+          required:
+          - elasticsearch_client
+          - last_updated
+          - collection_interval_in_millis
+        name:
+          description: Kibana instance name.
+          type: string
+        status:
+          additionalProperties: false
+          type: object
+          properties:
+            core:
+              additionalProperties: false
+              description: Statuses of core Kibana services.
+              type: object
+              properties:
+                elasticsearch:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    detail:
+                      description: Human readable detail of the service status.
+                      type: string
+                    documentationUrl:
+                      description: A URL to further documentation regarding this service.
+                      type: string
+                    level:
+                      description: Service status levels as human and machine readable values.
+                      enum:
+                      - available
+                      - degraded
+                      - unavailable
+                      - critical
+                      type: string
+                    meta:
+                      additionalProperties: {}
+                      description: An unstructured set of extra metadata about this service.
+                      type: object
+                    summary:
+                      description: A human readable summary of the service status.
+                      type: string
+                  required:
+                  - level
+                  - summary
+                  - meta
+                http:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    detail:
+                      description: Human readable detail of the service status.
+                      type: string
+                    documentationUrl:
+                      description: A URL to further documentation regarding this service.
+                      type: string
+                    level:
+                      description: Service status levels as human and machine readable values.
+                      enum:
+                      - available
+                      - degraded
+                      - unavailable
+                      - critical
+                      type: string
+                    meta:
+                      additionalProperties: {}
+                      description: An unstructured set of extra metadata about this service.
+                      type: object
+                    summary:
+                      description: A human readable summary of the service status.
+                      type: string
+                  required:
+                  - level
+                  - summary
+                  - meta
+                savedObjects:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    detail:
+                      description: Human readable detail of the service status.
+                      type: string
+                    documentationUrl:
+                      description: A URL to further documentation regarding this service.
+                      type: string
+                    level:
+                      description: Service status levels as human and machine readable values.
+                      enum:
+                      - available
+                      - degraded
+                      - unavailable
+                      - critical
+                      type: string
+                    meta:
+                      additionalProperties: {}
+                      description: An unstructured set of extra metadata about this service.
+                      type: object
+                    summary:
+                      description: A human readable summary of the service status.
+                      type: string
+                  required:
+                  - level
+                  - summary
+                  - meta
+              required:
+              - elasticsearch
+              - savedObjects
+            overall:
+              additionalProperties: false
+              type: object
+              properties:
+                detail:
+                  description: Human readable detail of the service status.
+                  type: string
+                documentationUrl:
+                  description: A URL to further documentation regarding this service.
+                  type: string
+                level:
+                  description: Service status levels as human and machine readable values.
+                  enum:
+                  - available
+                  - degraded
+                  - unavailable
+                  - critical
+                  type: string
+                meta:
+                  additionalProperties: {}
+                  description: An unstructured set of extra metadata about this service.
+                  type: object
+                summary:
+                  description: A human readable summary of the service status.
+                  type: string
+              required:
+              - level
+              - summary
+              - meta
+            plugins:
+              additionalProperties:
+                additionalProperties: false
+                type: object
+                properties:
+                  detail:
+                    description: Human readable detail of the service status.
+                    type: string
+                  documentationUrl:
+                    description: A URL to further documentation regarding this service.
+                    type: string
+                  level:
+                    description: Service status levels as human and machine readable values.
+                    enum:
+                    - available
+                    - degraded
+                    - unavailable
+                    - critical
+                    type: string
+                  meta:
+                    additionalProperties: {}
+                    description: An unstructured set of extra metadata about this service.
+                    type: object
+                  summary:
+                    description: A human readable summary of the service status.
+                    type: string
+                required:
+                - level
+                - summary
+                - meta
+              description: A dynamic mapping of plugin ID to plugin status.
+              type: object
+          required:
+          - overall
+          - core
+          - plugins
+        uuid:
+          description: Unique, generated Kibana instance UUID. This UUID should persist even if the Kibana process restarts.
+          type: string
+        version:
+          additionalProperties: false
+          type: object
+          properties:
+            build_date:
+              description: The date and time of this build.
+              type: string
+            build_flavor:
+              description: The build flavour determines configuration and behavior of Kibana. On premise users will almost always run the "traditional" flavour, while other flavours are reserved for Elastic-specific use cases.
+              enum:
+              - serverless
+              - traditional
+              type: string
+            build_hash:
+              description: A unique hash value representing the git commit of this Kibana build.
+              type: string
+            build_number:
+              description: A monotonically increasing number, each subsequent build will have a higher number.
+              type: number
+            build_snapshot:
+              description: Whether this build is a snapshot build.
+              type: boolean
+            number:
+              description: A semantic version number.
+              type: string
+          required:
+          - number
+          - build_hash
+          - build_number
+          - build_snapshot
+          - build_flavor
+          - build_date
+      required:
+      - name
+      - uuid
+      - version
+      - status
+      - metrics
+      title: core_status_response
+      type: object
+    Kibana_HTTP_APIs_core_status_redactedResponse:
+      additionalProperties: false
+      description: A minimal representation of Kibana's operational status. Returned when the caller is unauthenticated or lacks the `monitor` cluster privilege.
+      properties:
+        status:
+          additionalProperties: false
+          type: object
+          properties:
+            overall:
+              additionalProperties: false
+              type: object
+              properties:
+                level:
+                  description: Service status levels as human and machine readable values.
+                  enum:
+                  - available
+                  - degraded
+                  - unavailable
+                  - critical
+                  type: string
+              required:
+              - level
+          required:
+          - overall
+      required:
+      - status
+      title: core_status_redactedResponse
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

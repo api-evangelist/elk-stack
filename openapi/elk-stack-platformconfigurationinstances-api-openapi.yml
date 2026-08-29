@@ -1,0 +1,649 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Platform Configuration Instances API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: PlatformConfigurationInstances
+paths:
+  /platform/configuration/instances:
+    get:
+      tags:
+      - PlatformConfigurationInstances
+      summary: Get instance configurations
+      description: Get instance configurations.
+      operationId: get-instance-configurations
+      parameters:
+      - name: show_deleted
+        in: query
+        description: If true, instance configurations marked for deletions are also returned. Otherwise, only instance configurations not marked for deletion are returned
+        required: false
+        schema:
+          type: boolean
+      - name: show_max_zones
+        in: query
+        description: If true, will populate the max_zones field of the instance configurations.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: include_versions
+        in: query
+        description: If true, will return all existing versions of each instance configuration.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: A InstanceConfiguration
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InstanceConfiguration'
+      x-doc:
+        tag: Platform - Configuration - Instances - CRUD
+    post:
+      tags:
+      - PlatformConfigurationInstances
+      summary: Create instance configuration
+      description: Create instance configuration and return the auto-generated ID.
+      operationId: create-instance-configuration
+      responses:
+        '201':
+          description: Instance Configuration added with the auto generated ID returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionedIdResponse'
+        '400':
+          description: 'cluster_type in the InstanceConfiguration model is invalid (code: ''configuration.invalid_cluster_type'') or the discrete_sizes in the InstanceConfiguration model is invalid (code: ''configuration.invalid_discrete_sizes'') or the metadata in the InstanceConfiguration model has empty keys or values (code: ''configuration.bad_meta_data'') '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'system_owned or deleted_on cannot be set externally (code: ''configuration.system_owned'') '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Instances - CRUD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceConfiguration'
+        description: the Instance Configuration
+        required: true
+  /platform/configuration/instances/{id}:
+    get:
+      tags:
+      - PlatformConfigurationInstances
+      summary: Get instance configuration
+      description: Get instance configuration by id.
+      operationId: get-instance-configuration
+      parameters:
+      - name: id
+        in: path
+        description: ID of the instance configuration
+        required: true
+        schema:
+          type: string
+      - name: config_version
+        in: query
+        description: Optionally retrieve the specified config version of the IC (otherwise retrieves the latest/only version)
+        required: false
+        schema:
+          type: integer
+      - name: show_deleted
+        in: query
+        description: If true, if the instance configuration has been marked for deletion it is still returned. Otherwise, instance configurations marked for deletion generate a 404
+        required: false
+        schema:
+          type: boolean
+      - name: show_max_zones
+        in: query
+        description: If true, will populate the max_zones field of the instance configuration.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: An InstanceConfiguration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceConfiguration'
+        '404':
+          description: 'Instance configuration specified by {id} cannot be found (code: ''configuration.instance_configuration_not_found'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Instances - CRUD
+    put:
+      tags:
+      - PlatformConfigurationInstances
+      summary: Set instance configuration
+      description: Creates or updates an instance configuration.
+      operationId: set-instance-configuration
+      parameters:
+      - name: id
+        in: path
+        description: ID of the instance configuration
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: This is a database-level field, not related to the application-level 'config_version', except as described in the following docs. If specified, checks for conflicts against 'x-cloud-resource-version' from the GET request (where the 'config_version' in the GET should match the the 'configuration_version' in the PUT body if the IC is configuration controlled).
+        required: false
+        schema:
+          type: integer
+      - name: config_control
+        in: query
+        description: If true, then an update that changes immutable fields will create a new version of the IC (leaving the previous ones accessible via 'config_version'). Otherwise such updates will fail.
+        required: false
+        schema:
+          type: boolean
+      - name: test_config
+        in: query
+        description: 'If true, The IC is added as a test version (set ''instance_config_version'': -1 in the deployment request to reference), leaving the existing IC alone. Will error if the IC doesn''t already exist.'
+        required: false
+        schema:
+          type: boolean
+      - name: strict_mode
+        in: query
+        description: If true, then allocator_filter and storage_multiplier cannot be changed in an existing IC. Defaults to false unless config_control is true (in which case a new version is created)
+        required: false
+        schema:
+          type: boolean
+      - name: create_only
+        in: query
+        description: If true, will fail if an instance configuration already exists at the given id
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: The instance configuration was updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionedIdResponse'
+        '201':
+          description: The instance configuration was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionedIdResponse'
+        '400':
+          description: 'cluster_type in the InstanceConfiguration model is invalid (code: ''configuration.invalid_cluster_type'') or the ZooKeeper operation failed due to bad version, etc. (code: ''configuration.instance_configuration_update_failed'') or the id in the InstanceConfiguration model is reserved/prohibited (code: ''configuration.configuration_id_reserved'') or the discrete_sizes in the InstanceConfiguration model is invalid (code: ''configuration.invalid_discrete_sizes'') or the metadata in the InstanceConfiguration model has empty keys or values (code: ''configuration.bad_meta_data'') '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'system_owned or deleted_on cannot be set externally (code: ''configuration.system_owned'') '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'Instance configuration specified by {id} cannot be found or the operation failed (code: ''configuration.instance_configuration_not_found'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Instances - CRUD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceConfiguration'
+        description: the Instance Configuration
+        required: true
+    delete:
+      tags:
+      - PlatformConfigurationInstances
+      summary: Delete a instance configuration
+      description: Delete the instance configuration with the given id.
+      operationId: delete-instance-configuration
+      parameters:
+      - name: id
+        in: path
+        description: ID of the instance configuration
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: This is a database-level field, not related to the application-level 'config_version', except as described in the following docs. If specified, checks for conflicts against 'x-cloud-resource-version' from the GET request (the GET's 'config_version' should be left blank if the IC is configuration controlled, ie to get the latest configuration)
+        required: false
+        schema:
+          type: integer
+      - name: only_test_version
+        in: query
+        description: If true, the testing version (version -1) will be permanently deleted but the latest IC version will remain untouched. Defaults to false
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Instance configuration specified by {id} was deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '403':
+          description: 'Instance configuration specified by {id} is system owned (code: ''configuration.system_owned'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'Instance configuration specified by {id} cannot be found or the operation failed (code: ''configuration.instance_configuration_not_found'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Instances - CRUD
+components:
+  schemas:
+    QueryContainer:
+      type: object
+      properties:
+        match:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/MatchQuery'
+        match_all:
+          $ref: '#/components/schemas/MatchAllQuery'
+        match_none:
+          $ref: '#/components/schemas/MatchNoneQuery'
+        term:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TermQuery'
+        bool:
+          $ref: '#/components/schemas/BoolQuery'
+        query_string:
+          $ref: '#/components/schemas/QueryStringQuery'
+        nested:
+          $ref: '#/components/schemas/NestedQuery'
+        prefix:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/PrefixQuery'
+        exists:
+          $ref: '#/components/schemas/ExistsQuery'
+        range:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RangeQuery'
+        simple_query_string:
+          $ref: '#/components/schemas/SimpleQueryStringQuery'
+      description: The container for all of the allowed Elasticsearch queries. Specify only one property each time.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    SimpleQueryStringQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The query expressed in simple query string syntax.
+        fields:
+          type: array
+          description: Array of fields to search
+          items:
+            type: string
+        default_operator:
+          type: string
+          description: The boolean operator used to combine the terms of the query. Valid values are `OR` (default) and `AND`.
+        analyze_wildcard:
+          type: boolean
+          description: If `true`, the query attempts to analyze wildcard terms. Defaults to `false`.
+        analyzer:
+          type: string
+          description: The name of the analyzer to use to convert the query text into tokens.
+        auto_generate_synonyms_phrase_query:
+          type: boolean
+          description: If `true`, the parse creates a `match_phrase` uery for each multi-position token. Defaults to `true`.
+        flags:
+          type: string
+          description: List of enabled operators for the simple query string syntax. Defaults to `ALL`.
+        fuzzy_max_expansions:
+          type: integer
+          format: int32
+          description: Maximum number of terms to which the query expands for fuzzy matching. Defaults to 50.
+        fuzzy_prefix_length:
+          type: integer
+          format: int32
+          description: Number of beginning characters left unchanged for fuzzy matching. Defaults to 0.
+        fuzzy_transpositions:
+          type: boolean
+          description: If `true`, edits for fuzzy matching include transpositions of two adjacent characters. Defaults to `false`.
+        lenient:
+          type: boolean
+          description: If `true`, format-based errors, such as providing a text value for a numeric field are ignored. Defaults to `false`.
+        minimum_should_match:
+          type: string
+          description: Minimum number of clauses that must match for a document to be returned.
+        quote_field_suffix:
+          type: string
+          description: Suffix appended to quoted text in the query string.
+      description: A query that uses simple query string syntax. Will ignore invalid syntax.
+    MatchAllQuery:
+      type: object
+      description: A query that matches all documents.
+    MatchQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The text/numeric/date to query for.
+        operator:
+          type: string
+          description: The operator flag can be set to or or and to control the boolean clauses (defaults to or).
+        minimum_should_match:
+          type: integer
+          format: int32
+          description: The minimum number of optional should clauses to match.
+        analyzer:
+          type: string
+          description: The analyzer that will be used to perform the analysis process on the text. Defaults to the analyzer that was used to index the field.
+      description: Consumes and analyzes text, numbers, and dates, then constructs a query.
+    QueryStringQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The actual query to be parsed.
+        default_field:
+          type: string
+          description: The default field for query terms if no prefix field is specified.
+        analyzer:
+          type: string
+          description: The analyzer used to analyze each term of the query when creating composite queries.
+        default_operator:
+          type: string
+          description: The default operator used if no explicit operator is specified.
+        allow_leading_wildcard:
+          type: boolean
+          description: When set, * or ? are allowed as the first character. Defaults to false.
+      description: A query that uses the strict query string syntax for parsing. Will return an error for invalid syntax.
+    EmptyResponse:
+      type: object
+    ExistsQuery:
+      type: object
+      required:
+      - field
+      properties:
+        field:
+          type: string
+          description: The field to check for non-null values in.
+      description: Matches documents that have at least one non-`null` value in the original field.
+    MatchNoneQuery:
+      type: object
+      description: A query that doesn't match any documents.
+    PrefixQuery:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
+          description: The prefix to search for.
+        boost:
+          type: number
+          format: float
+          description: An optional boost value to apply to the query.
+      description: The query that matches documents with fields that contain terms with a specified, not analyzed, prefix.
+    InstanceConfiguration:
+      type: object
+      required:
+      - discrete_sizes
+      - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the instance configuration
+        name:
+          type: string
+          description: Display name for the instance configuration.
+        config_version:
+          type: integer
+          format: int32
+          description: If the IC is configuration controlled, this field is the version either being read back (reads return the latest IC unless specified by the 'config_version' URL param), or the version to update. Cannot be used in creates. For unversioned IC reads it is left empty.
+        description:
+          type: string
+          description: Optional description for the instance configuration
+        instance_type:
+          type: string
+          description: The type of instance. For instance configurations where the type is specified in the 'id', the default value of 'instance_type' will be automatically inferred.
+          enum:
+          - elasticsearch
+          - kibana
+          - apm
+          - integrations_server
+          - appsearch
+          - enterprise_search
+        node_types:
+          type: array
+          description: Node types (master, data) for the instance. For instance configurations where the type (and tier) is specified in the 'id', the default value of 'node_types' will be automatically inferred.
+          items:
+            type: string
+        discrete_sizes:
+          description: Numerics representing possible instance sizes that the instance configuration supports.
+          $ref: '#/components/schemas/DiscreteSizes'
+        allocator_filter:
+          description: Optional filter to match allocators against
+          $ref: '#/components/schemas/QueryContainer'
+        storage_multiplier:
+          type: number
+          format: double
+          description: Settings for the instance storage multiplier
+        deleted_on:
+          type: string
+          format: date-time
+          description: Date/time that this instance configuration was marked for deletion
+        system_owned:
+          type: boolean
+          description: Indicates if a instance configuration is system owned (restricts the set of operations that can be performed on it)
+        metadata:
+          type: object
+          description: Optional arbitrary metadata to associate with this template.
+          properties: {}
+        cpu_multiplier:
+          type: number
+          format: double
+          description: Settings for the instance CPU multiplier
+        allowed_zones:
+          type: array
+          description: The zones this instance configuration may exist in. Leaving out this parameter or specifying an empty list implies all zones are allowed. Normally not needed, but can be useful for exceptional infrastructure constraints.
+          items:
+            type: string
+        max_zones:
+          type: integer
+          format: int32
+          description: The maximum number of availability zones in which this instance configuration has allocators. This field will be missing unless explicitly requested with the show_max_zones parameter.
+          readOnly: true
+      description: The configuration template for Elasticsearch instances, Kibana instances, and APM Servers.
+    DiscreteSizes:
+      type: object
+      required:
+      - sizes
+      properties:
+        sizes:
+          type: array
+          description: List of supported sizes
+          items:
+            type: integer
+            format: int32
+        default_size:
+          type: integer
+          format: int32
+          description: The default size
+        resource:
+          type: string
+          description: The unit that each size represents. If not specified, it will default to 'memory'.
+          enum:
+          - memory
+          - storage
+      description: Instance sizes that are supported by the Elasticsearch instance, Kibana instance, or APM Server configuration.
+    NestedQuery:
+      type: object
+      required:
+      - path
+      - query
+      properties:
+        query:
+          description: The actual query to execute on the nested objects.
+          $ref: '#/components/schemas/QueryContainer'
+        path:
+          type: string
+          description: The path to the nested object.
+        score_mode:
+          type: string
+          description: Allows to specify how inner children matching affects score of the parent. Refer to the Elasticsearch documentation for details.
+          enum:
+          - avg
+          - sum
+          - min
+          - max
+          - none
+      description: A query that matches nested objects.
+    BoolQuery:
+      type: object
+      properties:
+        must:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryContainer'
+        should:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryContainer'
+        must_not:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryContainer'
+        filter:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryContainer'
+        minimum_should_match:
+          type: integer
+          format: int32
+          description: The minimum number of optional should clauses to match.
+      description: A query for documents that match boolean combinations of other queries.
+    VersionedIdResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The ID
+        config_version:
+          type: object
+          description: The version, if the entity is configuration controlled
+          properties: {}
+        config_version_updated:
+          type: object
+          description: Returns true if the update resulted in a new version of the configuration controlled entity
+          properties: {}
+    TermQuery:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
+          description: The exact value to query for.
+      description: A query for documents that contain the specified term in the inverted index.
+    RangeQuery:
+      type: object
+      properties:
+        gt:
+          type: object
+          description: Greater-than
+          properties: {}
+        gte:
+          type: object
+          description: Greater-than or equal to
+          properties: {}
+        lt:
+          type: object
+          description: Less-than
+          properties: {}
+        lte:
+          type: object
+          description: Less-than or equal to.
+          properties: {}
+        boost:
+          type: number
+          format: float
+          description: An optional boost value to apply to the query.
+        format:
+          type: string
+          description: Formatted dates will be parsed using the format specified on the date field by default, but it can be overridden by passing the format parameter.
+        time_zone:
+          type: string
+          description: Dates can be converted from another timezone to UTC either by specifying the time zone in the date value itself (if the format accepts it), or it can be specified as the time_zone parameter.
+      description: The query that matches documents with fields that contain terms within a specified range.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

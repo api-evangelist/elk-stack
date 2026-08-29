@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana APM server schema API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- description: Create APM fleet server schema.
+  name: APM server schema
+paths:
+  /api/apm/fleet/apm_server_schema:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/apm/fleet/apm_server_schema</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        DEPRECATED: This endpoint is intended for internal use by Fleet integrations to push the APM Server configuration schema. Do not use for new integrations. It stores the provided schema object as a Kibana saved object. If Fleet migration is not available on the current deployment, the API returns a 404.
+
+        '
+      operationId: saveApmServerSchema
+      parameters:
+      - $ref: '#/components/parameters/APM_UI_elastic_api_version'
+      - $ref: '#/components/parameters/APM_UI_kbn_xsrf'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              saveApmServerSchemaRequest:
+                description: An example request payload for `POST /api/apm/fleet/apm_server_schema`.
+                value:
+                  schema:
+                    foo: bar
+            schema:
+              type: object
+              properties:
+                schema:
+                  additionalProperties: true
+                  description: Schema object
+                  example:
+                    foo: bar
+                  type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                saveApmServerSchemaResponseExample1:
+                  $ref: '#/components/examples/APM_UI_fleet_apm_server_schema_200_response1'
+              schema:
+                additionalProperties: false
+                description: The response body is intentionally empty for this endpoint.
+                type: object
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  $ref: '#/components/examples/APM_UI_error_400_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_400_response'
+          description: Bad Request response
+        '401':
+          content:
+            application/json:
+              examples:
+                unauthorizedResponse:
+                  $ref: '#/components/examples/APM_UI_error_401_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_401_response'
+          description: Unauthorized response
+        '403':
+          content:
+            application/json:
+              examples:
+                forbiddenResponse:
+                  $ref: '#/components/examples/APM_UI_error_403_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_403_response'
+          description: Forbidden response
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundResponse:
+                  $ref: '#/components/examples/APM_UI_error_404_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_404_response'
+          description: Not found response
+      summary: Save APM server schema
+      tags:
+      - APM server schema
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    APM_UI_400_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Found
+          type: string
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 400
+          type: number
+    APM_UI_401_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Unauthorized
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 401
+          type: number
+    APM_UI_404_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Found
+          type: string
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 404
+          type: number
+    APM_UI_403_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Forbidden
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 403
+          type: number
+  examples:
+    APM_UI_error_400_response:
+      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
+      value:
+        error: Bad Request
+        message: '[request body]: expected value of type [string] but got [undefined]'
+        statusCode: 400
+    APM_UI_error_403_response:
+      description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
+      value:
+        error: Forbidden
+        message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
+        statusCode: 403
+    APM_UI_error_404_response:
+      description: An example of a 404 Not Found response, returned when the requested resource does not exist or the feature is not available on the current deployment.
+      value:
+        error: Not Found
+        message: Not Found
+        statusCode: 404
+    APM_UI_error_401_response:
+      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
+      value:
+        error: Unauthorized
+        message: '[security_exception]: missing authentication credentials for REST request'
+        statusCode: 401
+    APM_UI_fleet_apm_server_schema_200_response1:
+      description: An example of a successful response from `POST /api/apm/fleet/apm_server_schema`. The response body is intentionally empty.
+      value: {}
+  parameters:
+    APM_UI_kbn_xsrf:
+      description: A required header to protect against CSRF attacks
+      in: header
+      name: kbn-xsrf
+      required: true
+      schema:
+        example: 'true'
+        type: string
+    APM_UI_elastic_api_version:
+      description: The version of the API to use
+      in: header
+      name: elastic-api-version
+      required: true
+      schema:
+        default: '2023-10-31'
+        enum:
+        - '2023-10-31'
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

@@ -1,0 +1,882 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Deployments Traffic Filter API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: DeploymentsTrafficFilter
+paths:
+  /deployments/traffic-filter/associations/{association_type}/{associated_entity_id}/rulesets:
+    get:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Get associated rulesets
+      description: Retrieves the rulesets associated with a deployment.
+      operationId: get-traffic-filter-deployment-ruleset-associations
+      parameters:
+      - name: association_type
+        in: path
+        description: Association type
+        required: true
+        schema:
+          type: string
+      - name: associated_entity_id
+        in: path
+        description: Associated entity ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Rulesets in the deployment were successfully returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterSettings'
+        '400':
+          description: 'Invalid association type. (code: `traffic_filter.invalid_association_type`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.invalid_association_type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Error fetching traffic filter rulesets. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - Associations
+  /deployments/traffic-filter/link-ids:
+    get:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: List traffic filter claimed link id
+      description: List all of the traffic filter claimed link id.
+      operationId: get-traffic-filter-claimed-link-ids
+      parameters:
+      - name: region
+        in: query
+        description: If provided limits the claimed id to that region only.
+        required: false
+        schema:
+          type: string
+      - name: organization_id
+        in: query
+        description: Retrieves a list of resources that are associated to the specified organization ID. It only takes effect if the user is an admin.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The collection of traffic filter claimed link id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterClaimedLinkIds'
+        '500':
+          description: 'Error fetching traffic filter claimed link ids. (code: `traffic_filter_claimed_link_id.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter_claimed_link_id.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter Claimed Link Id
+  /deployments/traffic-filter/link-ids/_claim:
+    post:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Claim a link id
+      description: Claim the ownership of a link id.
+      operationId: claim-traffic-filter-link-id
+      responses:
+        '201':
+          description: The ruleset definition is valid and the creation has started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
+        '500':
+          description: 'Error creating the traffic filter ruleset. (code: `traffic_filter_claimed_link_id.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter_claimed_link_id.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter Claimed Link Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrafficFilterClaimedLinkIdRequest'
+        description: The specification for traffic filter claimed link id.
+        required: true
+  /deployments/traffic-filter/link-ids/_unclaim:
+    post:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Unclaims a link id
+      description: Unclaims the ownership of a link id.
+      operationId: unclaim-traffic-filter-link-id
+      responses:
+        '200':
+          description: The claimed link id was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: 'Error validating the request. (code: `traffic_filter_claimed_link_id.invalid_input`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter_claimed_link_id.invalid_input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Error deleting the traffic filter claimed link id. (code: `traffic_filter_claimed_link_id.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter_claimed_link_id.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter Claimed Link Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrafficFilterClaimedLinkIdRequest'
+        description: The specification for traffic filter claimed link id.
+        required: true
+  /deployments/traffic-filter/rulesets:
+    get:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: List traffic filter rulesets
+      description: List all of the traffic filter rulesets.
+      operationId: get-traffic-filter-rulesets
+      parameters:
+      - name: include_associations
+        in: query
+        description: Retrieves a list of resources that are associated to the specified ruleset.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: region
+        in: query
+        description: If provided limits the rulesets to that region only.
+        required: false
+        schema:
+          type: string
+      - name: organization_id
+        in: query
+        description: Retrieves a list of resources that are associated to the specified organization ID. It only takes effect if the user is an admin.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The collection of traffic filter routes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterRulesets'
+        '500':
+          description: 'Error fetching traffic filter rulesets. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - CRUD
+    post:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Create a ruleset
+      description: Creates a ruleset that consists of a set of rules.
+      operationId: create-traffic-filter-ruleset
+      responses:
+        '201':
+          description: The ruleset definition is valid and the creation has started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterRulesetResponse'
+        '500':
+          description: 'Error creating the traffic filter ruleset. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - CRUD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrafficFilterRulesetRequest'
+        description: The specification for traffic filter ruleset.
+        required: true
+  /deployments/traffic-filter/rulesets/{ruleset_id}:
+    get:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Retrieves the ruleset by ID.
+      description: Retrieves a list of resources that are associated to the specified ruleset.
+      operationId: get-traffic-filter-ruleset
+      parameters:
+      - name: ruleset_id
+        in: path
+        description: The mandatory ruleset ID.
+        required: true
+        schema:
+          type: string
+      - name: include_associations
+        in: query
+        description: Retrieves a list of resources that are associated to the specified ruleset.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The container for a set of traffic filter rules.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterRulesetInfo'
+        '404':
+          description: 'The traffic filter ruleset specified by {ruleset_id} cannot be found. (code: `traffic_filter.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Error reading the traffic filter ruleset. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - CRUD
+    put:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Updates a ruleset
+      description: Updates the ruleset with the definition.
+      operationId: update-traffic-filter-ruleset
+      parameters:
+      - name: ruleset_id
+        in: path
+        description: The mandatory ruleset ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The ruleset definition was valid and the update has started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficFilterRulesetResponse'
+        '404':
+          description: 'The traffic filter ruleset specified by {ruleset_id} cannot be found. (code: `traffic_filter.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Error reading the traffic filter ruleset. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - CRUD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrafficFilterRulesetRequest'
+        description: The specification for traffic filter ruleset.
+        required: true
+    delete:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Delete a ruleset
+      description: Deletes the ruleset by ID.
+      operationId: delete-traffic-filter-ruleset
+      parameters:
+      - name: ruleset_id
+        in: path
+        description: The mandatory ruleset ID.
+        required: true
+        schema:
+          type: string
+      - name: ignore_associations
+        in: query
+        description: When true, ignores the associations and deletes the ruleset. When false, recognizes the associations, which prevents the deletion of the rule set.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The traffic filter ruleset was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The traffic filter ruleset specified by {ruleset_id} cannot be found. (code: `traffic_filter.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Error deleting the traffic filter ruleset. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - CRUD
+  /deployments/traffic-filter/rulesets/{ruleset_id}/associations:
+    get:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Get associated deployments
+      description: Retrieves a list of deployments that are associated to the specified ruleset.
+      operationId: get-traffic-filter-ruleset-deployment-associations
+      parameters:
+      - name: ruleset_id
+        in: path
+        description: The mandatory ruleset ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Associations referred by traffic filter rulesets were successfully returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RulesetAssociations'
+        '500':
+          description: 'Error fetching deployments. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - Associations
+    post:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Create ruleset association
+      description: Applies the ruleset to the specified deployment.
+      operationId: create-traffic-filter-ruleset-association
+      parameters:
+      - name: ruleset_id
+        in: path
+        description: The mandatory ruleset ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Create association request was valid and the association has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '200':
+          description: Create association request was valid and the association already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The traffic filter ruleset specified by {ruleset_id} cannot be found. (code: `traffic_filter.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Creation failed. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - Associations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterAssociation'
+        description: Mandatory ruleset association description
+        required: true
+  /deployments/traffic-filter/rulesets/{ruleset_id}/associations/{association_type}/{associated_entity_id}:
+    delete:
+      tags:
+      - DeploymentsTrafficFilter
+      summary: Delete ruleset association
+      description: Deletes the traffic rules in the ruleset from the deployment.
+      operationId: delete-traffic-filter-ruleset-association
+      parameters:
+      - name: ruleset_id
+        in: path
+        description: The mandatory ruleset ID.
+        required: true
+        schema:
+          type: string
+      - name: association_type
+        in: path
+        description: Association type
+        required: true
+        schema:
+          type: string
+      - name: associated_entity_id
+        in: path
+        description: Associated entity ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete association request was valid and the association has been deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The traffic filter ruleset association cannot be found. (code: `traffic_filter.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Deletion failed. (code: `traffic_filter.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - traffic_filter.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Traffic Filter - Associations
+components:
+  schemas:
+    TrafficFilterEgressRule:
+      type: object
+      required:
+      - protocol
+      - target
+      properties:
+        target:
+          type: string
+          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
+        ports:
+          type: array
+          description: A list of target ports for an egress rule
+          items:
+            type: integer
+            format: int32
+        protocol:
+          type: string
+          description: The target protocol for an egress rule
+          enum:
+          - all
+          - tcp
+          - udp
+      description: The rule detail for a traffic filter egress rule.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    TrafficFilterRule:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The rule ID
+        remote_cluster_org_id:
+          type: string
+          description: The remote cluster organization ID
+        remote_cluster_id:
+          type: string
+          description: The remote cluster ID
+        description:
+          type: string
+          description: Description of the rule
+        source:
+          type: string
+          description: 'Allowed traffic filter source: IP address, CIDR mask, or VPC endpoint ID'
+        azure_endpoint_name:
+          type: string
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        egress_rule:
+          description: An egress traffic filter rule
+          $ref: '#/components/schemas/TrafficFilterEgressRule'
+      description: The container for a traffic filter rule.
+    TrafficFilterClaimedLinkIdInfo:
+      type: object
+      required:
+      - region
+      properties:
+        link_id:
+          type: string
+          description: Link id. A GCP private service connect ID or AWS VPC endpoint ID
+        azure_endpoint_name:
+          type: string
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        region:
+          type: string
+          description: The claimed link id can be used only for traffic filter in the specific region
+    RulesetAssociations:
+      type: object
+      required:
+      - associations
+      - total_associations
+      properties:
+        associations:
+          type: array
+          description: List of associations
+          items:
+            $ref: '#/components/schemas/FilterAssociation'
+        total_associations:
+          type: integer
+          format: int32
+          description: Total number of associations. This includes associations the user does not have permission to view.
+      description: The configuration settings for the traffic filter.
+    TrafficFilterRulesetInfo:
+      type: object
+      required:
+      - id
+      - include_by_default
+      - name
+      - region
+      - rules
+      - type
+      properties:
+        id:
+          type: string
+          description: The ruleset ID
+        name:
+          type: string
+          description: Name of the ruleset
+        description:
+          type: string
+          description: Description of the ruleset
+        type:
+          type: string
+          description: Type of the ruleset
+          enum:
+          - ip
+          - azure_private_endpoint
+          - gcp_private_service_connect_endpoint
+          - vpce
+          - egress_firewall
+          - remote_cluster
+        include_by_default:
+          type: boolean
+          description: Should the ruleset be automatically included in the new deployments
+        region:
+          type: string
+          description: The ruleset can be attached only to deployments in the specific region
+        rules:
+          type: array
+          description: List of rules
+          items:
+            $ref: '#/components/schemas/TrafficFilterRule'
+        associations:
+          type: array
+          description: List of associations. Returned only when include_associations query parameter is true
+          items:
+            $ref: '#/components/schemas/FilterAssociation'
+        total_associations:
+          type: integer
+          format: int32
+          description: Total number of associations. This includes associations the user does not have permission to view.Returned only when include_associations query parameter is true
+      description: The container for a set of traffic filter rules.
+    TrafficFilterSettings:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: IDs of the traffic filter rulesets
+          items:
+            type: string
+      description: The configuration settings for the traffic filter.
+    TrafficFilterRulesetRequest:
+      type: object
+      required:
+      - include_by_default
+      - name
+      - region
+      - rules
+      - type
+      properties:
+        name:
+          type: string
+          description: Name of the ruleset
+        description:
+          type: string
+          description: Description of the ruleset
+        type:
+          type: string
+          description: Type of the ruleset
+        include_by_default:
+          type: boolean
+          description: Should the ruleset be automatically included in the new deployments
+        region:
+          type: string
+          description: The ruleset can be attached only to deployments in the specific region
+        rules:
+          type: array
+          description: List of rules
+          items:
+            $ref: '#/components/schemas/TrafficFilterRule'
+      description: The specification for traffic filter ruleset.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    TrafficFilterClaimedLinkIds:
+      type: object
+      required:
+      - claimed_link_ids
+      properties:
+        claimed_link_ids:
+          type: array
+          description: List of traffic filter claimed link id
+          items:
+            $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
+      description: The container for a set of traffic filter claimed link id.
+    TrafficFilterRulesets:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: List of traffic filter rules
+          items:
+            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
+      description: The container for a set of traffic filter rulesets.
+    EmptyResponse:
+      type: object
+    FilterAssociation:
+      type: object
+      required:
+      - entity_type
+      - id
+      properties:
+        entity_type:
+          type: string
+          description: Type of the traffic filter ruleset association, such as 'deployment', 'cluster'
+        id:
+          type: string
+          description: ID of the entity, such as the deployment ID or Elasticsearch cluster ID.
+      description: The association with a ruleset or user auth token for a deployment, template, or product.
+    TrafficFilterRulesetResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The new ruleset ID
+      description: The response after you create a new ruleset.
+    TrafficFilterClaimedLinkIdRequest:
+      type: object
+      required:
+      - region
+      properties:
+        link_id:
+          type: string
+          description: Link id. A GCP private service connect ID or AWS VPC endpoint ID
+        azure_endpoint_name:
+          type: string
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        region:
+          type: string
+          description: The claimed link id can be used only for traffic filter in the specific region
+      description: The specification for traffic filter claimed link id.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

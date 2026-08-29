@@ -1,0 +1,1236 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Spaces API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Spaces
+paths:
+  /api/spaces/_resolve_copy_saved_objects_errors:
+    post:
+      description: 'Overwrite saved objects that are returned as errors from the copy saved objects to space API.<br/><br/>[Required authorization] Route required privileges: copySavedObjectsToSpaces.'
+      operationId: post-spaces-resolve-copy-saved-objects-errors
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                compatibilityMode:
+                  default: false
+                  type: boolean
+                createNewCopies:
+                  default: true
+                  type: boolean
+                includeReferences:
+                  default: false
+                  type: boolean
+                objects:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+                retries:
+                  additionalProperties:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        createNewCopy:
+                          description: Creates new copies of the saved objects, regenerates each object ID, and resets the origin.
+                          type: boolean
+                        destinationId:
+                          description: Specifies the destination identifier that the copied object should have, if different from the current identifier.
+                          type: string
+                        id:
+                          description: The saved object identifier.
+                          type: string
+                        ignoreMissingReferences:
+                          description: When set to true, any missing references errors are ignored.
+                          type: boolean
+                        overwrite:
+                          default: false
+                          description: When set to true, the saved object from the source space overwrites the conflicting object in the destination space.
+                          type: boolean
+                        type:
+                          description: The saved object type.
+                          type: string
+                      required:
+                      - type
+                      - id
+                    maxItems: 1000
+                    type: array
+                  type: object
+              required:
+              - retries
+              - objects
+            examples:
+              resolveCopySavedObjectsRequestExample1:
+                $ref: '#/components/examples/resolve_copy_saved_objects_request1'
+              resolveCopySavedObjectsRequestExample2:
+                $ref: '#/components/examples/resolve_copy_saved_objects_request2'
+      responses:
+        '200':
+          description: 'OK: A successful request.'
+          content:
+            application/json:
+              examples:
+                resolveCopySavedObjectsResponseExample1:
+                  $ref: '#/components/examples/copy_saved_objects_response1'
+                resolveCopySavedObjectsResponseExample2:
+                  $ref: '#/components/examples/copy_saved_objects_response2'
+      summary: Resolve conflicts copying saved objects
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/spaces/_copy_saved_objects:
+    post:
+      description: 'It also allows you to automatically copy related objects, so when you copy a dashboard, this can automatically copy over the associated visualizations, data views, and saved Discover sessions, as required. You can request to overwrite any objects that already exist in the target space if they share an identifier or you can use the resolve copy saved objects conflicts API to do this on a per-object basis.<br/><br/>[Required authorization] Route required privileges: copySavedObjectsToSpaces.'
+      operationId: post-spaces-copy-saved-objects
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                compatibilityMode:
+                  default: false
+                  description: Apply various adjustments to the saved objects that are being copied to maintain compatibility between different Kibana versions. Use this option only if you encounter issues with copied saved objects. This option cannot be used with the `createNewCopies` option.
+                  type: boolean
+                createNewCopies:
+                  default: true
+                  description: Create new copies of saved objects, regenerate each object identifier, and reset the origin. When used, potential conflict errors are avoided.  This option cannot be used with the `overwrite` and `compatibilityMode` options.
+                  type: boolean
+                includeReferences:
+                  default: false
+                  description: When set to true, all saved objects related to the specified saved objects will also be copied into the target spaces.
+                  type: boolean
+                objects:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        description: The identifier of the saved object to copy.
+                        type: string
+                      type:
+                        description: The type of the saved object to copy.
+                        type: string
+                    required:
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+                overwrite:
+                  default: false
+                  description: When set to true, all conflicts are automatically overridden. When a saved object with a matching type and identifier exists in the target space, that version is replaced with the version from the source space. This option cannot be used with the `createNewCopies` option.
+                  type: boolean
+                spaces:
+                  items:
+                    description: The identifiers of the spaces where you want to copy the specified objects.
+                    type: string
+                  maxItems: 100
+                  type: array
+              required:
+              - spaces
+              - objects
+            examples:
+              copySavedObjectsRequestExample1:
+                $ref: '#/components/examples/copy_saved_objects_request1'
+              copySavedObjectsRequestExample2:
+                $ref: '#/components/examples/copy_saved_objects_request2'
+      responses:
+        '200':
+          description: 'OK: A successful request.'
+          content:
+            application/json:
+              examples:
+                copySavedObjectsResponseExample1:
+                  $ref: '#/components/examples/copy_saved_objects_response1'
+                copySavedObjectsResponseExample2:
+                  $ref: '#/components/examples/copy_saved_objects_response2'
+                copySavedObjectsResponseExample3:
+                  $ref: '#/components/examples/copy_saved_objects_response3'
+                copySavedObjectsResponseExample4:
+                  $ref: '#/components/examples/copy_saved_objects_response4'
+      summary: Copy saved objects between spaces
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/spaces/_disable_legacy_url_aliases:
+    post:
+      description: Disable one or more legacy URL aliases so that they no longer resolve to their target saved objects.
+      operationId: post-spaces-disable-legacy-url-aliases
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                aliases:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      sourceId:
+                        description: The alias source object identifier. This is the legacy object identifier.
+                        type: string
+                      targetSpace:
+                        description: The space where the alias target object exists.
+                        type: string
+                      targetType:
+                        description: 'The type of alias target object. '
+                        type: string
+                    required:
+                    - targetSpace
+                    - targetType
+                    - sourceId
+                  maxItems: 1000
+                  type: array
+              required:
+              - aliases
+            examples:
+              disableLegacyURLRequestExample1:
+                $ref: '#/components/examples/disable_legacy_url_request1'
+      responses:
+        '204':
+          description: Indicates a successful call.
+      summary: Disable legacy URL aliases
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/spaces/_get_shareable_references:
+    post:
+      description: Collect references and space contexts for saved objects.
+      operationId: post-spaces-get-shareable-references
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                objects:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+              required:
+              - objects
+            examples:
+              getShareableReferencesRequestExample1:
+                $ref: '#/components/examples/get_shareable_references_request1'
+      responses:
+        '200':
+          description: Indicates a successful call.
+          content:
+            application/json:
+              examples:
+                getShareableReferencesResponseExample1:
+                  $ref: '#/components/examples/get_shareable_references_response1'
+      summary: Get shareable references
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/spaces/_update_objects_spaces:
+    post:
+      description: Update one or more saved objects to add or remove them from some spaces.
+      operationId: post-spaces-update-objects-spaces
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                objects:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        description: The identifier of the saved object to update.
+                        type: string
+                      type:
+                        description: The type of the saved object to update.
+                        type: string
+                    required:
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+                spacesToAdd:
+                  items:
+                    description: The identifiers of the spaces the saved objects should be added to or removed from.
+                    type: string
+                  maxItems: 1000
+                  type: array
+                spacesToRemove:
+                  items:
+                    description: The identifiers of the spaces the saved objects should be added to or removed from.
+                    type: string
+                  maxItems: 1000
+                  type: array
+              required:
+              - objects
+              - spacesToAdd
+              - spacesToRemove
+            examples:
+              updateObjectSpacesRequestExample1:
+                $ref: '#/components/examples/update_saved_objects_spaces_request1'
+      responses:
+        '200':
+          description: 'OK: A successful request.'
+          content:
+            application/json:
+              examples:
+                updateObjectSpacesResponseExample1:
+                  $ref: '#/components/examples/update_saved_objects_spaces_response1'
+      summary: Update saved objects in spaces
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/spaces/space:
+    get:
+      description: Retrieve all available Kibana spaces. The list includes only the spaces that the user is authorized to access.
+      operationId: get-spaces-space
+      parameters:
+      - description: Specifies which authorization checks are applied to the API call. The default value is `any`.
+        in: query
+        name: purpose
+        required: false
+        schema:
+          enum:
+          - any
+          - copySavedObjectsIntoSpace
+          - shareSavedObjectsIntoSpace
+          type: string
+      - description: When enabled, the API returns any spaces the user is authorized to access in any capacity, each including the purposes for which the user is authorized. This is useful for identifying spaces the user can read but is not authorized for a given purpose. Without the security plugin, this parameter has no effect, because no authorization checks are performed. This parameter cannot be used together with the `purpose` parameter.
+        in: query
+        name: include_authorized_purposes
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Indicates a successful call.
+          content:
+            application/json:
+              examples:
+                getSpacesResponseExample1:
+                  $ref: '#/components/examples/get_spaces_response1'
+                getSpacesResponseExample2:
+                  $ref: '#/components/examples/get_spaces_response2'
+      summary: Get all spaces
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: Create a new Kibana space.
+      operationId: post-spaces-space
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                _reserved:
+                  type: boolean
+                color:
+                  description: The hexadecimal color code used in the space avatar. By default, the color is automatically generated from the space name.
+                  type: string
+                description:
+                  description: A description for the space.
+                  type: string
+                disabledFeatures:
+                  default: []
+                  items:
+                    description: The list of features that are turned off in the space.
+                    type: string
+                  maxItems: 100
+                  type: array
+                id:
+                  description: The space ID that is part of the Kibana URL when inside the space. Space IDs are limited to lowercase alphanumeric, underscore, and hyphen characters (a-z, 0-9, _, and -). You are cannot change the ID with the update operation.
+                  type: string
+                imageUrl:
+                  description: The data-URL encoded image to display in the space avatar. If specified, initials will not be displayed and the color will be visible as the background color for transparent images. For best results, your image should be 64x64. Images will not be optimized by this API call, so care should be taken when using custom images.
+                  type: string
+                initials:
+                  description: One or two characters that are shown in the space avatar. By default, the initials are automatically generated from the space name.
+                  maxLength: 2
+                  type: string
+                name:
+                  description: 'The display name for the space. '
+                  minLength: 1
+                  type: string
+                projectRouting:
+                  description: Cross-project search default routing configuration for this space. Controls whether searches are scoped to a single project or span multiple projects in serverless environments.
+                  type: string
+                solution:
+                  enum:
+                  - security
+                  - oblt
+                  - es
+                  - classic
+                  type: string
+              required:
+              - id
+              - name
+            examples:
+              createSpaceRequest:
+                $ref: '#/components/examples/create_space_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  _reserved:
+                    type: boolean
+                  color:
+                    description: The hexadecimal color code used in the space avatar. By default, the color is automatically generated from the space name.
+                    type: string
+                  description:
+                    description: A description for the space.
+                    type: string
+                  disabledFeatures:
+                    default: []
+                    items:
+                      description: The list of features that are turned off in the space.
+                      type: string
+                    maxItems: 100
+                    type: array
+                  id:
+                    description: The space ID that is part of the Kibana URL when inside the space. Space IDs are limited to lowercase alphanumeric, underscore, and hyphen characters (a-z, 0-9, _, and -). You are cannot change the ID with the update operation.
+                    type: string
+                  imageUrl:
+                    description: The data-URL encoded image to display in the space avatar. If specified, initials will not be displayed and the color will be visible as the background color for transparent images. For best results, your image should be 64x64. Images will not be optimized by this API call, so care should be taken when using custom images.
+                    type: string
+                  initials:
+                    description: One or two characters that are shown in the space avatar. By default, the initials are automatically generated from the space name.
+                    maxLength: 2
+                    type: string
+                  name:
+                    description: 'The display name for the space. '
+                    minLength: 1
+                    type: string
+                  projectRouting:
+                    description: Cross-project search default routing configuration for this space. Controls whether searches are scoped to a single project or span multiple projects in serverless environments.
+                    type: string
+                  solution:
+                    enum:
+                    - security
+                    - oblt
+                    - es
+                    - classic
+                    type: string
+                required:
+                - id
+                - name
+              examples:
+                createSpaceResponseExample:
+                  $ref: '#/components/examples/get_space_response'
+          description: Indicates a successful call.
+      summary: Create a space
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/spaces/space/{id}:
+    delete:
+      description: When you delete a space, all saved objects that belong to the space are automatically deleted, which is permanent and cannot be undone.
+      operationId: delete-spaces-space-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The space identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Indicates a successful call.
+        '404':
+          description: Indicates that the request failed.
+      summary: Delete a space
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: Retrieve a single Kibana space by its identifier.
+      operationId: get-spaces-space-id
+      parameters:
+      - description: The space identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSpaceResponse:
+                  description: A response that contains the full configuration for a single Kibana space.
+                  summary: Get details about a marketing space
+                  value:
+                    color: '#aabbcc'
+                    description: This is the Marketing Space
+                    disabledFeatures: []
+                    id: marketing
+                    imageUrl: ''
+                    initials: MK
+                    name: Marketing
+                    solution: es
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  _reserved:
+                    type: boolean
+                  color:
+                    description: The hexadecimal color code used in the space avatar. By default, the color is automatically generated from the space name.
+                    type: string
+                  description:
+                    description: A description for the space.
+                    type: string
+                  disabledFeatures:
+                    default: []
+                    items:
+                      description: The list of features that are turned off in the space.
+                      type: string
+                    maxItems: 100
+                    type: array
+                  id:
+                    description: The space ID that is part of the Kibana URL when inside the space. Space IDs are limited to lowercase alphanumeric, underscore, and hyphen characters (a-z, 0-9, _, and -). You are cannot change the ID with the update operation.
+                    type: string
+                  imageUrl:
+                    description: The data-URL encoded image to display in the space avatar. If specified, initials will not be displayed and the color will be visible as the background color for transparent images. For best results, your image should be 64x64. Images will not be optimized by this API call, so care should be taken when using custom images.
+                    type: string
+                  initials:
+                    description: One or two characters that are shown in the space avatar. By default, the initials are automatically generated from the space name.
+                    maxLength: 2
+                    type: string
+                  name:
+                    description: 'The display name for the space. '
+                    minLength: 1
+                    type: string
+                  projectRouting:
+                    description: Cross-project search default routing configuration for this space. Controls whether searches are scoped to a single project or span multiple projects in serverless environments.
+                    type: string
+                  solution:
+                    enum:
+                    - security
+                    - oblt
+                    - es
+                    - classic
+                    type: string
+                required:
+                - id
+                - name
+          description: Indicates a successful call.
+      summary: Get a space
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: Update an existing Kibana space.
+      operationId: put-spaces-space-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The space identifier. You are unable to change the ID with the update operation.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                _reserved:
+                  type: boolean
+                color:
+                  description: The hexadecimal color code used in the space avatar. By default, the color is automatically generated from the space name.
+                  type: string
+                description:
+                  description: A description for the space.
+                  type: string
+                disabledFeatures:
+                  default: []
+                  items:
+                    description: The list of features that are turned off in the space.
+                    type: string
+                  maxItems: 100
+                  type: array
+                id:
+                  description: The space ID that is part of the Kibana URL when inside the space. Space IDs are limited to lowercase alphanumeric, underscore, and hyphen characters (a-z, 0-9, _, and -). You are cannot change the ID with the update operation.
+                  type: string
+                imageUrl:
+                  description: The data-URL encoded image to display in the space avatar. If specified, initials will not be displayed and the color will be visible as the background color for transparent images. For best results, your image should be 64x64. Images will not be optimized by this API call, so care should be taken when using custom images.
+                  type: string
+                initials:
+                  description: One or two characters that are shown in the space avatar. By default, the initials are automatically generated from the space name.
+                  maxLength: 2
+                  type: string
+                name:
+                  description: 'The display name for the space. '
+                  minLength: 1
+                  type: string
+                projectRouting:
+                  description: Cross-project search default routing configuration for this space. Controls whether searches are scoped to a single project or span multiple projects in serverless environments.
+                  type: string
+                solution:
+                  enum:
+                  - security
+                  - oblt
+                  - es
+                  - classic
+                  type: string
+              required:
+              - id
+              - name
+            examples:
+              updateSpaceRequest:
+                $ref: '#/components/examples/update_space_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                updateSpaceResponse:
+                  description: A response that contains the updated configuration of the Kibana space.
+                  summary: Update the marketing space
+                  value:
+                    color: '#aabbcc'
+                    description: An updated description for the Marketing Space
+                    disabledFeatures: []
+                    id: marketing
+                    imageUrl: ''
+                    initials: MK
+                    name: Marketing
+                    solution: es
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  _reserved:
+                    type: boolean
+                  color:
+                    description: The hexadecimal color code used in the space avatar. By default, the color is automatically generated from the space name.
+                    type: string
+                  description:
+                    description: A description for the space.
+                    type: string
+                  disabledFeatures:
+                    default: []
+                    items:
+                      description: The list of features that are turned off in the space.
+                      type: string
+                    maxItems: 100
+                    type: array
+                  id:
+                    description: The space ID that is part of the Kibana URL when inside the space. Space IDs are limited to lowercase alphanumeric, underscore, and hyphen characters (a-z, 0-9, _, and -). You are cannot change the ID with the update operation.
+                    type: string
+                  imageUrl:
+                    description: The data-URL encoded image to display in the space avatar. If specified, initials will not be displayed and the color will be visible as the background color for transparent images. For best results, your image should be 64x64. Images will not be optimized by this API call, so care should be taken when using custom images.
+                    type: string
+                  initials:
+                    description: One or two characters that are shown in the space avatar. By default, the initials are automatically generated from the space name.
+                    maxLength: 2
+                    type: string
+                  name:
+                    description: 'The display name for the space. '
+                    minLength: 1
+                    type: string
+                  projectRouting:
+                    description: Cross-project search default routing configuration for this space. Controls whether searches are scoped to a single project or span multiple projects in serverless environments.
+                    type: string
+                  solution:
+                    enum:
+                    - security
+                    - oblt
+                    - es
+                    - classic
+                    type: string
+                required:
+                - id
+                - name
+          description: Indicates a successful call.
+      summary: Update a space
+      tags:
+      - Spaces
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  examples:
+    resolve_copy_saved_objects_request1:
+      summary: Resolve conflict errors
+      description: 'Resolve conflict errors for a data view, visualization, and Canvas workpad by overwriting the existing saved objects. NOTE: If a prior copy attempt resulted in resolvable errors, you must include a retry for each object you want to copy, including any that were returned in the successResults array. In this example, we retried copying the dashboard accordingly.
+
+        '
+      value:
+        objects:
+        - type: dashboard
+          id: my-dashboard
+        includeReferences: true
+        createNewCopies: false
+        retries:
+          sales:
+          - type: index-pattern
+            id: my-pattern
+            overwrite: true
+          - type: visualization
+            id: my-vis
+            overwrite: true,
+            destinationId: another-vis
+          - type: canvas
+            id: my-canvas
+            overwrite: true
+            destinationId: yet-another-canvas
+          - type: dashboard
+            id: my-dashboard
+    copy_saved_objects_response1:
+      summary: Copy with createNewCopies
+      description: 'The response for successfully copying a dashboard with the my-dashboard ID, including all references from the default space to the marketing space. The result indicates a successful copy and all three objects are created. Since these objects were created as new copies, each entry in the successResults array includes a destinationId attribute.
+
+        '
+      value:
+        marketing:
+          success: true
+          successCount: 3
+          successResults:
+          - id: my-dashboard
+            type: dashboard
+            destinationId: 1e127098-5b80-417f-b0f1-c60c8395358f
+            meta:
+              icon: dashboardApp
+              title: Look at my dashboard
+          - id: my-vis
+            type: visualization
+            destinationId: a610ed80-1c73-4507-9e13-d3af736c8e04
+            meta:
+              icon: visualizeApp
+              title: Look at my visualization
+          - id: my-index-pattern
+            type: index-pattern
+            destinationId: bc3c9c70-bf6f-4bec-b4ce-f4189aa9e26b
+            meta:
+              icon: indexPatternApp
+              title: my-pattern-*
+    resolve_copy_saved_objects_request2:
+      summary: Resolve missing reference errors
+      description: 'Resolve missing reference errors for a visualization by ignoring the error. NOTE: If a prior copy attempt resulted in resolvable errors, you must include a retry for each object you want to copy, including any that were returned in the successResults array. In this example, we retried copying the dashboard and canvas accordingly.
+
+        '
+      value:
+        objects:
+        - type: dashboard
+          id: my-dashboard
+        includeReferences: true
+        createNewCopies: false
+        retries:
+          marketing:
+          - type: visualization
+            id: my-vis
+            ignoreMissingReferences: true
+          - type: canvas
+            id: my-canvas
+          - type: dashboard
+            id: my-dashboard
+    copy_saved_objects_response2:
+      summary: Copy without createNewCopies
+      description: 'The response for successfully copying a dashboard with the my-dashboard ID with createNewCopies turned off. The result indicates a successful copy and all three objects are created.
+
+        '
+      value:
+        marketing:
+          success: true
+          successCount: 3
+          successResults:
+          - id: my-dashboard
+            type: dashboard
+            meta:
+              icon: dashboardApp
+              title: Look at my dashboard
+          - id: my-vis
+            type: visualization
+            meta:
+              icon: visualizeApp
+              title: Look at my visualization
+          - id: my-index-pattern
+            type: index-pattern
+            meta:
+              icon: indexPatternApp
+              title: my-pattern-*
+    update_saved_objects_spaces_response1:
+      summary: Update saved object spaces
+      description: 'The response from updating the spaces of saved objects.
+
+        '
+      value:
+        objects:
+        - type: index-pattern
+          id: 90943e30-9a47-11e8-b64d-95841ca0b247
+          spaces:
+          - default
+          - test
+    copy_saved_objects_response3:
+      summary: Failed copy response with conflict errors
+      description: 'A response for a failed copy of a dashboard with the my-dashboard ID including all references from the default space to the marketing and sales spaces. In this example, the dashboard has a reference to a visualization and a Canvas workpad and the visualization has a reference to an index pattern. The result indicates a successful copy for the marketing space and an unsuccessful copy for the sales space because the data view, visualization, and Canvas workpad each resulted in a conflict error. Objects are created when the error is resolved using the resolve copy conflicts API.
+
+        '
+      value:
+        marketing:
+          success: true
+          successCount: 4
+          successResults:
+          - id: my-dashboard
+            type: dashboard
+            meta:
+              icon: dashboardApp
+              title: Look at my dashboard
+          - id: my-vis
+            type: visualization
+            meta:
+              icon: visualizeApp
+              title: Look at my visualization
+          - id: my-canvas
+            type: canvas-workpad
+            meta:
+              icon: canvasApp
+              title: Look at my canvas
+          - id: my-index-pattern
+            type: index-pattern
+            meta:
+              icon: indexPatternApp
+              title: my-pattern-*
+        sales:
+          success: false
+          successCount: 1,
+          errors:
+          - id: my-pattern
+            type: index-pattern
+            title: my-pattern-*
+            error:
+              type: conflict
+            meta:
+              icon: indexPatternApp
+              title: my-pattern-*
+          - id: my-visualization
+            type: my-vis
+            title: Look at my visualization
+            error:
+              type: conflict
+              destinationId: another-vis
+            meta:
+              icon: visualizeApp
+              title: Look at my visualization
+          - id: my-canvas
+            type: canvas-workpad
+            title: Look at my canvas
+            error:
+              type: ambiguous_conflict
+              destinations:
+              - id: another-canvas
+                title: Look at another canvas
+                updatedAt: '2020-07-08T16:36:32.377Z'
+              - id: yet-another-canvas
+                title: Look at yet another canvas
+                updatedAt: '2020-07-05T12:29:54.849Z'
+            meta:
+              icon: canvasApp
+              title: Look at my canvas
+          successResults":
+          - id: my-dashboard
+            type: dashboard
+            meta:
+              icon: dashboardApp
+              title: Look at my dashboard
+    get_space_response:
+      summary: Get details about a marketing space
+      value:
+        id: marketing
+        name: Marketing
+        description: This is the Marketing Space
+        color: null
+        initials: MK
+        disabledFeatures: []
+        imageUrl: ''
+        solution: es
+    get_shareable_references_response1:
+      summary: Get shareable references response
+      description: 'A response that includes the collected references and the spaces where the objects exist.
+
+        '
+      value:
+        objects:
+        - type: dashboard
+          id: my-dashboard-id
+          spaces:
+          - default
+          - marketing
+          inboundReferences: []
+    get_shareable_references_request1:
+      summary: Get shareable references
+      description: 'Collect references and space contexts for a dashboard saved object.
+
+        '
+      value:
+        objects:
+        - type: dashboard
+          id: my-dashboard-id
+    update_space_request:
+      summary: Update a marketing space
+      description: Update the marketing space to remove the imageUrl.
+      value:
+        id: marketing
+        name: Marketing
+        description: This is the Marketing Space
+        color: null
+        initials: MK
+        disabledFeatures: []
+        imageUrl: ''
+    copy_saved_objects_request2:
+      summary: Copy without createNewCopies
+      description: 'Copy a dashboard with the my-dashboard ID, including all references from the default space to the marketing space. In this example, the dashboard has a reference to a visualization and that has a reference to a data view.
+
+        '
+      value:
+        objects:
+        - type: dashboard
+          id: my-dashboard
+        spaces:
+        - marketing
+        includeReferences: true
+        createNewCopies: false
+    disable_legacy_url_request1:
+      summary: Disable legacy URL aliases
+      description: 'This request leaves the alias intact but the legacy URL for this alias (http://localhost:5601/s/bills-space/app/dashboards#/view/123) will no longer function. The dashboard still exists and you can access it with the new URL.
+
+        '
+      value:
+        aliases:
+        - targetSpace: bills-space
+          targetType: dashboard
+          sourceId: 123
+    update_saved_objects_spaces_request1:
+      summary: Update saved object spaces
+      description: Update the spaces of each saved object and all its references.
+      value:
+        objects:
+        - type: index-pattern
+          id: 90943e30-9a47-11e8-b64d-95841ca0b247
+        spacesToAdd:
+        - test
+        spacesToRemove: []
+    get_spaces_response1:
+      summary: Get all spaces
+      description: Get all spaces without specifying any options.
+      value:
+      - id: default
+        name: Default
+        description: This is the Default Space
+        disabledFeatures: []
+        imageUrl: ''
+        _reserved: true
+      - id: marketing
+        name: Marketing
+        description: This is the Marketing Space
+        color: null
+        disabledFeatures:
+        - apm
+        initials: MK
+        imageUrl: data:image/png;base64,iVBORw0KGgoAAAANSU
+      - id: sales
+        name: Sales
+        initials: MK
+        disabledFeatures:
+        - discover
+        imageUr": ''
+        solution: oblt
+    copy_saved_objects_response4:
+      summary: Failed copy with missing reference errors
+      description: 'The response for successfully copying a dashboard with the my-dashboard ID, including all references from the default space to the marketing space. In this example, the dashboard has a reference to a visualization and a Canvas workpad and the visualization has a reference to a data view. The result indicates an unsuccessful copy because the visualization resulted in a missing references error. Objects are created when the errors are resolved using the resolve copy conflicts API.
+
+        '
+      value:
+        marketing:
+          success: false
+          successCount: 2
+          errors:
+          - id: my-vis
+            type: visualization
+            title: Look at my visualization
+            error:
+              type: missing_references
+              references:
+              - type: index-pattern
+                id: my-pattern-*
+            meta:
+              icon: visualizeApp
+              title: Look at my visualization
+          successResults:
+          - id: my-dashboard
+            type: dashboard
+            meta:
+              icon: dashboardApp
+              title: Look at my dashboard
+          - id: my-canvas
+            type: canvas-workpad
+            meta:
+              icon: canvasApp
+              title: Look at my canvas
+    copy_saved_objects_request1:
+      summary: Copy with createNewCopies
+      description: 'Copy a dashboard with the my-dashboard ID, including all references from the default space to the marketing space. In this example, the dashboard has a reference to a visualization and that has a reference to a data view.
+
+        '
+      value:
+        objects:
+        - type: dashboard
+          id: my-dashboard
+        spaces:
+        - marketing
+        includeReferences: true
+    get_spaces_response2:
+      summary: Get all spaces with custom options
+      description: 'The user has read-only access to the Sales space. Get all spaces with the following query parameters: "purpose=shareSavedObjectsIntoSpace&include_authorized_purposes=true"
+
+        '
+      value:
+      - id: default
+        name: Default
+        description: This is the Default Space
+        disabledFeatures: []
+        imageUrl: ''
+        _reserved: true
+        authorizedPurposes:
+          any: true
+          copySavedObjectsIntoSpace: true
+          findSavedObjects: true
+          shareSavedObjectsIntoSpace: true
+      - id: marketing
+        name: Marketing
+        description: This is the Marketing Space
+        color: null
+        disabledFeatures:
+        - apm
+        initials: MK
+        imageUrl: data:image/png;base64,iVBORw0KGgoAAAANSU
+        authorizedPurposes:
+          any: true
+          copySavedObjectsIntoSpace: true
+          findSavedObjects: true
+          shareSavedObjectsIntoSpace: true
+      - id: sales
+        name: Sales
+        initials: MK
+        disabledFeatures:
+        - discover
+        imageUrl: ''
+        authorizedPurposes:
+          any: true
+          copySavedObjectsIntoSpace: false
+          findSavedObjects: true
+          shareSavedObjectsIntoSpace: false
+    create_space_request:
+      summary: Create a marketing space
+      value:
+        id: marketing
+        name: Marketing
+        description: This is the Marketing Space
+        color: null
+        initials: MK
+        disabledFeatures: []
+        imageUrl: data:image/png;base64,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
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

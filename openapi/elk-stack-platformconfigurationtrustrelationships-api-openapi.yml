@@ -1,0 +1,469 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Platform Configuration Trust Relationships API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: PlatformConfigurationTrustRelationships
+paths:
+  /platform/configuration/trust-relationships:
+    get:
+      tags:
+      - PlatformConfigurationTrustRelationships
+      summary: List trust relationships
+      description: List trust relationships.
+      operationId: get-trust-relationships
+      parameters:
+      - name: include_certificate
+        in: query
+        description: Whether to include the public CA certificates in the response.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: filter
+        in: query
+        description: Which trust relationships to return in the response. Defaults to `all`
+        required: false
+        schema:
+          type: string
+          enum:
+          - all
+          - local
+          - non-local
+          default: all
+      responses:
+        '200':
+          description: The list of trust relationships.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationshipsListResponse'
+        '401':
+          description: You are not authorized to perform this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Trust relationships
+    post:
+      tags:
+      - PlatformConfigurationTrustRelationships
+      summary: Create trust relationship
+      description: Creates a trust relationship.
+      operationId: create-trust-relationship
+      responses:
+        '201':
+          description: The request was valid and a new trust relationship was created
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationshipCreateResponse'
+        '400':
+          description: The trust relationship request had errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: You are not authorized to perform this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Trust relationships
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustRelationshipCreateRequest'
+        description: The trust relationship definition
+        required: true
+  /platform/configuration/trust-relationships/{trust_relationship_id}:
+    get:
+      tags:
+      - PlatformConfigurationTrustRelationships
+      summary: Get trust relationship
+      description: Retrieves information about a trust relationship.
+      operationId: get-trust-relationship
+      parameters:
+      - name: trust_relationship_id
+        in: path
+        description: Identifier for the trust relationship
+        required: true
+        schema:
+          type: string
+      - name: include_certificate
+        in: query
+        description: Whether to include the public CA certificates in the response.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The trust relationship info response
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationshipGetResponse'
+        '401':
+          description: You are not authorized to perform this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The trust relationship specified by {trust_relationship_id} cannot be found. (code: `trust_relationships.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - trust_relationships.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Trust relationships
+    put:
+      tags:
+      - PlatformConfigurationTrustRelationships
+      summary: Update trust relationship
+      description: Updates a trust relationship.
+      operationId: update-trust-relationship
+      parameters:
+      - name: trust_relationship_id
+        in: path
+        description: Identifier for the trust relationship
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The request was valid and the trust relationship was updated.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationshipUpdateResponse'
+        '400':
+          description: The trust relationship request had errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: You are not authorized to perform this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The trust relationship specified by {trust_relationship_id} cannot be found. (code: `trust_relationships.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - trust_relationships.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Trust relationships
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustRelationshipUpdateRequest'
+        description: The trust relationship definition
+        required: true
+    delete:
+      tags:
+      - PlatformConfigurationTrustRelationships
+      summary: Delete trust relationship
+      description: Deletes a trust relationship.
+      operationId: delete-trust-relationship
+      parameters:
+      - name: trust_relationship_id
+        in: path
+        description: Identifier for the trust relationship
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: If specified then checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: The request was valid and the trust relationship was deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '401':
+          description: You are not authorized to perform this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The trust relationship specified by {trust_relationship_id} cannot be found. (code: `trust_relationships.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - trust_relationships.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Trust relationships
+components:
+  schemas:
+    TrustRelationshipsListResponse:
+      type: object
+      required:
+      - trust_relationships
+      properties:
+        trust_relationships:
+          type: array
+          description: The trust relationships
+          items:
+            $ref: '#/components/schemas/TrustRelationshipGetResponse'
+      description: Contains a list of trust relationships
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
+    TrustRelationshipUpdateResponse:
+      type: object
+      required:
+      - id
+      - local
+      - name
+      - trust_by_default
+      properties:
+        id:
+          type: string
+          description: The id of the trust relationship
+        name:
+          type: string
+          description: The name of the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts trusted by this relationship.
+          items:
+            type: string
+        local:
+          type: boolean
+          description: If this is the trust relationship for the local environment
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+      description: A response returned from the trust relationship update endpoint
+    TrustRelationshipUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name for the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts to trust by this relationship.
+          items:
+            type: string
+        public_ca_cert:
+          type: string
+          description: The public CA certificate of the environment to trust
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+      description: A request for updating a trust relationship with another environment
+    TrustRelationshipCreateResponse:
+      type: object
+      required:
+      - id
+      - local
+      - name
+      - trust_by_default
+      properties:
+        id:
+          type: string
+          description: The id of the trust relationship
+        name:
+          type: string
+          description: The name of the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts trusted by this relationship.
+          items:
+            type: string
+        local:
+          type: boolean
+          description: If this is the trust relationship for the local environment
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+      description: A response returned from the trust relationship create endpoint
+    TrustRelationshipGetResponse:
+      type: object
+      required:
+      - id
+      - last_modified
+      - local
+      - name
+      - trust_by_default
+      properties:
+        id:
+          type: string
+          description: The id of the trust relationship
+        name:
+          type: string
+          description: The name of the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts trusted by this relationship.
+          items:
+            type: string
+        public_ca_cert:
+          type: string
+          description: The public CA certificate of the environment to trust
+        local:
+          type: boolean
+          description: If this is the trust relationship for the local environment
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+        last_modified:
+          type: string
+          format: date-time
+          description: The most recent time the trust relationship was changed (ISO format in UTC)
+    TrustRelationshipCreateRequest:
+      type: object
+      required:
+      - name
+      - public_ca_cert
+      properties:
+        name:
+          type: string
+          description: A name for the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts to trust by this relationship.
+          items:
+            type: string
+        public_ca_cert:
+          type: string
+          description: The public CA certificate of the environment to trust
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+      description: A request for creating a trust relationship with another environment
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

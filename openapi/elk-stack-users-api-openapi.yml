@@ -1,0 +1,527 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Users API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: Users
+paths:
+  /user:
+    get:
+      tags:
+      - Users
+      summary: Fetch current user information
+      description: Fetch current user information.
+      operationId: get-current-user
+      responses:
+        '200':
+          description: User successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid user authentication. (code: `root.unauthenticated`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users
+    patch:
+      tags:
+      - Users
+      summary: Updates the current user
+      description: Updates the current user.
+      operationId: update-current-user
+      responses:
+        '200':
+          description: User successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: '* Some of the provided roles are invalid. (code: `user.roles.invalid`)
+
+            * Some of the provided roles are forbidden. (code: `user.roles.forbidden`)
+
+            * Trying to set a restricted field. (code: `user.restricted_field`)
+
+            * External users cannot be modified. (code: `user.cannot_modify_external`)
+
+            * Built-in users cannot be modified. (code: `user.cannot_modify`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.roles.invalid
+                - user.roles.forbidden
+                - user.restricted_field
+                - user.cannot_modify_external
+                - user.cannot_modify
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'Invalid user authentication. (code: `root.unauthenticated`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: All changes in the specified object are applied to the current user according to the JSON Merge Patch processing rules. Omitting existing fields causes the same values to be reapplied. Specifying a `null` value reverts the field to the default value, or removes the field when no default value exists.
+        required: true
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Fetch all users
+      description: Fetches all available users.
+      operationId: get-users
+      parameters:
+      - name: include_disabled
+        in: query
+        description: True if disabled users should be included in the response
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Users successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+      x-doc:
+        tag: Users
+    post:
+      tags:
+      - Users
+      summary: Creates a new user
+      description: Creates a new user.
+      operationId: create-user
+      responses:
+        '200':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: '* The provided user name is invalid. Check that it is not empty and it does not contain special characters. (code: `user.user_name.invalid`)
+
+            * Some of the provided roles are invalid. (code: `user.roles.invalid`)
+
+            * Some of the provided roles are forbidden. (code: `user.roles.forbidden`)
+
+            * Trying to set a restricted field. (code: `user.restricted_field`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.user_name.invalid
+                - user.roles.invalid
+                - user.roles.forbidden
+                - user.restricted_field
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The username is already in use. (code: `user.user_name.conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.user_name.conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: The user to create
+        required: true
+  /users/{user_name}:
+    get:
+      tags:
+      - Users
+      summary: Fetch a single user
+      description: Fetches a single user.
+      operationId: get-user
+      parameters:
+      - name: user_name
+        in: path
+        description: Identifier for the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users
+    delete:
+      tags:
+      - Users
+      summary: Deletes an existing user
+      description: Deletes an existing user.
+      operationId: delete-user
+      parameters:
+      - name: user_name
+        in: path
+        description: Identifier for the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The user cannot be deleted. (code: `user.restricted_deletion`)
+
+            * External users cannot be modified. (code: `user.cannot_modify_external`)
+
+            * Built-in users cannot be modified. (code: `user.cannot_modify`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.restricted_deletion
+                - user.cannot_modify_external
+                - user.cannot_modify
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users
+    patch:
+      tags:
+      - Users
+      summary: Updates an existing user
+      description: Updates an existing user.
+      operationId: update-user
+      parameters:
+      - name: user_name
+        in: path
+        description: Identifier for the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: '* Some of the provided roles are invalid. (code: `user.roles.invalid`)
+
+            * Some of the provided roles are forbidden. (code: `user.roles.forbidden`)
+
+            * Trying to set a restricted field. (code: `user.restricted_field`)
+
+            * External users cannot be modified. (code: `user.cannot_modify_external`)
+
+            * Built-in users cannot be modified. (code: `user.cannot_modify`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.roles.invalid
+                - user.roles.forbidden
+                - user.restricted_field
+                - user.cannot_modify_external
+                - user.cannot_modify
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'User not found. (code: `user.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - user.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: All changes in the specified object are applied to the user according to the JSON Merge Patch processing rules. Omitting existing fields causes the same values to be reapplied. Specifying a `null` value reverts the field to the default value, or removes the field when no default value exists.
+        required: true
+components:
+  schemas:
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
+    UserSecurity:
+      type: object
+      properties:
+        roles:
+          type: array
+          description: The set of roles assigned to a user
+          items:
+            type: string
+        permissions:
+          type: array
+          description: The distinct set of permissions allowed by the user's roles. These correspond to operationId values in the OpenAPI definition.
+          items:
+            type: string
+        elevated_permissions:
+          description: The user's elevated permission status
+          $ref: '#/components/schemas/ElevatedPermissions'
+        password:
+          type: string
+          description: The user's password. Only used when modifying a user.
+        enabled:
+          type: boolean
+          description: True if the user is enabled
+        security_realm:
+          description: The user's security realm
+          $ref: '#/components/schemas/UserSecurityRealm'
+      description: A user's security information
+    ElevatedPermissions:
+      type: object
+      required:
+      - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: True if the user has elevated permissions
+        expires_at:
+          type: string
+          format: date-time
+          description: The time at which the user's elevated permissions expire
+      description: A user's elevated permissions status
+    UserList:
+      type: object
+      required:
+      - users
+      properties:
+        users:
+          type: array
+          description: A list of users
+          items:
+            $ref: '#/components/schemas/User'
+      description: A collection of users
+    UserSecurityRealm:
+      type: object
+      required:
+      - id
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of the security realm
+          enum:
+          - native
+          - ldap
+          - saml
+          - active_directory
+        id:
+          type: string
+          description: The identifier for the security realm
+      description: The security realm the user belongs to
+    UserMetadata:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: The Id of the user that created this user
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was created
+        updated_by:
+          type: string
+          description: The Id of the user that last updated this user
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was last updated
+        first_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user first logged in
+        last_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user last logged in
+      description: Metadata for a user
+    User:
+      type: object
+      required:
+      - security
+      - user_name
+      properties:
+        user_name:
+          type: string
+          description: The user's identifier
+        security:
+          description: The user's security information
+          $ref: '#/components/schemas/UserSecurity'
+        metadata:
+          description: The users metadata
+          $ref: '#/components/schemas/UserMetadata'
+        full_name:
+          type: string
+          description: The user's optional full name
+        email:
+          type: string
+          description: The user's optional email address
+        builtin:
+          type: boolean
+          description: True if the user is a built-in read-only user
+      description: An API user
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

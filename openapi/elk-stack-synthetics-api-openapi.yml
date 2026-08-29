@@ -1,0 +1,1631 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Synthetics API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: synthetics
+  x-displayName: Synthetics
+  description: Synthetics APIs enable you to check the status of your services and applications.
+  externalDocs:
+    description: Synthetic monitoring
+    url: https://www.elastic.co/docs/solutions/observability/synthetics
+paths:
+  /api/synthetics/monitor/test/{monitorId}:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitor/test/{monitorId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Trigger an immediate test execution for the specified monitor. The response includes the generated `testRunId`. If the test encounters issues in one or more service locations, an `errors` array is also returned with details about the failures.
+
+        '
+      operationId: post-synthetics-monitor-test
+      parameters:
+      - description: The ID (config_id) of the monitor to test.
+        in: path
+        name: monitorId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                testNowMonitorResponseExample1:
+                  value: "{\n  \"testRunId\": \"2bd506e5-4f9a-4aa6-a019-7988500afba0\",\n  \"errors\": [\n    {\n      \"locationId\": \"us_central_staging\",\n      \"error\": {\n        \"status\": 401,\n        \"reason\": \"no auth credentials provided\",\n        \"failed_monitors\": null\n      }\n    }\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  errors:
+                    description: Array of errors encountered while triggering the test, one per service location.
+                    items:
+                      type: object
+                      properties:
+                        error:
+                          type: object
+                          properties:
+                            failed_monitors:
+                              description: Optional list of monitors that failed at the location.
+                              items:
+                                type: object
+                              type:
+                              - array
+                              - 'null'
+                            reason:
+                              description: Human-readable explanation of the failure.
+                              type: string
+                            status:
+                              description: HTTP status code returned by the agent.
+                              type: integer
+                          required:
+                          - status
+                          - reason
+                          - failed_monitors
+                        locationId:
+                          description: Identifier of the service location where the error occurred.
+                          type: string
+                      required:
+                      - locationId
+                      - error
+                    type: array
+                  testRunId:
+                    description: Unique identifier for the triggered test run.
+                    type: string
+                required:
+                - testRunId
+          description: Test run triggered successfully.
+        '404':
+          description: Monitor not found.
+      summary: Trigger an on-demand test run for a monitor
+      tags:
+      - synthetics
+      x-state: Generally available; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/monitors:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitors</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of monitors.
+
+        You must have `read` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: get-synthetic-monitors
+      parameters:
+      - description: Additional filtering criteria.
+        in: query
+        name: filter
+        schema:
+          type: string
+      - description: The locations to filter by.
+        in: query
+        name: locations
+        schema:
+          oneOf:
+          - type: string
+          - items:
+              type: string
+            type: array
+      - description: The monitor types to filter.
+        in: query
+        name: monitorTypes
+        schema:
+          oneOf:
+          - enum:
+            - browser
+            - http
+            - icmp
+            - tcp
+            type: string
+          - items:
+              enum:
+              - browser
+              - http
+              - icmp
+              - tcp
+              type: string
+            type: array
+      - description: The page number for paginated results.
+        in: query
+        name: page
+        schema:
+          type: integer
+      - description: The number of items to return per page.
+        in: query
+        name: per_page
+        schema:
+          type: integer
+      - description: The projects to filter by.
+        in: query
+        name: projects
+        schema:
+          oneOf:
+          - type: string
+          - items:
+              type: string
+            type: array
+      - description: A free-text query string.
+        in: query
+        name: query
+        schema:
+          type: string
+      - description: The schedules to filter by.
+        in: query
+        name: schedules
+        schema:
+          oneOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+      - description: The field to sort the results by.
+        in: query
+        name: sortField
+        schema:
+          enum:
+          - name
+          - createdAt
+          - updatedAt
+          - status
+          type: string
+      - description: The sort order.
+        in: query
+        name: sortOrder
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+      - description: The status to filter by.
+        in: query
+        name: status
+        schema:
+          oneOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+      - description: Tags to filter monitors.
+        in: query
+        name: tags
+        schema:
+          oneOf:
+          - type: string
+          - items:
+              type: string
+            type: array
+      - description: 'Specifies whether to apply logical AND filtering for specific fields. Accepts either a string with values "tags" or "locations" or an array containing both.
+
+          '
+        in: query
+        name: useLogicalAndFor
+        schema:
+          oneOf:
+          - enum:
+            - tags
+            - locations
+            type: string
+          - items:
+              enum:
+              - tags
+              - locations
+              type: string
+            type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSyntheticMonitorsResponseExample1:
+                  description: A successful response from `GET /api/synthetics/monitors?tags=prod&monitorTypes=http&locations=us-east-1&projects=project1&status=up`.
+                  value: "{\n    \"page\": 1,\n    \"total\": 24,\n    \"monitors\": [\n        {\n            \"type\": \"icmp\",\n            \"enabled\": false,\n            \"alert\": {\n                \"status\": {\n                    \"enabled\": true\n                },\n                \"tls\": {\n                    \"enabled\": true\n                }\n            },\n            \"schedule\": {\n                \"number\": \"3\",\n                \"unit\": \"m\"\n            },\n            \"config_id\": \"e59142e5-1fe3-4aae-b0b0-19d6345e65a1\",\n            \"timeout\": \"16\",\n            \"name\": \"8.8.8.8:80\",\n            \"locations\": [\n                {\n                    \"id\": \"us_central\",\n                    \"label\": \"North America - US Central\",\n                    \"geo\": {\n                        \"lat\": 41.25,\n                        \"lon\": -95.86\n                    },\n                    \"isServiceManaged\": true\n                }\n            ],\n            \"namespace\": \"default\",\n            \"origin\": \"ui\",\n            \"id\": \"e59142e5-1fe3-4aae-b0b0-19d6345e65a1\",\n            \"max_attempts\": 2,\n            \"wait\": \"7\",\n            \"revision\": 3,\n            \"mode\": \"all\",\n            \"ipv4\": true,\n            \"ipv6\": true,\n            \"created_at\": \"2023-11-07T09:57:04.152Z\",\n            \"updated_at\": \"2023-12-04T19:19:34.039Z\",\n            \"host\": \"8.8.8.8:80\"\n        }\n    ],\n    \"absoluteTotal\": 24,\n    \"perPage\": 10,\n}"
+              schema:
+                type: object
+          description: A successful response.
+      summary: Get monitors
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitors</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a new monitor with the specified attributes. A monitor can be one of the following types: HTTP, TCP, ICMP, or Browser. The required and default fields may vary based on the monitor type.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: post-synthetic-monitors
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postSyntheticMonitorsRequestExample1:
+                description: Create an HTTP monitor to check a website's availability.
+                summary: HTTP monitor
+                value: "{\n  \"type\": \"http\",\n  \"name\": \"Website Availability\",\n  \"url\": \"https://example.com\",\n  \"tags\": [\"website\", \"availability\"],\n  \"locations\": [\"united_kingdom\"]\n}"
+              postSyntheticMonitorsRequestExample2:
+                description: Create a TCP monitor to monitor a server's availability.
+                summary: TCP monitor
+                value: "{\n  \"type\": \"tcp\",\n  \"name\": \"Server Availability\",\n  \"host\": \"example.com\",\n  \"private_locations\": [\"my_private_location\"]\n}"
+              postSyntheticMonitorsRequestExample3:
+                description: Create an ICMP monitor to perform ping checks.
+                summary: ICMP monitor
+                value: "{\n  \"type\": \"icmp\",\n  \"name\": \"Ping Test\",\n  \"host\": \"example.com\",\n  \"locations\": [\"united_kingdom\"]\n}"
+              postSyntheticMonitorsRequestExample4:
+                description: Create a browser monitor to check a website.
+                summary: Browser monitor
+                value: "{\n  \"type\": \"browser\",\n  \"name\": \"Example journey\",\n  \"inline_script\": \"step('Go to https://google.com.co', () => page.goto('https://www.google.com'))\",\n  \"locations\": [\"united_kingdom\"]\n}"
+            schema:
+              description: 'The request body should contain the attributes of the monitor you want to create. The required and default fields differ depending on the monitor type.
+
+                '
+              discriminator:
+                propertyName: type
+              oneOf:
+              - $ref: '#/components/schemas/Synthetics_browserMonitorFields'
+              - $ref: '#/components/schemas/Synthetics_httpMonitorFields'
+              - $ref: '#/components/schemas/Synthetics_icmpMonitorFields'
+              - $ref: '#/components/schemas/Synthetics_tcpMonitorFields'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postSyntheticMonitorsResponseWithWarning:
+                  description: A response when a browser monitor specifies a timeout but has no private locations.
+                  summary: Response with warning
+                  value: "{\n  \"type\": \"browser\",\n  \"name\": \"Example journey\",\n  \"enabled\": true,\n  \"warnings\": [\n    {\n      \"id\": \"monitor-id\",\n      \"message\": \"For browser monitors, timeout is only supported on private locations. Browser monitor \\\"Example journey\\\" specifies a timeout and is running on public locations: \\\"public-1, public-2\\\". The timeout will have no effect on these locations.\",\n      \"publicLocationIds\": [\"public-1\", \"public-2\"]\n    }\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  warnings:
+                    description: 'An optional array of warnings about the monitor configuration.
+
+                      '
+                    items:
+                      $ref: '#/components/schemas/Synthetics_monitorWarning'
+                    type: array
+          description: 'A successful response. The response may include a `warnings` array when the monitor configuration has non-critical issues. For example, if a browser monitor specifies a timeout but has no private locations configured, a warning is returned indicating the timeout will have no effect.
+
+            '
+        '400':
+          content:
+            application/json:
+              examples:
+                invalidBrowserTimeout:
+                  description: A 400 error when a browser monitor timeout is below 30 seconds.
+                  summary: Invalid browser timeout
+                  value: "{\n  \"statusCode\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"Browser Monitor timeout is invalid\",\n  \"attributes\": {\n    \"details\": \"Invalid timeout 20 seconds supplied. Minimum timeout for browser monitors is 30 seconds.\"\n  }\n}"
+              schema:
+                type: object
+                properties:
+                  attributes:
+                    type: object
+                    properties:
+                      details:
+                        example: Invalid timeout 20 seconds supplied. Minimum timeout for browser monitors is 30 seconds.
+                        type: string
+                  error:
+                    example: Bad Request
+                    type: string
+                  message:
+                    example: Browser Monitor timeout is invalid
+                    type: string
+                  statusCode:
+                    example: 400
+                    type: integer
+          description: 'Bad request. For browser monitors, a 400 error is returned if the timeout is less than 30 seconds.
+
+            '
+      summary: Create a monitor
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/monitors/_bulk_delete:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitors/_bulk_delete</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete multiple monitors by sending a list of config IDs.
+
+        '
+      operationId: delete-synthetic-monitors
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkDeleteRequestExample1:
+                description: Run `POST /api/synthetics/monitors/_bulk_delete` to delete a list of monitors.
+                value: "{\n  \"ids\": [\n    \"monitor1-id\",\n    \"monitor2-id\"\n  ]\n}"
+            schema:
+              type: object
+              properties:
+                ids:
+                  description: An array of monitor IDs to delete.
+                  items:
+                    type: string
+                  type: array
+              required:
+              - ids
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteMonitorsResponseExample1:
+                  description: A response from successfully deleting multiple monitors.
+                  value: "[\n  {\n    \"id\": \"monitor1-id\",\n    \"deleted\": true\n  },\n  {\n    \"id\": \"monitor2-id\",\n    \"deleted\": true\n  }\n]"
+              schema:
+                items:
+                  description: The API response includes information about the deleted monitors.
+                  type: object
+                  properties:
+                    deleted:
+                      description: 'If it is `true`, the monitor was successfully deleted If it is `false`, the monitor was not deleted.
+
+                        '
+                      type: boolean
+                    ids:
+                      description: The unique identifier of the deleted monitor.
+                      type: string
+                type: array
+          description: A successful response.
+      summary: Delete monitors
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/monitors/{id}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitors/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a monitor from the Synthetics app.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: delete-synthetic-monitor
+      parameters:
+      - description: The identifier for the monitor that you want to delete.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      summary: Delete a monitor
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      operationId: get-synthetic-monitor
+      parameters:
+      - description: The ID of the monitor.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSyntheticMonitorResponseExample1:
+                  description: A successful response from `GET /api/synthetics/monitors/<id>`.
+                  value: "{\n    \"type\": \"http\",\n    \"enabled\": true,\n    \"alert\": {\n        \"status\": {\n            \"enabled\": true\n        },\n        \"tls\": {\n            \"enabled\": true\n        }\n    },\n    \"schedule\": {\n        \"number\": \"3\",\n        \"unit\": \"m\"\n    },\n    \"config_id\": \"a8188705-d01e-4bb6-87a1-64fa5e4b07ec\",\n    \"timeout\": \"16\",\n    \"name\": \"am i something\",\n    \"locations\": [\n        {\n            \"id\": \"us_central\",\n            \"label\": \"North America - US Central\",\n            \"geo\": {\n                \"lat\": 41.25,\n                \"lon\": -95.86\n            },\n            \"isServiceManaged\": true\n        }\n    ],\n    \"namespace\": \"default\",\n    \"origin\": \"ui\",\n    \"id\": \"a8188705-d01e-4bb6-87a1-64fa5e4b07ec\",\n    \"max_attempts\": 2,\n    \"__ui\": {\n        \"is_tls_enabled\": false\n    },\n    \"max_redirects\": \"0\",\n    \"response.include_body\": \"on_error\",\n    \"response.include_headers\": true,\n    \"check.request.method\": \"GET\",\n    \"mode\": \"any\",\n    \"response.include_body_max_bytes\": \"1024\",\n    \"ipv4\": true,\n    \"ipv6\": true,\n    \"ssl.verification_mode\": \"full\",\n    \"ssl.supported_protocols\": [\n        \"TLSv1.1\",\n        \"TLSv1.2\",\n        \"TLSv1.3\"\n    ],\n    \"revision\": 13,\n    \"created_at\": \"2023-11-08T08:45:29.334Z\",\n    \"updated_at\": \"2023-12-18T20:31:44.770Z\",\n    \"url\": \"https://fast.com\"\n}"
+              schema:
+                type: object
+          description: A successful response.
+        '404':
+          description: If the monitor is not found, the API returns a 404 error.
+      summary: Get a monitor
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitors/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.'
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/monitors/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update a monitor with the specified attributes. The required and default fields may vary based on the monitor type.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        You can also partially update a monitor. This will only update the fields that are specified in the request body. All other fields are left unchanged. The specified fields should conform to the monitor type. For example, you can''t update the `inline_scipt` field of a HTTP monitor.
+
+        '
+      operationId: put-synthetic-monitor
+      parameters:
+      - description: The identifier for the monitor that you want to update.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putSyntheticMonitorsRequestExample1:
+                description: Update an HTTP monitor that checks a website's availability.
+                summary: HTTP monitor
+                value: "{\n  \"type\": \"http\",\n  \"name\": \"Website Availability\",\n  \"url\": \"https://example.com\",\n  \"tags\": [\"website\", \"availability\"],\n  \"locations\": [\"united_kingdom\"]\n}"
+              putSyntheticMonitorsRequestExample2:
+                description: Update a TCP monitor that monitors a server's availability.
+                summary: TCP monitor
+                value: "{\n  \"type\": \"tcp\",\n  \"name\": \"Server Availability\",\n  \"host\": \"example.com\",\n  \"private_locations\": [\"my_private_location\"]\n}"
+              putSyntheticMonitorsRequestExample3:
+                description: Update an ICMP monitor that performs ping checks.
+                summary: ICMP monitor
+                value: "{\n  \"type\": \"icmp\",\n  \"name\": \"Ping Test\",\n  \"host\": \"example.com\",\n  \"locations\": [\"united_kingdom\"]\n}"
+              putSyntheticMonitorsRequestExample4:
+                description: Update a browser monitor that checks a website.
+                summary: Browser monitor
+                value: "{\n  \"type\": \"browser\",\n  \"name\": \"Example journey\",\n  \"inline_script\": \"step('Go to https://google.com.co', () => page.goto('https://www.google.com'))\",\n  \"locations\": [\"united_kingdom\"]\n}"
+            schema:
+              description: 'The request body should contain the attributes of the monitor you want to update. The required and default fields differ depending on the monitor type.
+
+                '
+              discriminator:
+                propertyName: type
+              oneOf:
+              - $ref: '#/components/schemas/Synthetics_browserMonitorFields'
+              - $ref: '#/components/schemas/Synthetics_httpMonitorFields'
+              - $ref: '#/components/schemas/Synthetics_icmpMonitorFields'
+              - $ref: '#/components/schemas/Synthetics_tcpMonitorFields'
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putSyntheticMonitorResponseWithWarning:
+                  description: A response when a browser monitor specifies a timeout but has no private locations.
+                  summary: Response with warning
+                  value: "{\n  \"type\": \"browser\",\n  \"name\": \"Example journey\",\n  \"enabled\": true,\n  \"warnings\": [\n    {\n      \"id\": \"monitor-id\",\n      \"message\": \"For browser monitors, timeout is only supported on private locations. Browser monitor \\\"Example journey\\\" specifies a timeout and is running on public locations: \\\"public-1, public-2\\\". The timeout will have no effect on these locations.\",\n      \"publicLocationIds\": [\"public-1\", \"public-2\"]\n    }\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  warnings:
+                    description: 'An optional array of warnings about the monitor configuration.
+
+                      '
+                    items:
+                      $ref: '#/components/schemas/Synthetics_monitorWarning'
+                    type: array
+          description: 'A successful response. The response may include a `warnings` array when the monitor configuration has non-critical issues.
+
+            '
+        '400':
+          description: 'Bad request. For browser monitors, a 400 error is returned if the timeout is less than 30 seconds.
+
+            '
+      summary: Update a monitor
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/params:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/params</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of all parameters. You must have `read` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: get-parameters
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getParametersResponseExample1:
+                  description: A successful response for a user with read-only permissions to get a list of parameters.
+                  summary: Read access
+                  value: "[\n  {\n    \"id\": \"param1-id\",\n    \"key\": \"param1\",\n    \"description\": \"Description for param1\",\n    \"tags\": [\"tag1\", \"tag2\"],\n    \"namespaces\": [\"namespace1\"]\n  },\n  {\n    \"id\": \"param2-id\",\n    \"key\": \"param2\",\n    \"description\": \"Description for param2\",\n    \"tags\": [\"tag3\"],\n    \"namespaces\": [\"namespace2\"]\n  }\n]"
+                getParametersResponseExample2:
+                  description: A successful response for a user with write permissions to get a list of parameters.
+                  summary: Write access
+                  value: "[\n  {\n    \"id\": \"param1-id\",\n    \"key\": \"param1\",\n    \"description\": \"Description for param1\",\n    \"tags\": [\"tag1\", \"tag2\"],\n    \"namespaces\": [\"namespace1\"],\n    \"value\": \"value1\"\n  },\n  {\n    \"id\": \"param2-id\",\n    \"key\": \"param2\",\n    \"description\": \"Description for param2\",\n    \"tags\": [\"tag3\"],\n    \"namespaces\": [\"namespace2\"],\n    \"value\": \"value2\"\n  }\n]"
+              schema:
+                items:
+                  $ref: '#/components/schemas/Synthetics_getParameterResponse'
+                type: array
+          description: A successful response.
+      summary: Get parameters
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/params</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Add one or more parameters to the Synthetics app.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: post-parameters
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postParametersRequestExample1:
+                description: Add a single parameter.
+                summary: Single parameter
+                value: "{\n  \"key\": \"your-key-name\",\n  \"value\": \"your-parameter-value\",\n  \"description\": \"Param to use in browser monitor\",\n  \"tags\": [\"authentication\", \"security\"],\n  \"share_across_spaces\": true\n}"
+              postParametersRequestExample2:
+                description: Add multiple parameters.
+                summary: Multiple parameters
+                value: "[\n  {\n    \"key\": \"param1\",\n    \"value\": \"value1\"\n  },\n  {\n    \"key\": \"param2\",\n    \"value\": \"value2\"\n  }\n]"
+            schema:
+              oneOf:
+              - items:
+                  $ref: '#/components/schemas/Synthetics_parameterRequest'
+                type: array
+              - $ref: '#/components/schemas/Synthetics_parameterRequest'
+        description: The request body can contain either a single parameter object or an array of parameter objects.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postParametersResponseExample1:
+                  description: A successful response for a single added parameter.
+                  summary: Single parameter
+                  value: "{\n  \"id\": \"unique-parameter-id\",\n  \"key\": \"your-key-name\",\n  \"value\": \"your-param-value\",\n  \"description\": \"Param to use in browser monitor\",\n  \"tags\": [\"authentication\", \"security\"],\n  \"share_across_spaces\": true\n}"
+                postParametersResponseExample2:
+                  description: A successful response for multiple added parameters.
+                  summary: Multiple parameters
+                  value: "[\n  {\n    \"id\": \"param1-id\",\n    \"key\": \"param1\",\n    \"value\": \"value1\"\n  },\n  {\n    \"id\": \"param2-id\",\n    \"key\": \"param2\",\n    \"value\": \"value2\"\n  }\n]"
+              schema:
+                oneOf:
+                - items:
+                    $ref: '#/components/schemas/Synthetics_postParameterResponse'
+                  type: array
+                - $ref: '#/components/schemas/Synthetics_postParameterResponse'
+          description: A successful response.
+      summary: Add parameters
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/params/_bulk_delete:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/params/_bulk_delete</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete parameters from the Synthetics app.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: delete-parameters
+      requestBody:
+        content:
+          application/json:
+            examples:
+              deleteParametersRequestExample1:
+                description: Run `POST /api/synthetics/params/_bulk_delete` to delete multiple parameters.
+                value: "{\n  \"ids\": [\"param1-id\", \"param2-id\"]\n}"
+            schema:
+              type: object
+              properties:
+                ids:
+                  description: An array of parameter IDs to delete.
+                  items:
+                    type: string
+                  type: array
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteParametersResponseExample1:
+                  value: "[\n  {\n    \"id\": \"param1-id\",\n    \"deleted\": true\n  }\n]"
+              schema:
+                items:
+                  type: object
+                  properties:
+                    deleted:
+                      description: 'Indicates whether the parameter was successfully deleted. It is `true` if it was deleted. It is `false` if it was not deleted.
+
+                        '
+                      type: boolean
+                    id:
+                      description: The unique identifier for the deleted parameter.
+                      type: string
+                type: array
+          description: A successful response.
+      summary: Delete parameters
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/params/{id}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/params/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a parameter from the Synthetics app.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: delete-parameter
+      parameters:
+      - description: The ID for the parameter to delete.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      summary: Delete a parameter
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/params/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a parameter from the Synthetics app.
+
+        You must have `read` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: get-parameter
+      parameters:
+      - description: The unique identifier for the parameter.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getParameterResponseExample1:
+                  description: A successful response for a user with read-only permissions to get a single parameter.
+                  summary: Read access
+                  value: "{\n  \"id\": \"unique-parameter-id\",\n  \"key\": \"your-api-key\",\n  \"description\": \"Param to use in browser monitor\",\n  \"tags\": [\"authentication\", \"security\"],\n  \"namespaces\": [\"namespace1\", \"namespace2\"]\n}"
+                getParameterResponseExample2:
+                  description: A successful response for a user with write permissions to get a single parameter.
+                  summary: Write access
+                  value: "{\n  \"id\": \"unique-parameter-id\",\n  \"key\": \"your-param-key\",\n  \"description\": \"Param to use in browser monitor\",\n  \"tags\": [\"authentication\", \"security\"],\n  \"namespaces\": [\"namespace1\", \"namespace2\"],\n  \"value\": \"your-param-value\"\n}"
+              schema:
+                $ref: '#/components/schemas/Synthetics_getParameterResponse'
+          description: A successful response.
+      summary: Get a parameter
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/params/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update a parameter in the Synthetics app.
+
+        You must have `all` privileges for the Synthetics feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: put-parameter
+      parameters:
+      - description: The unique identifier for the parameter.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putParameterRequestExample1:
+                value: "{\n  \"key\": \"updated_param_key\",\n  \"value\": \"updated-param-value\",\n  \"description\": \"Updated Param to be used in browser monitor\",\n  \"tags\": [\"authentication\", \"security\", \"updated\"]\n}"
+            schema:
+              type: object
+              properties:
+                description:
+                  description: The updated description of the parameter.
+                  type: string
+                key:
+                  description: The key of the parameter.
+                  type: string
+                tags:
+                  description: An array of updated tags to categorize the parameter.
+                  items:
+                    type: string
+                  type: array
+                value:
+                  description: The updated value associated with the parameter.
+                  type: string
+        description: The request body cannot be empty; at least one attribute is required.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putParameterResponseExample1:
+                  value: "{\n  \"id\": \"param_id1\",\n  \"key\": \"updated_param_key\",\n  \"value\": \"updated-param-value\",\n  \"description\": \"Updated Param to be used in browser monitor\",\n  \"tags\": [\"authentication\", \"security\", \"updated\"]\n}"
+              schema:
+                type: object
+          description: A successful response.
+      summary: Update a parameter
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/private_locations:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/private_locations</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of private locations.
+
+        You must have `read` privileges for the Synthetics and Uptime feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: get-private-locations
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPrivateLocationsResponseExample1:
+                  value: "[\n    {\n        \"label\": \"Test private location\",\n        \"id\": \"fleet-server-policy\",\n        \"agentPolicyId\": \"fleet-server-policy\",\n        \"isInvalid\": false,\n        \"geo\": {\n            \"lat\": 0,\n            \"lon\": 0\n        },\n        \"namespace\": \"default\"\n    },\n    {\n        \"label\": \"Test private location 2\",\n        \"id\": \"691225b0-6ced-11ee-8f5a-376306ee85ae\",\n        \"agentPolicyId\": \"691225b0-6ced-11ee-8f5a-376306ee85ae\",\n        \"isInvalid\": false,\n        \"geo\": {\n            \"lat\": 0,\n            \"lon\": 0\n        },\n        \"namespace\": \"test\"\n    }\n]"
+              schema:
+                items:
+                  $ref: '#/components/schemas/Synthetics_getPrivateLocation'
+                type: array
+          description: A successful response.
+      summary: Get private locations
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/private_locations</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        You must have `all` privileges for the Synthetics and Uptime feature in the Observability section of the Kibana feature privileges.'
+      operationId: post-private-location
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postPrivateLocationRequestExample1:
+                description: Run `POST /api/private_locations` to create a private location.
+                value: "{\n  \"label\": \"Private Location 1\",\n  \"agentPolicyId\": \"abcd1234\",\n  \"tags\": [\"private\", \"testing\"],\n  \"geo\": {\n    \"lat\": 40.7128,\n    \"lon\": -74.0060\n  }\n  \"spaces\": [\"default\"]\n}"
+            schema:
+              type: object
+              properties:
+                agentPolicyId:
+                  description: The ID of the agent policy associated with the private location.
+                  type: string
+                geo:
+                  description: Geographic coordinates (WGS84) for the location.
+                  type: object
+                  properties:
+                    lat:
+                      description: The latitude of the location.
+                      type: number
+                    lon:
+                      description: The longitude of the location.
+                      type: number
+                  required:
+                  - lat
+                  - lon
+                label:
+                  description: A label for the private location.
+                  type: string
+                spaces:
+                  description: 'An array of space IDs where the private location is available. If it is not provided, the private location is available in all spaces.
+
+                    '
+                  items:
+                    type: string
+                  type: array
+                tags:
+                  description: An array of tags to categorize the private location.
+                  items:
+                    type: string
+                  type: array
+              required:
+              - agentPolicyId
+              - label
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postPrivateLocationResponseExample1:
+                  value: "{\n  \"id\": \"abcd1234\",\n  \"label\": \"Private Location 1\",\n  \"agentPolicyId\": \"abcd1234\",\n  \"tags\": [\"private\", \"testing\"],\n  \"geo\": {\n    \"lat\": 40.7128,\n    \"lon\": -74.0060\n  }\n}"
+              schema:
+                type: object
+          description: A successful response.
+        '400':
+          description: If the `agentPolicyId` is already used by an existing private location or if the `label` already exists, the API will return a 400 Bad Request response with a corresponding error message.
+      summary: Create a private location
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/synthetics/private_locations/{id}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/private_locations/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        You must have `all` privileges for the Synthetics and Uptime feature in the Observability section of the Kibana feature privileges.
+
+        The API does not return a response body for deletion, but it will return an appropriate status code upon successful deletion.
+
+        A location cannot be deleted if it has associated monitors in use. You must delete all monitors associated with the location before deleting the location.
+
+        '
+      operationId: delete-private-location
+      parameters:
+      - description: The unique identifier of the private location to be deleted.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 1024
+          minLength: 1
+          type: string
+      responses:
+        '200':
+          description: OK
+      summary: Delete a private location
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/private_locations/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        You must have `read` privileges for the Synthetics and Uptime feature in the Observability section of the Kibana feature privileges.
+
+        '
+      operationId: get-private-location
+      parameters:
+      - description: A private location identifier or label.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPrivateLocationResponseExample1:
+                  value: "{\n    \"label\": \"Test private location\",\n    \"id\": \"test-private-location-id\",\n    \"agentPolicyId\": \"test-private-location-id\",\n    \"isServiceManaged\": false,\n    \"isInvalid\": false,\n    \"geo\": {\n        \"lat\": 0,\n        \"lon\": 0\n    },\n    \"namespace\": \"default\"\n}"
+              schema:
+                $ref: '#/components/schemas/Synthetics_getPrivateLocation'
+          description: A successful response.
+      summary: Get a private location
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/synthetics/private_locations/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update an existing private location''s label.
+
+        You must have `all` privileges for the Synthetics and Uptime feature in the Observability section of the Kibana feature privileges.
+
+        When a private location''s label is updated, all monitors using this location will also be updated to maintain data consistency.
+
+        '
+      operationId: put-private-location
+      parameters:
+      - description: The unique identifier of the private location to be updated.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putPrivateLocationRequestExample1:
+                description: Update a private location's label.
+                value: "{\n  \"label\": \"Updated Private Location Name\"\n}"
+            schema:
+              type: object
+              properties:
+                label:
+                  description: A new label for the private location. Must be at least 1 character long.
+                  minLength: 1
+                  type: string
+              required:
+              - label
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putPrivateLocationResponseExample1:
+                  value: "{\n  \"label\": \"Updated Private Location Name\",\n  \"id\": \"test-private-location-id\",\n  \"agentPolicyId\": \"test-private-location-id\",\n  \"isServiceManaged\": false,\n  \"isInvalid\": false,\n  \"tags\": [\"private\", \"testing\", \"updated\"],\n  \"geo\": {\n    \"lat\": 37.7749,\n    \"lon\": -122.4194\n  },\n  \"spaces\": [\"*\"]\n}"
+              schema:
+                $ref: '#/components/schemas/Synthetics_getPrivateLocation'
+          description: A successful response.
+        '400':
+          description: If the `label` is shorter than 1 character the API will return a 400 Bad Request response with a corresponding error message.
+        '404':
+          description: If the private location with the specified ID does not exist, the API will return a 404 Not Found response.
+      summary: Update a private location
+      tags:
+      - synthetics
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Synthetics_tcpMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          host:
+            description: 'The host to monitor; it can be an IP address or a hostname. The host can include the port using a colon, for example "example.com:9200".
+
+              '
+            type: string
+          proxy_url:
+            description: 'The URL of the SOCKS5 proxy to use when connecting to the server. The value must be a URL with a scheme of `socks5://`. If the SOCKS5 proxy server requires client authentication, then a username and password can be embedded in the URL. When using a proxy, hostnames are resolved on the proxy server instead of on the client. You can change this behavior by setting the `proxy_use_local_resolver` option.
+
+              '
+            type: string
+          proxy_use_local_resolver:
+            default: false
+            description: 'Specify that hostnames are resolved locally instead of being resolved on the proxy server. If `false`, name resolution occurs on the proxy server.
+
+              '
+            type: boolean
+          ssl:
+            description: 'The TLS/SSL connection settings for use with the HTTPS endpoint. If you don''t specify settings, the system defaults are used.
+
+              '
+            type: object
+          type:
+            description: The monitor type.
+            enum:
+            - tcp
+            type: string
+        required:
+        - host
+        - type
+      title: TCP monitor fields
+    Synthetics_getParameterResponse:
+      title: Get parameter response
+      type: object
+      properties:
+        description:
+          description: 'The description of the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          type: string
+        id:
+          description: The unique identifier of the parameter.
+          type: string
+        key:
+          description: The key of the parameter.
+          type: string
+        namespaces:
+          description: 'The namespaces associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          items:
+            type: string
+          type: array
+        tags:
+          description: 'An array of tags associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          items:
+            type: string
+          type: array
+        value:
+          description: "The value associated with the parameter. It will be included in the response if the user has write permissions.  \n"
+          type: string
+    Synthetics_parameterRequest:
+      title: Parameter request
+      type: object
+      properties:
+        description:
+          description: A description of the parameter.
+          type: string
+        key:
+          description: The key of the parameter.
+          type: string
+        share_across_spaces:
+          description: Specify whether the parameter should be shared across spaces.
+          type: boolean
+        tags:
+          description: An array of tags to categorize the parameter.
+          items:
+            type: string
+          type: array
+        value:
+          description: The value associated with the parameter.
+          type: string
+      required:
+      - key
+      - value
+    Synthetics_httpMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          check:
+            description: The check request settings.
+            type: object
+            properties:
+              request:
+                description: An optional request to send to the remote host.
+                type: object
+                properties:
+                  body:
+                    description: Optional request body content.
+                    type: string
+                  headers:
+                    description: 'A dictionary of additional HTTP headers to send. By default, Synthetics will set the User-Agent header to identify itself.
+
+                      '
+                    type: object
+                  method:
+                    description: The HTTP method to use.
+                    enum:
+                    - HEAD
+                    - GET
+                    - POST
+                    - OPTIONS
+                    type: string
+              response:
+                additionalProperties: true
+                description: The expected response.
+                type: object
+                properties:
+                  body:
+                    type: object
+                  headers:
+                    description: A dictionary of expected HTTP headers. If the header is not found, the check fails.
+                    type: object
+          ipv4:
+            default: true
+            description: If `true`, ping using the ipv4 protocol.
+            type: boolean
+          ipv6:
+            default: true
+            description: If `true`, ping using the ipv6 protocol.
+            type: boolean
+          max_redirects:
+            default: 0
+            description: The maximum number of redirects to follow.
+            type: number
+          mode:
+            default: any
+            description: 'The mode of the monitor. If it is `all`, the monitor pings all resolvable IPs for a hostname. If it is `any`, the monitor pings only one IP address for a hostname. If you''re using a DNS-load balancer and want to ping every IP address for the specified hostname, you should use `all`.
+
+              '
+            enum:
+            - all
+            - any
+            type: string
+          password:
+            description: 'The password for authenticating with the server. The credentials are passed with the request.
+
+              '
+            type: string
+          proxy_headers:
+            description: Additional headers to send to proxies during CONNECT requests.
+            type: object
+          proxy_url:
+            description: The URL of the proxy to use for this monitor.
+            type: string
+          response:
+            description: Controls the indexing of the HTTP response body contents to the `http.response.body.contents field`.
+            type: object
+          ssl:
+            description: 'The TLS/SSL connection settings for use with the HTTPS endpoint. If you don''t specify settings, the system defaults are used.
+
+              '
+            type: object
+          type:
+            description: The monitor type.
+            enum:
+            - http
+            type: string
+          url:
+            description: The URL to monitor.
+            type: string
+          username:
+            description: 'The username for authenticating with the server. The credentials are passed with the request.
+
+              '
+            type: string
+        required:
+        - type
+        - url
+      title: HTTP monitor fields
+    Synthetics_browserMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          ignore_https_errors:
+            default: false
+            description: Ignore HTTPS errors.
+            type: boolean
+          inline_script:
+            description: The inline script.
+            type: string
+          playwright_options:
+            description: Playwright options.
+            type: object
+          screenshots:
+            default: 'on'
+            description: The screenshot option.
+            enum:
+            - 'on'
+            - 'off'
+            - only-on-failure
+            type: string
+          synthetics_args:
+            description: Synthetics agent CLI arguments.
+            items:
+              type: string
+            type: array
+          type:
+            description: The monitor type.
+            enum:
+            - browser
+            type: string
+        required:
+        - inline_script
+        - type
+      title: Browser monitor fields
+    Synthetics_postParameterResponse:
+      title: Post parameter response
+      type: object
+      properties:
+        description:
+          description: A description of the parameter.
+          type: string
+        id:
+          description: The unique identifier for the parameter.
+          type: string
+        key:
+          description: The parameter key.
+          type: string
+        share_across_spaces:
+          description: Indicates whether the parameter is shared across spaces.
+          type: boolean
+        tags:
+          description: An array of tags associated with the parameter.
+          items:
+            type: string
+          type: array
+        value:
+          description: The value associated with the parameter.
+          type: string
+    Synthetics_monitorWarning:
+      title: Monitor warning
+      type: object
+      properties:
+        message:
+          description: A human-readable warning message.
+          type: string
+        monitorId:
+          description: The monitor ID associated with the warning.
+          type: string
+        publicLocationIds:
+          description: The public location IDs associated with the warning.
+          items:
+            type: string
+          type: array
+    Synthetics_icmpMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          host:
+            description: The host to ping.
+            type: string
+          type:
+            description: The monitor type.
+            enum:
+            - icmp
+            type: string
+          wait:
+            default: 1
+            description: The wait time in seconds.
+            type: number
+        required:
+        - host
+        - type
+      title: ICMP monitor fields
+    Synthetics_getPrivateLocation:
+      additionalProperties: true
+      properties:
+        agentPolicyId:
+          description: The ID of the agent policy associated with the private location.
+          type: string
+        geo:
+          description: Geographic coordinates (WGS84) for the location.
+          type: object
+          properties:
+            lat:
+              description: The latitude of the location.
+              type: number
+            lon:
+              description: The longitude of the location.
+              type: number
+          required:
+          - lat
+          - lon
+        id:
+          description: The unique identifier of the private location.
+          type: string
+        isInvalid:
+          description: 'Indicates whether the location is invalid. If `true`, the location is invalid, which means the agent policy associated with the location is deleted.
+
+            '
+          type: boolean
+        label:
+          description: A label for the private location.
+          type: string
+        namespace:
+          description: The namespace of the location, which is the same as the namespace of the agent policy associated with the location.
+          type: string
+      title: Post a private location
+      type: object
+    Synthetics_commonMonitorFields:
+      title: Common monitor fields
+      type: object
+      properties:
+        alert:
+          description: 'The alert configuration. The default is `{ status: { enabled: true }, tls: { enabled: true } }`.
+
+            '
+          type: object
+        enabled:
+          default: true
+          description: Specify whether the monitor is enabled.
+          type: boolean
+        labels:
+          additionalProperties:
+            type: string
+          description: 'Key-value pairs of labels to associate with the monitor. Labels can be used for filtering and grouping monitors.
+
+            '
+          type: object
+        locations:
+          description: 'The location to deploy the monitor.
+
+            Monitors can be deployed in multiple locations so that you can detect differences in availability and response times across those locations.
+
+            To list available locations you can:
+
+
+            - Run the `elastic-synthetics locations` command with the deployment''s Kibana URL.
+
+            - Go to *Synthetics > Management* and click *Create monitor*. Locations will be listed in *Locations*.
+
+            '
+          externalDocs:
+            url: https://github.com/elastic/synthetics/blob/main/src/locations/public-locations.ts
+          items:
+            type: string
+          type: array
+        name:
+          description: The monitor name.
+          type: string
+        namespace:
+          default: default
+          description: 'The namespace field should be lowercase and not contain spaces. The namespace must not include any of the following characters: `*`, `\`, `/`, `?`, `"`, `<`, `>`, `|`, whitespace, `,`, `#`, `:`, or `-`.
+
+            '
+          type: string
+        params:
+          description: The monitor parameters.
+          type: string
+        private_locations:
+          description: 'The private locations to which the monitors will be deployed.
+
+            These private locations refer to locations hosted and managed by you, whereas `locations` are hosted by Elastic.
+
+            You can specify a private location using the location''s name.
+
+            To list available private locations you can:
+
+
+            - Run the `elastic-synthetics locations` command with the deployment''s Kibana URL.
+
+            - Go to *Synthetics > Settings* and click *Private locationsr*. Private locations will be listed in the table.
+
+
+            > info
+
+            > You can provide `locations` or `private_locations` or both. At least one is required.
+
+            '
+          items:
+            type: string
+          type: array
+        retest_on_failure:
+          default: true
+          description: 'Turn retesting for when a monitor fails on or off. By default, monitors are automatically retested if the monitor goes from "up" to "down". If the result of the retest is also "down", an error will be created and if configured, an alert sent. The monitor will then resume running according to the defined schedule. Using `retest_on_failure` can reduce noise related to transient problems.
+
+            '
+          type: boolean
+        schedule:
+          description: 'The monitor''s schedule in minutes. Supported values are `1`, `3`, `5`, `10`, `15`, `30`, `60`, `120`, and `240`. The default value is `3` minutes for HTTP, TCP, and ICMP monitors. The default value is `10` minutes for Browser monitors.
+
+            '
+          type: number
+        service.name:
+          description: The APM service name.
+          type: string
+        tags:
+          description: An array of tags.
+          items:
+            type: string
+          type: array
+        timeout:
+          default: 16
+          description: 'The monitor timeout in seconds. The monitor will fail if it doesn''t complete within this time.
+
+
+            For browser monitors, the minimum timeout is 30 seconds. Browser monitor timeouts are only applied when the monitor runs on private locations. If a browser monitor specifies a timeout but has no private locations configured, the timeout will have no effect and a warning will be returned in the response.
+
+            '
+          type: number
+      required:
+      - name
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

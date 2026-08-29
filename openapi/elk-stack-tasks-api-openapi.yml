@@ -1,0 +1,603 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Request & Response Specification Tasks API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+tags:
+- name: tasks
+paths:
+  /_tasks/_cancel:
+    post:
+      tags:
+      - tasks
+      summary: Cancel a task
+      description: 'WARNING: The task management API is new and should still be considered a beta feature.
+
+        The API may change in ways that are not backwards compatible.
+
+
+        A task may continue to run for some time after it has been cancelled because it may not be able to safely stop its current activity straight away.
+
+        It is also possible that Elasticsearch must complete its work on other tasks before it can process the cancellation.
+
+        The get task information API will continue to list these cancelled tasks until they complete.
+
+        The cancelled flag in the response indicates that the cancellation command has been processed and the task will stop as soon as possible.
+
+
+        To troubleshoot why a cancelled task does not complete promptly, use the get task information API with the `?detailed` parameter to identify the other tasks the system is running.
+
+        You can also use the node hot threads API to obtain detailed information about the work the system is doing instead of completing the cancelled task.
+
+
+        For relocatable tasks, this API transparently follows the task across graceful shutdown relocations,
+
+        so callers can keep using the original task ID. The returned task reports its `original_task_id` and `original_start_time_in_millis`
+
+        if it is continuing work from an earlier task.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`
+
+        '
+      operationId: tasks-cancel
+      parameters:
+      - $ref: '#/components/parameters/tasks.cancel-actions'
+      - $ref: '#/components/parameters/tasks.cancel-nodes'
+      - $ref: '#/components/parameters/tasks.cancel-parent_task_id'
+      - $ref: '#/components/parameters/tasks.cancel-wait_for_completion'
+      responses:
+        '200':
+          $ref: '#/components/responses/tasks.cancel-200'
+      x-state: Experimental; Added in 2.3.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_tasks/{task_id}/_cancel:
+    post:
+      tags:
+      - tasks
+      summary: Cancel a task
+      description: 'WARNING: The task management API is new and should still be considered a beta feature.
+
+        The API may change in ways that are not backwards compatible.
+
+
+        A task may continue to run for some time after it has been cancelled because it may not be able to safely stop its current activity straight away.
+
+        It is also possible that Elasticsearch must complete its work on other tasks before it can process the cancellation.
+
+        The get task information API will continue to list these cancelled tasks until they complete.
+
+        The cancelled flag in the response indicates that the cancellation command has been processed and the task will stop as soon as possible.
+
+
+        To troubleshoot why a cancelled task does not complete promptly, use the get task information API with the `?detailed` parameter to identify the other tasks the system is running.
+
+        You can also use the node hot threads API to obtain detailed information about the work the system is doing instead of completing the cancelled task.
+
+
+        For relocatable tasks, this API transparently follows the task across graceful shutdown relocations,
+
+        so callers can keep using the original task ID. The returned task reports its `original_task_id` and `original_start_time_in_millis`
+
+        if it is continuing work from an earlier task.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`
+
+        '
+      operationId: tasks-cancel-1
+      parameters:
+      - $ref: '#/components/parameters/tasks.cancel-task_id'
+      - $ref: '#/components/parameters/tasks.cancel-actions'
+      - $ref: '#/components/parameters/tasks.cancel-nodes'
+      - $ref: '#/components/parameters/tasks.cancel-parent_task_id'
+      - $ref: '#/components/parameters/tasks.cancel-wait_for_completion'
+      responses:
+        '200':
+          $ref: '#/components/responses/tasks.cancel-200'
+      x-state: Experimental; Added in 2.3.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_tasks/{task_id}:
+    get:
+      tags:
+      - tasks
+      summary: Get task information
+      description: 'Get information about a task currently running in the cluster.
+
+
+        WARNING: The task management API is new and should still be considered a beta feature.
+
+        The API may change in ways that are not backwards compatible.
+
+
+        If the task identifier is not found, a 404 response code indicates that there are no resources that match the request.
+
+
+        For relocatable tasks, this API transparently follows the task across graceful shutdown relocations,
+
+        so callers can keep using the original task ID. The returned task reports its `original_task_id` and `original_start_time_in_millis`
+
+        if it is continuing work from an earlier task.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `monitor`
+
+        '
+      operationId: tasks-get
+      parameters:
+      - in: path
+        name: task_id
+        description: The task identifier.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: wait_for_completion
+        description: If `true`, the request blocks until the task has completed.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completed:
+                    type: boolean
+                  task:
+                    allOf:
+                    - $ref: '#/components/schemas/tasks._types.TaskInfo'
+                  response:
+                    type: object
+                  error:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.ErrorCause'
+                required:
+                - completed
+                - task
+              examples:
+                GetTaskResponseExample1:
+                  summary: Get cluster actions
+                  description: 'A successful response from `GET _tasks?actions=cluster:*`, which retrieves all cluster-related tasks.
+
+                    '
+                  value: "{\n  \"nodes\" : {\n    \"oTUltX4IQMOUUVeiohTt8A\" : {\n      \"name\" : \"H5dfFeA\",\n      \"transport_address\" : \"127.0.0.1:9300\",\n      \"host\" : \"127.0.0.1\",\n      \"ip\" : \"127.0.0.1:9300\",\n      \"tasks\" : {\n        \"oTUltX4IQMOUUVeiohTt8A:124\" : {\n          \"node\" : \"oTUltX4IQMOUUVeiohTt8A\",\n          \"id\" : 124,\n          \"type\" : \"direct\",\n          \"action\" : \"cluster:monitor/tasks/lists[n]\",\n          \"start_time_in_millis\" : 1458585884904,\n          \"running_time_in_nanos\" : 47402,\n          \"cancellable\" : false,\n          \"parent_task_id\" : \"oTUltX4IQMOUUVeiohTt8A:123\"\n        },\n        \"oTUltX4IQMOUUVeiohTt8A:123\" : {\n          \"node\" : \"oTUltX4IQMOUUVeiohTt8A\",\n          \"id\" : 123,\n          \"type\" : \"transport\",\n          \"action\" : \"cluster:monitor/tasks/lists\",\n          \"start_time_in_millis\" : 1458585884904,\n          \"running_time_in_nanos\" : 236042,\n          \"cancellable\" : false\n        }\n      }\n    }\n  }\n}"
+                GetTaskResponseExample2:
+                  summary: Get details about a delete by query
+                  description: 'A successful response from `GET _tasks?detailed=true&actions=*/delete/byquery`, which gets the status of a delete by query operation. The `status` object contains the actual status. `total` is the total number of operations that the reindex expects to perform. You can estimate the progress by adding the `updated`, `created`, and `deleted` fields. The request will finish when their sum is equal to the `total` field.
+
+                    '
+                  value: "{\n  \"nodes\" : {\n    \"r1A2WoRbTwKZ516z6NEs5A\" : {\n      \"name\" : \"r1A2WoR\",\n      \"transport_address\" : \"127.0.0.1:9300\",\n      \"host\" : \"127.0.0.1\",\n      \"ip\" : \"127.0.0.1:9300\",\n      \"attributes\" : {\n        \"testattr\" : \"test\",\n        \"portsfile\" : \"true\"\n      },\n      \"tasks\" : {\n        \"r1A2WoRbTwKZ516z6NEs5A:36619\" : {\n          \"node\" : \"r1A2WoRbTwKZ516z6NEs5A\",\n          \"id\" : 36619,\n          \"type\" : \"transport\",\n          \"action\" : \"indices:data/write/delete/byquery\",\n          \"status\" : {    \n            \"total\" : 6154,\n            \"updated\" : 0,\n            \"created\" : 0,\n            \"deleted\" : 3500,\n            \"batches\" : 36,\n            \"version_conflicts\" : 0,\n            \"noops\" : 0,\n            \"retries\": 0,\n            \"throttled_millis\": 0\n          },\n          \"description\" : \"\"\n        }\n      }\n    }\n  }\n}"
+      x-state: Experimental; Added in 5.0.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_tasks:
+    get:
+      tags:
+      - tasks
+      summary: Get all tasks
+      description: "Get information about the tasks currently running on one or more nodes in the cluster.\n\nWARNING: The task management API is new and should still be considered a beta feature.\nThe API may change in ways that are not backwards compatible.\n\nFor relocatable tasks, this API transparently follows the task across graceful shutdown relocations,\nso callers can keep using the original task ID. The returned task reports its `original_task_id` and `original_start_time_in_millis`\nif it is continuing work from an earlier task.\n\n**Identifying running tasks**\n\nThe `X-Opaque-Id header`, when provided on the HTTP request header, is going to be returned as a header in the response as well as in the headers field for in the task information.\nThis enables you to track certain calls or associate certain tasks with the client that started them.\nFor example:\n\n```\ncurl -i -H \"X-Opaque-Id: 123456\" \"http://localhost:9200/_tasks?group_by=parents\"\n```\n\nThe API returns the following result:\n\n```\nHTTP/1.1 200 OK\nX-Opaque-Id: 123456\ncontent-type: application/json; charset=UTF-8\ncontent-length: 831\n\n{\n  \"tasks\" : {\n    \"u5lcZHqcQhu-rUoFaqDphA:45\" : {\n      \"node\" : \"u5lcZHqcQhu-rUoFaqDphA\",\n      \"id\" : 45,\n      \"type\" : \"transport\",\n      \"action\" : \"cluster:monitor/tasks/lists\",\n      \"start_time_in_millis\" : 1513823752749,\n      \"running_time_in_nanos\" : 293139,\n      \"cancellable\" : false,\n      \"headers\" : {\n        \"X-Opaque-Id\" : \"123456\"\n      },\n      \"children\" : [\n        {\n          \"node\" : \"u5lcZHqcQhu-rUoFaqDphA\",\n          \"id\" : 46,\n          \"type\" : \"direct\",\n          \"action\" : \"cluster:monitor/tasks/lists[n]\",\n          \"start_time_in_millis\" : 1513823752750,\n          \"running_time_in_nanos\" : 92133,\n          \"cancellable\" : false,\n          \"parent_task_id\" : \"u5lcZHqcQhu-rUoFaqDphA:45\",\n          \"headers\" : {\n            \"X-Opaque-Id\" : \"123456\"\n          }\n        }\n      ]\n    }\n  }\n }\n```\nIn this example, `X-Opaque-Id: 123456` is the ID as a part of the response header.\nThe `X-Opaque-Id` in the task `headers` is the ID for the task that was initiated by the REST request.\nThe `X-Opaque-Id` in the children `headers` is the child task of the task that was initiated by the REST request.\n\n## Required authorization\n\n* Cluster privileges: `monitor`\n"
+      operationId: tasks-list
+      parameters:
+      - in: query
+        name: actions
+        description: 'A comma-separated list or wildcard expression of actions used to limit the request.
+
+          For example, you can use `cluser:*` to retrieve all cluster-related tasks.'
+        deprecated: false
+        schema:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        style: form
+      - in: query
+        name: detailed
+        description: 'If `true`, the response includes detailed information about the running tasks.
+
+          This information is useful to distinguish tasks from each other but is more costly to run.'
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: group_by
+        description: 'A key that is used to group tasks in the response.
+
+          The task lists can be grouped either by nodes or by parent tasks.'
+        deprecated: false
+        schema:
+          default: nodes
+          allOf:
+          - $ref: '#/components/schemas/tasks._types.GroupBy'
+        style: form
+      - in: query
+        name: nodes
+        description: A comma-separated list of node IDs or names that is used to limit the returned information.
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.NodeIds'
+        style: form
+      - in: query
+        name: parent_task_id
+        description: 'A parent task identifier that is used to limit returned information.
+
+          To return all tasks, omit this parameter or use a value of `-1`.
+
+          If the parent task is not found, the API does not return a 404 response code.'
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for each node to respond.
+
+          If a node does not respond before its timeout expires, the response does not include its information.
+
+          However, timed out nodes are included in the `node_failures` property.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: wait_for_completion
+        description: If `true`, the request blocks until the operation is complete.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tasks._types.TaskListResponseBase'
+              examples:
+                ListTasksResponseExample1:
+                  description: 'A successful response from `GET _tasks?actions=*search&detailed` The `detailed` parameter affects the `description` field, which contains human readable text that identifies the particular request that the task is performing. For example, it helps identify the search request being performed by a search task.
+
+                    '
+                  value: "{\n  \"nodes\" : {\n    \"oTUltX4IQMOUUVeiohTt8A\" : {\n      \"name\" : \"H5dfFeA\",\n      \"transport_address\" : \"127.0.0.1:9300\",\n      \"host\" : \"127.0.0.1\",\n      \"ip\" : \"127.0.0.1:9300\",\n      \"tasks\" : {\n        \"oTUltX4IQMOUUVeiohTt8A:464\" : {\n          \"node\" : \"oTUltX4IQMOUUVeiohTt8A\",\n          \"id\" : 464,\n          \"type\" : \"transport\",\n          \"action\" : \"indices:data/read/search\",\n          \"description\" : \"indices[test], types[test], search_type[QUERY_THEN_FETCH], source[{\\\"query\\\":...}]\",\n          \"start_time_in_millis\" : 1483478610008,\n          \"running_time_in_nanos\" : 13991383,\n          \"cancellable\" : true,\n          \"cancelled\" : false\n        }\n      }\n    }\n  }\n}"
+      x-state: Experimental; Added in 2.3.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  parameters:
+    tasks.cancel-nodes:
+      in: query
+      name: nodes
+      description: A comma-separated list of node IDs or names that is used to limit the request.
+      deprecated: false
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+    tasks.cancel-task_id:
+      in: path
+      name: task_id
+      description: The task identifier.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.TaskId'
+      style: simple
+    tasks.cancel-wait_for_completion:
+      in: query
+      name: wait_for_completion
+      description: If true, the request blocks until all found tasks are complete.
+      deprecated: false
+      schema:
+        default: false
+        type: boolean
+      style: form
+    tasks.cancel-parent_task_id:
+      in: query
+      name: parent_task_id
+      description: A parent task ID that is used to limit the tasks.
+      deprecated: false
+      schema:
+        type: string
+      style: form
+    tasks.cancel-actions:
+      in: query
+      name: actions
+      description: A comma-separated list or wildcard expression of actions that is used to limit the request.
+      deprecated: false
+      schema:
+        oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      style: form
+  schemas:
+    tasks._types.TaskInfos:
+      oneOf:
+      - type: array
+        items:
+          $ref: '#/components/schemas/tasks._types.TaskInfo'
+      - type: object
+        additionalProperties:
+          $ref: '#/components/schemas/tasks._types.ParentTaskInfo'
+    _types.NodeId:
+      type: string
+    _types.Id:
+      type: string
+    _types.UnitNanos:
+      description: Time unit for nanoseconds
+      type: number
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    tasks._types.GroupBy:
+      type: string
+      enum:
+      - nodes
+      - parents
+      - none
+    _types.TransportAddress:
+      type: string
+    _types.DurationValueUnitNanos:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitNanos'
+    tasks._types.TaskInfo:
+      type: object
+      properties:
+        action:
+          type: string
+        cancelled:
+          type: boolean
+        cancellable:
+          type: boolean
+        description:
+          description: 'Human readable text that identifies the particular request that the task is performing.
+
+            For example, it might identify the search request being performed by a search task.
+
+            Other kinds of tasks have different descriptions, like `_reindex` which has the source and the destination, or `_bulk` which just has the number of requests and the destination indices.
+
+            Many requests will have only an empty description because more detailed information about the request is not easily available or particularly helpful in identifying the request.'
+          type: string
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        id:
+          type: number
+        node:
+          allOf:
+          - $ref: '#/components/schemas/_types.NodeId'
+        running_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        running_time_in_nanos:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitNanos'
+        start_time_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        status:
+          description: 'The internal status of the task, which varies from task to task.
+
+            The format also varies.
+
+            While the goal is to keep the status for a particular task consistent from version to version, this is not always possible because sometimes the implementation changes.
+
+            Fields might be removed from the status for a particular request so any parsing you do of the status might break in minor releases.'
+          type: object
+        type:
+          type: string
+        parent_task_id:
+          allOf:
+          - $ref: '#/components/schemas/_types.TaskId'
+        original_task_id:
+          description: 'The task ID of the original task. Only present when the task is continuing the work of an earlier task that was running on a node which has since shut down (i.e. a relocatable task).
+
+            For tasks that have not been relocated this is always equal to the task''s own ID and is omitted from the response.'
+          allOf:
+          - $ref: '#/components/schemas/_types.TaskId'
+        original_start_time_in_millis:
+          description: The time at which the original task started, in milliseconds since the Unix epoch. Only present together with `original_task_id`.
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        original_start_time:
+          description: The time at which the original task started, as an ISO 8601 formatted string. Only present together with `original_task_id` and when the request includes the `?human=true` query parameter.
+          type: string
+      required:
+      - action
+      - cancellable
+      - headers
+      - id
+      - node
+      - running_time_in_nanos
+      - start_time_in_millis
+      - type
+    _types.TaskId:
+      type: string
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.NodeIds:
+      oneOf:
+      - $ref: '#/components/schemas/_types.NodeId'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.NodeId'
+    tasks._types.TaskListResponseBase:
+      type: object
+      properties:
+        node_failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        task_failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.TaskFailure'
+        nodes:
+          description: Task information grouped by node, if `group_by` was set to `node` (the default).
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/tasks._types.NodeTasks'
+        tasks:
+          description: 'Either a flat list of tasks if `group_by` was set to `none`, or grouped by parents if
+
+            `group_by` was set to `parents`.'
+          allOf:
+          - $ref: '#/components/schemas/tasks._types.TaskInfos'
+    tasks._types.NodeTasks:
+      type: object
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.NodeId'
+        transport_address:
+          allOf:
+          - $ref: '#/components/schemas/_types.TransportAddress'
+        host:
+          allOf:
+          - $ref: '#/components/schemas/_types.Host'
+        ip:
+          allOf:
+          - $ref: '#/components/schemas/_types.Ip'
+        roles:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+        tasks:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/tasks._types.TaskInfo'
+      required:
+      - tasks
+    tasks._types.ParentTaskInfo:
+      allOf:
+      - $ref: '#/components/schemas/tasks._types.TaskInfo'
+      - type: object
+        properties:
+          children:
+            type: array
+            items:
+              $ref: '#/components/schemas/tasks._types.TaskInfo'
+    _types.Ip:
+      type: string
+    _types.Host:
+      type: string
+    _types.ErrorCause:
+      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
+
+        Additional details are also provided, that depend on the error type.'
+      type: object
+      properties:
+        type:
+          description: The type of error
+          type: string
+        reason:
+          description: A human-readable explanation of the error, in English.
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        stack_trace:
+          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
+          type: string
+        caused_by:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        root_cause:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        suppressed:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - type
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.TaskFailure:
+      type: object
+      properties:
+        task_id:
+          type: number
+        node_id:
+          allOf:
+          - $ref: '#/components/schemas/_types.NodeId'
+        status:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - task_id
+      - node_id
+      - status
+      - reason
+  responses:
+    tasks.cancel-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tasks._types.TaskListResponseBase'

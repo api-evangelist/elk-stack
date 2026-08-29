@@ -1,0 +1,5010 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Elastic Package Manager (EPM) API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Elastic Package Manager (EPM)
+  description: 'Elastic Package Manager (EPM) APIs enable you to manage packages and integrations, including installing, updating, and uninstalling packages, managing custom integrations, and handling package assets.
+
+    '
+  x-displayName: Elastic Package Manager (EPM)
+paths:
+  /api/fleet/epm/bulk_assets:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/bulk_assets</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve multiple Kibana saved object assets by their IDs and types.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: post-fleet-epm-bulk-assets
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkGetAssetsRequestExample:
+                description: Retrieve multiple assets by their IDs and types
+                value:
+                  assetIds:
+                  - id: dashboard-id-1
+                    type: dashboard
+                  - id: index-pattern-id-1
+                    type: index_pattern
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_get_bulk_assets_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkGetAssetsExample:
+                  description: Requested assets
+                  value:
+                    items:
+                    - appLink: /app/dashboards#/view/dashboard-id-1
+                      attributes:
+                        title: My Dashboard
+                      id: dashboard-id-1
+                      type: dashboard
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_bulk_assets_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk get assets
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/categories:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/categories</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of integration categories.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-categories
+      parameters:
+      - description: When true, include prerelease packages in the results
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, include categories that only contain policy templates
+        in: query
+        name: include_policy_templates
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getCategoriesExample:
+                  description: List of integration categories
+                  value:
+                    items:
+                    - count: 42
+                      id: security
+                      title: Security
+                    - count: 38
+                      id: observability
+                      title: Observability
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_categories_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get package categories
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/custom_integrations:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/custom_integrations</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a new custom integration package with user-defined data streams.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-custom-integrations
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postCreateCustomIntegrationRequestExample:
+                description: Create a new custom integration
+                value:
+                  datasets:
+                  - name: my_custom_logs.access
+                    type: logs
+                  integrationName: my_custom_logs
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_create_custom_integration_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postCreateCustomIntegrationExample:
+                  description: Custom integration successfully created
+                  value:
+                    _meta:
+                      install_source: custom
+                    items:
+                    - id: my_custom_logs-logs-my_custom_logs.access
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Create a custom integration
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/custom_integrations/{pkgName}:
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/custom_integrations/{pkgName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update the datasets of an existing custom integration package.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all AND integrations-all.'
+      operationId: put-fleet-epm-custom-integrations-pkgname
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putUpdateCustomIntegrationRequestExample:
+                description: Update a custom integration
+                value:
+                  datasets:
+                  - name: my_custom_logs.access
+                    type: logs
+                  integrationName: my_custom_logs
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                categories:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+                readMeData:
+                  type: string
+              required:
+              - readMeData
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putUpdateCustomIntegrationExample:
+                  description: Custom integration successfully updated
+                  value: {}
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Update a custom integration
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of integration packages available in the registry.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-packages
+      parameters:
+      - description: Filter packages by category
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: When true, include prerelease packages in the results
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, exclude the install status from the response
+        in: query
+        name: excludeInstallStatus
+        required: false
+        schema:
+          type: boolean
+      - description: When true, include the number of package policies per package
+        in: query
+        name: withPackagePoliciesCount
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPackagesExample:
+                  description: List of available integration packages
+                  value:
+                    items:
+                    - categories:
+                      - cloud
+                      description: Collect logs and metrics from Amazon Web Services
+                      id: aws
+                      name: aws
+                      status: not_installed
+                      title: AWS
+                      version: 2.10.0
+                    searchExcluded: 0
+                    total: 1
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Install a package by uploading a .zip or .tar.gz archive (max 100MB).<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: When true, ignore mapping update errors during installation
+        in: query
+        name: ignoreMappingUpdateErrors
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: When true, skip data stream rollover after installation
+        in: query
+        name: skipDataStreamRollover
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/gzip:
+            examples:
+              postInstallByUploadRequestExample:
+                description: Upload a .zip or .tar.gz package archive (max 100MB)
+                value: <binary package archive>
+          application/gzip; application/zip:
+            examples:
+              postInstallByUploadRequestExample:
+                description: Upload a .zip or .tar.gz package archive (max 100MB)
+                value: <binary package archive>
+            schema:
+              format: binary
+              type: string
+      responses:
+        '200':
+          content:
+            application/gzip; application/zip:
+              examples:
+                postInstallByUploadExample:
+                  description: Package successfully installed from upload
+                  value:
+                    _meta:
+                      install_source: upload
+                    items:
+                    - id: my-custom-package-logs-default
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_package_response'
+            application/json:
+              examples:
+                postInstallByUploadExample:
+                  description: Package successfully installed from upload
+                  value:
+                    _meta:
+                      install_source: upload
+                    items:
+                    - id: my-custom-package-logs-default
+                      type: index_template
+          description: Successful response
+        '400':
+          content:
+            application/gzip; application/zip:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+          description: Bad Request
+      summary: Install a package by upload
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Install multiple packages from the Elastic Package Registry in a single request.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-bulk
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: When true, allow installing prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkInstallPackagesRequestExample:
+                description: Install multiple packages from the registry
+                value:
+                  packages:
+                  - system
+                  - aws
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_from_registry_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkInstallPackagesExample:
+                  description: Bulk install results
+                  value:
+                    items:
+                    - name: system
+                      result:
+                        assets: []
+                        status: installed
+                    - name: aws
+                      result:
+                        assets: []
+                        status: installed
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_from_registry_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk install packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_namespace_customization:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_namespace_customization</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Enable or disable namespace-level index template customization for a list of packages in one call. Use this for IaC-style declarative flows.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-bulk-namespace-customization
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkNamespaceCustomizationRequest:
+                value:
+                  disable:
+                  - dev
+                  enable:
+                  - production
+                  - staging
+                  packages:
+                  - system
+                  - nginx
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_namespace_customization_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    items:
+                    - name: system
+                      namespace_customization_enabled_for:
+                      - production
+                      - staging
+                      success: true
+                    - error: Package nginx is not installed
+                      name: nginx
+                      success: false
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_namespace_customization_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    error: Bad Request
+                    message: 'Namespaces must not appear in both enable and disable: production'
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Bulk enable/disable namespace-level customization for packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_rollback:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_rollback</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Rollback multiple packages to their previous versions.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-bulk-rollback
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkRollbackRequest:
+                value:
+                  packages:
+                  - name: system
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_rollback_packages_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    taskId: taskId
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_rollback_packages_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Bulk rollback packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_rollback/{taskId}:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_rollback/{taskId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the status and results of a bulk package rollback operation.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: get-fleet-epm-packages-bulk-rollback-taskid
+      parameters:
+      - description: Task ID of the bulk operation
+        in: path
+        name: taskId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    status: success
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_one_bulk_operation_packages_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Get Bulk rollback packages details
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_uninstall:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_uninstall</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Uninstall multiple packages in a single operation.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-bulk-uninstall
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkUninstallPackagesRequestExample:
+                description: Uninstall multiple packages
+                value:
+                  packages:
+                  - name: aws
+                  - name: gcp
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_uninstall_packages_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkUninstallPackagesExample:
+                  description: Bulk uninstall task initiated
+                  value:
+                    taskId: task-id-1
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_upgrade_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk uninstall packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_uninstall/{taskId}:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_uninstall/{taskId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the status and results of a bulk package uninstall operation.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: get-fleet-epm-packages-bulk-uninstall-taskid
+      parameters:
+      - description: Task ID of the bulk operation
+        in: path
+        name: taskId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getBulkOperationDetailsExample:
+                  description: Details of the bulk operation task
+                  value:
+                    packages:
+                    - name: system
+                      result: installed
+                    - name: elastic_agent
+                      result: installed
+                    status: success
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_one_bulk_operation_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get Bulk uninstall packages details
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_upgrade:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_upgrade</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Upgrade multiple packages to their latest versions.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-bulk-upgrade
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkUpgradePackagesRequestExample:
+                description: Upgrade multiple packages to their latest versions
+                value:
+                  packages:
+                  - name: system
+                  - name: elastic_agent
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_upgrade_packages_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkUpgradePackagesExample:
+                  description: Bulk upgrade task initiated
+                  value:
+                    taskId: task-id-1
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_upgrade_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk upgrade packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/_bulk_upgrade/{taskId}:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/_bulk_upgrade/{taskId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the status and results of a bulk package upgrade operation.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: get-fleet-epm-packages-bulk-upgrade-taskid
+      parameters:
+      - description: Task ID of the bulk operation
+        in: path
+        name: taskId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getBulkOperationDetailsExample:
+                  description: Details of the bulk operation task
+                  value:
+                    packages:
+                    - name: system
+                      result: installed
+                    - name: elastic_agent
+                      result: installed
+                    status: success
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_one_bulk_operation_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get Bulk upgrade packages details
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Uninstall a package and remove all its assets.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: delete-fleet-epm-packages-pkgname
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: When true, delete the package even if it has active package policies
+        in: query
+        name: force
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deletePackageExample:
+                  description: Package successfully deleted
+                  value:
+                    items:
+                    - id: aws-logs-aws.cloudwatch_logs-default
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_delete_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Delete a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get information about a package by name, returning the latest installed or available version.'
+      operationId: get-fleet-epm-packages-pkgname
+      parameters:
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: When true, returns the package even if the signature cannot be verified
+        in: query
+        name: ignoreUnverified
+        required: false
+        schema:
+          type: boolean
+      - description: When true, include prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, return the full package info including assets
+        in: query
+        name: full
+        required: false
+        schema:
+          type: boolean
+      - description: When true, include package metadata such as whether it has package policies
+        in: query
+        name: withMetadata
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPackageInfoExample:
+                  description: Package details and installation status
+                  value:
+                    item:
+                      assets:
+                        kibana:
+                          dashboard: []
+                          index_pattern: []
+                      categories:
+                      - cloud
+                      description: Collect logs and metrics from Amazon Web Services
+                      name: aws
+                      status: installed
+                      title: AWS
+                      version: 2.10.0
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_info_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Install the latest version of a package from the Elastic Package Registry.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-pkgname
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: When true, allow installing prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, ignore mapping update errors during installation
+        in: query
+        name: ignoreMappingUpdateErrors
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: When true, skip data stream rollover after installation
+        in: query
+        name: skipDataStreamRollover
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Skip dependency validation when installing a package with dependencies
+        in: query
+        name: skipDependencyCheck
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postInstallPackageRequestExample:
+                description: Install a package, optionally ignoring constraints
+                value:
+                  ignore_constraints: false
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_install_package_from_registry_request'
+              default: null
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postInstallPackageExample:
+                  description: Package successfully installed
+                  value:
+                    _meta:
+                      install_source: registry
+                    items:
+                    - id: aws-logs-aws.cloudwatch_logs-default
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Install a package from the registry
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update settings for a package, such as whether policies are kept up to date automatically.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: put-fleet-epm-packages-pkgname
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putUpdatePackageNamespaceCustomizationExample:
+                description: Enable namespace-level customization for the `production` and `staging` namespaces
+                value:
+                  namespace_customization_enabled_for:
+                  - production
+                  - staging
+              putUpdatePackageRequestExample:
+                description: Update keep_policies_up_to_date setting for a package
+                value:
+                  keepPoliciesUpToDate: true
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_update_package_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putUpdatePackageExample:
+                  description: Updated package settings
+                  value:
+                    item:
+                      keepPoliciesUpToDate: true
+                      name: aws
+                      version: 2.10.0
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_update_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Update package settings
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Uninstall a specific version of a package and remove all its assets.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: delete-fleet-epm-packages-pkgname-pkgversion
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: When true, delete the package even if it has active package policies
+        in: query
+        name: force
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deletePackageExample:
+                  description: Package successfully deleted
+                  value:
+                    items:
+                    - id: aws-logs-aws.cloudwatch_logs-default
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_delete_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Delete a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get information about a specific version of a package.'
+      operationId: get-fleet-epm-packages-pkgname-pkgversion
+      parameters:
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: When true, returns the package even if the signature cannot be verified
+        in: query
+        name: ignoreUnverified
+        required: false
+        schema:
+          type: boolean
+      - description: When true, include prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, return the full package info including assets
+        in: query
+        name: full
+        required: false
+        schema:
+          type: boolean
+      - description: When true, include package metadata such as whether it has package policies
+        in: query
+        name: withMetadata
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPackageInfoExample:
+                  description: Package details and installation status
+                  value:
+                    item:
+                      assets:
+                        kibana:
+                          dashboard: []
+                          index_pattern: []
+                      categories:
+                      - cloud
+                      description: Collect logs and metrics from Amazon Web Services
+                      name: aws
+                      status: installed
+                      title: AWS
+                      version: 2.10.0
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_info_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Install a specific version of a package from the Elastic Package Registry.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-pkgname-pkgversion
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: When true, allow installing prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, ignore mapping update errors during installation
+        in: query
+        name: ignoreMappingUpdateErrors
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: When true, skip data stream rollover after installation
+        in: query
+        name: skipDataStreamRollover
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Skip dependency validation when installing a package with dependencies
+        in: query
+        name: skipDependencyCheck
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postInstallPackageRequestExample:
+                description: Install a package, optionally ignoring constraints
+                value:
+                  ignore_constraints: false
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_install_package_from_registry_request'
+              default: null
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postInstallPackageExample:
+                  description: Package successfully installed
+                  value:
+                    _meta:
+                      install_source: registry
+                    items:
+                    - id: aws-logs-aws.cloudwatch_logs-default
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Install a package from the registry
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update settings for a specific version of a package.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: put-fleet-epm-packages-pkgname-pkgversion
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putUpdatePackageNamespaceCustomizationExample:
+                description: Enable namespace-level customization for the `production` and `staging` namespaces
+                value:
+                  namespace_customization_enabled_for:
+                  - production
+                  - staging
+              putUpdatePackageRequestExample:
+                description: Update keep_policies_up_to_date setting for a package
+                value:
+                  keepPoliciesUpToDate: true
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_update_package_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putUpdatePackageExample:
+                  description: Updated package settings
+                  value:
+                    item:
+                      keepPoliciesUpToDate: true
+                      name: aws
+                      version: 2.10.0
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_update_package_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Update package settings
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}/{filePath}:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/{filePath}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the contents of a specific file from a package.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-packages-pkgname-pkgversion-filepath
+      parameters:
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: File path within the package
+        in: path
+        name: filePath
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPackageFileExample:
+                  description: The content of the requested package file
+                  value: <file content>
+              schema: {}
+          description: Successful response — returns the file content
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get a package file
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}/datastream_assets:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/datastream_assets</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete datastream assets for a specific package, by data stream name.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: delete-fleet-epm-packages-pkgname-pkgversion-datastream-assets
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: The ID of the package policy
+        in: query
+        name: packagePolicyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deletePackageDatastreamAssetsExample:
+                  description: Package datastream assets successfully deleted
+                  value:
+                    items:
+                    - id: logs-my_package.access-default
+                      type: index_template
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_delete_package_datastream_assets_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Delete assets for a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}/dependencies:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/dependencies</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the list of packages that a specific package depends on.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-packages-pkgname-pkgversion-dependencies
+      parameters:
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                dependenciesResponse:
+                  value:
+                    items:
+                    - name: aws
+                      title: AWS
+                      version: ^2.0.0
+                    - name: system
+                      title: System
+                      version: ^1.0.0
+                noDependenciesResponse:
+                  value:
+                    items: []
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_dependencies_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                packageNotFoundResponse:
+                  value:
+                    message: '[my-package-1.0.0] package not found in registry'
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Get package dependencies
+      tags:
+      - Elastic Package Manager (EPM)
+      x-state: Generally available; added in 9.4.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}/kibana_assets:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/kibana_assets</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete Kibana assets (dashboards, visualizations, etc.) for a specific package version.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: delete-fleet-epm-packages-pkgname-pkgversion-kibana-assets
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteKibanaAssetsExample:
+                  description: Kibana assets successfully deleted
+                  value:
+                    items:
+                    - id: dashboard-id-1
+                      type: dashboard
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_kibana_assets_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Delete Kibana assets for a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/kibana_assets</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Install Kibana assets (dashboards, visualizations, etc.) for a specific package version.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-pkgname-pkgversion-kibana-assets
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postInstallKibanaAssetsRequestExample:
+                description: Install Kibana assets for a specific package version
+                value: {}
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_install_kibana_assets_request'
+              default: null
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postInstallKibanaAssetsExample:
+                  description: Kibana assets successfully installed
+                  value:
+                    items:
+                    - id: dashboard-id-1
+                      type: dashboard
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_kibana_assets_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Install Kibana assets for a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}/rule_assets:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/rule_assets</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Install Kibana alert rule assets for a specific package version.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-pkgname-pkgversion-rule-assets
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postInstallRuleAssetsRequestExample:
+                description: Install alert rule assets for a specific package version
+                value: {}
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_install_rule_assets_request'
+              default: null
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postInstallRuleAssetsExample:
+                  description: Rule assets successfully installed
+                  value:
+                    items:
+                    - id: rule-asset-id-1
+                      type: security_rule
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_install_kibana_assets_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Install Kibana alert rule for a package
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/{pkgVersion}/transforms/authorize:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/{pkgVersion}/transforms/authorize</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Reauthorize Elasticsearch transforms installed by a package with secondary authorization headers.'
+      operationId: post-fleet-epm-packages-pkgname-pkgversion-transforms-authorize
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: When true, allow prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postReauthorizeTransformsRequestExample:
+                description: Reauthorize transforms for a package
+                value:
+                  transforms:
+                  - destinations:
+                    - index: logs-transform-dest
+                    transformId: logs-transform-1
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_reauthorize_transform_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postReauthorizeTransformsExample:
+                  description: Transforms successfully reauthorized
+                  value:
+                  - success: true
+                    transformId: logs-transform-1
+              schema:
+                items:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    error: {}
+                    success:
+                      type: boolean
+                    transformId:
+                      type: string
+                  required:
+                  - transformId
+                  - success
+                  - error
+                maxItems: 10000
+                type: array
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Authorize transforms
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/review_upgrade:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/review_upgrade</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Review and accept or reject a pending policy upgrade for a package that contains deprecations.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-pkgname-review-upgrade
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name to review upgrade for
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              acceptUpgrade:
+                value:
+                  action: accept
+                  target_version: 2.0.0
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_review_upgrade_request'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    success: true
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_review_upgrade_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Review a pending policy upgrade for a package with deprecations
+      tags:
+      - Elastic Package Manager (EPM)
+      x-state: Generally available; added in 9.4.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/rollback:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/rollback</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Rollback a package to its previously installed version.<br/><br/>[Required authorization] Route required privileges: integrations-all AND fleet-agent-policies-all.'
+      operationId: post-fleet-epm-packages-pkgname-rollback
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Package name to roll back
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    success: true
+                    version: 1.0.0
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_rollback_package_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Rollback a package to previous version
+      tags:
+      - Elastic Package Manager (EPM)
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/{pkgName}/stats:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/{pkgName}/stats</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get usage statistics for a specific package, such as the number of agent policies using it.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-packages-pkgname-stats
+      parameters:
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getPackageStatsExample:
+                  description: Usage stats for a specific package
+                  value:
+                    response:
+                      agent_policy_count: 3
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_stats_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get package stats
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/installed:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/installed</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of all currently installed integration packages.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-packages-installed
+      parameters:
+      - description: Filter by data stream type
+        in: query
+        name: dataStreamType
+        required: false
+        schema:
+          enum:
+          - logs
+          - metrics
+          - traces
+          - synthetics
+          - profiles
+          type: string
+      - description: When true, only return packages with active data streams
+        in: query
+        name: showOnlyActiveDataStreams
+        required: false
+        schema:
+          type: boolean
+      - description: Filter packages by name
+        in: query
+        name: nameQuery
+        required: false
+        schema:
+          type: string
+      - description: Sort values from the previous page for `search_after` pagination
+        in: query
+        name: searchAfter
+        required: false
+        schema:
+          items:
+            anyOf:
+            - type: string
+            - type: number
+          maxItems: 10
+          type: array
+      - description: Number of results per page
+        in: query
+        name: perPage
+        required: false
+        schema:
+          default: 15
+          type: number
+      - description: Sort order, ascending or descending
+        in: query
+        name: sortOrder
+        required: false
+        schema:
+          default: asc
+          enum:
+          - asc
+          - desc
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getInstalledPackagesExample:
+                  description: List of installed integration packages
+                  value:
+                    items:
+                    - name: system
+                      status: installed
+                      title: System
+                      version: 1.55.0
+                    - name: elastic_agent
+                      status: installed
+                      title: Elastic Agent
+                      version: 1.15.0
+                    searchExcluded: 0
+                    total: 2
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_installed_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get installed packages
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/packages/limited:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/packages/limited</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the list of packages that cannot be uninstalled (e.g. elastic_agent, fleet_server).<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-packages-limited
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getLimitedPackagesExample:
+                  description: List of packages that cannot be uninstalled
+                  value:
+                    items:
+                    - elastic_agent
+                    - fleet_server
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_limited_packages_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get a limited package list
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/templates/{pkgName}/{pkgVersion}/inputs:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/templates/{pkgName}/{pkgVersion}/inputs</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get an inputs template for a package, used to pre-populate package policy forms.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-templates-pkgname-pkgversion-inputs
+      parameters:
+      - description: Package name
+        in: path
+        name: pkgName
+        required: true
+        schema:
+          type: string
+      - description: Package version
+        in: path
+        name: pkgVersion
+        required: true
+        schema:
+          type: string
+      - description: 'Output format for the inputs template: json, yml, or yaml'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: json
+          enum:
+          - json
+          - yml
+          - yaml
+          type: string
+      - description: When true, allow prerelease versions
+        in: query
+        name: prerelease
+        required: false
+        schema:
+          type: boolean
+      - description: When true, return inputs even if the package signature cannot be verified
+        in: query
+        name: ignoreUnverified
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getInputsTemplateExample:
+                  description: Inputs template for a package
+                  value:
+                    inputs:
+                    - description: Collect logs from log files
+                      title: Collect logs from files
+                      type: logfile
+                      vars:
+                      - name: paths
+                        required: true
+                        title: Paths
+                        type: text
+              schema:
+                anyOf:
+                - type: string
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_get_inputs_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get an inputs template
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/verification_key_id:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/verification_key_id</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the GPG key ID used to verify the signatures of packages from the Elastic Package Registry.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-verification-key-id
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getVerificationKeyIdExample:
+                  description: The GPG key ID used to verify package signatures
+                  value:
+                    id: D27D666CD88E42B4
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_verification_key_id_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get a package signature verification key ID
+      tags:
+      - Elastic Package Manager (EPM)
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_package_info_icon:
+      additionalProperties: true
+      properties:
+        dark_mode:
+          type: boolean
+        path:
+          type: string
+        size:
+          type: string
+        src:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - src
+      title: package_info_icon
+      type: object
+    Kibana_HTTP_APIs_update_package_response:
+      additionalProperties: false
+      properties:
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_get_package_info'
+        warnings:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              baseTemplateName:
+                maxLength: 1000
+                type: string
+              conflictingTemplates:
+                items:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    conflictType:
+                      enum:
+                      - overrides_fleet
+                      - blocked_by_same_priority
+                      - overridden_by_fleet
+                      type: string
+                    name:
+                      maxLength: 1000
+                      type: string
+                    priority:
+                      type: number
+                  required:
+                  - name
+                  - priority
+                  - conflictType
+                maxItems: 100
+                type: array
+              dataStreamName:
+                maxLength: 1000
+                type: string
+              namespace:
+                maxLength: 255
+                type: string
+              nsTemplateName:
+                maxLength: 1000
+                type: string
+            required:
+            - dataStreamName
+            - namespace
+            - baseTemplateName
+            - nsTemplateName
+            - conflictingTemplates
+          maxItems: 100
+          type: array
+      required:
+      - item
+      title: update_package_response
+      type: object
+    Kibana_HTTP_APIs_bulk_namespace_customization_request:
+      additionalProperties: false
+      properties:
+        disable:
+          description: Namespaces to disable namespace-level customization for on each package.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        enable:
+          description: Namespaces to enable namespace-level customization for on each package.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        packages:
+          description: Package names to apply the customization changes to.
+          items:
+            type: string
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_namespace_customization_request
+      type: object
+    Kibana_HTTP_APIs_category_summary_item:
+      additionalProperties: false
+      properties:
+        count:
+          type: number
+        id:
+          type: string
+        parent_id:
+          type: string
+        parent_title:
+          type: string
+        title:
+          type: string
+      required:
+      - id
+      - title
+      - count
+      title: category_summary_item
+      type: object
+    Kibana_HTTP_APIs_install_rule_assets_request:
+      additionalProperties: false
+      properties:
+        force:
+          type: boolean
+      title: install_rule_assets_request
+      type: object
+    Kibana_HTTP_APIs_package_icon:
+      additionalProperties: false
+      properties:
+        dark_mode:
+          type: boolean
+        path:
+          type: string
+        size:
+          type: string
+        src:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - src
+      title: package_icon
+      type: object
+    Kibana_HTTP_APIs_bulk_rollback_packages_response:
+      additionalProperties: false
+      properties:
+        taskId:
+          type: string
+      required:
+      - taskId
+      title: bulk_rollback_packages_response
+      type: object
+    Kibana_HTTP_APIs_delete_package_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: delete_package_response
+      type: object
+    Kibana_HTTP_APIs_package_info_deprecation_info:
+      additionalProperties: true
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: package_info_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_package_info_installation_info:
+      additionalProperties: true
+      properties:
+        additional_spaces_installed_kibana:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_kibana_asset_reference'
+            maxItems: 100
+            type: array
+          type: object
+        created_at:
+          type: string
+        experimental_data_stream_features:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              data_stream:
+                maxLength: 1024
+                type: string
+              features:
+                additionalProperties: true
+                type: object
+                properties:
+                  doc_value_only_numeric:
+                    type: boolean
+                  doc_value_only_other:
+                    type: boolean
+                  synthetic_source:
+                    type: boolean
+                  tsdb:
+                    type: boolean
+            required:
+            - data_stream
+            - features
+          maxItems: 100
+          type: array
+        install_format_schema_version:
+          type: string
+        install_source:
+          enum:
+          - registry
+          - upload
+          - bundled
+          - custom
+          type: string
+        install_status:
+          enum:
+          - installed
+          - installing
+          - install_failed
+          type: string
+        installed_es:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_es_asset_reference'
+          maxItems: 10000
+          type: array
+        installed_kibana:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_kibana_asset_reference'
+          maxItems: 10000
+          type: array
+        installed_kibana_space_id:
+          type: string
+        is_rollback_ttl_expired:
+          type: boolean
+        latest_executed_state:
+          additionalProperties: true
+          type: object
+          properties:
+            error:
+              type: string
+            name:
+              type: string
+            started_at:
+              type: string
+        latest_install_failed_attempts:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              created_at:
+                type: string
+              error:
+                additionalProperties: true
+                type: object
+                properties:
+                  message:
+                    type: string
+                  name:
+                    type: string
+                  stack:
+                    type: string
+                required:
+                - name
+                - message
+              missing_assets:
+                items:
+                  additionalProperties: true
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - id
+                  - type
+                maxItems: 10000
+                type: array
+              target_version:
+                type: string
+            required:
+            - created_at
+            - target_version
+            - error
+          maxItems: 10
+          type: array
+        name:
+          type: string
+        namespaces:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        previous_version:
+          type:
+          - string
+          - 'null'
+        rolled_back:
+          type: boolean
+        type:
+          type: string
+        updated_at:
+          type: string
+        verification_key_id:
+          type:
+          - string
+          - 'null'
+        verification_status:
+          enum:
+          - unverified
+          - verified
+          - unknown
+          type: string
+        version:
+          type: string
+      required:
+      - type
+      - installed_kibana
+      - installed_es
+      - name
+      - version
+      - install_status
+      - install_source
+      - verification_status
+      title: package_info_installation_info
+      type: object
+    Kibana_HTTP_APIs_create_custom_integration_request:
+      additionalProperties: false
+      properties:
+        datasets:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                enum:
+                - logs
+                - metrics
+                - traces
+                - synthetics
+                - profiles
+                type: string
+            required:
+            - name
+            - type
+          maxItems: 10
+          type: array
+        force:
+          type: boolean
+        integrationName:
+          type: string
+      required:
+      - integrationName
+      - datasets
+      title: create_custom_integration_request
+      type: object
+    Kibana_HTTP_APIs_update_package_request:
+      additionalProperties: false
+      properties:
+        keepPoliciesUpToDate:
+          type: boolean
+        namespace_customization_enabled_for:
+          description: Namespaces for which namespace-level customization is enabled on this package.
+          items:
+            maxLength: 100
+            type: string
+          maxItems: 100
+          type: array
+        namespace_customization_settings:
+          additionalProperties:
+            additionalProperties: true
+            type: object
+            properties:
+              ilm_policy:
+                maxLength: 1024
+                minLength: 1
+                type: string
+          description: Per-namespace managed settings (for example, ILM policy) for this package. Keyed by namespace name.
+          type: object
+      title: update_package_request
+      type: object
+    Kibana_HTTP_APIs_rollback_package_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+        version:
+          type: string
+      required:
+      - version
+      - success
+      title: rollback_package_response
+      type: object
+    Kibana_HTTP_APIs_review_upgrade_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+      title: review_upgrade_response
+      type: object
+    Kibana_HTTP_APIs_review_upgrade_request:
+      additionalProperties: false
+      properties:
+        action:
+          enum:
+          - accept
+          - decline
+          - pending
+          type: string
+        target_version:
+          type: string
+      required:
+      - action
+      - target_version
+      title: review_upgrade_request
+      type: object
+    Kibana_HTTP_APIs_bulk_rollback_packages_request:
+      additionalProperties: false
+      properties:
+        packages:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                description: Package name to rollback
+                type: string
+            required:
+            - name
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_rollback_packages_request
+      type: object
+    Kibana_HTTP_APIs_bulk_install_packages_response_item_success:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        result:
+          additionalProperties: false
+          type: object
+          properties:
+            assets:
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
+              maxItems: 10000
+              type: array
+            error: {}
+            installSource:
+              type: string
+            installType:
+              type: string
+            status:
+              enum:
+              - installed
+              - already_installed
+              type: string
+          required:
+          - error
+          - installType
+        version:
+          type: string
+      required:
+      - name
+      - version
+      - result
+      title: bulk_install_packages_response_item_success
+      type: object
+    Kibana_HTTP_APIs_get_one_bulk_operation_packages_response:
+      additionalProperties: false
+      properties:
+        error:
+          additionalProperties: false
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+          - message
+        results:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              error:
+                additionalProperties: false
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+              name:
+                type: string
+              success:
+                type: boolean
+            required:
+            - name
+            - success
+          maxItems: 10000
+          type: array
+        status:
+          type: string
+      required:
+      - status
+      title: get_one_bulk_operation_packages_response
+      type: object
+    Kibana_HTTP_APIs_get_limited_packages_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            type: string
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_limited_packages_response
+      type: object
+    Kibana_HTTP_APIs_get_verification_key_id_response:
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      title: get_verification_key_id_response
+      type: object
+    Kibana_HTTP_APIs_get_inputs_response:
+      additionalProperties: false
+      properties:
+        connectors:
+          additionalProperties: {}
+          type: object
+        exporters:
+          additionalProperties: {}
+          type: object
+        extensions:
+          additionalProperties: {}
+          type: object
+        inputs:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              id:
+                type: string
+              streams:
+                items:
+                  additionalProperties: true
+                  type: object
+                  properties:
+                    data_stream:
+                      additionalProperties: true
+                      type: object
+                      properties:
+                        dataset:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - dataset
+                    id:
+                      type: string
+                  required:
+                  - id
+                  - data_stream
+                maxItems: 10000
+                type: array
+              type:
+                type: string
+            required:
+            - id
+            - type
+          maxItems: 10000
+          type: array
+        processors:
+          additionalProperties: {}
+          type: object
+        receivers:
+          additionalProperties: {}
+          type: object
+        service:
+          additionalProperties: false
+          type: object
+          properties:
+            extensions:
+              items:
+                type: string
+              maxItems: 1000
+              type: array
+            pipelines:
+              additionalProperties:
+                additionalProperties: false
+                type: object
+                properties:
+                  exporters:
+                    items:
+                      type: string
+                    maxItems: 1000
+                    type: array
+                  processors:
+                    items:
+                      type: string
+                    maxItems: 1000
+                    type: array
+                  receivers:
+                    items:
+                      type: string
+                    maxItems: 1000
+                    type: array
+              type: object
+      required:
+      - inputs
+      title: get_inputs_response
+      type: object
+    Kibana_HTTP_APIs_bulk_upgrade_packages_response:
+      additionalProperties: false
+      properties:
+        taskId:
+          type: string
+      required:
+      - taskId
+      title: bulk_upgrade_packages_response
+      type: object
+    Kibana_HTTP_APIs_package_info_kibana_asset_reference:
+      additionalProperties: true
+      properties:
+        deferred:
+          type: boolean
+        id:
+          type: string
+        originId:
+          type: string
+        type:
+          anyOf:
+          - enum:
+            - dashboard
+            - lens
+            - visualization
+            - search
+            - index-pattern
+            - map
+            - ml-module
+            - security-rule
+            - csp-rule-template
+            - osquery-pack-asset
+            - osquery-saved-query
+            - tag
+            type: string
+          - type: string
+      required:
+      - id
+      - type
+      title: package_info_kibana_asset_reference
+      type: object
+    Kibana_HTTP_APIs_get_categories_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_category_summary_item'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_categories_response
+      type: object
+    Kibana_HTTP_APIs_bulk_upgrade_packages_request:
+      additionalProperties: false
+      properties:
+        force:
+          default: false
+          type: boolean
+        packages:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              version:
+                type: string
+            required:
+            - name
+          maxItems: 1000
+          minItems: 1
+          type: array
+        prerelease:
+          type: boolean
+        upgrade_package_policies:
+          default: false
+          type: boolean
+      required:
+      - packages
+      title: bulk_upgrade_packages_request
+      type: object
+    Kibana_HTTP_APIs_install_package_from_registry_request:
+      additionalProperties: false
+      properties:
+        allow_outdated_version:
+          default: false
+          description: When true, allow installing a version older than the latest available. Bypasses only the out-of-date version check.
+          type: boolean
+        force:
+          default: false
+          type: boolean
+        ignore_constraints:
+          default: false
+          type: boolean
+      title: install_package_from_registry_request
+      type: object
+    Kibana_HTTP_APIs_install_kibana_assets_request:
+      additionalProperties: false
+      properties:
+        force:
+          type: boolean
+        space_ids:
+          description: When provided, assets are installed in the specified spaces instead of the current space.
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+      title: install_kibana_assets_request
+      type: object
+    Kibana_HTTP_APIs_delete_package_datastream_assets_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+      title: delete_package_datastream_assets_response
+      type: object
+    Kibana_HTTP_APIs_bulk_install_packages_from_registry_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_response_item_success'
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_response_item_error'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: bulk_install_packages_from_registry_response
+      type: object
+    Kibana_HTTP_APIs_install_kibana_assets_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+      title: install_kibana_assets_response
+      type: object
+    Kibana_HTTP_APIs_get_bulk_assets_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              appLink:
+                type: string
+              attributes:
+                additionalProperties: false
+                type: object
+                properties:
+                  description:
+                    type: string
+                  engine:
+                    enum:
+                    - v1
+                    - v2
+                    type: string
+                  service:
+                    type: string
+                  title:
+                    type: string
+              id:
+                type: string
+              type:
+                type: string
+              updatedAt:
+                type: string
+            required:
+            - id
+            - type
+            - attributes
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_bulk_assets_response
+      type: object
+    Kibana_HTTP_APIs_get_installed_packages_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_installed_package'
+          maxItems: 10000
+          type: array
+        searchAfter:
+          items:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - {}
+          maxItems: 2
+          type: array
+        total:
+          type: number
+      required:
+      - items
+      - total
+      title: get_installed_packages_response
+      type: object
+    Kibana_HTTP_APIs_installed_package:
+      additionalProperties: false
+      properties:
+        dataStreams:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              title:
+                type: string
+            required:
+            - name
+            - title
+          maxItems: 10000
+          type: array
+        description:
+          type: string
+        icons:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_icon'
+          maxItems: 100
+          type: array
+        name:
+          type: string
+        rolledBack:
+          type: boolean
+        status:
+          type: string
+        title:
+          type: string
+        version:
+          type: string
+      required:
+      - name
+      - version
+      - status
+      - dataStreams
+      title: installed_package
+      type: object
+    Kibana_HTTP_APIs_get_bulk_assets_request:
+      additionalProperties: false
+      properties:
+        assetIds:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+            required:
+            - id
+            - type
+          maxItems: 10000
+          type: array
+      required:
+      - assetIds
+      title: get_bulk_assets_request
+      type: object
+    Kibana_HTTP_APIs_get_package_info:
+      additionalProperties: true
+      properties:
+        agent:
+          additionalProperties: false
+          type: object
+          properties:
+            privileges:
+              additionalProperties: false
+              type: object
+              properties:
+                root:
+                  type: boolean
+        asset_tags:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              asset_ids:
+                items:
+                  type: string
+                maxItems: 1000
+                type: array
+              asset_types:
+                items:
+                  type: string
+                maxItems: 100
+                type: array
+              text:
+                type: string
+            required:
+            - text
+          maxItems: 1000
+          type: array
+        assets:
+          additionalProperties: {}
+          type: object
+        categories:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        conditions:
+          additionalProperties: true
+          type: object
+          properties:
+            deprecated:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_conditions_deprecation_info'
+            elastic:
+              additionalProperties: true
+              type: object
+              properties:
+                capabilities:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+                subscription:
+                  type: string
+            kibana:
+              additionalProperties: true
+              type: object
+              properties:
+                version:
+                  type: string
+        data_streams:
+          items:
+            additionalProperties: {}
+            type: object
+          maxItems: 1000
+          type: array
+        deprecated:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_deprecation_info'
+        description:
+          type: string
+        discovery:
+          additionalProperties: true
+          type: object
+          properties:
+            datasets:
+              items:
+                additionalProperties: true
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              maxItems: 100
+              type: array
+            fields:
+              items:
+                additionalProperties: true
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              maxItems: 100
+              type: array
+        download:
+          type: string
+        elasticsearch:
+          additionalProperties: {}
+          type: object
+        format_version:
+          type: string
+        icons:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_icon'
+          maxItems: 100
+          type: array
+        installationInfo:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_installation_info'
+        internal:
+          type: boolean
+        keepPoliciesUpToDate:
+          type: boolean
+        latestVersion:
+          type: string
+        license:
+          type: string
+        licensePath:
+          type: string
+        name:
+          type: string
+        notice:
+          type: string
+        owner:
+          additionalProperties: true
+          type: object
+          properties:
+            github:
+              type: string
+            type:
+              enum:
+              - elastic
+              - partner
+              - community
+              type: string
+        path:
+          type: string
+        policy_templates:
+          items:
+            additionalProperties: {}
+            type: object
+          maxItems: 1000
+          type: array
+        readme:
+          type: string
+        release:
+          enum:
+          - ga
+          - beta
+          - experimental
+          type: string
+        screenshots:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_icon'
+          maxItems: 100
+          type: array
+        signature_path:
+          type: string
+        source:
+          additionalProperties: true
+          type: object
+          properties:
+            license:
+              type: string
+          required:
+          - license
+        status:
+          type: string
+        title:
+          type: string
+        type:
+          anyOf:
+          - enum:
+            - integration
+            type: string
+          - enum:
+            - input
+            type: string
+          - enum:
+            - content
+            type: string
+          - type: string
+        var_groups:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              description:
+                type: string
+              name:
+                type: string
+              options:
+                items:
+                  additionalProperties: true
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                    hide_in_deployment_modes:
+                      items:
+                        enum:
+                        - default
+                        - agentless
+                        type: string
+                      maxItems: 2
+                      type: array
+                    name:
+                      type: string
+                    title:
+                      type: string
+                    vars:
+                      items:
+                        type: string
+                      maxItems: 100
+                      type: array
+                  required:
+                  - name
+                  - title
+                  - vars
+                maxItems: 100
+                type: array
+              selector_title:
+                type: string
+              title:
+                type: string
+            required:
+            - name
+            - title
+            - selector_title
+            - options
+          maxItems: 100
+          type: array
+        vars:
+          items:
+            additionalProperties: {}
+            type: object
+          maxItems: 1000
+          type: array
+        version:
+          type: string
+      required:
+      - name
+      - version
+      - title
+      - assets
+      title: get_package_info
+      type: object
+    Kibana_HTTP_APIs_bulk_install_packages_from_registry_request:
+      additionalProperties: false
+      properties:
+        allow_outdated_version:
+          default: false
+          description: When true, allow installing a version older than the latest available. Bypasses only the out-of-date version check.
+          type: boolean
+        force:
+          default: false
+          type: boolean
+        packages:
+          items:
+            anyOf:
+            - type: string
+            - additionalProperties: false
+              type: object
+              properties:
+                name:
+                  type: string
+                prerelease:
+                  type: boolean
+                version:
+                  type: string
+              required:
+              - name
+              - version
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_install_packages_from_registry_request
+      type: object
+    Kibana_HTTP_APIs_bulk_namespace_customization_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              error:
+                type: string
+              name:
+                type: string
+              namespace_customization_enabled_for:
+                description: 'The opt-in list on the package. Returned whenever the package is installed: the new list on success, or the unchanged list when the request is rejected (for example, because of a namespace-prefix restriction).'
+                items:
+                  type: string
+                maxItems: 100
+                type: array
+              success:
+                type: boolean
+              warnings:
+                items:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    baseTemplateName:
+                      maxLength: 1000
+                      type: string
+                    conflictingTemplates:
+                      items:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          conflictType:
+                            enum:
+                            - overrides_fleet
+                            - blocked_by_same_priority
+                            - overridden_by_fleet
+                            type: string
+                          name:
+                            maxLength: 1000
+                            type: string
+                          priority:
+                            type: number
+                        required:
+                        - name
+                        - priority
+                        - conflictType
+                      maxItems: 100
+                      type: array
+                    dataStreamName:
+                      maxLength: 1000
+                      type: string
+                    namespace:
+                      maxLength: 255
+                      type: string
+                    nsTemplateName:
+                      maxLength: 1000
+                      type: string
+                  required:
+                  - dataStreamName
+                  - namespace
+                  - baseTemplateName
+                  - nsTemplateName
+                  - conflictingTemplates
+                maxItems: 100
+                type: array
+            required:
+            - name
+            - success
+          maxItems: 1000
+          type: array
+      required:
+      - items
+      title: bulk_namespace_customization_response
+      type: object
+    Kibana_HTTP_APIs_package_info_conditions_deprecation_info:
+      additionalProperties: true
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: package_info_conditions_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_get_stats_response:
+      additionalProperties: false
+      properties:
+        response:
+          additionalProperties: false
+          type: object
+          properties:
+            agent_policy_count:
+              type: number
+            package_policy_count:
+              type: number
+          required:
+          - agent_policy_count
+          - package_policy_count
+      required:
+      - response
+      title: get_stats_response
+      type: object
+    Kibana_HTTP_APIs_get_dependencies_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              title:
+                type: string
+              version:
+                type: string
+            required:
+            - name
+            - version
+            - title
+          maxItems: 1000
+          type: array
+      required:
+      - items
+      title: get_dependencies_response
+      type: object
+    Kibana_HTTP_APIs_bulk_install_packages_response_item_error:
+      additionalProperties: false
+      properties:
+        error:
+          anyOf:
+          - type: string
+          - {}
+        name:
+          type: string
+        statusCode:
+          type: number
+      required:
+      - name
+      - statusCode
+      title: bulk_install_packages_response_item_error
+      type: object
+    Kibana_HTTP_APIs_install_package_response:
+      additionalProperties: false
+      properties:
+        _meta:
+          additionalProperties: false
+          type: object
+          properties:
+            install_source:
+              type: string
+            name:
+              type: string
+          required:
+          - install_source
+          - name
+        items:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      - _meta
+      title: install_package_response
+      type: object
+    Kibana_HTTP_APIs_reauthorize_transform_request:
+      additionalProperties: false
+      properties:
+        transforms:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              transformId:
+                type: string
+            required:
+            - transformId
+          maxItems: 1000
+          type: array
+      required:
+      - transforms
+      title: reauthorize_transform_request
+      type: object
+    Kibana_HTTP_APIs_get_packages_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_list_item'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_packages_response
+      type: object
+    Kibana_HTTP_APIs_package_list_item:
+      additionalProperties: true
+      properties:
+        categories:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        conditions:
+          additionalProperties: true
+          type: object
+          properties:
+            deprecated:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_conditions_deprecation_info'
+            elastic:
+              additionalProperties: true
+              type: object
+              properties:
+                capabilities:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+                subscription:
+                  type: string
+            kibana:
+              additionalProperties: true
+              type: object
+              properties:
+                version:
+                  type: string
+        data_streams:
+          items:
+            additionalProperties: {}
+            type: object
+          maxItems: 1000
+          type: array
+        deprecated:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_deprecation_info'
+        description:
+          type: string
+        discovery:
+          additionalProperties: true
+          type: object
+          properties:
+            datasets:
+              items:
+                additionalProperties: true
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              maxItems: 100
+              type: array
+            fields:
+              items:
+                additionalProperties: true
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              maxItems: 100
+              type: array
+        download:
+          type: string
+        format_version:
+          type: string
+        icons:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_icon'
+          maxItems: 100
+          type: array
+        id:
+          type: string
+        installationInfo:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_installation_info'
+        integration:
+          type: string
+        internal:
+          type: boolean
+        latestVersion:
+          type: string
+        name:
+          type: string
+        owner:
+          additionalProperties: true
+          type: object
+          properties:
+            github:
+              type: string
+            type:
+              enum:
+              - elastic
+              - partner
+              - community
+              type: string
+        path:
+          type: string
+        policy_templates:
+          items:
+            additionalProperties: {}
+            type: object
+          maxItems: 1000
+          type: array
+        readme:
+          type: string
+        release:
+          enum:
+          - ga
+          - beta
+          - experimental
+          type: string
+        signature_path:
+          type: string
+        source:
+          additionalProperties: true
+          type: object
+          properties:
+            license:
+              type: string
+          required:
+          - license
+        status:
+          type: string
+        title:
+          type: string
+        type:
+          anyOf:
+          - enum:
+            - integration
+            type: string
+          - enum:
+            - input
+            type: string
+          - enum:
+            - content
+            type: string
+          - type: string
+        var_groups:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              description:
+                type: string
+              name:
+                type: string
+              options:
+                items:
+                  additionalProperties: true
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                    hide_in_deployment_modes:
+                      items:
+                        enum:
+                        - default
+                        - agentless
+                        type: string
+                      maxItems: 2
+                      type: array
+                    name:
+                      type: string
+                    title:
+                      type: string
+                    vars:
+                      items:
+                        type: string
+                      maxItems: 100
+                      type: array
+                  required:
+                  - name
+                  - title
+                  - vars
+                maxItems: 100
+                type: array
+              selector_title:
+                type: string
+              title:
+                type: string
+            required:
+            - name
+            - title
+            - selector_title
+            - options
+          maxItems: 100
+          type: array
+        vars:
+          items:
+            additionalProperties: {}
+            type: object
+          maxItems: 1000
+          type: array
+        version:
+          type: string
+      required:
+      - name
+      - version
+      - title
+      - id
+      title: package_list_item
+      type: object
+    Kibana_HTTP_APIs_get_info_response:
+      additionalProperties: false
+      properties:
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_get_package_info'
+        metadata:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_metadata'
+      required:
+      - item
+      title: get_info_response
+      type: object
+    Kibana_HTTP_APIs_kibana_asset_reference:
+      additionalProperties: false
+      properties:
+        deferred:
+          type: boolean
+        id:
+          type: string
+        originId:
+          type: string
+        type:
+          anyOf:
+          - enum:
+            - dashboard
+            - lens
+            - visualization
+            - search
+            - index-pattern
+            - map
+            - ml-module
+            - security-rule
+            - csp-rule-template
+            - osquery-pack-asset
+            - osquery-saved-query
+            - tag
+            type: string
+          - type: string
+      required:
+      - id
+      - type
+      title: kibana_asset_reference
+      type: object
+    Kibana_HTTP_APIs_package_info_es_asset_reference:
+      additionalProperties: true
+      properties:
+        customDataStreamOriginDataset:
+          type: string
+        customDataStreamOriginType:
+          type: string
+        deferred:
+          type: boolean
+        id:
+          type: string
+        type:
+          enum:
+          - index
+          - index_template
+          - component_template
+          - ingest_pipeline
+          - ilm_policy
+          - data_stream_ilm_policy
+          - transform
+          - ml_model
+          - knowledge_base
+          - esql_view
+          type: string
+        version:
+          type: string
+      required:
+      - id
+      - type
+      title: package_info_es_asset_reference
+      type: object
+    Kibana_HTTP_APIs_package_metadata:
+      additionalProperties: false
+      properties:
+        has_policies:
+          type: boolean
+      required:
+      - has_policies
+      title: package_metadata
+      type: object
+    Kibana_HTTP_APIs_bulk_uninstall_packages_request:
+      additionalProperties: false
+      properties:
+        force:
+          default: false
+          type: boolean
+        packages:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              version:
+                type: string
+            required:
+            - name
+            - version
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_uninstall_packages_request
+      type: object
+    Kibana_HTTP_APIs_es_asset_reference:
+      additionalProperties: false
+      properties:
+        customDataStreamOriginDataset:
+          type: string
+        customDataStreamOriginType:
+          type: string
+        deferred:
+          type: boolean
+        id:
+          type: string
+        type:
+          enum:
+          - index
+          - index_template
+          - component_template
+          - ingest_pipeline
+          - ilm_policy
+          - data_stream_ilm_policy
+          - transform
+          - ml_model
+          - knowledge_base
+          - esql_view
+          type: string
+        version:
+          type: string
+      required:
+      - id
+      - type
+      title: es_asset_reference
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

@@ -1,0 +1,941 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Fleet internals API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Fleet internals
+  description: 'Fleet internals APIs enable you to manage Fleet internal operations, including checking permissions, monitoring Fleet Server health, managing settings, and initiating Fleet setup.
+
+    '
+  x-displayName: Fleet internals
+paths:
+  /api/fleet/check-permissions:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/check-permissions</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Check whether the current user has the required permissions to use Fleet. Optionally verifies Fleet Server setup privileges.'
+      operationId: get-fleet-check-permissions
+      parameters:
+      - description: When true, check Fleet Server setup privileges in addition to standard Fleet privileges
+        in: query
+        name: fleetServerSetup
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                checkPermissionsMissingPrivilegesExample:
+                  description: The current user is missing Fleet privileges
+                  value:
+                    error: MISSING_PRIVILEGES
+                    success: false
+                checkPermissionsSuccessExample:
+                  description: The current user has all required Fleet permissions
+                  value:
+                    success: true
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  error:
+                    enum:
+                    - MISSING_SECURITY
+                    - MISSING_PRIVILEGES
+                    - MISSING_FLEET_SERVER_SETUP_PRIVILEGES
+                    type: string
+                  success:
+                    type: boolean
+                required:
+                - success
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Check permissions
+      tags:
+      - Fleet internals
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/health_check:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/health_check</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Check the health status of a Fleet Server instance by its host ID. Returns the server status and name if available.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: post-fleet-health-check
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postHealthCheckRequestExample:
+                description: Check the health of a Fleet Server instance by its host ID
+                value:
+                  id: fleet-server-host-id-1
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                id:
+                  type: string
+              required:
+              - id
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postHealthCheckHealthyExample:
+                  description: Fleet Server is online and healthy
+                  value:
+                    name: fleet-server-1
+                    status: ONLINE
+                postHealthCheckUnreachableExample:
+                  description: Fleet Server host is not reachable (request timed out or aborted)
+                  value:
+                    host_id: fleet-server-host-id-1
+                    status: OFFLINE
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  host_id:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                required:
+                - status
+          description: Successful health check response
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestExample:
+                  description: The host ID exists but has no associated host URLs configured
+                  value:
+                    error: Bad Request
+                    message: The requested host id fleet-server-host-id-1 does not have associated host urls.
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No Fleet Server host was found with the given ID
+                  value:
+                    error: Not Found
+                    message: The requested host id fleet-server-host-id-1 does not exist.
+                    statusCode: 404
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Not Found
+      summary: Check Fleet Server health
+      tags:
+      - Fleet internals
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/settings:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/settings</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the global Fleet settings.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read.'
+      operationId: get-fleet-settings
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSettingsExample:
+                  description: The current Fleet settings
+                  value:
+                    item:
+                      delete_unenrolled_agents:
+                        enabled: false
+                        is_preconfigured: false
+                      has_seen_add_data_notice: true
+                      id: fleet-default-settings
+                      output_secret_storage_requirements_met: true
+                      prerelease_integrations_enabled: false
+                      secret_storage_requirements_met: true
+                      version: WzEsMV0=
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      action_secret_storage_requirements_met:
+                        type: boolean
+                      delete_unenrolled_agents:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          enabled:
+                            type: boolean
+                          is_preconfigured:
+                            type: boolean
+                        required:
+                        - enabled
+                        - is_preconfigured
+                      download_source_auth_secret_storage_requirements_met:
+                        type: boolean
+                      has_seen_add_data_notice:
+                        type: boolean
+                      id:
+                        type: string
+                      ilm_migration_status:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          logs:
+                            enum:
+                            - success
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                          metrics:
+                            enum:
+                            - success
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                          synthetics:
+                            enum:
+                            - success
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                      integration_knowledge_enabled:
+                        type: boolean
+                      output_secret_storage_requirements_met:
+                        type: boolean
+                      preconfigured_fields:
+                        items:
+                          enum:
+                          - fleet_server_hosts
+                          type: string
+                        maxItems: 1
+                        type: array
+                      prerelease_integrations_enabled:
+                        type: boolean
+                      secret_storage_requirements_met:
+                        type: boolean
+                      ssl_secret_storage_requirements_met:
+                        type: boolean
+                      use_space_awareness_migration_started_at:
+                        type:
+                        - string
+                        - 'null'
+                      use_space_awareness_migration_status:
+                        enum:
+                        - pending
+                        - success
+                        - error
+                        type: string
+                      version:
+                        type: string
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: Fleet settings have not been initialized
+                  value:
+                    error: Not Found
+                    message: Settings not found
+                    statusCode: 404
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+          description: Not Found
+      summary: Get settings
+      tags:
+      - Fleet internals
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/settings</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update the global Fleet settings.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: put-fleet-settings
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putSettingsRequestExample:
+                description: Update Fleet settings to enable pre-release integrations
+                value:
+                  prerelease_integrations_enabled: true
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                additional_yaml_config:
+                  deprecated: true
+                  type: string
+                delete_unenrolled_agents:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                    is_preconfigured:
+                      type: boolean
+                  required:
+                  - enabled
+                  - is_preconfigured
+                has_seen_add_data_notice:
+                  deprecated: true
+                  type: boolean
+                integration_knowledge_enabled:
+                  type: boolean
+                kibana_ca_sha256:
+                  deprecated: true
+                  type: string
+                kibana_urls:
+                  deprecated: true
+                  items:
+                    format: uri
+                    type: string
+                  maxItems: 10
+                  type: array
+                prerelease_integrations_enabled:
+                  type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putSettingsExample:
+                  description: The updated Fleet settings
+                  value:
+                    item:
+                      delete_unenrolled_agents:
+                        enabled: false
+                        is_preconfigured: false
+                      has_seen_add_data_notice: true
+                      id: fleet-default-settings
+                      output_secret_storage_requirements_met: true
+                      prerelease_integrations_enabled: true
+                      secret_storage_requirements_met: true
+                      version: WzIsMV0=
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      action_secret_storage_requirements_met:
+                        type: boolean
+                      delete_unenrolled_agents:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          enabled:
+                            type: boolean
+                          is_preconfigured:
+                            type: boolean
+                        required:
+                        - enabled
+                        - is_preconfigured
+                      download_source_auth_secret_storage_requirements_met:
+                        type: boolean
+                      has_seen_add_data_notice:
+                        type: boolean
+                      id:
+                        type: string
+                      ilm_migration_status:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          logs:
+                            enum:
+                            - success
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                          metrics:
+                            enum:
+                            - success
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                          synthetics:
+                            enum:
+                            - success
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                      integration_knowledge_enabled:
+                        type: boolean
+                      output_secret_storage_requirements_met:
+                        type: boolean
+                      preconfigured_fields:
+                        items:
+                          enum:
+                          - fleet_server_hosts
+                          type: string
+                        maxItems: 1
+                        type: array
+                      prerelease_integrations_enabled:
+                        type: boolean
+                      secret_storage_requirements_met:
+                        type: boolean
+                      ssl_secret_storage_requirements_met:
+                        type: boolean
+                      use_space_awareness_migration_started_at:
+                        type:
+                        - string
+                        - 'null'
+                      use_space_awareness_migration_status:
+                        enum:
+                        - pending
+                        - success
+                        - error
+                        type: string
+                      version:
+                        type: string
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: Fleet settings have not been initialized
+                  value:
+                    error: Not Found
+                    message: Settings not found
+                    statusCode: 404
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+          description: Not Found
+      summary: Update settings
+      tags:
+      - Fleet internals
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/setup:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/setup</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Initialize Fleet and create the necessary Elasticsearch resources for Fleet to operate. Safe to call multiple times (idempotent). Returns the initialization status and any non-fatal errors encountered during setup.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read OR fleet-agent-policies-read OR fleet-settings-read OR fleet-setup.'
+      operationId: post-fleet-setup
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                fleetSetupSuccessExample:
+                  description: Fleet initialized successfully with no non-fatal errors
+                  value:
+                    isInitialized: true
+                    nonFatalErrors: []
+                fleetSetupWithNonFatalErrorsExample:
+                  description: Fleet initialized but encountered non-fatal errors during setup
+                  value:
+                    isInitialized: true
+                    nonFatalErrors:
+                    - message: Package fleet_server not found in registry
+                      name: PackageNotFoundError
+              schema:
+                additionalProperties: false
+                description: A summary of the result of Fleet's `setup` lifecycle. If `isInitialized` is true, Fleet is ready to accept agent enrollment. `nonFatalErrors` may include useful insight into non-blocking issues with Fleet setup.
+                type: object
+                properties:
+                  isInitialized:
+                    type: boolean
+                  nonFatalErrors:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - name
+                      - message
+                    maxItems: 10000
+                    type: array
+                required:
+                - isInitialized
+                - nonFatalErrors
+          description: Fleet setup completed
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '500':
+          content:
+            application/json:
+              examples:
+                internalErrorResponseExample:
+                  description: Example of an internal server error response
+                  value:
+                    error: Internal Server Error
+                    message: An error message describing what went wrong
+                    statusCode: 500
+              schema:
+                additionalProperties: false
+                description: Internal Server Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+          description: Internal Server Error
+      summary: Initiate Fleet setup
+      tags:
+      - Fleet internals
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/space_settings:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/space_settings</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the Fleet settings for the current Kibana space.'
+      operationId: get-fleet-space-settings
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSpaceSettingsExample:
+                  description: The Fleet settings for the current Kibana space
+                  value:
+                    item:
+                      allowed_namespace_prefixes:
+                      - team-a
+                      - team-b
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      allowed_namespace_prefixes:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      managed_by:
+                        type: string
+                    required:
+                    - allowed_namespace_prefixes
+                required:
+                - item
+          description: Successful response
+      summary: Get space settings
+      tags:
+      - Fleet internals
+      x-state: Generally available; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/space_settings</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create or update Fleet settings for the current Kibana space.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: put-fleet-space-settings
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putSpaceSettingsRequestExample:
+                description: Update allowed namespace prefixes for the current Kibana space
+                value:
+                  allowed_namespace_prefixes:
+                  - team-a
+                  - team-b
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                allowed_namespace_prefixes:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putSpaceSettingsExample:
+                  description: The updated Fleet settings for the current Kibana space
+                  value:
+                    item:
+                      allowed_namespace_prefixes:
+                      - team-a
+                      - team-b
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      allowed_namespace_prefixes:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      managed_by:
+                        type: string
+                    required:
+                    - allowed_namespace_prefixes
+                required:
+                - item
+          description: Successful response
+      summary: Create space settings
+      tags:
+      - Fleet internals
+      x-state: Generally available; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

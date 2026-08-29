@@ -1,0 +1,3688 @@
+openapi: 3.2.0
+info:
+  title: Elk Stack Streams API
+  version: ''
+  x-refined-note:
+  - x-doc-license differs across the merged source definitions and was not carried
+  - x-feedbackLink differs across the merged source definitions and was not carried
+  description: 'Operations tagged streams across 2 of this provider''s published API definitions: elk-stack-elasticsearch-openapi.json, elk-stack-kibana-openapi.yaml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+tags:
+- name: streams
+paths:
+  /_streams/{name}/_disable:
+    post:
+      tags:
+      - streams
+      summary: Disable a named stream
+      description: 'Turn off the named stream feature for this cluster.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`
+
+        '
+      operationId: streams-logs-disable
+      parameters:
+      - in: path
+        name: name
+        description: The stream type to disable.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/streams._types.StreamType'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                PostStreamsLogsDisableResponseExample1:
+                  summary: Disable logs.otel streams
+                  description: 'A successful response from `POST _streams/logs.otel/_disable` endpoint
+
+                    '
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Experimental; Added in 9.1.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_streams/{name}/_enable:
+    post:
+      tags:
+      - streams
+      summary: Enable a named stream
+      description: 'Turn on the named stream feature for this cluster.
+
+
+        NOTE: To protect existing data, this feature can be turned on only if the cluster does not have
+
+        existing indices or data streams that match the pattern `<name>|<name>.*` for the enabled stream
+
+        type name. If those indices or data streams exist, a `409 - Conflict` response and error is
+
+        returned.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`
+
+        '
+      operationId: streams-logs-enable
+      parameters:
+      - in: path
+        name: name
+        description: The stream type to enable.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/streams._types.StreamType'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                PostStreamsEnableResponseExample1:
+                  summary: Enable logs streams
+                  description: 'A successful response from `POST _streams/logs.otel/_enable` endpoint
+
+                    '
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Experimental; Added in 9.1.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_streams/status:
+    get:
+      tags:
+      - streams
+      summary: Get the status of streams
+      description: 'Get the current status for all types of streams.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `monitor`
+
+        '
+      operationId: streams-status
+      parameters:
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logs:
+                    allOf:
+                    - $ref: '#/components/schemas/streams.status.StreamStatus'
+                  logs.otel:
+                    allOf:
+                    - $ref: '#/components/schemas/streams.status.StreamStatus'
+                  logs.ecs:
+                    allOf:
+                    - $ref: '#/components/schemas/streams.status.StreamStatus'
+                required:
+                - logs
+                - logs.otel
+                - logs.ecs
+              examples:
+                GetStreamsStatusResponseExample1:
+                  summary: Get Streams Status A successful response from `GET _streams/status` that outlines the current state of all wired streams in the cluster.
+                  value: "{\n  \"logs\": {\n    \"enabled\": false\n  }\n  \"logs.ecs\": {\n    \"enabled\": true\n  }\n  \"logs.otel\": {\n    \"enabled\": true\n  }\n}"
+      x-state: Experimental; Added in 9.1.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /api/streams:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Fetches list of all streams<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                listStreams:
+                  value:
+                    streams:
+                    - description: Root logs stream
+                      ingest:
+                        failure_store:
+                          inherit: {}
+                        lifecycle:
+                          inherit: {}
+                        processing:
+                          steps: []
+                          updated_at: '2025-01-10T08:00:00.000Z'
+                        settings: {}
+                        wired:
+                          fields:
+                            '@timestamp':
+                              type: date
+                            log.level:
+                              type: keyword
+                            message:
+                              type: match_only_text
+                          routing:
+                          - destination: logs.nginx
+                            status: enabled
+                            where:
+                              eq: nginx
+                              field: host.name
+                      name: logs
+                      type: wired
+                      updated_at: '2025-01-10T08:00:00.000Z'
+                    - description: Web server access logs, routed by severity
+                      ingest:
+                        failure_store:
+                          inherit: {}
+                        lifecycle:
+                          inherit: {}
+                        processing:
+                          steps: []
+                          updated_at: '2025-01-15T10:30:00.000Z'
+                        settings: {}
+                        wired:
+                          fields:
+                            host.name:
+                              type: keyword
+                            http.response.status_code:
+                              type: long
+                            message:
+                              type: match_only_text
+                          routing:
+                          - destination: logs.nginx.errors
+                            status: enabled
+                            where:
+                              field: http.response.status_code
+                              gte: 500
+                      name: logs.nginx
+                      type: wired
+                      updated_at: '2025-01-15T10:30:00.000Z'
+                    - description: Legacy application logs
+                      ingest:
+                        classic: {}
+                        failure_store:
+                          disabled: {}
+                        lifecycle:
+                          dsl:
+                            data_retention: 30d
+                        processing:
+                          steps:
+                          - action: grok
+                            from: message
+                            ignore_missing: true
+                            patterns:
+                            - '%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:log.level} %{GREEDYDATA:message}'
+                          updated_at: '2024-12-01T09:00:00.000Z'
+                        settings: {}
+                      name: logs-myapp-default
+                      type: classic
+                      updated_at: '2024-12-01T09:00:00.000Z'
+                    - description: All error-level logs across every stream
+                      name: logs.errors
+                      query:
+                        esql: FROM logs* | WHERE log.level == "error"
+                        view: logs.errors-view
+                      type: query
+                      updated_at: '2025-01-20T14:00:00.000Z'
+          description: A list of all streams.
+      summary: Get stream list
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/_disable:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/_disable</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Disables wired streams and deletes all existing stream definitions. The data of wired streams is deleted, but the data of classic streams is preserved.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-disable
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          description: Streams were disabled successfully.
+      summary: Disable streams
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/_enable:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/_enable</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Enables wired streams<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-enable
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          description: Streams were enabled successfully.
+      summary: Enable streams
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/_resync:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/_resync</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Resyncs all streams, making sure that Elasticsearch assets are up to date<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-resync
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          description: Streams were resynced successfully.
+      summary: Resync streams
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{name}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Deletes a stream definition and the underlying data stream<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: delete-streams-name
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          description: The stream was deleted successfully.
+      summary: Delete a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Fetches a stream definition and associated dashboards<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams-name
+      parameters:
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getWiredStream:
+                  value:
+                    dashboards: []
+                    data_stream_exists: true
+                    effective_failure_store:
+                      disabled: {}
+                      from: logs
+                    effective_lifecycle:
+                      dsl:
+                        data_retention: 7d
+                      from: logs
+                    effective_settings: {}
+                    inherited_fields:
+                      '@timestamp':
+                        from: logs
+                        type: date
+                      log.level:
+                        from: logs
+                        type: keyword
+                    privileges:
+                      create_snapshot_repository: false
+                      lifecycle: true
+                      manage: true
+                      manage_failure_store: true
+                      monitor: true
+                      read_failure_store: true
+                      simulate: true
+                      text_structure: true
+                      view_index_metadata: true
+                    rules: []
+                    stream:
+                      description: Web server access logs, routed by severity
+                      ingest:
+                        failure_store:
+                          inherit: {}
+                        lifecycle:
+                          inherit: {}
+                        processing:
+                          steps: []
+                          updated_at: '2025-01-15T10:30:00.000Z'
+                        settings: {}
+                        wired:
+                          fields:
+                            host.name:
+                              type: keyword
+                            http.response.status_code:
+                              type: long
+                            message:
+                              type: match_only_text
+                          routing:
+                          - destination: logs.nginx.errors
+                            status: enabled
+                            where:
+                              field: http.response.status_code
+                              gte: 500
+                      name: logs.nginx
+                      type: wired
+                      updated_at: '2025-01-15T10:30:00.000Z'
+          description: Stream definition and associated metadata.
+      summary: Get a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Creates or updates a stream definition. Classic streams can not be created through this API, only updated<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: put-streams-name
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createQueryStream:
+                value:
+                  dashboards: []
+                  rules: []
+                  stream:
+                    description: All error-level logs across every stream
+                    query:
+                      esql: FROM logs* | WHERE log.level == "error"
+                      view: logs.errors-view
+                    type: query
+              createWiredStream:
+                value:
+                  dashboards: []
+                  rules: []
+                  stream:
+                    description: Web server access logs, routed by severity
+                    ingest:
+                      failure_store:
+                        inherit: {}
+                      lifecycle:
+                        inherit: {}
+                      processing:
+                        steps: []
+                      settings: {}
+                      wired:
+                        fields:
+                          host.name:
+                            type: keyword
+                          http.response.status_code:
+                            type: long
+                          message:
+                            type: match_only_text
+                        routing:
+                        - destination: logs.nginx.errors
+                          status: enabled
+                          where:
+                            field: http.response.status_code
+                            gte: 500
+                    type: wired
+              updateClassicStream:
+                value:
+                  dashboards: []
+                  rules: []
+                  stream:
+                    description: Legacy application logs managed as a classic data stream
+                    ingest:
+                      classic: {}
+                      failure_store:
+                        disabled: {}
+                      lifecycle:
+                        dsl:
+                          data_retention: 30d
+                      processing:
+                        steps:
+                        - action: grok
+                          from: message
+                          ignore_missing: true
+                          patterns:
+                          - '%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:log.level} %{GREEDYDATA:message}'
+                      settings: {}
+                    type: classic
+            schema:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamUpsertRequest'
+      responses:
+        '200':
+          description: The stream was created or updated successfully.
+      summary: Create or update a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{name}/_fork:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_fork</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Forks a wired stream and creates a child stream<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-name-fork
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the parent stream to fork from.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              forkStream:
+                value:
+                  status: enabled
+                  stream:
+                    name: logs.nginx.errors
+                  where:
+                    eq: '500'
+                    field: http.response.status_code
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                draft:
+                  type: boolean
+                status:
+                  enum:
+                  - enabled
+                  - disabled
+                  type: string
+                stream:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+                where:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              required:
+              - stream
+              - where
+      responses:
+        '200':
+          description: The stream was forked successfully.
+      summary: Fork a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{name}/_ingest:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_ingest</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Fetches the ingest settings of an ingest stream definition<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams-name-ingest
+      parameters:
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getWiredIngest:
+                  value:
+                    ingest:
+                      failure_store:
+                        inherit: {}
+                      lifecycle:
+                        inherit: {}
+                      processing:
+                        steps:
+                        - action: grok
+                          from: message
+                          ignore_missing: false
+                          patterns:
+                          - '%{IPORHOST:client.ip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:@timestamp}\] "%{WORD:http.method} %{DATA:url.original} HTTP/%{NUMBER:http.version}" %{NUMBER:http.response.status_code:int} (?:%{NUMBER:http.response.body.bytes:int}|-)'
+                        updated_at: '2025-01-15T10:30:00.000Z'
+                      settings: {}
+                      wired:
+                        fields:
+                          client.ip:
+                            type: ip
+                          http.method:
+                            type: keyword
+                          http.response.body.bytes:
+                            type: long
+                          http.response.status_code:
+                            type: long
+                          url.original:
+                            type: wildcard
+                        routing:
+                        - destination: logs.nginx.errors
+                          status: enabled
+                          where:
+                            field: http.response.status_code
+                            gte: 500
+          description: Ingest settings for the stream.
+      summary: Get ingest stream settings
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_ingest</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Upserts the ingest settings of an ingest stream definition<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: put-streams-name-ingest
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              upsertWiredIngest:
+                value:
+                  ingest:
+                    failure_store:
+                      inherit: {}
+                    lifecycle:
+                      inherit: {}
+                    processing:
+                      steps:
+                      - action: grok
+                        from: message
+                        ignore_missing: false
+                        patterns:
+                        - '%{IPORHOST:client.ip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:@timestamp}\] "%{WORD:http.method} %{DATA:url.original} HTTP/%{NUMBER:http.version}" %{NUMBER:http.response.status_code:int} (?:%{NUMBER:http.response.body.bytes:int}|-)'
+                    settings: {}
+                    wired:
+                      fields:
+                        client.ip:
+                          type: ip
+                        http.method:
+                          type: keyword
+                        http.response.body.bytes:
+                          type: long
+                        http.response.status_code:
+                          type: long
+                        url.original:
+                          type: wildcard
+                      routing:
+                      - destination: logs.nginx.errors
+                        status: enabled
+                        where:
+                          eq: '500'
+                          field: http.response.status_code
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                ingest:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      failure_store:
+                        $ref: '#/components/schemas/Kibana_HTTP_APIs_FailureStore'
+                      lifecycle:
+                        $ref: '#/components/schemas/Kibana_HTTP_APIs_IngestStreamLifecycle'
+                      processing:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          steps:
+                            items:
+                              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+                            type: array
+                        required:
+                        - steps
+                      settings:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          index.number_of_replicas:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                            required:
+                            - value
+                          index.number_of_shards:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                            required:
+                            - value
+                          index.refresh_interval:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              value:
+                                anyOf:
+                                - type: string
+                                - enum:
+                                  - -1
+                                  type: number
+                            required:
+                            - value
+                      wired:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          draft:
+                            type: boolean
+                          fields:
+                            $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinition'
+                          routing:
+                            items:
+                              type: object
+                              properties:
+                                destination:
+                                  description: A non-empty string.
+                                  minLength: 1
+                                  type: string
+                                draft:
+                                  type: boolean
+                                status:
+                                  enum:
+                                  - enabled
+                                  - disabled
+                                  type: string
+                                where:
+                                  $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+                              required:
+                              - destination
+                              - where
+                            type: array
+                        required:
+                        - fields
+                        - routing
+                    required:
+                    - lifecycle
+                    - processing
+                    - settings
+                    - failure_store
+                    - wired
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      classic:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          field_overrides:
+                            $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicFieldDefinition'
+                      failure_store:
+                        $ref: '#/components/schemas/Kibana_HTTP_APIs_FailureStore'
+                      lifecycle:
+                        $ref: '#/components/schemas/Kibana_HTTP_APIs_IngestStreamLifecycle'
+                      processing:
+                        anyOf:
+                        - additionalProperties: false
+                          type: object
+                          properties:
+                            steps:
+                              items:
+                                $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+                              type: array
+                          required:
+                          - steps
+                        - additionalProperties: false
+                          type: object
+                          properties:
+                            processors:
+                              items:
+                                additionalProperties: {}
+                                type: object
+                              type: array
+                          required:
+                          - processors
+                      settings:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          index.number_of_replicas:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                            required:
+                            - value
+                          index.number_of_shards:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                            required:
+                            - value
+                          index.refresh_interval:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              value:
+                                anyOf:
+                                - type: string
+                                - enum:
+                                  - -1
+                                  type: number
+                            required:
+                            - value
+                    required:
+                    - lifecycle
+                    - processing
+                    - settings
+                    - failure_store
+                    - classic
+              required:
+              - ingest
+      responses:
+        '200':
+          description: The ingest settings were updated successfully.
+      summary: Update ingest stream settings
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{name}/_query:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_query</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Fetches the query settings of a query stream definition<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams-name-query
+      parameters:
+      - description: The name of the query stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          description: Query settings for the stream.
+      summary: Get query stream settings
+      tags:
+      - streams
+      x-state: Experimental; added in 9.4.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_query</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Upserts the query settings of a query stream definition<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: put-streams-name-query
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the query stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              upsertQueryStream:
+                value:
+                  query:
+                    esql: FROM logs* | WHERE log.level == "error" | KEEP @timestamp, message, host.name, log.level
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                field_descriptions:
+                  additionalProperties:
+                    type: string
+                  type: object
+                query:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    esql:
+                      type: string
+                  required:
+                  - esql
+              required:
+              - query
+      responses:
+        '200':
+          description: The query stream settings were updated successfully.
+      summary: Upsert query stream settings
+      tags:
+      - streams
+      x-state: Experimental; added in 9.4.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{name}/content/export:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/content/export</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Exports a content pack with the stream structure (routing, mappings, and processing). Significant-event queries are not included; manage them via the /api/streams/{name}/queries endpoints.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-name-content-export
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream to export content from.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              exportContent:
+                value:
+                  description: Nginx stream content pack
+                  include:
+                    objects:
+                      all: {}
+                  name: nginx-pack
+                  version: 1.0.0
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                description:
+                  type: string
+                include:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_ContentPackIncludedObjects'
+                name:
+                  type: string
+                version:
+                  type: string
+              required:
+              - name
+              - description
+              - version
+              - include
+      responses:
+        '200':
+          description: Content pack archive for the stream.
+      summary: Export stream content
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{name}/content/import:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/content/import</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Imports stream structure (routing, mappings, and processing) from a content pack into a stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-name-content-import
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream to import content into.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            examples:
+              importContent:
+                value:
+                  content: <binary zip archive>
+                  include: '{"objects":{"all":{}}}'
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                content: {}
+                include:
+                  type: string
+              required:
+              - include
+              - content
+      responses:
+        '200':
+          description: Content was imported into the stream successfully.
+      summary: Import content into a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{streamName}/attachments:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Fetches all attachments linked to a stream that are visible to the current user in the current space. Optionally filter by attachment types, search query, and tags.<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams-streamname-attachments
+      parameters:
+      - description: The name of the stream
+        in: path
+        name: streamName
+        required: true
+        schema:
+          type: string
+      - description: Search query to filter attachments by title
+        in: query
+        name: query
+        required: false
+        schema:
+          type: string
+      - description: Filter by attachment types (single value or array)
+        in: query
+        name: attachmentTypes
+        required: false
+        schema:
+          items:
+            enum:
+            - dashboard
+            - rule
+            - slo
+            type: string
+          type: array
+      - description: Filter by tags (single value or array)
+        in: query
+        name: tags
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      requestBody:
+        content:
+          application/json:
+            examples:
+              listAttachmentsExample:
+                value: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                listAttachmentsResponse:
+                  value:
+                    attachments:
+                    - createdAt: '2023-02-23T16:15:47.275Z'
+                      description: Dashboard for monitoring production services
+                      id: dashboard-123
+                      streamNames:
+                      - logs.awsfirehose
+                      - logs.nginx
+                      tags:
+                      - monitoring
+                      - production
+                      title: My Dashboard
+                      type: dashboard
+                      updatedAt: '2023-03-24T14:39:17.636Z'
+          description: Successfully retrieved attachments
+      summary: Get stream attachments
+      tags:
+      - streams
+      x-state: Experimental; added in 9.3.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{streamName}/attachments/_bulk:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments/_bulk</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Bulk update attachments linked to a stream. Can link new attachments and delete existing ones. Supports mixed attachment types in a single request.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-streamname-attachments-bulk
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream
+        in: path
+        name: streamName
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkAttachmentsExample:
+                value:
+                  operations:
+                  - index:
+                      id: dashboard-123
+                      type: dashboard
+                  - delete:
+                      id: rule-456
+                      type: rule
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                operations:
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        index:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              enum:
+                              - dashboard
+                              - rule
+                              - slo
+                              type: string
+                          required:
+                          - id
+                          - type
+                      required:
+                      - index
+                    - type: object
+                      properties:
+                        delete:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              enum:
+                              - dashboard
+                              - rule
+                              - slo
+                              type: string
+                          required:
+                          - id
+                          - type
+                      required:
+                      - delete
+                  type: array
+              required:
+              - operations
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                bulkAttachmentsResponse:
+                  value:
+                    acknowledged: true
+          description: Successfully performed bulk operations
+      summary: Bulk update attachments
+      tags:
+      - streams
+      x-state: Experimental; added in 9.3.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Unlinks an attachment from a stream. Noop if the attachment is not linked to the stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: delete-streams-streamname-attachments-attachmenttype-attachmentid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream
+        in: path
+        name: streamName
+        required: true
+        schema:
+          type: string
+      - description: The type of the attachment
+        in: path
+        name: attachmentType
+        required: true
+        schema:
+          enum:
+          - dashboard
+          - rule
+          - slo
+          type: string
+      - description: The ID of the attachment
+        in: path
+        name: attachmentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              unlinkAttachmentExample:
+                value: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                unlinkAttachmentResponse:
+                  value:
+                    acknowledged: true
+          description: Successfully unlinked attachment
+      summary: Unlink an attachment from a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.3.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Links an attachment to a stream. Noop if the attachment is already linked to the stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: put-streams-streamname-attachments-attachmenttype-attachmentid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream
+        in: path
+        name: streamName
+        required: true
+        schema:
+          type: string
+      - description: The type of the attachment
+        in: path
+        name: attachmentType
+        required: true
+        schema:
+          enum:
+          - dashboard
+          - rule
+          - slo
+          type: string
+      - description: The ID of the attachment
+        in: path
+        name: attachmentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              linkAttachmentExample:
+                value: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                linkAttachmentResponse:
+                  value:
+                    acknowledged: true
+          description: Successfully linked attachment
+      summary: Link an attachment to a stream
+      tags:
+      - streams
+      x-state: Experimental; added in 9.3.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+components:
+  schemas:
+    streams._types.StreamType:
+      type: string
+      enum:
+      - logs
+      - logs.otel
+      - logs.ecs
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    streams.status.StreamStatus:
+      type: object
+      properties:
+        enabled:
+          description: If true, the stream feature is enabled.
+          type: boolean
+      required:
+      - enabled
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    Kibana_HTTP_APIs_ClassicStreamUpsertRequest:
+      additionalProperties: false
+      type: object
+      properties:
+        dashboards:
+          items:
+            type: string
+          type: array
+        rules:
+          items:
+            type: string
+          type: array
+        stream:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            ingest:
+              additionalProperties: false
+              type: object
+              properties:
+                classic:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    field_overrides:
+                      $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicFieldDefinition'
+                failure_store:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_FailureStore'
+                lifecycle:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_IngestStreamLifecycle'
+                processing:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      steps:
+                        items:
+                          $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+                        type: array
+                    required:
+                    - steps
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      processors:
+                        items:
+                          additionalProperties: {}
+                          type: object
+                        type: array
+                    required:
+                    - processors
+                settings:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    index.number_of_replicas:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                      required:
+                      - value
+                    index.number_of_shards:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                      required:
+                      - value
+                    index.refresh_interval:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          anyOf:
+                          - type: string
+                          - enum:
+                            - -1
+                            type: number
+                      required:
+                      - value
+              required:
+              - lifecycle
+              - processing
+              - settings
+              - failure_store
+              - classic
+            query_streams:
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              type: array
+            type:
+              enum:
+              - classic
+              type: string
+          required:
+          - description
+          - ingest
+          - type
+      required:
+      - dashboards
+      - rules
+      - stream
+    Kibana_HTTP_APIs_StreamlangStep:
+      anyOf:
+      - anyOf:
+        - additionalProperties: false
+          description: Grok processor - Extract fields from text using grok patterns
+          type: object
+          properties:
+            action:
+              enum:
+              - grok
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Source field to parse with grok patterns
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            pattern_definitions:
+              additionalProperties:
+                type: string
+              type: object
+            patterns:
+              description: Grok patterns applied in order to extract fields
+              items:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+              minItems: 1
+              type: array
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - patterns
+        - additionalProperties: false
+          description: Dissect processor - Extract fields from text using a lightweight, delimiter-based parser
+          type: object
+          properties:
+            action:
+              enum:
+              - dissect
+              type: string
+            append_separator:
+              description: Separator inserted when target fields are concatenated
+              minLength: 1
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Source field to parse with dissect pattern
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            pattern:
+              description: Dissect pattern describing field boundaries
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - pattern
+        - additionalProperties: false
+          description: URI parts processor - Parse a URI into components (scheme, domain, port, path, query, fragment, ...)
+          type: object
+          properties:
+            action:
+              enum:
+              - uri_parts
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Source field holding the URI string to parse
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            keep_original:
+              description: If true (default), preserve the original URI string alongside the extracted parts
+              type: boolean
+            remove_if_successful:
+              description: If true, remove the source field after a successful parse. Source field is kept on failure.
+              type: boolean
+            to:
+              description: 'Target field / column prefix for the extracted URI components (defaults to "url"). May equal `from` — the canonical ECS shape parses the `url` field in place. Note: combining `to === from` with `remove_if_successful: true` nulls the parsed object after writing it.'
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          description: Date processor - Parse dates from strings using one or more expected formats
+          type: object
+          properties:
+            action:
+              enum:
+              - date
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            formats:
+              description: Accepted input date formats, tried in order
+              items:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+              type: array
+            from:
+              description: Source field containing the date/time text
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            locale:
+              description: Optional locale for date parsing
+              minLength: 1
+              type: string
+            output_format:
+              description: Optional output format for storing the parsed date as text
+              minLength: 1
+              type: string
+            timezone:
+              description: Optional timezone for date parsing
+              minLength: 1
+              type: string
+            to:
+              description: Target field for the parsed date (defaults to source)
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - formats
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - drop_document
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - math
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            expression:
+              description: A non-empty string.
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - expression
+          - to
+        - additionalProperties: false
+          description: Rename processor - Change a field name and optionally its location
+          type: object
+          properties:
+            action:
+              enum:
+              - rename
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Existing source field to rename or move
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip when source field is missing
+              type: boolean
+            override:
+              description: Allow overwriting the target field if it already exists
+              type: boolean
+            to:
+              description: New field name or destination path
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - to
+        - additionalProperties: false
+          description: Set processor - Assign a literal or copied value to a field (mutually exclusive inputs)
+          type: object
+          properties:
+            action:
+              enum:
+              - set
+              type: string
+            copy_from:
+              description: Copy value from another field instead of providing a literal
+              minLength: 1
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            override:
+              description: Allow overwriting an existing target field
+              type: boolean
+            to:
+              description: Target field to set or create
+              minLength: 1
+              type: string
+            value:
+              description: Literal value to assign to the target field
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - to
+        - additionalProperties: false
+          description: Append processor - Append one or more values to an existing or new array field
+          type: object
+          properties:
+            action:
+              enum:
+              - append
+              type: string
+            allow_duplicates:
+              description: If true, do not deduplicate appended values
+              type: boolean
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            to:
+              description: Array field to append values to
+              minLength: 1
+              type: string
+            value:
+              description: Values to append (must be literal, no templates)
+              items: {}
+              minItems: 1
+              type: array
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - to
+          - value
+        - additionalProperties: false
+          description: Remove by prefix processor - Remove a field and all nested fields matching the prefix
+          type: object
+          properties:
+            action:
+              enum:
+              - remove_by_prefix
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Field to remove along with all its nested fields
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          description: Remove processor - Delete one or more fields from the document
+          type: object
+          properties:
+            action:
+              enum:
+              - remove
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Field to remove from the document
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - replace
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            pattern:
+              minLength: 1
+              type: string
+            replacement:
+              type: string
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - pattern
+          - replacement
+        - additionalProperties: false
+          description: Redact processor - Mask sensitive data using Grok patterns
+          type: object
+          properties:
+            action:
+              enum:
+              - redact
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Source field to redact sensitive data from
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing (defaults to true)
+              type: boolean
+            pattern_definitions:
+              additionalProperties:
+                type: string
+              description: Custom pattern definitions to use in the patterns
+              type: object
+            patterns:
+              description: Grok patterns to match sensitive data (for example, "%{IP:client}", "%{EMAILADDRESS:email}")
+              items:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+              minItems: 1
+              type: array
+            prefix:
+              description: Prefix to prepend to the redacted pattern name (defaults to "<")
+              type: string
+            suffix:
+              description: Suffix to append to the redacted pattern name (defaults to ">")
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - patterns
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - uppercase
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - lowercase
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - trim
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - join
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            delimiter:
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              items:
+                minLength: 1
+                type: string
+              minItems: 1
+              type: array
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - delimiter
+          - to
+        - additionalProperties: false
+          description: Split processor - Split a field value into an array using a separator
+          type: object
+          properties:
+            action:
+              enum:
+              - split
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Source field to split into an array
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            preserve_trailing:
+              description: Preserve empty trailing fields in the split result
+              type: boolean
+            separator:
+              description: Regex separator used to split the field value into an array
+              minLength: 1
+              type: string
+            to:
+              description: Target field for the split array (defaults to source)
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - separator
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - sort
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Array field to sort
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            order:
+              description: Sort order - "asc" (ascending) or "desc" (descending). Defaults to "asc"
+              enum:
+              - asc
+              - desc
+              type: string
+            to:
+              description: Target field for the sorted array (defaults to source)
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          description: Convert processor - Change the data type of a field value (integer, long, double, boolean, or string)
+          type: object
+          properties:
+            action:
+              enum:
+              - convert
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              description: Source field to convert to a different data type
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            to:
+              description: Target field for the converted value (defaults to source)
+              minLength: 1
+              type: string
+            type:
+              description: 'Target data type: integer, long, double, boolean, or string'
+              enum:
+              - integer
+              - long
+              - double
+              - boolean
+              - string
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - type
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - concat
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            from:
+              items:
+                anyOf:
+                - type: object
+                  properties:
+                    type:
+                      enum:
+                      - field
+                      type: string
+                    value:
+                      minLength: 1
+                      type: string
+                  required:
+                  - type
+                  - value
+                - type: object
+                  properties:
+                    type:
+                      enum:
+                      - literal
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - type
+                  - value
+              minItems: 1
+              type: array
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+          - to
+        - allOf:
+          - additionalProperties: false
+            type: object
+            properties:
+              action:
+                enum:
+                - network_direction
+                type: string
+              customIdentifier:
+                description: Custom identifier to correlate this processor across outputs
+                minLength: 1
+                type: string
+              description:
+                description: Human-readable notes about this processor step
+                type: string
+              destination_ip:
+                minLength: 1
+                type: string
+              ignore_failure:
+                description: Continue pipeline execution if this processor fails
+                type: boolean
+              ignore_missing:
+                type: boolean
+              source_ip:
+                minLength: 1
+                type: string
+              target_field:
+                minLength: 1
+                type: string
+              where:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+                description: Conditional expression controlling whether this processor runs
+            required:
+            - action
+            - source_ip
+            - destination_ip
+          - anyOf:
+            - additionalProperties: false
+              type: object
+              properties:
+                internal_networks:
+                  items:
+                    type: string
+                  type: array
+              required:
+              - internal_networks
+            - additionalProperties: false
+              type: object
+              properties:
+                internal_networks_field:
+                  minLength: 1
+                  type: string
+              required:
+              - internal_networks_field
+        - additionalProperties: false
+          description: JsonExtract processor - Extract values from JSON strings using JSONPath-like selectors
+          type: object
+          properties:
+            action:
+              enum:
+              - json_extract
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            extractions:
+              description: List of extraction specifications
+              items:
+                description: A single extraction specification
+                type: object
+                properties:
+                  selector:
+                    description: JSONPath-like selector to extract value (e.g., "user.id", "$.metadata.client.ip", "items[0].name")
+                    minLength: 1
+                    type: string
+                  target_field:
+                    description: Target field to store the extracted value
+                    minLength: 1
+                    type: string
+                  type:
+                    description: Data type for the extracted value. Defaults to "keyword". Ensures consistent types across transpilers.
+                    enum:
+                    - keyword
+                    - integer
+                    - long
+                    - double
+                    - boolean
+                    type: string
+                required:
+                - selector
+                - target_field
+              minItems: 1
+              type: array
+            field:
+              description: Source field containing the JSON string to parse
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - field
+          - extractions
+        - additionalProperties: false
+          type: object
+          properties:
+            action:
+              enum:
+              - enrich
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              type: boolean
+            override:
+              type: boolean
+            policy_name:
+              description: A non-empty string.
+              minLength: 1
+              type: string
+            to:
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - policy_name
+          - to
+        - additionalProperties: false
+          description: User agent processor - Extract browser, OS, and device details from a user agent string
+          type: object
+          properties:
+            action:
+              enum:
+              - user_agent
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            extract_device_type:
+              description: Extracts device type from the user agent string
+              type: boolean
+            from:
+              description: The field containing the user agent string
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when source field is missing
+              type: boolean
+            properties:
+              description: Specific properties to extract (defaults to all)
+              items:
+                enum:
+                - name
+                - os
+                - device
+                - original
+                - version
+                type: string
+              type: array
+            regex_file:
+              description: Custom regex file name containing the regular expressions for parsing the user agent string
+              minLength: 1
+              type: string
+            to:
+              description: The field that will be filled with the user agent details
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - from
+        - additionalProperties: false
+          description: Registered domain processor - extracts domain, registered_domain, top_level_domain, subdomain from a FQDN
+          type: object
+          properties:
+            action:
+              enum:
+              - registered_domain
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            expression:
+              description: The string expression containing the FQDN to parse
+              minLength: 1
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            ignore_missing:
+              description: Skip processing when expression field is missing
+              type: boolean
+            prefix:
+              description: The prefix for the output columns. The extracted parts are available as prefix.part_name
+              minLength: 1
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - expression
+          - prefix
+        - additionalProperties: false
+          description: Manual ingest pipeline wrapper around native Elasticsearch processors
+          type: object
+          properties:
+            action:
+              description: Manual ingest pipeline - executes raw Elasticsearch ingest processors
+              enum:
+              - manual_ingest_pipeline
+              type: string
+            customIdentifier:
+              description: Custom identifier to correlate this processor across outputs
+              minLength: 1
+              type: string
+            description:
+              description: Human-readable notes about this processor step
+              type: string
+            ignore_failure:
+              description: Continue pipeline execution if this processor fails
+              type: boolean
+            on_failure:
+              description: Fallback processors to run when a processor fails
+              items:
+                additionalProperties: {}
+                type: object
+              type: array
+            processors:
+              description: List of raw Elasticsearch ingest processors to run
+              items:
+                additionalProperties: {}
+                type: object
+              type: array
+            tag:
+              description: Optional ingest processor tag for Elasticsearch
+              type: string
+            where:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+              description: Conditional expression controlling whether this processor runs
+          required:
+          - action
+          - processors
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangConditionBlock'
+    Kibana_HTTP_APIs_QueryStreamUpsertRequest:
+      additionalProperties: false
+      type: object
+      properties:
+        dashboards:
+          items:
+            type: string
+          type: array
+        rules:
+          items:
+            type: string
+          type: array
+        stream:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            field_descriptions:
+              additionalProperties:
+                type: string
+              type: object
+            query:
+              additionalProperties: false
+              type: object
+              properties:
+                esql:
+                  type: string
+                view:
+                  type: string
+              required:
+              - view
+              - esql
+            query_streams:
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              type: array
+            type:
+              enum:
+              - query
+              type: string
+          required:
+          - description
+          - type
+          - query
+      required:
+      - dashboards
+      - rules
+      - stream
+    Kibana_HTTP_APIs_RecursiveRecord:
+      additionalProperties:
+        anyOf:
+        - anyOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - {}
+        - items:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - {}
+          type: array
+        - items: {}
+          type: array
+        - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
+      type: object
+    Kibana_HTTP_APIs_ClassicFieldDefinitionConfig:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
+      - anyOf:
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            format:
+              description: A non-empty string.
+              minLength: 1
+              type: string
+            type:
+              enum:
+              - keyword
+              - match_only_text
+              - long
+              - double
+              - date
+              - boolean
+              - ip
+              - geo_point
+              - integer
+              - short
+              - byte
+              - float
+              - half_float
+              - text
+              - wildcard
+              - version
+              - unsigned_long
+              - date_nanos
+              type: string
+          required:
+          - type
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            type:
+              enum:
+              - system
+              type: string
+          required:
+          - type
+    Kibana_HTTP_APIs_ConditionWithSteps:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+      - additionalProperties: false
+        type: object
+        properties:
+          else:
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+            type: array
+          steps:
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+            type: array
+        required:
+        - steps
+    Kibana_HTTP_APIs_ContentPackIncludedObjects:
+      anyOf:
+      - additionalProperties: false
+        type: object
+        properties:
+          objects:
+            additionalProperties: false
+            type: object
+            properties:
+              all:
+                additionalProperties: false
+                type: object
+                properties: {}
+            required:
+            - all
+        required:
+        - objects
+      - additionalProperties: false
+        type: object
+        properties:
+          objects:
+            additionalProperties: false
+            type: object
+            properties:
+              mappings:
+                type: boolean
+              routing:
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/Kibana_HTTP_APIs_ContentPackIncludedObjects'
+                  - type: object
+                    properties:
+                      destination:
+                        type: string
+                    required:
+                    - destination
+                type: array
+            required:
+            - mappings
+            - routing
+        required:
+        - objects
+    Kibana_HTTP_APIs_FailureStore:
+      anyOf:
+      - additionalProperties: false
+        type: object
+        properties:
+          inherit:
+            additionalProperties: false
+            type: object
+            properties: {}
+        required:
+        - inherit
+      - additionalProperties: false
+        type: object
+        properties:
+          disabled:
+            additionalProperties: false
+            type: object
+            properties: {}
+        required:
+        - disabled
+      - additionalProperties: false
+        type: object
+        properties:
+          lifecycle:
+            additionalProperties: false
+            type: object
+            properties:
+              enabled:
+                additionalProperties: false
+                type: object
+                properties:
+                  data_retention:
+                    description: A non-empty string.
+                    minLength: 1
+                    type: string
+            required:
+            - enabled
+        required:
+        - lifecycle
+      - additionalProperties: false
+        type: object
+        properties:
+          lifecycle:
+            additionalProperties: false
+            type: object
+            properties:
+              disabled:
+                additionalProperties: false
+                type: object
+                properties: {}
+            required:
+            - disabled
+        required:
+        - lifecycle
+    Kibana_HTTP_APIs_StreamUpsertRequest:
+      anyOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_WiredStreamUpsertRequest'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicStreamUpsertRequest'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_QueryStreamUpsertRequest'
+    Kibana_HTTP_APIs_WiredStreamUpsertRequest:
+      additionalProperties: false
+      type: object
+      properties:
+        dashboards:
+          items:
+            type: string
+          type: array
+        rules:
+          items:
+            type: string
+          type: array
+        stream:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            ingest:
+              additionalProperties: false
+              type: object
+              properties:
+                failure_store:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_FailureStore'
+                lifecycle:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_IngestStreamLifecycle'
+                processing:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    steps:
+                      items:
+                        $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+                      type: array
+                  required:
+                  - steps
+                settings:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    index.number_of_replicas:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                      required:
+                      - value
+                    index.number_of_shards:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                      required:
+                      - value
+                    index.refresh_interval:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          anyOf:
+                          - type: string
+                          - enum:
+                            - -1
+                            type: number
+                      required:
+                      - value
+                wired:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    draft:
+                      type: boolean
+                    fields:
+                      $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinition'
+                    routing:
+                      items:
+                        type: object
+                        properties:
+                          destination:
+                            description: A non-empty string.
+                            minLength: 1
+                            type: string
+                          draft:
+                            type: boolean
+                          status:
+                            enum:
+                            - enabled
+                            - disabled
+                            type: string
+                          where:
+                            $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+                        required:
+                        - destination
+                        - where
+                      type: array
+                  required:
+                  - fields
+                  - routing
+              required:
+              - lifecycle
+              - processing
+              - settings
+              - failure_store
+              - wired
+            query_streams:
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              type: array
+            type:
+              enum:
+              - wired
+              type: string
+          required:
+          - description
+          - ingest
+          - type
+      required:
+      - dashboards
+      - rules
+      - stream
+    Kibana_HTTP_APIs_IngestStreamLifecycle:
+      anyOf:
+      - additionalProperties: false
+        type: object
+        properties:
+          dsl:
+            additionalProperties: false
+            type: object
+            properties:
+              data_retention:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+              downsample:
+                items:
+                  type: object
+                  properties:
+                    after:
+                      description: A non-empty string.
+                      minLength: 1
+                      type: string
+                    fixed_interval:
+                      description: A non-empty string.
+                      minLength: 1
+                      type: string
+                  required:
+                  - after
+                  - fixed_interval
+                type: array
+              frozen_after:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+        required:
+        - dsl
+      - additionalProperties: false
+        type: object
+        properties:
+          ilm:
+            additionalProperties: false
+            type: object
+            properties:
+              policy:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+            required:
+            - policy
+        required:
+        - ilm
+      - additionalProperties: false
+        type: object
+        properties:
+          inherit:
+            additionalProperties: false
+            type: object
+            properties: {}
+        required:
+        - inherit
+    Kibana_HTTP_APIs_ClassicFieldDefinition:
+      additionalProperties:
+        $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicFieldDefinitionConfig'
+      type: object
+    Kibana_HTTP_APIs_StreamlangConditionBlock:
+      additionalProperties: false
+      type: object
+      properties:
+        condition:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_ConditionWithSteps'
+        customIdentifier:
+          type: string
+      required:
+      - condition
+    Kibana_HTTP_APIs_FieldDefinition:
+      additionalProperties:
+        $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinitionConfig'
+      type: object
+    Kibana_HTTP_APIs_Condition:
+      anyOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_FilterCondition'
+      - additionalProperties: false
+        description: A logical AND that groups multiple conditions.
+        type: object
+        properties:
+          and:
+            description: An array of conditions. All sub-conditions must be true for this condition to be true.
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+            type: array
+        required:
+        - and
+      - additionalProperties: false
+        description: A logical OR that groups multiple conditions.
+        type: object
+        properties:
+          or:
+            description: An array of conditions. At least one sub-condition must be true for this condition to be true.
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+            type: array
+        required:
+        - or
+      - additionalProperties: false
+        description: A logical NOT that negates a condition.
+        type: object
+        properties:
+          not:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+            description: A condition that negates another condition.
+        required:
+        - not
+      - additionalProperties: false
+        description: A condition that always evaluates to false.
+        type: object
+        properties:
+          never:
+            additionalProperties: false
+            description: An empty object. This condition never matches.
+            type: object
+            properties: {}
+        required:
+        - never
+      - additionalProperties: false
+        description: A condition that always evaluates to true. Useful for catch-all scenarios, but use with caution as partitions are ordered.
+        type: object
+        properties:
+          always:
+            additionalProperties: false
+            description: An empty object. This condition always matches.
+            type: object
+            properties: {}
+        required:
+        - always
+      description: The root condition object. It can be a simple filter or a combination of other conditions.
+    Kibana_HTTP_APIs_FilterCondition:
+      anyOf:
+      - additionalProperties: false
+        description: A condition that compares a field to a value or range using an operator as the key.
+        type: object
+        properties:
+          contains:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Contains comparison value.
+          endsWith:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Ends-with comparison value.
+          eq:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Equality comparison value.
+          field:
+            description: The document field to filter on.
+            minLength: 1
+            type: string
+          gt:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Greater-than comparison value.
+          gte:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Greater-than-or-equal comparison value.
+          includes:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Checks if multivalue field includes the value.
+          lt:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Less-than comparison value.
+          lte:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Less-than-or-equal comparison value.
+          neq:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Inequality comparison value.
+          range:
+            additionalProperties: false
+            description: Range comparison values.
+            type: object
+            properties:
+              gt:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+              gte:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+              lt:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+              lte:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+          startsWith:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Starts-with comparison value.
+        required:
+        - field
+      - additionalProperties: false
+        description: A condition that checks for the existence or non-existence of a field.
+        type: object
+        properties:
+          exists:
+            description: Indicates whether the field exists or not.
+            type: boolean
+          field:
+            description: The document field to check.
+            minLength: 1
+            type: string
+        required:
+        - field
+      description: A basic filter condition, either unary or binary.
+    Kibana_HTTP_APIs_FieldDefinitionConfig:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
+      - anyOf:
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            format:
+              description: A non-empty string.
+              minLength: 1
+              type: string
+            type:
+              enum:
+              - keyword
+              - match_only_text
+              - long
+              - double
+              - date
+              - boolean
+              - ip
+              - geo_point
+              - integer
+              - short
+              - byte
+              - float
+              - half_float
+              - text
+              - wildcard
+              - version
+              - unsigned_long
+              - date_nanos
+              type: string
+          required:
+          - type
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            format:
+              not: {}
+            type:
+              not: {}
+          required:
+          - description
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            type:
+              enum:
+              - system
+              type: string
+          required:
+          - type
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-refined-from:
+- elk-stack-elasticsearch-openapi.json
+- elk-stack-kibana-openapi.yaml
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

@@ -1,0 +1,466 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Fleet uninstall tokens API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Fleet uninstall tokens
+  description: 'Fleet uninstall tokens APIs enable you to manage Fleet uninstall tokens, including retrieving metadata and decrypted tokens for agent uninstallation.
+
+    '
+  x-displayName: Fleet uninstall tokens
+paths:
+  /api/fleet/uninstall_tokens:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/uninstall_tokens</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        List the metadata for the latest uninstall tokens per agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: get-fleet-uninstall-tokens
+      parameters:
+      - description: Partial match filtering for policy IDs
+        in: query
+        name: policyId
+        required: false
+        schema:
+          maxLength: 50
+          type: string
+      - description: Partial match filtering for uninstall token values
+        in: query
+        name: search
+        required: false
+        schema:
+          maxLength: 50
+          type: string
+      - description: The number of items to return
+        in: query
+        name: perPage
+        required: false
+        schema:
+          minimum: 5
+          type: number
+      - description: Page number
+        in: query
+        name: page
+        required: false
+        schema:
+          minimum: 1
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getUninstallTokensExample:
+                  description: List of uninstall token metadata for agent policies
+                  value:
+                    items:
+                    - created_at: '2024-01-01T00:00:00.000Z'
+                      id: token-id-1
+                      namespaces:
+                      - default
+                      policy_id: policy-id-1
+                      policy_name: Default policy
+                    - created_at: '2024-01-02T00:00:00.000Z'
+                      id: token-id-2
+                      namespaces:
+                      - production
+                      policy_id: policy-id-2
+                      policy_name: Production policy
+                    page: 1
+                    perPage: 20
+                    total: 2
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        created_at:
+                          type: string
+                        id:
+                          type: string
+                        namespaces:
+                          items:
+                            type: string
+                          maxItems: 100
+                          type: array
+                        policy_id:
+                          type: string
+                        policy_name:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - policy_id
+                      - created_at
+                    maxItems: 10000
+                    type: array
+                  page:
+                    type: number
+                  perPage:
+                    type: number
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                - page
+                - perPage
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                conflictingQueryParamsExample:
+                  description: Both policyId and search query parameters were provided
+                  value:
+                    error: Bad Request
+                    message: Query parameters `policyId` and `search` cannot be used at the same time.
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get metadata for latest uninstall tokens
+      tags:
+      - Fleet uninstall tokens
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/uninstall_tokens/{agentPolicyId}/rotate:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/uninstall_tokens/{agentPolicyId}/rotate</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Rotate the uninstall token for an agent policy. Only applicable to policies with tamper protection enabled.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-uninstall-tokens-agentpolicyid-rotate
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the agent policy whose uninstall token should be rotated
+        in: path
+        name: agentPolicyId
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                rotateUninstallTokenExample:
+                  description: Uninstall token rotated successfully for the given agent policy
+                  value:
+                    message: Uninstall token rotated successfully.
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+                notProtectedExample:
+                  description: Agent policy does not have tamper protection enabled
+                  value:
+                    error: Bad Request
+                    message: Agent policy [policy-id-1] does not have tamper protection enabled. Uninstall tokens can only be rotated for protected policies.
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No agent policy was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Agent policy not found with id policy-id-1
+                    statusCode: 404
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Not Found
+      summary: Rotate an uninstall token
+      tags:
+      - Fleet uninstall tokens
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/uninstall_tokens/{uninstallTokenId}:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/uninstall_tokens/{uninstallTokenId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get one decrypted uninstall token by its ID.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: get-fleet-uninstall-tokens-uninstalltokenid
+      parameters:
+      - description: The ID of the uninstall token
+        in: path
+        name: uninstallTokenId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getUninstallTokenExample:
+                  description: Decrypted uninstall token for an agent policy
+                  value:
+                    item:
+                      created_at: '2024-01-01T00:00:00.000Z'
+                      id: token-id-1
+                      namespaces:
+                      - default
+                      policy_id: policy-id-1
+                      policy_name: Default policy
+                      token: CKHJsJcBqNwIRcRBNDaE
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      created_at:
+                        type: string
+                      id:
+                        type: string
+                      namespaces:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      policy_id:
+                        type: string
+                      policy_name:
+                        type:
+                        - string
+                        - 'null'
+                      token:
+                        type: string
+                    required:
+                    - id
+                    - policy_id
+                    - created_at
+                    - token
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No uninstall token was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Uninstall Token not found with ID token-id-1
+                    statusCode: 404
+          description: Not Found
+      summary: Get a decrypted uninstall token
+      tags:
+      - Fleet uninstall tokens
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

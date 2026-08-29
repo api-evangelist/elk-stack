@@ -1,0 +1,1168 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Elastic Agent binary download sources API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Elastic Agent binary download sources
+  description: 'Elastic Agent binary download sources APIs enable you to manage download sources for Elastic Agent binaries, including creating, updating, and deleting custom download sources for agent binaries.
+
+    '
+  x-displayName: Elastic Agent binary download sources
+paths:
+  /api/fleet/agent_download_sources:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_download_sources</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        List all agent binary download sources.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-settings-read.'
+      operationId: get-fleet-agent-download-sources
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getDownloadSourcesExample:
+                  description: List of agent binary download sources
+                  value:
+                    items:
+                    - host: https://artifacts.elastic.co/downloads/
+                      id: download-source-id-1
+                      is_default: true
+                      name: Elastic Artifacts
+                    page: 1
+                    perPage: 20
+                    total: 1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        auth:
+                          additionalProperties: false
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            api_key:
+                              type: string
+                            headers:
+                              items:
+                                additionalProperties: false
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  value:
+                                    type: string
+                                required:
+                                - key
+                                - value
+                              maxItems: 100
+                              type: array
+                            password:
+                              type: string
+                            username:
+                              type: string
+                        host:
+                          format: uri
+                          type: string
+                        id:
+                          type: string
+                        is_default:
+                          default: false
+                          type: boolean
+                        is_preconfigured:
+                          type: boolean
+                        name:
+                          type: string
+                        proxy_id:
+                          description: The ID of the proxy to use for this download source. See the proxies API for more information.
+                          type:
+                          - string
+                          - 'null'
+                        secrets:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            auth:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                api_key:
+                                  anyOf:
+                                  - additionalProperties: false
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                    required:
+                                    - id
+                                  - type: string
+                                password:
+                                  anyOf:
+                                  - additionalProperties: false
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                    required:
+                                    - id
+                                  - type: string
+                            ssl:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                key:
+                                  anyOf:
+                                  - additionalProperties: false
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                    required:
+                                    - id
+                                  - type: string
+                        ssl:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            certificate:
+                              type: string
+                            certificate_authorities:
+                              items:
+                                type: string
+                              maxItems: 10
+                              type: array
+                            key:
+                              type: string
+                      required:
+                      - id
+                      - name
+                      - host
+                    maxItems: 10000
+                    type: array
+                  page:
+                    type: number
+                  perPage:
+                    type: number
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                - page
+                - perPage
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get agent binary download sources
+      tags:
+      - Elastic Agent binary download sources
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_download_sources</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a new agent binary download source.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: post-fleet-agent-download-sources
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postDownloadSourceRequestExample:
+                description: Create a new agent binary download source
+                value:
+                  host: https://my-custom-host.example.com/downloads/
+                  is_default: false
+                  name: My custom download source
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                auth:
+                  additionalProperties: false
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    api_key:
+                      type: string
+                    headers:
+                      items:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - key
+                        - value
+                      maxItems: 100
+                      type: array
+                    password:
+                      type: string
+                    username:
+                      type: string
+                host:
+                  format: uri
+                  type: string
+                id:
+                  type: string
+                is_default:
+                  default: false
+                  type: boolean
+                name:
+                  type: string
+                proxy_id:
+                  description: The ID of the proxy to use for this download source. See the proxies API for more information.
+                  type:
+                  - string
+                  - 'null'
+                secrets:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    auth:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        api_key:
+                          anyOf:
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                            required:
+                            - id
+                          - type: string
+                        password:
+                          anyOf:
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                            required:
+                            - id
+                          - type: string
+                    ssl:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        key:
+                          anyOf:
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                            required:
+                            - id
+                          - type: string
+                ssl:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    certificate:
+                      type: string
+                    certificate_authorities:
+                      items:
+                        type: string
+                      maxItems: 10
+                      type: array
+                    key:
+                      type: string
+              required:
+              - name
+              - host
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postDownloadSourceExample:
+                  description: The created agent binary download source
+                  value:
+                    item:
+                      host: https://my-custom-host.example.com/downloads/
+                      id: download-source-id-2
+                      is_default: false
+                      name: My custom download source
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      auth:
+                        additionalProperties: false
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          api_key:
+                            type: string
+                          headers:
+                            items:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                key:
+                                  type: string
+                                value:
+                                  type: string
+                              required:
+                              - key
+                              - value
+                            maxItems: 100
+                            type: array
+                          password:
+                            type: string
+                          username:
+                            type: string
+                      host:
+                        format: uri
+                        type: string
+                      id:
+                        type: string
+                      is_default:
+                        default: false
+                        type: boolean
+                      is_preconfigured:
+                        type: boolean
+                      name:
+                        type: string
+                      proxy_id:
+                        description: The ID of the proxy to use for this download source. See the proxies API for more information.
+                        type:
+                        - string
+                        - 'null'
+                      secrets:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          auth:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              api_key:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                              password:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                          ssl:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              key:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                      ssl:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          certificate:
+                            type: string
+                          certificate_authorities:
+                            items:
+                              type: string
+                            maxItems: 10
+                            type: array
+                          key:
+                            type: string
+                    required:
+                    - id
+                    - name
+                    - host
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Create an agent binary download source
+      tags:
+      - Elastic Agent binary download sources
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agent_download_sources/{sourceId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_download_sources/{sourceId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete an agent binary download source by ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: delete-fleet-agent-download-sources-sourceid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the download source
+        in: path
+        name: sourceId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteDownloadSourceExample:
+                  description: The download source was successfully deleted
+                  value:
+                    id: download-source-id-1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                - id
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No download source was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Agent binary source download-source-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Delete an agent binary download source
+      tags:
+      - Elastic Agent binary download sources
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_download_sources/{sourceId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get an agent binary download source by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-settings-read.'
+      operationId: get-fleet-agent-download-sources-sourceid
+      parameters:
+      - description: The ID of the download source
+        in: path
+        name: sourceId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getDownloadSourceExample:
+                  description: An agent binary download source
+                  value:
+                    item:
+                      host: https://artifacts.elastic.co/downloads/
+                      id: download-source-id-1
+                      is_default: true
+                      name: Elastic Artifacts
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      auth:
+                        additionalProperties: false
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          api_key:
+                            type: string
+                          headers:
+                            items:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                key:
+                                  type: string
+                                value:
+                                  type: string
+                              required:
+                              - key
+                              - value
+                            maxItems: 100
+                            type: array
+                          password:
+                            type: string
+                          username:
+                            type: string
+                      host:
+                        format: uri
+                        type: string
+                      id:
+                        type: string
+                      is_default:
+                        default: false
+                        type: boolean
+                      is_preconfigured:
+                        type: boolean
+                      name:
+                        type: string
+                      proxy_id:
+                        description: The ID of the proxy to use for this download source. See the proxies API for more information.
+                        type:
+                        - string
+                        - 'null'
+                      secrets:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          auth:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              api_key:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                              password:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                          ssl:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              key:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                      ssl:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          certificate:
+                            type: string
+                          certificate_authorities:
+                            items:
+                              type: string
+                            maxItems: 10
+                            type: array
+                          key:
+                            type: string
+                    required:
+                    - id
+                    - name
+                    - host
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No download source was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Agent binary source download-source-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Get an agent binary download source
+      tags:
+      - Elastic Agent binary download sources
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_download_sources/{sourceId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update an agent binary download source by ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: put-fleet-agent-download-sources-sourceid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the download source
+        in: path
+        name: sourceId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putDownloadSourceRequestExample:
+                description: Update an agent binary download source
+                value:
+                  host: https://updated-host.example.com/downloads/
+                  is_default: false
+                  name: Updated download source
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                auth:
+                  additionalProperties: false
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    api_key:
+                      type: string
+                    headers:
+                      items:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - key
+                        - value
+                      maxItems: 100
+                      type: array
+                    password:
+                      type: string
+                    username:
+                      type: string
+                host:
+                  format: uri
+                  type: string
+                id:
+                  type: string
+                is_default:
+                  default: false
+                  type: boolean
+                name:
+                  type: string
+                proxy_id:
+                  description: The ID of the proxy to use for this download source. See the proxies API for more information.
+                  type:
+                  - string
+                  - 'null'
+                secrets:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    auth:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        api_key:
+                          anyOf:
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                            required:
+                            - id
+                          - type: string
+                        password:
+                          anyOf:
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                            required:
+                            - id
+                          - type: string
+                    ssl:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        key:
+                          anyOf:
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                            required:
+                            - id
+                          - type: string
+                ssl:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    certificate:
+                      type: string
+                    certificate_authorities:
+                      items:
+                        type: string
+                      maxItems: 10
+                      type: array
+                    key:
+                      type: string
+              required:
+              - name
+              - host
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putDownloadSourceExample:
+                  description: The updated agent binary download source
+                  value:
+                    item:
+                      host: https://updated-host.example.com/downloads/
+                      id: download-source-id-1
+                      is_default: false
+                      name: Updated download source
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      auth:
+                        additionalProperties: false
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          api_key:
+                            type: string
+                          headers:
+                            items:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                key:
+                                  type: string
+                                value:
+                                  type: string
+                              required:
+                              - key
+                              - value
+                            maxItems: 100
+                            type: array
+                          password:
+                            type: string
+                          username:
+                            type: string
+                      host:
+                        format: uri
+                        type: string
+                      id:
+                        type: string
+                      is_default:
+                        default: false
+                        type: boolean
+                      is_preconfigured:
+                        type: boolean
+                      name:
+                        type: string
+                      proxy_id:
+                        description: The ID of the proxy to use for this download source. See the proxies API for more information.
+                        type:
+                        - string
+                        - 'null'
+                      secrets:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          auth:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              api_key:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                              password:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                          ssl:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              key:
+                                anyOf:
+                                - additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                  required:
+                                  - id
+                                - type: string
+                      ssl:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          certificate:
+                            type: string
+                          certificate_authorities:
+                            items:
+                              type: string
+                            maxItems: 10
+                            type: array
+                          key:
+                            type: string
+                    required:
+                    - id
+                    - name
+                    - host
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No download source was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Download source download-source-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Update an agent binary download source
+      tags:
+      - Elastic Agent binary download sources
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

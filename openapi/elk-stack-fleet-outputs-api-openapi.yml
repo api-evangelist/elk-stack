@@ -1,0 +1,2501 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Fleet outputs API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Fleet outputs
+  description: 'Fleet outputs APIs enable you to manage Fleet outputs, including creating, updating, and deleting output configurations, generating Logstash API keys, and monitoring output health.
+
+    '
+  x-displayName: Fleet outputs
+paths:
+  /api/fleet/logstash_api_keys:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/logstash_api_keys</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Generate an API key for Logstash to use with a Fleet output.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: post-fleet-logstash-api-keys
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postLogstashApiKeyExample:
+                  description: The generated Logstash API key
+                  value:
+                    api_key: TiNAGG4BaaMdaH1tRfuU:KnR6yE41RrSowb0kQ0HWoA
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  api_key:
+                    type: string
+                required:
+                - api_key
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Generate a Logstash API key
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/outputs:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/outputs</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        List all Fleet outputs.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read OR fleet-agent-policies-read.'
+      operationId: get-fleet-outputs
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getOutputsExample:
+                  description: List of Fleet outputs
+                  value:
+                    items:
+                    - hosts:
+                      - https://elasticsearch.example.com:9200
+                      id: output-id-1
+                      is_default: true
+                      is_default_monitoring: true
+                      name: Default output
+                      type: elasticsearch
+                    page: 1
+                    perPage: 20
+                    total: 1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      discriminator:
+                        mapping:
+                          elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                          kafka: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                          logstash: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                          remote_elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                        propertyName: type
+                      oneOf:
+                      - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                      - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                      - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                      - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                    maxItems: 10000
+                    type: array
+                  page:
+                    type: number
+                  perPage:
+                    type: number
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                - page
+                - perPage
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get outputs
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/outputs</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a new Fleet output.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: post-fleet-outputs
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postOutputRequestExample:
+                description: Create a new Elasticsearch output
+                value:
+                  hosts:
+                  - https://elasticsearch.example.com:9200
+                  is_default: false
+                  is_default_monitoring: false
+                  name: My output
+                  type: elasticsearch
+            schema:
+              discriminator:
+                mapping:
+                  elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_new_output_elasticsearch'
+                  kafka: '#/components/schemas/Kibana_HTTP_APIs_new_output_kafka'
+                  logstash: '#/components/schemas/Kibana_HTTP_APIs_new_output_logstash'
+                  remote_elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_new_output_remote_elasticsearch'
+                propertyName: type
+              oneOf:
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_new_output_elasticsearch'
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_new_output_remote_elasticsearch'
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_new_output_logstash'
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_new_output_kafka'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postOutputExample:
+                  description: The created Fleet output
+                  value:
+                    item:
+                      hosts:
+                      - https://elasticsearch.example.com:9200
+                      id: output-id-2
+                      is_default: false
+                      is_default_monitoring: false
+                      name: My output
+                      type: elasticsearch
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    discriminator:
+                      mapping:
+                        elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                        kafka: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                        logstash: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                        remote_elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                      propertyName: type
+                    oneOf:
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Create output
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/outputs/{outputId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/outputs/{outputId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete output by ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: delete-fleet-outputs-outputid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the output
+        in: path
+        name: outputId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteOutputExample:
+                  description: The output was successfully deleted
+                  value:
+                    id: output-id-1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                - id
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No output was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Output output-id-1 not found
+                    statusCode: 404
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Not Found
+      summary: Delete output
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/outputs/{outputId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get output by ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read OR fleet-agent-policies-read.'
+      operationId: get-fleet-outputs-outputid
+      parameters:
+      - description: The ID of the output
+        in: path
+        name: outputId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getOutputExample:
+                  description: A Fleet output
+                  value:
+                    item:
+                      hosts:
+                      - https://elasticsearch.example.com:9200
+                      id: output-id-1
+                      is_default: true
+                      is_default_monitoring: true
+                      name: Default output
+                      type: elasticsearch
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    discriminator:
+                      mapping:
+                        elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                        kafka: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                        logstash: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                        remote_elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                      propertyName: type
+                    oneOf:
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No output was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Output output-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Get output
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/outputs/{outputId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update output by ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+      operationId: put-fleet-outputs-outputid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the output
+        in: path
+        name: outputId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putOutputRequestExample:
+                description: Update a Fleet output
+                value:
+                  hosts:
+                  - https://updated-elasticsearch.example.com:9200
+                  name: Updated output
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_update_output_elasticsearch'
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_update_output_remote_elasticsearch'
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_update_output_logstash'
+              - $ref: '#/components/schemas/Kibana_HTTP_APIs_update_output_kafka'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putOutputExample:
+                  description: The updated Fleet output
+                  value:
+                    item:
+                      hosts:
+                      - https://updated-elasticsearch.example.com:9200
+                      id: output-id-1
+                      is_default: true
+                      is_default_monitoring: true
+                      name: Updated output
+                      type: elasticsearch
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    discriminator:
+                      mapping:
+                        elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                        kafka: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                        logstash: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                        remote_elasticsearch: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                      propertyName: type
+                    oneOf:
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_elasticsearch'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_remote_elasticsearch'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_logstash'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_kafka'
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No output was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Output output-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Update output
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/outputs/{outputId}/health:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/outputs/{outputId}/health</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the latest health status of an output by ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read.'
+      operationId: get-fleet-outputs-outputid-health
+      parameters:
+      - description: The ID of the output
+        in: path
+        name: outputId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getOutputHealthExample:
+                  description: The latest health status of a Fleet output
+                  value:
+                    message: ''
+                    state: HEALTHY
+                    timestamp: '2024-01-15T10:00:00.000Z'
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  message:
+                    description: long message if unhealthy
+                    type: string
+                  state:
+                    description: state of output, HEALTHY or DEGRADED
+                    type: string
+                  timestamp:
+                    description: timestamp of reported state
+                    type: string
+                required:
+                - state
+                - message
+                - timestamp
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get the latest output health
+      tags:
+      - Fleet outputs
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_update_output_logstash:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          type: boolean
+        is_default_monitoring:
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - logstash
+          type: string
+      title: update_output_logstash
+      type: object
+    Kibana_HTTP_APIs_output_shipper:
+      additionalProperties: false
+      properties:
+        compression_level:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_compression_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_encryption_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_max_size:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_path:
+          default: null
+          type:
+          - string
+          - 'null'
+        loadbalance:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        max_batch_bytes:
+          default: null
+          type:
+          - number
+          - 'null'
+        mem_queue_events:
+          default: null
+          type:
+          - number
+          - 'null'
+        queue_flush_timeout:
+          default: null
+          type:
+          - number
+          - 'null'
+      title: output_shipper
+      type: object
+    Kibana_HTTP_APIs_output_response_shipper:
+      additionalProperties: true
+      properties:
+        compression_level:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_compression_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_encryption_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_max_size:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_path:
+          default: null
+          type:
+          - string
+          - 'null'
+        loadbalance:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        max_batch_bytes:
+          default: null
+          type:
+          - number
+          - 'null'
+        mem_queue_events:
+          default: null
+          type:
+          - number
+          - 'null'
+        queue_flush_timeout:
+          default: null
+          type:
+          - number
+          - 'null'
+      title: output_response_shipper
+      type: object
+    Kibana_HTTP_APIs_output_response_ssl:
+      additionalProperties: true
+      properties:
+        certificate:
+          type: string
+        certificate_authorities:
+          items:
+            type: string
+          maxItems: 10
+          type: array
+        key:
+          type: string
+        verification_mode:
+          enum:
+          - full
+          - none
+          - certificate
+          - strict
+          type: string
+      title: output_response_ssl
+      type: object
+    Kibana_HTTP_APIs_new_output_remote_elasticsearch:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        kibana_api_key:
+          type:
+          - string
+          - 'null'
+        kibana_url:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            service_token:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        service_token:
+          type:
+          - string
+          - 'null'
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        sync_integrations:
+          type: boolean
+        sync_uninstalled_integrations:
+          type: boolean
+        type:
+          enum:
+          - remote_elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: new_output_remote_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_output_response_logstash:
+      additionalProperties: true
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: true
+          type: object
+          properties:
+            ssl:
+              additionalProperties: true
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
+        type:
+          enum:
+          - logstash
+          type: string
+      required:
+      - name
+      - type
+      - hosts
+      title: output_response_logstash
+      type: object
+    Kibana_HTTP_APIs_new_output_logstash:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - logstash
+          type: string
+      required:
+      - name
+      - type
+      - hosts
+      title: new_output_logstash
+      type: object
+    Kibana_HTTP_APIs_output_response_remote_elasticsearch:
+      additionalProperties: true
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        kibana_api_key:
+          type:
+          - string
+          - 'null'
+        kibana_url:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: true
+          type: object
+          properties:
+            service_token:
+              anyOf:
+              - additionalProperties: true
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: true
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        service_token:
+          type:
+          - string
+          - 'null'
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
+        sync_integrations:
+          type: boolean
+        sync_uninstalled_integrations:
+          type: boolean
+        type:
+          enum:
+          - remote_elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: output_response_remote_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_output_response_elasticsearch:
+      additionalProperties: true
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: true
+          type: object
+          properties:
+            ssl:
+              additionalProperties: true
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
+        type:
+          enum:
+          - elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: output_response_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_output_ssl:
+      additionalProperties: false
+      properties:
+        certificate:
+          type: string
+        certificate_authorities:
+          items:
+            type: string
+          maxItems: 10
+          type: array
+        key:
+          type: string
+        verification_mode:
+          enum:
+          - full
+          - none
+          - certificate
+          - strict
+          type: string
+      title: output_ssl
+      type: object
+    Kibana_HTTP_APIs_output_response_kafka:
+      additionalProperties: true
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        auth_type:
+          enum:
+          - none
+          - user_pass
+          - ssl
+          - kerberos
+          type: string
+        broker_timeout:
+          type: number
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        client_id:
+          type: string
+        compression:
+          enum:
+          - gzip
+          - snappy
+          - lz4
+          - none
+          type: string
+        compression_level:
+          type:
+          - number
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        connection_type:
+          enum:
+          - plaintext
+          - encryption
+          type: string
+        hash:
+          additionalProperties: true
+          type: object
+          properties:
+            hash:
+              type: string
+            random:
+              type: boolean
+        headers:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+            required:
+            - key
+            - value
+          maxItems: 100
+          type: array
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        key:
+          type: string
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        partition:
+          enum:
+          - random
+          - round_robin
+          - hash
+          type: string
+        password:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          deprecated: true
+          description: Kafka outputs do not support proxy configuration. This field is accepted for backwards compatibility but is ignored — it is cleared to null on save and has no effect on the compiled agent policy.
+          type:
+          - string
+          - 'null'
+        random:
+          additionalProperties: true
+          type: object
+          properties:
+            group_events:
+              type: number
+        required_acks:
+          enum:
+          - 1
+          - 0
+          - -1
+          type: integer
+        round_robin:
+          additionalProperties: true
+          type: object
+          properties:
+            group_events:
+              type: number
+        sasl:
+          additionalProperties: true
+          type:
+          - object
+          - 'null'
+          properties:
+            mechanism:
+              enum:
+              - PLAIN
+              - SCRAM-SHA-256
+              - SCRAM-SHA-512
+              type: string
+        secrets:
+          additionalProperties: true
+          type: object
+          properties:
+            password:
+              anyOf:
+              - additionalProperties: true
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: true
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+              required:
+              - key
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
+        timeout:
+          type: number
+        topic:
+          type: string
+        type:
+          enum:
+          - kafka
+          type: string
+        username:
+          type:
+          - string
+          - 'null'
+        version:
+          type: string
+      required:
+      - name
+      - type
+      - hosts
+      - auth_type
+      title: output_response_kafka
+      type: object
+    Kibana_HTTP_APIs_new_output_kafka:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        auth_type:
+          enum:
+          - none
+          - user_pass
+          - ssl
+          - kerberos
+          type: string
+        broker_timeout:
+          type: number
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        client_id:
+          type: string
+        compression:
+          enum:
+          - gzip
+          - snappy
+          - lz4
+          - none
+          type: string
+        compression_level:
+          type:
+          - number
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        connection_type:
+          enum:
+          - plaintext
+          - encryption
+          type: string
+        hash:
+          additionalProperties: false
+          type: object
+          properties:
+            hash:
+              type: string
+            random:
+              type: boolean
+        headers:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+            required:
+            - key
+            - value
+          maxItems: 100
+          type: array
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        key:
+          type: string
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        partition:
+          enum:
+          - random
+          - round_robin
+          - hash
+          type: string
+        password:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          deprecated: true
+          description: Kafka outputs do not support proxy configuration. This field is accepted for backwards compatibility but is ignored — it is cleared to null on save and has no effect on the compiled agent policy.
+          type:
+          - string
+          - 'null'
+        random:
+          additionalProperties: false
+          type: object
+          properties:
+            group_events:
+              type: number
+        required_acks:
+          enum:
+          - 1
+          - 0
+          - -1
+          type: integer
+        round_robin:
+          additionalProperties: false
+          type: object
+          properties:
+            group_events:
+              type: number
+        sasl:
+          additionalProperties: false
+          type:
+          - object
+          - 'null'
+          properties:
+            mechanism:
+              enum:
+              - PLAIN
+              - SCRAM-SHA-256
+              - SCRAM-SHA-512
+              type: string
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            password:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+              required:
+              - key
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        timeout:
+          type: number
+        topic:
+          type: string
+        type:
+          enum:
+          - kafka
+          type: string
+        username:
+          type:
+          - string
+          - 'null'
+        version:
+          type: string
+      required:
+      - name
+      - type
+      - hosts
+      - auth_type
+      title: new_output_kafka
+      type: object
+    Kibana_HTTP_APIs_update_output_remote_elasticsearch:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          type: boolean
+        is_default_monitoring:
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        kibana_api_key:
+          type:
+          - string
+          - 'null'
+        kibana_url:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            service_token:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        service_token:
+          type:
+          - string
+          - 'null'
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        sync_integrations:
+          type: boolean
+        sync_uninstalled_integrations:
+          type: boolean
+        type:
+          enum:
+          - remote_elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      title: update_output_remote_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_update_output_elasticsearch:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          type: boolean
+        is_default_monitoring:
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      title: update_output_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_update_output_kafka:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        auth_type:
+          enum:
+          - none
+          - user_pass
+          - ssl
+          - kerberos
+          type: string
+        broker_timeout:
+          type: number
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        client_id:
+          type: string
+        compression:
+          enum:
+          - gzip
+          - snappy
+          - lz4
+          - none
+          type: string
+        compression_level:
+          type:
+          - number
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        connection_type:
+          enum:
+          - plaintext
+          - encryption
+          type: string
+        hash:
+          additionalProperties: false
+          type: object
+          properties:
+            hash:
+              type: string
+            random:
+              type: boolean
+        headers:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+            required:
+            - key
+            - value
+          maxItems: 100
+          type: array
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        key:
+          type: string
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        partition:
+          enum:
+          - random
+          - round_robin
+          - hash
+          type: string
+        password:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          deprecated: true
+          description: Kafka outputs do not support proxy configuration. This field is accepted for backwards compatibility but is ignored — it is cleared to null on save and has no effect on the compiled agent policy.
+          type:
+          - string
+          - 'null'
+        random:
+          additionalProperties: false
+          type: object
+          properties:
+            group_events:
+              type: number
+        required_acks:
+          enum:
+          - 1
+          - 0
+          - -1
+          type: integer
+        round_robin:
+          additionalProperties: false
+          type: object
+          properties:
+            group_events:
+              type: number
+        sasl:
+          additionalProperties: false
+          type:
+          - object
+          - 'null'
+          properties:
+            mechanism:
+              enum:
+              - PLAIN
+              - SCRAM-SHA-256
+              - SCRAM-SHA-512
+              type: string
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            password:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+              required:
+              - key
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        timeout:
+          type: number
+        topic:
+          type: string
+        type:
+          enum:
+          - kafka
+          type: string
+        username:
+          type:
+          - string
+          - 'null'
+        version:
+          type: string
+      required:
+      - name
+      title: update_output_kafka
+      type: object
+    Kibana_HTTP_APIs_new_output_elasticsearch:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: new_output_elasticsearch
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

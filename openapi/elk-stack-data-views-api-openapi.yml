@@ -1,0 +1,2935 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana data views API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- description: Data view APIs enable you to manage data views, formerly known as Kibana index patterns.
+  name: data views
+  x-displayName: Data views
+paths:
+  /api/data_views:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve a list of all data views. Use this endpoint to identify available data views in the current Kibana space.
+
+        '
+      operationId: getAllDataViewsDefault
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAllDataViewsResponse:
+                  $ref: '#/components/examples/Data_views_get_data_views_response'
+              schema:
+                type: object
+                properties:
+                  data_view:
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        namespaces:
+                          items:
+                            type: string
+                          type: array
+                        title:
+                          type: string
+                        typeMeta:
+                          type: object
+                    type: array
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                getAllDataViewsBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Get all data views
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/data_views
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/data_view:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a data view. Data views identify the Elasticsearch data you want to explore and visualize. They can point to one or more data streams, indices, or index aliases, and use optional runtime fields to compute values at query time. Note that data views are not required for ES|QL-based visualizations. To learn more, refer to the [data views documentation](https://www.elastic.co/docs/explore-analyze/find-and-organize/data-views).
+
+        '
+      operationId: createDataViewDefaultw
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createDataViewRequest:
+                $ref: '#/components/examples/Data_views_create_data_view_request'
+            schema:
+              $ref: '#/components/schemas/Data_views_create_data_view_request_object'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                createDataViewResponse:
+                  $ref: '#/components/examples/Data_views_create_data_view_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_data_view_response_object'
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                createDataViewBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Create a data view
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/data_view\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"data_view\":{\"title\":\"logstash-*\",\"name\":\"My Logstash data view\"}}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/data_view
+
+          {"data_view":{"title":"logstash-*","name":"My Logstash data view"}}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/data_view/{viewId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a data view by its identifier. WARNING: When you delete a data view, it cannot be recovered.
+
+        '
+      operationId: deleteDataViewDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      responses:
+        '204':
+          description: Indicates a successful call.
+        '404':
+          content:
+            application/json:
+              examples:
+                deleteDataViewNotFound:
+                  $ref: '#/components/examples/Data_views_error_404_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_404_response'
+          description: Object is not found.
+      summary: Delete a data view
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X DELETE \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
+      - lang: Console
+        source: 'DELETE kbn://api/data_views/data_view/{viewId}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve a single data view by its identifier. Data views identify the Elasticsearch data you want to explore and visualize. They can point to one or more data streams, indices, or index aliases, and use optional runtime fields to compute values at query time. Note that data views are not required for ES|QL-based visualizations. To learn more, refer to the [data views documentation](https://www.elastic.co/docs/explore-analyze/find-and-organize/data-views).
+
+        '
+      operationId: getDataViewDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_view_id'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getDataViewResponse:
+                  $ref: '#/components/examples/Data_views_get_data_view_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_data_view_response_object'
+          description: Indicates a successful call.
+        '404':
+          content:
+            application/json:
+              examples:
+                getDataViewNotFound:
+                  $ref: '#/components/examples/Data_views_error_404_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_404_response'
+          description: Object is not found.
+      summary: Get a data view
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/data_views/data_view/{viewId}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update an existing data view. Only the fields provided in the request body are updated.
+
+        '
+      operationId: updateDataViewDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              updateDataViewRequest:
+                $ref: '#/components/examples/Data_views_update_data_view_request'
+            schema:
+              $ref: '#/components/schemas/Data_views_update_data_view_request_object'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                updateDataViewResponse:
+                  $ref: '#/components/examples/Data_views_get_data_view_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_data_view_response_object'
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                updateDataViewBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Update a data view
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"data_view\":{\"name\":\"Updated data view name\"}}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/data_view/{viewId}
+
+          {"data_view":{"name":"Updated data view name"}}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/data_view/{viewId}/fields:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/fields</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update field metadata for a data view. Use this endpoint to set custom labels, custom descriptions, and format overrides for individual fields.
+
+        '
+      operationId: updateFieldsMetadataDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              updateFieldsMetadataRequest:
+                $ref: '#/components/examples/Data_views_update_field_metadata_request'
+            schema:
+              type: object
+              properties:
+                fields:
+                  description: The field object.
+                  type: object
+              required:
+              - fields
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                updateFieldsMetadataResponse:
+                  $ref: '#/components/examples/Data_views_update_field_metadata_response'
+              schema:
+                type: object
+                properties:
+                  acknowledged:
+                    type: boolean
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                updateFieldsMetadataBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Update field metadata
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}/fields\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"fields\":{\"field_name\":{\"customLabel\":\"My custom label\"}}}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/data_view/{viewId}/fields
+
+          {"fields":{"field_name":{"customLabel":"My custom label"}}}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/data_view/{viewId}/runtime_field:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a runtime field for a data view. Runtime fields are computed at query time using a [Painless script](https://www.elastic.co/docs/explore-analyze/scripting/modules-scripting-painless) and do not require reindexing. If no `script` is provided, the runtime field returns the corresponding value from the document `_source`.
+
+        '
+      operationId: createRuntimeFieldDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createRuntimeFieldRequest:
+                $ref: '#/components/examples/Data_views_create_runtime_field_request'
+            schema:
+              type: object
+              properties:
+                name:
+                  description: 'The name for a runtime field.
+
+                    '
+                  type: string
+                runtimeField:
+                  description: 'The runtime field definition object.
+
+                    '
+                  type: object
+              required:
+              - name
+              - runtimeField
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                createRuntimeFieldResponse:
+                  $ref: '#/components/examples/Data_views_create_runtime_field_response'
+              schema:
+                type: object
+          description: Indicates a successful call.
+      summary: Create a runtime field
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}/runtime_field\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\":\"hour_of_day\",\"runtimeField\":{\"type\":\"long\",\"script\":{\"source\":\"emit(doc['\"'\"'timestamp'\"'\"'].value.getHour())\"}}}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/data_view/{viewId}/runtime_field
+
+          {"name":"hour_of_day","runtimeField":{"type":"long","script":{"source":"emit(doc[''timestamp''].value.getHour())"}}}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create or update a runtime field for a data view. If the runtime field already exists, it is replaced with the new definition.
+
+        '
+      operationId: createUpdateRuntimeFieldDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      - description: 'The ID of the data view fields you want to update.
+
+          '
+        in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              updateRuntimeFieldRequest:
+                $ref: '#/components/examples/Data_views_create_runtime_field_request'
+            schema:
+              type: object
+              properties:
+                name:
+                  description: 'The name for a runtime field.
+
+                    '
+                  type: string
+                runtimeField:
+                  description: 'The runtime field definition object.
+
+                    '
+                  type: object
+              required:
+              - name
+              - runtimeField
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                createUpdateRuntimeFieldResponse:
+                  $ref: '#/components/examples/Data_views_create_runtime_field_response'
+              schema:
+                type: object
+                properties:
+                  data_view:
+                    type: object
+                  fields:
+                    items:
+                      type: object
+                    type: array
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                createUpdateRuntimeFieldBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Create or update a runtime field
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X PUT \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}/runtime_field\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\":\"hour_of_day\",\"runtimeField\":{\"type\":\"long\",\"script\":{\"source\":\"emit(doc['\"'\"'timestamp'\"'\"'].value.getHour())\"}}}'\n"
+      - lang: Console
+        source: 'PUT kbn://api/data_views/data_view/{viewId}/runtime_field
+
+          {"name":"hour_of_day","runtimeField":{"type":"long","script":{"source":"emit(doc[''timestamp''].value.getHour())"}}}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/data_view/{viewId}/runtime_field/{fieldName}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a runtime field from a data view.
+
+        '
+      operationId: deleteRuntimeFieldDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_field_name'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      responses:
+        '200':
+          description: Indicates a successful call.
+        '404':
+          content:
+            application/json:
+              examples:
+                deleteRuntimeFieldNotFound:
+                  $ref: '#/components/examples/Data_views_error_404_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_404_response'
+          description: Object is not found.
+      summary: Delete a runtime field
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X DELETE \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}/runtime_field/${FIELD_NAME}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
+      - lang: Console
+        source: 'DELETE kbn://api/data_views/data_view/{viewId}/runtime_field/{fieldName}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve a single runtime field by name from a data view.
+
+        '
+      operationId: getRuntimeFieldDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_field_name'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getRuntimeFieldResponse:
+                  $ref: '#/components/examples/Data_views_get_runtime_field_response'
+              schema:
+                type: object
+                properties:
+                  data_view:
+                    type: object
+                  fields:
+                    items:
+                      type: object
+                    type: array
+          description: Indicates a successful call.
+        '404':
+          content:
+            application/json:
+              examples:
+                getRuntimeFieldNotFound:
+                  $ref: '#/components/examples/Data_views_error_404_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_404_response'
+          description: Object is not found.
+      summary: Get a runtime field
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}/runtime_field/${FIELD_NAME}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/data_views/data_view/{viewId}/runtime_field/{fieldName}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update an existing runtime field in a data view. Only the fields provided in the request body are updated.
+
+        '
+      operationId: updateRuntimeFieldDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_field_name'
+      - $ref: '#/components/parameters/Data_views_view_id'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              updateRuntimeFieldRequest:
+                $ref: '#/components/examples/Data_views_update_runtime_field_request'
+            schema:
+              type: object
+              properties:
+                runtimeField:
+                  description: 'The runtime field definition object.
+
+
+                    You can update following fields:
+
+
+                    - `type`
+
+                    - `script`
+
+                    '
+                  type: object
+              required:
+              - runtimeField
+        required: true
+      responses:
+        '200':
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                updateRuntimeFieldBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Update a runtime field
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/data_view/${DATA_VIEW_ID}/runtime_field/${FIELD_NAME}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"runtimeField\":{\"type\":\"long\",\"script\":{\"source\":\"emit(doc['\"'\"'timestamp'\"'\"'].value.getHour())\"}}}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/data_view/{viewId}/runtime_field/{fieldName}
+
+          {"runtimeField":{"type":"long","script":{"source":"emit(doc[''timestamp''].value.getHour())"}}}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/default:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/default</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve the identifier of the default data view for the current Kibana space.
+
+        '
+      operationId: getDefaultDataViewDefault
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getDefaultDataViewResponse:
+                  $ref: '#/components/examples/Data_views_get_default_data_view_response'
+              schema:
+                type: object
+                properties:
+                  data_view_id:
+                    type: string
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                getDefaultDataViewBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Get the default data view
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/data_views/default\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/data_views/default
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/default</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Set the default data view for the current Kibana space. The default data view is used as a fallback when no specific data view is selected.
+
+        '
+      operationId: setDefaultDatailViewDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              setDefaultDataViewRequest:
+                $ref: '#/components/examples/Data_views_set_default_data_view_request'
+            schema:
+              type: object
+              properties:
+                data_view_id:
+                  description: 'The data view identifier. NOTE: The API does not validate whether it is a valid identifier. Use `null` to unset the default data view.
+
+                    '
+                  type:
+                  - string
+                  - 'null'
+                force:
+                  default: false
+                  description: Update an existing default data view identifier.
+                  type: boolean
+              required:
+              - data_view_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                setDefaultDataViewResponse:
+                  $ref: '#/components/examples/Data_views_set_default_data_view_response'
+              schema:
+                type: object
+                properties:
+                  acknowledged:
+                    type: boolean
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                setDefaultDataViewBadRequest:
+                  $ref: '#/components/examples/Data_views_error_400_response'
+              schema:
+                $ref: '#/components/schemas/Data_views_400_response'
+          description: Bad request
+      summary: Set the default data view
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/default\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"data_view_id\":\"ff959d40-b880-11e8-a6d9-e546fe2bba5f\",\"force\":true}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/default
+
+          {"data_view_id":"ff959d40-b880-11e8-a6d9-e546fe2bba5f","force":true}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/swap_references:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/swap_references</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Swap saved object references from one data view to another. Use this endpoint to update dashboards, visualizations, and other saved objects that reference a data view. WARNING: Misuse can break large numbers of saved objects! Use the [`_preview`](https://www.elastic.co/docs/api/doc/kibana/operation/operation-previewswapdataviewsdefault) endpoint to see which saved objects would be affected before making changes.
+
+        '
+      operationId: swapDataViewsDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              swapDataViewRequest:
+                $ref: '#/components/examples/Data_views_swap_data_view_request'
+            schema:
+              $ref: '#/components/schemas/Data_views_swap_data_view_request_object'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                swapDataViewResponse:
+                  $ref: '#/components/examples/Data_views_swap_data_view_response'
+              schema:
+                type: object
+                properties:
+                  deleteStatus:
+                    type: object
+                    properties:
+                      deletePerformed:
+                        type: boolean
+                      remainingRefs:
+                        type: integer
+                  result:
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: A saved object identifier.
+                          type: string
+                        type:
+                          description: The saved object type.
+                          type: string
+                    type: array
+          description: Indicates a successful call.
+      summary: Swap saved object references
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/swap_references\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"fromId\":\"abcd-efg\",\"toId\":\"xyz-123\",\"delete\":true}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/swap_references
+
+          {"fromId":"abcd-efg","toId":"xyz-123","delete":true}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/data_views/swap_references/_preview:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/swap_references/_preview</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Preview the effect of swapping saved object references from one data view to another. Returns the list of affected saved objects without making any changes.
+
+        '
+      operationId: previewSwapDataViewsDefault
+      parameters:
+      - $ref: '#/components/parameters/Data_views_kbn_xsrf'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              previewSwapDataViewRequest:
+                $ref: '#/components/examples/Data_views_preview_swap_data_view_request'
+            schema:
+              $ref: '#/components/schemas/Data_views_swap_data_view_request_object'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                previewSwapDataViewResponse:
+                  $ref: '#/components/examples/Data_views_preview_swap_data_view_response'
+              schema:
+                type: object
+                properties:
+                  result:
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: A saved object identifier.
+                          type: string
+                        type:
+                          description: The saved object type.
+                          type: string
+                    type: array
+          description: Indicates a successful call.
+      summary: Preview swap references
+      tags:
+      - data views
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/data_views/swap_references/_preview\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"fromId\":\"abcd-efg\",\"toId\":\"xyz-123\"}'\n"
+      - lang: Console
+        source: 'POST kbn://api/data_views/swap_references/_preview
+
+          {"fromId":"abcd-efg","toId":"xyz-123"}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Data_views_fieldformats:
+      description: A map of field formats by field name.
+      type: object
+    Data_views_update_data_view_request_object:
+      title: Update data view request
+      type: object
+      properties:
+        data_view:
+          description: 'The data view properties you want to update. Only the specified properties are updated in the data view. Unspecified fields stay as they are persisted.
+
+            '
+          type: object
+          properties:
+            allowNoIndex:
+              $ref: '#/components/schemas/Data_views_allownoindex'
+            fieldFormats:
+              $ref: '#/components/schemas/Data_views_fieldformats'
+            fields:
+              type: object
+            name:
+              type: string
+            runtimeFieldMap:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_runtimefieldmap'
+              type: object
+            sourceFilters:
+              $ref: '#/components/schemas/Data_views_sourcefilters'
+            timeFieldName:
+              $ref: '#/components/schemas/Data_views_timefieldname'
+            title:
+              $ref: '#/components/schemas/Data_views_title'
+            type:
+              $ref: '#/components/schemas/Data_views_type'
+            typeMeta:
+              $ref: '#/components/schemas/Data_views_typemeta'
+        refresh_fields:
+          default: false
+          description: Reloads the data view fields after the data view is updated.
+          type: boolean
+      required:
+      - data_view
+    Data_views_namespaces:
+      description: An array of space identifiers for sharing the data view between multiple spaces.
+      items:
+        default: default
+        type: string
+      type: array
+    Data_views_type:
+      description: When set to `rollup`, identifies the rollup data views.
+      type: string
+    Data_views_404_response:
+      type: object
+      properties:
+        error:
+          enum:
+          - Not Found
+          example: Not Found
+          type: string
+        message:
+          example: Saved object [index-pattern/caaad6d0-920c-11ed-b36a-874bd1548a00] not found
+          type: string
+        statusCode:
+          enum:
+          - 404
+          example: 404
+          type: integer
+    Data_views_typemeta_response:
+      description: When you use rollup indices, contains the field list for the rollup data view API endpoints.
+      type:
+      - object
+      - 'null'
+      properties:
+        aggs:
+          description: A map of rollup restrictions by aggregation type and field name.
+          type: object
+        params:
+          description: Properties for retrieving rollup fields.
+          type: object
+    Data_views_swap_data_view_request_object:
+      title: Data view reference swap request
+      type: object
+      properties:
+        delete:
+          description: Deletes referenced saved object if all references are removed.
+          type: boolean
+        forId:
+          description: Limit the affected saved objects to one or more by identifier.
+          oneOf:
+          - type: string
+          - items:
+              type: string
+            type: array
+        forType:
+          description: Limit the affected saved objects by type.
+          type: string
+        fromId:
+          description: The saved object reference to change.
+          type: string
+        fromType:
+          description: 'Specify the type of the saved object reference to alter. The default value is `index-pattern` for data views.
+
+            '
+          type: string
+        toId:
+          description: New saved object reference value to replace the old value.
+          type: string
+      required:
+      - fromId
+      - toId
+    Data_views_sourcefilters:
+      description: The array of field names you want to filter out in Discover.
+      items:
+        type: object
+        properties:
+          value:
+            type: string
+        required:
+        - value
+      type: array
+    Data_views_400_response:
+      title: Bad request
+      type: object
+      properties:
+        error:
+          example: Bad Request
+          type: string
+        message:
+          type: string
+        statusCode:
+          example: 400
+          type: number
+      required:
+      - statusCode
+      - error
+      - message
+    Data_views_create_data_view_request_object:
+      title: Create data view request
+      type: object
+      properties:
+        data_view:
+          description: The data view object.
+          type: object
+          properties:
+            allowNoIndex:
+              $ref: '#/components/schemas/Data_views_allownoindex'
+            fieldAttrs:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_fieldattrs'
+              type: object
+            fieldFormats:
+              $ref: '#/components/schemas/Data_views_fieldformats'
+            fields:
+              type: object
+            id:
+              type: string
+            name:
+              description: The data view name.
+              type: string
+            namespaces:
+              $ref: '#/components/schemas/Data_views_namespaces'
+            runtimeFieldMap:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_runtimefieldmap'
+              type: object
+            sourceFilters:
+              $ref: '#/components/schemas/Data_views_sourcefilters'
+            timeFieldName:
+              $ref: '#/components/schemas/Data_views_timefieldname'
+            title:
+              $ref: '#/components/schemas/Data_views_title'
+            type:
+              $ref: '#/components/schemas/Data_views_type'
+            typeMeta:
+              $ref: '#/components/schemas/Data_views_typemeta'
+            version:
+              type: string
+          required:
+          - title
+        override:
+          default: false
+          description: Override an existing data view if a data view with the provided title already exists.
+          type: boolean
+      required:
+      - data_view
+    Data_views_fieldattrs:
+      description: A map of field attributes by field name.
+      type: object
+      properties:
+        count:
+          description: Popularity count for the field.
+          type: integer
+        customDescription:
+          description: Custom description for the field.
+          maxLength: 300
+          type: string
+        customLabel:
+          description: Custom label for the field.
+          type: string
+    Data_views_data_view_response_object:
+      title: Data view response properties
+      type: object
+      properties:
+        data_view:
+          type: object
+          properties:
+            allowNoIndex:
+              $ref: '#/components/schemas/Data_views_allownoindex'
+            fieldAttrs:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_fieldattrs'
+              type: object
+            fieldFormats:
+              $ref: '#/components/schemas/Data_views_fieldformats'
+            fields:
+              type: object
+            id:
+              example: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+              type: string
+            name:
+              description: The data view name.
+              type: string
+            namespaces:
+              $ref: '#/components/schemas/Data_views_namespaces'
+            runtimeFieldMap:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_runtimefieldmap'
+              type: object
+            sourceFilters:
+              $ref: '#/components/schemas/Data_views_sourcefilters'
+            timeFieldName:
+              $ref: '#/components/schemas/Data_views_timefieldname'
+            title:
+              $ref: '#/components/schemas/Data_views_title'
+            typeMeta:
+              $ref: '#/components/schemas/Data_views_typemeta_response'
+            version:
+              example: WzQ2LDJd
+              type: string
+    Data_views_allownoindex:
+      description: Allows the data view saved object to exist before the data is available. Defaults to `false`.
+      type: boolean
+    Data_views_typemeta:
+      description: When you use rollup indices, contains the field list for the rollup data view API endpoints.
+      type: object
+      properties:
+        aggs:
+          description: A map of rollup restrictions by aggregation type and field name.
+          type: object
+        params:
+          description: Properties for retrieving rollup fields.
+          type: object
+      required:
+      - aggs
+      - params
+    Data_views_runtimefieldmap:
+      description: A map of runtime field definitions by field name.
+      type: object
+      properties:
+        script:
+          type: object
+          properties:
+            source:
+              description: Script for the runtime field.
+              type: string
+        type:
+          description: Mapping type of the runtime field.
+          type: string
+      required:
+      - script
+      - type
+    Data_views_timefieldname:
+      description: The timestamp field name, which you use for time-based data views.
+      type: string
+    Data_views_title:
+      description: Comma-separated list of data streams, indices, and aliases that you want to search. Supports wildcards (`*`).
+      type: string
+  examples:
+    Data_views_create_data_view_request:
+      description: Create a data view for logstash indices that includes a runtime field which extracts the shape name from a source field.
+      summary: Create a data view with runtime fields.
+      value:
+        data_view:
+          name: My Logstash data view
+          runtimeFieldMap:
+            runtime_shape_name:
+              script:
+                source: emit(doc['shape_name'].value)
+              type: keyword
+          title: logstash-*
+    Data_views_update_field_metadata_request:
+      description: Update the popularity count, custom label, and custom description for specific fields in a data view.
+      summary: Update metadata for multiple fields.
+      value:
+        fields:
+          field1:
+            count: 123
+            customLabel: Field 1 label
+          field2:
+            customDescription: Field 2 description
+            customLabel: Field 2 label
+    Data_views_update_runtime_field_request:
+      description: Update the script of an existing runtime field.
+      summary: Update an existing runtime field on a data view.
+      value:
+        runtimeField:
+          script:
+            source: emit(doc["bar"].value)
+    Data_views_get_default_data_view_response:
+      description: The identifier of the default data view for the current Kibana space.
+      summary: The get default data view API returns the default data view identifier.
+      value:
+        data_view_id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+    Data_views_get_data_views_response:
+      description: A list of available data views including their identifiers, names, and index patterns.
+      summary: The get all data views API returns a list of data views.
+      value:
+        data_view:
+        - id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+          name: Kibana Sample Data eCommerce
+          namespaces:
+          - default
+          title: kibana_sample_data_ecommerce
+          typeMeta: {}
+        - id: d3d7af60-4c81-11e8-b3d7-01146121b73d
+          name: Kibana Sample Data Flights
+          namespaces:
+          - default
+          title: kibana_sample_data_flights
+        - id: 90943e30-9a47-11e8-b64d-95841ca0b247
+          name: Kibana Sample Data Logs
+          namespaces:
+          - default
+          title: kibana_sample_data_logs
+    Data_views_set_default_data_view_response:
+      description: The acknowledged flag confirms that the default data view for the current Kibana space was updated.
+      summary: The default data view was set successfully.
+      value:
+        acknowledged: true
+    Data_views_set_default_data_view_request:
+      description: Set the default data view, using the force flag to overwrite an existing default.
+      summary: Set the default data view identifier.
+      value:
+        data_view_id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+        force: true
+    Data_views_create_runtime_field_request:
+      description: Create a long-type runtime field that emits a value derived from the foo source field.
+      summary: Create a runtime field.
+      value:
+        name: runtimeFoo
+        runtimeField:
+          script:
+            source: emit(doc["foo"].value)
+          type: long
+    Data_views_swap_data_view_response:
+      description: The list of saved objects whose references were updated, along with the delete status of the source.
+      summary: The swap references API returns a list of the affected saved objects.
+      value:
+        deleteStatus:
+          deletePerformed: true
+          remainingRefs: 0
+        result:
+        - id: '123'
+          type: visualization
+    Data_views_update_data_view_request:
+      description: Update the title, time field, and other properties of an existing data view.
+      summary: Update some properties for a data view.
+      value:
+        data_view:
+          allowNoIndex: false
+          name: Kibana Sample Data eCommerce
+          timeFieldName: order_date
+          title: kibana_sample_data_ecommerce
+        refresh_fields: true
+    Data_views_error_400_response:
+      description: The request was rejected because the payload or query parameters are missing required fields or contain invalid values.
+      summary: A bad request response.
+      value:
+        error: Bad Request
+        message: '[request body.data_view.title]: expected value of type [string] but got [undefined]'
+        statusCode: 400
+    Data_views_preview_swap_data_view_request:
+      description: Preview the saved objects that would be affected by swapping references from one data view to another.
+      summary: Preview swapping references from data view ID "abcd-efg" to "xyz-123".
+      value:
+        fromId: abcd-efg
+        toId: xyz-123
+    Data_views_swap_data_view_request:
+      description: Swap all saved object references from one data view to another and delete the source data view afterward.
+      summary: Swap references from data view ID "abcd-efg" to "xyz-123" and remove the data view that is no longer referenced.
+      value:
+        delete: true
+        fromId: abcd-efg
+        toId: xyz-123
+    Data_views_preview_swap_data_view_response:
+      description: The result array lists every saved object that references the source data view. No saved objects are modified by the preview endpoint.
+      summary: A preview of saved objects that would be affected by a data view swap.
+      value:
+        result:
+        - id: 8963ca30-bca7-11e8-aa00-0123456789ab
+          type: visualization
+        - id: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+          type: dashboard
+    Data_views_get_data_view_response:
+      description: A complete data view object including all fields, runtime fields, and metadata.
+      summary: The get data view API returns a JSON object that contains information about the data view.
+      value:
+        data_view:
+          allowNoIndex: false
+          fieldAttrs:
+            products.manufacturer:
+              count: 1
+            products.price:
+              count: 1
+            products.product_name:
+              count: 1
+            total_quantity:
+              count: 1
+          fieldFormats:
+            products.base_price:
+              id: number
+              params:
+                pattern: $0,0.00
+            products.base_unit_price:
+              id: number
+              params:
+                pattern: $0,0.00
+            products.min_price:
+              id: number
+              params:
+                pattern: $0,0.00
+            products.price:
+              id: number
+              params:
+                pattern: $0,0.00
+            products.taxful_price:
+              id: number
+              params:
+                pattern: $0,0.00
+            products.taxless_price:
+              id: number
+              params:
+                pattern: $0,0.00
+            taxful_total_price:
+              id: number
+              params:
+                pattern: $0,0.[00]
+            taxless_total_price:
+              id: number
+              params:
+                pattern: $0,0.00
+          fields:
+            _id:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - _id
+              format:
+                id: string
+              isMapped: true
+              name: _id
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            _index:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - _index
+              format:
+                id: string
+              isMapped: true
+              name: _index
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            _score:
+              aggregatable: false
+              count: 0
+              format:
+                id: number
+              isMapped: true
+              name: _score
+              readFromDocValues: false
+              scripted: false
+              searchable: false
+              shortDotsEnable: false
+              type: number
+            _source:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - _source
+              format:
+                id: _source
+              isMapped: true
+              name: _source
+              readFromDocValues: false
+              scripted: false
+              searchable: false
+              shortDotsEnable: false
+              type: _source
+            category:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: category
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            category.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: category.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: category
+              type: string
+            currency:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: currency
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            customer_birth_date:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - date
+              format:
+                id: date
+              isMapped: true
+              name: customer_birth_date
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: date
+            customer_first_name:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: customer_first_name
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            customer_first_name.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: customer_first_name.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: customer_first_name
+              type: string
+            customer_full_name:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: customer_full_name
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            customer_full_name.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: customer_full_name.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: customer_full_name
+              type: string
+            customer_gender:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: customer_gender
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            customer_id:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: customer_id
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            customer_last_name:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: customer_last_name
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            customer_last_name.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: customer_last_name.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: customer_last_name
+              type: string
+            customer_phone:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: customer_phone
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            day_of_week:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: day_of_week
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            day_of_week_i:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - integer
+              format:
+                id: number
+              isMapped: true
+              name: day_of_week_i
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            email:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: email
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            event.dataset:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: event.dataset
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            geoip.city_name:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: geoip.city_name
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            geoip.continent_name:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: geoip.continent_name
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            geoip.country_iso_code:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: geoip.country_iso_code
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            geoip.location:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - geo_point
+              format:
+                id: geo_point
+                params:
+                  transform: wkt
+              isMapped: true
+              name: geoip.location
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: geo_point
+            geoip.region_name:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: geoip.region_name
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            manufacturer:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: manufacturer
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            manufacturer.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: manufacturer.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: manufacturer
+              type: string
+            order_date:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - date
+              format:
+                id: date
+              isMapped: true
+              name: order_date
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: date
+            order_id:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: order_id
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            products._id:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: products._id
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            products._id.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: products._id.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: products._id
+              type: string
+            products.base_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: products.base_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.base_unit_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: products.base_unit_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.category:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: products.category
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            products.category.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: products.category.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: products.category
+              type: string
+            products.created_on:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - date
+              format:
+                id: date
+              isMapped: true
+              name: products.created_on
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: date
+            products.discount_amount:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+              isMapped: true
+              name: products.discount_amount
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.discount_percentage:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+              isMapped: true
+              name: products.discount_percentage
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.manufacturer:
+              aggregatable: false
+              count: 1
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: products.manufacturer
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            products.manufacturer.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: products.manufacturer.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: products.manufacturer
+              type: string
+            products.min_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: products.min_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.price:
+              aggregatable: true
+              count: 1
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: products.price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.product_id:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - long
+              format:
+                id: number
+              isMapped: true
+              name: products.product_id
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.product_name:
+              aggregatable: false
+              count: 1
+              esTypes:
+              - text
+              format:
+                id: string
+              isMapped: true
+              name: products.product_name
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            products.product_name.keyword:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: products.product_name.keyword
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              subType:
+                multi:
+                  parent: products.product_name
+              type: string
+            products.quantity:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - integer
+              format:
+                id: number
+              isMapped: true
+              name: products.quantity
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.sku:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: products.sku
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            products.tax_amount:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+              isMapped: true
+              name: products.tax_amount
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.taxful_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: products.taxful_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.taxless_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: products.taxless_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            products.unit_discount_amount:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+              isMapped: true
+              name: products.unit_discount_amount
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            sku:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: sku
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            taxful_total_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.[00]
+              isMapped: true
+              name: taxful_total_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            taxless_total_price:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - half_float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.00
+              isMapped: true
+              name: taxless_total_price
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            total_quantity:
+              aggregatable: true
+              count: 1
+              esTypes:
+              - integer
+              format:
+                id: number
+              isMapped: true
+              name: total_quantity
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            total_unique_products:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - integer
+              format:
+                id: number
+              isMapped: true
+              name: total_unique_products
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            type:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: type
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            user:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: user
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+          id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+          name: Kibana Sample Data eCommerce
+          namespaces:
+          - default
+          runtimeFieldMap: {}
+          sourceFilters: []
+          timeFieldName: order_date
+          title: kibana_sample_data_ecommerce
+          typeMeta: {}
+          version: WzUsMV0=
+    Data_views_get_runtime_field_response:
+      description: The runtime field definition along with the parent data view.
+      summary: The get runtime field API returns a JSON object that contains information about the runtime field (`hour_of_day`) and the data view (`d3d7af60-4c81-11e8-b3d7-01146121b73d`).
+      value:
+        data_view:
+          allowNoIndex: false
+          fieldAttrs: {}
+          fieldFormats:
+            AvgTicketPrice:
+              id: number
+              params:
+                pattern: $0,0.[00]
+            hour_of_day:
+              id: number
+              params:
+                pattern: '00'
+          fields:
+            _id:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - _id
+              format:
+                id: string
+              isMapped: true
+              name: _id
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            _index:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - _index
+              format:
+                id: string
+              isMapped: true
+              name: _index
+              readFromDocValues: false
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            _score:
+              aggregatable: false
+              count: 0
+              format:
+                id: number
+              isMapped: true
+              name: _score
+              readFromDocValues: false
+              scripted: false
+              searchable: false
+              shortDotsEnable: false
+              type: number
+            _source:
+              aggregatable: false
+              count: 0
+              esTypes:
+              - _source
+              format:
+                id: _source
+              isMapped: true
+              name: _source
+              readFromDocValues: false
+              scripted: false
+              searchable: false
+              shortDotsEnable: false
+              type: _source
+            AvgTicketPrice:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - float
+              format:
+                id: number
+                params:
+                  pattern: $0,0.[00]
+              isMapped: true
+              name: AvgTicketPrice
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            Cancelled:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - boolean
+              format:
+                id: boolean
+              isMapped: true
+              name: Cancelled
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: boolean
+            Carrier:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: Carrier
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            dayOfWeek:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - integer
+              format:
+                id: number
+              isMapped: true
+              name: dayOfWeek
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            Dest:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: Dest
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            DestAirportID:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: DestAirportID
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            DestCityName:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: DestCityName
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            DestCountry:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: DestCountry
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            DestLocation:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - geo_point
+              format:
+                id: geo_point
+                params:
+                  transform: wkt
+              isMapped: true
+              name: DestLocation
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: geo_point
+            DestRegion:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: DestRegion
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            DestWeather:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: DestWeather
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            DistanceKilometers:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - float
+              format:
+                id: number
+              isMapped: true
+              name: DistanceKilometers
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            DistanceMiles:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - float
+              format:
+                id: number
+              isMapped: true
+              name: DistanceMiles
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            FlightDelay:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - boolean
+              format:
+                id: boolean
+              isMapped: true
+              name: FlightDelay
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: boolean
+            FlightDelayMin:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - integer
+              format:
+                id: number
+              isMapped: true
+              name: FlightDelayMin
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            FlightDelayType:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: FlightDelayType
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            FlightNum:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: FlightNum
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            FlightTimeHour:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: FlightTimeHour
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            FlightTimeMin:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - float
+              format:
+                id: number
+              isMapped: true
+              name: FlightTimeMin
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            hour_of_day:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - long
+              format:
+                id: number
+                params:
+                  pattern: '00'
+              name: hour_of_day
+              readFromDocValues: false
+              runtimeField:
+                script:
+                  source: emit(doc['timestamp'].value.getHour());
+                type: long
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: number
+            Origin:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: Origin
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            OriginAirportID:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: OriginAirportID
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            OriginCityName:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: OriginCityName
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            OriginCountry:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: OriginCountry
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            OriginLocation:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - geo_point
+              format:
+                id: geo_point
+                params:
+                  transform: wkt
+              isMapped: true
+              name: OriginLocation
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: geo_point
+            OriginRegion:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: OriginRegion
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            OriginWeather:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              isMapped: true
+              name: OriginWeather
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+            timestamp:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - date
+              format:
+                id: date
+              isMapped: true
+              name: timestamp
+              readFromDocValues: true
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: date
+          id: d3d7af60-4c81-11e8-b3d7-01146121b73d
+          name: Kibana Sample Data Flights
+          runtimeFieldMap:
+            hour_of_day:
+              script:
+                source: emit(doc['timestamp'].value.getHour());
+              type: long
+          sourceFilters: []
+          timeFieldName: timestamp
+          title: kibana_sample_data_flights
+          version: WzM2LDJd
+        fields:
+        - aggregatable: true
+          count: 0
+          esTypes:
+          - long
+          name: hour_of_day
+          readFromDocValues: false
+          runtimeField:
+            script:
+              source: emit(doc['timestamp'].value.getHour());
+            type: long
+          scripted: false
+          searchable: true
+          shortDotsEnable: false
+          type: number
+    Data_views_create_data_view_response:
+      description: The response includes the full data view specification, including auto-generated fields such as the unique identifier and version.
+      summary: The create data view API returns a JSON object that contains details about the new data view.
+      value:
+        data_view:
+          allowNoIndex: false
+          fieldAttrs: {}
+          fieldFormats: {}
+          fields:
+            runtime_shape_name:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              name: runtime_shape_name
+              readFromDocValues: false
+              runtimeField:
+                script:
+                  source: emit(doc['shape_name'].value)
+                type: keyword
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+          id: b561acfb-0181-455e-84a3-ce8980b2272f
+          name: My Logstash data view
+          namespaces:
+          - default
+          runtimeFieldMap:
+            runtime_shape_name:
+              script:
+                source: emit(doc['shape_name'].value)
+              type: keyword
+          sourceFilters: []
+          title: logstash-*
+          typeMeta: {}
+          version: WzQ5LDJd
+    Data_views_create_runtime_field_response:
+      description: The response includes the newly created runtime field as an array and the full updated data view object.
+      summary: The API returns created runtime field object array and updated data view object.
+      value:
+        data_view:
+          '...': null
+        fields:
+        - '...'
+    Data_views_error_404_response:
+      description: The requested data view or runtime field was not found in the current Kibana space.
+      summary: A not found response.
+      value:
+        error: Not Found
+        message: Saved object [index-pattern/caaad6d0-920c-11ed-b36a-874bd1548a00] not found
+        statusCode: 404
+    Data_views_update_field_metadata_response:
+      description: The acknowledged flag confirms that the field metadata changes were applied to the data view.
+      summary: Field metadata was updated successfully.
+      value:
+        acknowledged: true
+  parameters:
+    Data_views_kbn_xsrf:
+      description: Cross-site request forgery protection
+      in: header
+      name: kbn-xsrf
+      required: true
+      schema:
+        type: string
+    Data_views_view_id:
+      description: An identifier for the data view.
+      in: path
+      name: viewId
+      required: true
+      schema:
+        example: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+        type: string
+    Data_views_field_name:
+      description: The name of the runtime field.
+      in: path
+      name: fieldName
+      required: true
+      schema:
+        example: hour_of_day
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

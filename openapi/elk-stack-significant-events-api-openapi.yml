@@ -1,0 +1,535 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Significant Events API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: significant_events
+  x-displayName: Significant Events
+paths:
+  /api/streams/{name}/queries:
+    get:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/queries</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Fetches all queries linked to a stream that are visible to the current user in the current space.<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams-name-queries
+      parameters:
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                listQueries:
+                  value:
+                    queries:
+                    - description: Count error-level log events grouped by host name
+                      esql:
+                        query: FROM logs.nginx | WHERE log.level == "error" | STATS count = COUNT(*) BY host.name
+                      id: error-count-by-host
+                      severity_score: 75
+                      title: Error count by host
+                      type: match
+                    - description: Requests with response time above 2 seconds
+                      esql:
+                        query: FROM logs.nginx | WHERE http.response_time > 2000
+                      id: high-latency-requests
+                      severity_score: 50
+                      title: High latency requests
+                      type: match
+          description: List of queries linked to the stream.
+      summary: Get stream queries
+      tags:
+      - significant_events
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/streams/{name}/queries/_bulk:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/queries/_bulk</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Bulk update queries of a stream. Can add new queries and delete existing ones.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: post-streams-name-queries-bulk
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkQueries:
+                value:
+                  operations:
+                  - index:
+                      description: Count error-level log events grouped by host name
+                      esql:
+                        query: FROM logs* | WHERE log.level == "error" | STATS count = COUNT(*) BY host.name
+                      id: error-count-by-host
+                      title: Error count by host
+                  - delete:
+                      id: old-query-id
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                operations:
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        index:
+                          type: object
+                          properties:
+                            description:
+                              default: ''
+                              maxLength: 10000
+                              type: string
+                            esql:
+                              type: object
+                              properties:
+                                query:
+                                  maxLength: 10000
+                                  type: string
+                              required:
+                              - query
+                            evidence:
+                              items:
+                                maxLength: 10000
+                                type: string
+                              type: array
+                            expires_at:
+                              format: date-time
+                              pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+                              type: string
+                            id:
+                              description: A non-empty string.
+                              minLength: 1
+                              type: string
+                            severity_score:
+                              type: number
+                            title:
+                              description: A non-empty string.
+                              minLength: 1
+                              type: string
+                          required:
+                          - title
+                          - esql
+                          - id
+                      required:
+                      - index
+                    - type: object
+                      properties:
+                        delete:
+                          type: object
+                          properties:
+                            id:
+                              maxLength: 255
+                              type: string
+                          required:
+                          - id
+                      required:
+                      - delete
+                  type: array
+              required:
+              - operations
+      responses:
+        '200':
+          description: Bulk operation completed successfully.
+      summary: Bulk update queries
+      tags:
+      - significant_events
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/streams/{name}/queries/{queryId}:
+    delete:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/queries/{queryId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Remove a query from a stream. Noop if the query is not found on the stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: delete-streams-name-queries-queryid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: The identifier of the query to remove.
+        in: path
+        name: queryId
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          description: The query was removed successfully.
+      summary: Remove a query from a stream
+      tags:
+      - significant_events
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/queries/{queryId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Adds a query to a stream. Noop if the query is already present on the stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+      operationId: put-streams-name-queries-queryid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: The identifier of the query.
+        in: path
+        name: queryId
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              upsertQuery:
+                value:
+                  description: Count error-level log events grouped by host name
+                  esql:
+                    query: FROM logs* | WHERE log.level == "error" | STATS count = COUNT(*) BY host.name
+                  title: Error count by host
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                description:
+                  default: ''
+                  maxLength: 10000
+                  type: string
+                esql:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    query:
+                      maxLength: 10000
+                      type: string
+                  required:
+                  - query
+                evidence:
+                  items:
+                    maxLength: 10000
+                    type: string
+                  type: array
+                expires_at:
+                  format: date-time
+                  pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+                  type: string
+                severity_score:
+                  type: number
+                title:
+                  description: A non-empty string.
+                  minLength: 1
+                  type: string
+              required:
+              - title
+              - esql
+      responses:
+        '200':
+          description: The query was added or updated successfully.
+      summary: Upsert a query to a stream
+      tags:
+      - significant_events
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/streams/{name}/significant_events:
+    get:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/significant_events</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Read the significant events<br/><br/>[Required authorization] Route required privileges: read_stream.'
+      operationId: get-streams-name-significant-events
+      parameters:
+      - description: The name of the stream.
+        in: path
+        name: name
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: Start of the time range as an ISO 8601 date string.
+        in: query
+        name: from
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: End of the time range as an ISO 8601 date string.
+        in: query
+        name: to
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+      - description: The bucket size for aggregating events (e.g. "1m", "1h").
+        in: query
+        name: bucketSize
+        required: true
+        schema:
+          maxLength: 255
+          pattern: ^(\d+)([smhd])$
+          type: string
+      - description: Query string to filter significant events on metadata fields
+        in: query
+        name: query
+        required: false
+        schema:
+          maxLength: 10000
+          type: string
+      - description: 'Search mode: keyword (BM25), semantic (vector), or hybrid (RRF). When omitted, defaults to hybrid with a silent keyword fallback on failure. When set explicitly, failures propagate as errors.'
+        in: query
+        name: searchMode
+        required: false
+        schema:
+          enum:
+          - keyword
+          - semantic
+          - hybrid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties: {}
+              - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                queryOccurrences:
+                  value:
+                    aggregated_occurrences:
+                    - count: 42
+                      date: '2025-01-15T10:00:00.000Z'
+                    - count: 18
+                      date: '2025-01-15T11:00:00.000Z'
+                    - count: 7
+                      date: '2025-01-15T12:00:00.000Z'
+                    queries:
+                    - change_points:
+                        type:
+                          spike:
+                            change_point: 1
+                            p_value: 0.002
+                      description: Count error-level log events grouped by host name
+                      esql:
+                        query: FROM logs.nginx | WHERE log.level == "error" | STATS count = COUNT(*) BY host.name
+                      id: error-count-by-host
+                      occurrences:
+                      - count: 42
+                        date: '2025-01-15T10:00:00.000Z'
+                      - count: 18
+                        date: '2025-01-15T11:00:00.000Z'
+                      - count: 7
+                        date: '2025-01-15T12:00:00.000Z'
+                      rule_backed: false
+                      rule_uuid: 9fdfcf5a-4e1d-5ee3-b05d-7bc2b014e81c
+                      severity_score: 75
+                      stream_name: logs.nginx
+                      title: Error count by host
+                      type: match
+          description: Significant events for the stream.
+      summary: Read the significant events
+      tags:
+      - significant_events
+      x-state: Experimental; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

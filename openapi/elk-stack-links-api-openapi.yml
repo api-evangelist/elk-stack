@@ -1,0 +1,969 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Links API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Links
+paths:
+  /api/links:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/links</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Returns a paginated list of links library items. Each result includes title, description, and metadata. Use `GET /api/links/{id}` to retrieve the complete state.'
+      operationId: get-links
+      parameters:
+      - description: The page of results to return.
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          minimum: 1
+          type: number
+      - description: The number of results to return per page.
+        in: query
+        name: per_page
+        required: false
+        schema:
+          default: 20
+          maximum: 1000
+          minimum: 1
+          type: number
+      - description: Filters results by `title` and `description` using Elasticsearch [`simple_query_string`](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-simple-query-string-query) syntax. Multi-word terms require all words to match.
+        in: query
+        name: query
+        required: false
+        schema:
+          type: string
+      - description: A tag ID to include. Accepts a single tag ID or multiple tag IDs. When multiple are specified, library items matching any of the tag IDs are included.
+        in: query
+        name: tags
+        required: false
+        schema:
+          default: []
+          description: Tag IDs associated with this dashboard.
+          items:
+            maxLength: 250
+            type: string
+          maxItems: 100
+          type: array
+      - description: A tag ID to exclude. Accepts a single tag ID or multiple tag IDs. When multiple are specified, library items matching any of the tag IDs are excluded.
+        in: query
+        name: excluded_tags
+        required: false
+        schema:
+          default: []
+          description: Tag IDs associated with this dashboard.
+          items:
+            maxLength: 250
+            type: string
+          maxItems: 100
+          type: array
+      - description: A tag name to include. Accepts a single tag name or multiple tag names. When multiple are specified, library items matching any of the tag names are included. If the same name is shared by multiple tags, items matching any of those tags are included.
+        in: query
+        name: tag_names
+        required: false
+        schema:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+          x-state: Generally available; added in 9.6.0
+      - description: A tag name to exclude. Accepts a single tag name or multiple tag names. When multiple are specified, library items matching any of the tag names are excluded. If the same name is shared by multiple tags, items matching any of those tags are excluded.
+        in: query
+        name: excluded_tag_names
+        required: false
+        schema:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+          x-state: Generally available; added in 9.6.0
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                searchLinks:
+                  description: Returns a paginated list of links library items. Each result includes title, description, and metadata. Use `GET /api/links/{id}` to retrieve the complete state.
+                  summary: Search links library items response
+                  value:
+                    data:
+                    - data:
+                        description: A collection of important links
+                        title: Important Resources
+                      id: 0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+                      meta:
+                        created_at: '2026-06-03T23:33:39.979Z'
+                        created_by: u_EWATCHX9oIEsmcXj8aA1FkcaY3DE-XEpsiGTjrR2PmM_0
+                        managed: false
+                        updated_at: '2026-06-03T23:33:39.979Z'
+                        updated_by: u_EWATCHX9oIEsmcXj8aA1FkcaY3DE-XEpsiGTjrR2PmM_0
+                        version: WzEwNywxXQ==
+                    meta:
+                      page: 1
+                      per_page: 20
+                      total: 1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  data:
+                    description: List of links library items matching the query.
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        data:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            description:
+                              description: A short description of the links library item.
+                              maxLength: 10000
+                              type: string
+                            title:
+                              description: The links library item title.
+                              maxLength: 1000
+                              type: string
+                          required:
+                          - title
+                        id:
+                          maxLength: 250
+                          type: string
+                        meta:
+                          $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-as-code-meta'
+                      required:
+                      - id
+                      - data
+                      - meta
+                    maxItems: 1000
+                    minItems: 0
+                    type: array
+                  meta:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      page:
+                        default: 1
+                        description: The returned page of results.
+                        minimum: 1
+                        type: number
+                      per_page:
+                        default: 20
+                        description: The number of results returned per page.
+                        maximum: 1000
+                        minimum: 1
+                        type: number
+                      total:
+                        description: The total number of results matching the query.
+                        type: number
+                    required:
+                    - total
+                required:
+                - data
+                - meta
+          description: success
+        '403':
+          description: forbidden
+      summary: List links library items
+      tags:
+      - Links
+      x-codeSamples:
+      - label: Search links library items - cURL
+        lang: cURL
+        source: "curl -X GET \"${KIBANA_URL}/api/links?query=welcome&per_page=10\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - label: Search links library items - Console
+        lang: Console
+        source: 'GET kbn:/api/links?query=welcome&per_page=10
+
+          '
+      x-state: Experimental; added in 9.6.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/links</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Creates a new links library item and returns its ID, full state, and metadata.'
+      operationId: post-links
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createLinks:
+                summary: Create a links library item
+                value:
+                  description: A collection of important links
+                  layout: horizontal
+                  links:
+                  - destination: dashboard-abc-123
+                    label: Overview
+                    type: dashboardLink
+                  - destination: https://www.elastic.co/docs
+                    label: Elastic Documentation
+                    type: externalLink
+                  title: Important Resources
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                description:
+                  type: string
+                layout:
+                  description: Whether to display the links in a horizontal or vertical layout.
+                  enum:
+                  - horizontal
+                  - vertical
+                  type: string
+                links:
+                  description: The list of links to display.
+                  items:
+                    discriminator:
+                      mapping:
+                        dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                        externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                      propertyName: type
+                    oneOf:
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                  maxItems: 100
+                  type: array
+                tags:
+                  default: []
+                  description: Tag IDs associated with this library item.
+                  items:
+                    maxLength: 250
+                    type: string
+                  maxItems: 1000
+                  type: array
+                title:
+                  type: string
+              required:
+              - links
+              - title
+      responses:
+        '201':
+          content:
+            application/json:
+              examples:
+                createLinks:
+                  description: Creates a new links library item and returns its ID, full state, and metadata.
+                  summary: Create links library item response
+                  value:
+                    data:
+                      description: A collection of important links
+                      layout: horizontal
+                      links:
+                      - destination: dashboard-abc-123
+                        label: Overview
+                        options:
+                          open_in_new_tab: false
+                          use_filters: true
+                          use_time_range: true
+                        type: dashboardLink
+                      - destination: https://www.elastic.co/docs
+                        label: Elastic Documentation
+                        options:
+                          encode_url: true
+                          open_in_new_tab: true
+                        type: externalLink
+                      title: Important Resources
+                    id: 0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+                    meta:
+                      created_at: '2026-06-03T23:33:39.979Z'
+                      created_by: u_EWATCHX9oIEsmcXj8aA1FkcaY3DE-XEpsiGTjrR2PmM_0
+                      managed: false
+                      updated_at: '2026-06-03T23:33:39.979Z'
+                      updated_by: u_EWATCHX9oIEsmcXj8aA1FkcaY3DE-XEpsiGTjrR2PmM_0
+                      version: WzEwNywxXQ==
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  data:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      layout:
+                        description: Whether to display the links in a horizontal or vertical layout.
+                        enum:
+                        - horizontal
+                        - vertical
+                        type: string
+                      links:
+                        description: The list of links to display.
+                        items:
+                          discriminator:
+                            mapping:
+                              dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                              externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                            propertyName: type
+                          oneOf:
+                          - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                          - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                        maxItems: 100
+                        type: array
+                      tags:
+                        default: []
+                        description: Tag IDs associated with this library item.
+                        items:
+                          maxLength: 250
+                          type: string
+                        maxItems: 1000
+                        type: array
+                      title:
+                        type: string
+                    required:
+                    - links
+                    - title
+                  id:
+                    description: The unique ID of the links library item, as returned by the create or search endpoints.
+                    type: string
+                  meta:
+                    $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-as-code-meta'
+                required:
+                - id
+                - data
+                - meta
+          description: created
+        '400':
+          description: invalid request
+        '403':
+          description: forbidden
+      summary: Create a links library item
+      tags:
+      - Links
+      x-codeSamples:
+      - label: Create a links library item - cURL
+        lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/links\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"title\": \"Important Resources\",\n  \"description\": \"A collection of important links\",\n  \"links\": [\n    {\n      \"label\": \"Overview\",\n      \"type\": \"dashboardLink\",\n      \"destination\": \"dashboard-abc-123\"\n    },\n    {\n      \"label\": \"Elastic Documentation\",\n      \"type\": \"externalLink\",\n      \"destination\": \"https://www.elastic.co/docs\"\n    }\n  ],\n  \"layout\": \"horizontal\"\n}'"
+      - label: Create a links library item - Console
+        lang: Console
+        source: "POST kbn:/api/links\n{\n  \"summary\": \"Create a links library item\",\n  \"value\": {\n    \"title\": \"Important Resources\",\n    \"description\": \"A collection of important links\",\n    \"links\": [\n      {\n        \"label\": \"Overview\",\n        \"type\": \"dashboardLink\",\n        \"destination\": \"dashboard-abc-123\"\n      },\n      {\n        \"label\": \"Elastic Documentation\",\n        \"type\": \"externalLink\",\n        \"destination\": \"https://www.elastic.co/docs\"\n      }\n    ],\n    \"layout\": \"horizontal\"\n  }\n}\n"
+      x-state: Experimental; added in 9.6.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/links/{id}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/links/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Permanently deletes a links library item by ID.'
+      operationId: delete-links-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The unique ID of the links library item, as returned by the create or search endpoints.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 250
+          type: string
+      responses:
+        '204':
+          description: No content, the links library item was successfully deleted.
+        '400':
+          description: invalid request
+        '403':
+          description: forbidden
+        '404':
+          description: A links library item with the given ID was not found.
+      summary: Delete a links library item
+      tags:
+      - Links
+      x-codeSamples:
+      - label: Delete a links library item - cURL
+        lang: cURL
+        source: "curl -X DELETE \"${KIBANA_URL}/api/links/0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
+      - label: Delete a links library item - Console
+        lang: Console
+        source: 'DELETE kbn:/api/links/0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+
+          '
+      x-state: Experimental; added in 9.6.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/links/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Returns the complete state of a links library item by ID.'
+      operationId: get-links-id
+      parameters:
+      - description: The unique ID of the links library item, as returned by the create or search endpoints.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 250
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getLinksResponse:
+                  description: The full links library item state including `links`, `layout`, `title`, `description`, and metadata.
+                  summary: Get links library item response
+                  value:
+                    data:
+                      description: A collection of important links
+                      layout: horizontal
+                      links:
+                      - destination: dashboard-abc-123
+                        label: Overview
+                        options:
+                          open_in_new_tab: false
+                          use_filters: true
+                          use_time_range: true
+                        type: dashboardLink
+                      - destination: https://www.elastic.co/docs
+                        label: Elastic Documentation
+                        options:
+                          encode_url: true
+                          open_in_new_tab: true
+                        type: externalLink
+                      title: Important Resources
+                    id: 0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+                    meta:
+                      created_at: '2026-04-13T10:00:00.000Z'
+                      managed: false
+                      updated_at: '2026-04-13T10:00:00.000Z'
+                      version: WzU5LDFd
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  data:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      layout:
+                        description: Whether to display the links in a horizontal or vertical layout.
+                        enum:
+                        - horizontal
+                        - vertical
+                        type: string
+                      links:
+                        description: The list of links to display.
+                        items:
+                          discriminator:
+                            mapping:
+                              dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                              externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                            propertyName: type
+                          oneOf:
+                          - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                          - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                        maxItems: 100
+                        type: array
+                      tags:
+                        default: []
+                        description: Tag IDs associated with this library item.
+                        items:
+                          maxLength: 250
+                          type: string
+                        maxItems: 1000
+                        type: array
+                      title:
+                        type: string
+                    required:
+                    - links
+                    - title
+                  id:
+                    description: The unique ID of the links library item, as returned by the create or search endpoints.
+                    maxLength: 250
+                    type: string
+                  meta:
+                    $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-as-code-meta'
+                required:
+                - id
+                - data
+                - meta
+          description: success
+        '403':
+          description: forbidden
+        '404':
+          description: A links library item with the given ID was not found.
+      summary: Get a links library item by ID
+      tags:
+      - Links
+      x-codeSamples:
+      - label: Get a links library item - cURL
+        lang: cURL
+        source: "curl -X GET \"${KIBANA_URL}/api/links/0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - label: Get a links library item - Console
+        lang: Console
+        source: 'GET kbn:/api/links/0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+
+          '
+      x-state: Experimental; added in 9.6.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/links/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Replaces the full state of a links library item. Partial updates are not supported.
+
+        To make incremental changes, retrieve the item first, modify the fields you need, then send the complete object back.
+
+
+        If no item exists with the specified ID, a new one is created.'
+      operationId: put-links-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The unique ID of the links library item to be created or updated
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              upsertLinks:
+                summary: Upsert a links library item
+                value:
+                  description: A collection of important links
+                  layout: vertical
+                  links:
+                  - destination: dashboard-abc-123
+                    label: Overview
+                    options:
+                      open_in_new_tab: false
+                      use_filters: true
+                      use_time_range: true
+                    type: dashboardLink
+                  - destination: https://www.elastic.co/docs
+                    label: Elastic Documentation
+                    options:
+                      encode_url: true
+                      open_in_new_tab: true
+                    type: externalLink
+                  title: Important Resources
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                description:
+                  type: string
+                layout:
+                  description: Whether to display the links in a horizontal or vertical layout.
+                  enum:
+                  - horizontal
+                  - vertical
+                  type: string
+                links:
+                  description: The list of links to display.
+                  items:
+                    discriminator:
+                      mapping:
+                        dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                        externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                      propertyName: type
+                    oneOf:
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                    - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                  maxItems: 100
+                  type: array
+                tags:
+                  default: []
+                  description: Tag IDs associated with this library item.
+                  items:
+                    maxLength: 250
+                    type: string
+                  maxItems: 1000
+                  type: array
+                title:
+                  type: string
+              required:
+              - links
+              - title
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                upsertLinks:
+                  description: The complete updated links library item state after a full replacement. PUT replaces the entire item, so any fields omitted from the request are reset to their defaults.
+                  summary: Update links library item response
+                  value:
+                    data:
+                      description: A collection of important links
+                      layout: vertical
+                      links:
+                      - destination: dashboard-abc-123
+                        label: Overview
+                        options:
+                          open_in_new_tab: false
+                          use_filters: true
+                          use_time_range: true
+                        type: dashboardLink
+                      - destination: https://www.elastic.co/docs
+                        label: Elastic Documentation
+                        options:
+                          encode_url: true
+                          open_in_new_tab: true
+                        type: externalLink
+                      title: Important Resources
+                    id: 0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+                    meta:
+                      created_at: '2026-04-13T10:00:00.000Z'
+                      managed: false
+                      updated_at: '2026-04-13T11:00:00.000Z'
+                      version: WzYwLDFd
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_LinksItemResponse'
+          description: updated
+        '201':
+          content:
+            application/json:
+              examples:
+                createdLinks:
+                  description: Returned when the upsert created a new item because no item existed with the specified ID.
+                  summary: Create links library item response (via upsert)
+                  value:
+                    data:
+                      description: A collection of important links
+                      layout: horizontal
+                      links:
+                      - destination: dashboard-abc-123
+                        label: Overview
+                        options:
+                          open_in_new_tab: false
+                          use_filters: true
+                          use_time_range: true
+                        type: dashboardLink
+                      - destination: https://www.elastic.co/docs
+                        label: Elastic Documentation
+                        options:
+                          encode_url: true
+                          open_in_new_tab: true
+                        type: externalLink
+                      title: Important Resources
+                    id: 0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3
+                    meta:
+                      created_at: '2026-04-13T10:00:00.000Z'
+                      managed: false
+                      updated_at: '2026-04-13T10:00:00.000Z'
+                      version: WzU5LDFd
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_LinksItemResponse'
+          description: created
+        '400':
+          description: invalid request
+        '403':
+          description: forbidden
+        '409':
+          description: conflict
+      summary: Upsert links library item
+      tags:
+      - Links
+      x-codeSamples:
+      - label: Upsert a links library item - cURL
+        lang: curl
+        source: "curl \\\n  -X PUT \"${KIBANA_URL}/api/links/0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"title\": \"Important Resources\",\n  \"description\": \"A collection of important links\",\n  \"links\": [\n    {\n      \"label\": \"Overview\",\n      \"type\": \"dashboardLink\",\n      \"destination\": \"dashboard-abc-123\",\n      \"options\": {\n        \"open_in_new_tab\": false,\n        \"use_time_range\": true,\n        \"use_filters\": true\n      }\n    },\n    {\n      \"label\": \"Elastic Documentation\",\n      \"type\": \"externalLink\",\n      \"destination\": \"https://www.elastic.co/docs\",\n      \"options\": {\n        \"encode_url\": true,\n        \"open_in_new_tab\": true\n      }\n    }\n  ],\n  \"layout\": \"vertical\"\n}'"
+      - label: Upsert a links library item - Console
+        lang: Console
+        source: "PUT kbn:/api/links/0ee9d0ea-06a0-4a30-bf4e-be4d3ca85bf3\n{\n  \"title\": \"Important Resources\",\n  \"description\": \"A collection of important links\",\n  \"links\": [\n    {\n      \"label\": \"Overview\",\n      \"type\": \"dashboardLink\",\n      \"destination\": \"dashboard-abc-123\",\n      \"options\": {\n        \"open_in_new_tab\": false,\n        \"use_time_range\": true,\n        \"use_filters\": true\n      }\n    },\n    {\n      \"label\": \"Elastic Documentation\",\n      \"type\": \"externalLink\",\n      \"destination\": \"https://www.elastic.co/docs\",\n      \"options\": {\n        \"encode_url\": true,\n        \"open_in_new_tab\": true\n      }\n    }\n  ],\n  \"layout\": \"vertical\"\n}\n"
+      x-state: Experimental; added in 9.6.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_kbn-link-type-externalLink:
+      additionalProperties: false
+      description: Link type. Set to externalLink for a URL outside Kibana.
+      type: object
+      properties:
+        destination:
+          description: The external URL to link to.
+          type: string
+        label:
+          description: The label of the link displayed in the UI.
+          type: string
+        options:
+          additionalProperties: false
+          default:
+            encode_url: true
+            open_in_new_tab: true
+          type: object
+          properties:
+            encode_url:
+              default: true
+              description: Whether to escape the URL with percent encoding
+              type: boolean
+            open_in_new_tab:
+              default: true
+              description: Whether to open this link in a new tab when clicked.
+              type: boolean
+        type:
+          enum:
+          - externalLink
+          type: string
+      required:
+      - type
+      - destination
+    Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink:
+      additionalProperties: false
+      description: Link type. Set to dashboardLink for a link to another dashboard.
+      type: object
+      properties:
+        destination:
+          description: Linked dashboard saved object ID.
+          type: string
+        label:
+          description: The label of the link displayed in the UI.
+          type: string
+        options:
+          additionalProperties: false
+          default:
+            open_in_new_tab: false
+            use_filters: true
+            use_time_range: true
+          type: object
+          properties:
+            open_in_new_tab:
+              default: false
+              description: When enabled, the dashboard opens in a new browser tab.
+              type: boolean
+            use_filters:
+              default: true
+              description: When enabled, filters are passed to the opening dashboard.
+              type: boolean
+            use_time_range:
+              default: true
+              description: When enabled, time range is passed to the opening dashboard.
+              type: boolean
+        type:
+          enum:
+          - dashboardLink
+          type: string
+      required:
+      - type
+      - destination
+    Kibana_HTTP_APIs_kbn-as-code-meta:
+      additionalProperties: false
+      type: object
+      properties:
+        created_at:
+          description: Timestamp when the object was created (ISO 8601).
+          type: string
+        created_by:
+          description: User profile ID of the user who created the object.
+          type: string
+        managed:
+          description: When `true`, the object is managed by Kibana and cannot be edited by users.
+          type: boolean
+        owner:
+          description: Identifier of the plugin or team that owns this object.
+          type: string
+        updated_at:
+          description: Timestamp when the object was last updated (ISO 8601).
+          type: string
+        updated_by:
+          description: User profile ID of the user who last updated the object.
+          type: string
+        version:
+          description: Internal version identifier for optimistic concurrency control.
+          type: string
+    Kibana_HTTP_APIs_LinksItemResponse:
+      additionalProperties: false
+      description: Response containing a links library item with metadata.
+      type: object
+      properties:
+        data:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            layout:
+              description: Whether to display the links in a horizontal or vertical layout.
+              enum:
+              - horizontal
+              - vertical
+              type: string
+            links:
+              description: The list of links to display.
+              items:
+                discriminator:
+                  mapping:
+                    dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                    externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                  propertyName: type
+                oneOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+              maxItems: 100
+              type: array
+            tags:
+              default: []
+              description: Tag IDs associated with this library item.
+              items:
+                maxLength: 250
+                type: string
+              maxItems: 1000
+              type: array
+            title:
+              type: string
+          required:
+          - links
+          - title
+        id:
+          description: The unique ID of the links library item, as returned by the create or search endpoints.
+          maxLength: 250
+          type: string
+        meta:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-as-code-meta'
+      required:
+      - id
+      - data
+      - meta
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

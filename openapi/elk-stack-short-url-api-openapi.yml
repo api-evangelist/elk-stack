@@ -1,0 +1,323 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana short url API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- description: Manage Kibana short URLs.
+  name: short url
+  x-displayName: Short URLs
+paths:
+  /api/short_url:
+    post:
+      description: 'Kibana URLs may be long and cumbersome, short URLs are much easier to remember and share.
+
+        Short URLs are created by specifying the locator ID and locator parameters. When a short URL is resolved, the locator ID and locator parameters are used to redirect user to the right Kibana page.
+
+        '
+      operationId: post-url
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createShortUrlRequest:
+                description: Request a short URL that resolves to a dashboard with a preset time range.
+                summary: Create a short URL for a dashboard locator
+                value:
+                  locatorId: DASHBOARD_APP_LOCATOR
+                  params:
+                    dashboardId: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+                    timeRange:
+                      from: now-7d
+                      to: now
+                  slug: my-dashboard
+            schema:
+              type: object
+              properties:
+                humanReadableSlug:
+                  description: 'When the `slug` parameter is omitted, the API will generate a random human-readable slug if `humanReadableSlug` is set to true.
+
+                    '
+                  type: boolean
+                locatorId:
+                  description: The identifier for the locator.
+                  type: string
+                params:
+                  description: 'An object which contains all necessary parameters for the given locator to resolve to a Kibana location.
+
+                    > warn
+
+                    > When you create a short URL, locator params are not validated, which allows you to pass arbitrary and ill-formed data into the API that can break Kibana. Make sure any data that you send to the API is properly formed.
+
+                    '
+                  type: object
+                slug:
+                  description: 'A custom short URL slug. The slug is the part of the short URL that identifies it. You can provide a custom slug which consists of latin alphabet letters, numbers, and `-._` characters. The slug must be at least 3 characters long, but no longer than 255 characters.
+
+                    '
+                  type: string
+              required:
+              - locatorId
+              - params
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                createShortUrlResponse:
+                  description: The created short URL record.
+                  summary: Short URL created
+                  value:
+                    accessCount: 0
+                    accessDate: 1767225600000
+                    createDate: 1767225600000
+                    id: c54b04f5d4b3aa3c
+                    locator:
+                      id: DASHBOARD_APP_LOCATOR
+                      state:
+                        dashboardId: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+                        timeRange:
+                          from: now-7d
+                          to: now
+                      version: 9.4.0
+                    slug: my-dashboard
+              schema:
+                $ref: '#/components/schemas/Short_URL_APIs_urlResponse'
+          description: Indicates a successful call.
+      summary: Create a short URL
+      tags:
+      - short url
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/short_url/_slug/{slug}:
+    get:
+      description: 'Resolve a Kibana short URL by its slug.
+
+        '
+      operationId: resolve-url
+      parameters:
+      - description: The slug of the short URL.
+        in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                resolveShortUrlResponse:
+                  description: The short URL record matching the given slug.
+                  summary: Short URL resolved by slug
+                  value:
+                    accessCount: 12
+                    accessDate: 1767744000000
+                    createDate: 1767225600000
+                    id: c54b04f5d4b3aa3c
+                    locator:
+                      id: DASHBOARD_APP_LOCATOR
+                      state:
+                        dashboardId: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+                        timeRange:
+                          from: now-7d
+                          to: now
+                      version: 9.4.0
+                    slug: my-dashboard
+              schema:
+                $ref: '#/components/schemas/Short_URL_APIs_urlResponse'
+          description: Indicates a successful call.
+      summary: Resolve a short URL
+      tags:
+      - short url
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/short_url/{id}:
+    delete:
+      description: 'Delete a Kibana short URL.
+
+        '
+      operationId: delete-url
+      parameters:
+      - $ref: '#/components/parameters/Short_URL_APIs_idParam'
+      responses:
+        '200':
+          description: Indicates a successful call.
+      summary: Delete a short URL
+      tags:
+      - short url
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: 'Get a single Kibana short URL.
+
+        '
+      operationId: get-url
+      parameters:
+      - $ref: '#/components/parameters/Short_URL_APIs_idParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getShortUrlResponse:
+                  description: The short URL record matching the given identifier.
+                  summary: Short URL retrieved by ID
+                  value:
+                    accessCount: 12
+                    accessDate: 1767744000000
+                    createDate: 1767225600000
+                    id: c54b04f5d4b3aa3c
+                    locator:
+                      id: DASHBOARD_APP_LOCATOR
+                      state:
+                        dashboardId: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+                        timeRange:
+                          from: now-7d
+                          to: now
+                      version: 9.4.0
+                    slug: my-dashboard
+              schema:
+                $ref: '#/components/schemas/Short_URL_APIs_urlResponse'
+          description: Indicates a successful call.
+      summary: Get a short URL
+      tags:
+      - short url
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Short_URL_APIs_urlResponse:
+      type: object
+      properties:
+        accessCount:
+          description: Number of times the short URL has been resolved.
+          type: integer
+        accessDate:
+          description: Unix epoch (milliseconds) of the last time the short URL was resolved. Set to the creation time when the URL has never been accessed.
+          format: int64
+          type: integer
+        createDate:
+          description: Unix epoch (milliseconds) when the short URL was created.
+          format: int64
+          type: integer
+        id:
+          description: The identifier for the short URL.
+          type: string
+        locator:
+          type: object
+          properties:
+            id:
+              description: The identifier for the locator.
+              type: string
+            state:
+              description: The locator parameters.
+              type: object
+            version:
+              description: The version of Kibana when the short URL was created.
+              type: string
+        slug:
+          description: 'A random human-readable slug is automatically generated if the `humanReadableSlug` parameter is set to `true`. If it is set to `false`, a random short string is generated.
+
+            '
+          type: string
+  parameters:
+    Short_URL_APIs_idParam:
+      description: The identifier for the short URL.
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

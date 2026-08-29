@@ -1,0 +1,209 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Platform Configuration Snapshots API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: PlatformConfigurationSnapshots
+paths:
+  /platform/configuration/snapshots/repositories:
+    get:
+      tags:
+      - PlatformConfigurationSnapshots
+      summary: Get snapshot repositories
+      description: Retrieves a list of available snapshot repository configurations. To access the configuration contents, you must have privileged permissions.
+      operationId: get-snapshot-repositories
+      responses:
+        '200':
+          description: List of snapshot repository configs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryConfigs'
+      x-doc:
+        tag: Platform - Repository - CRUD
+  /platform/configuration/snapshots/repositories/{repository_name}:
+    get:
+      tags:
+      - PlatformConfigurationSnapshots
+      summary: Get snapshot repository
+      description: Retrieves the snapshot repository configuration. To access the configuration contents, you must have privileged permissions.
+      operationId: get-snapshot-repository
+      parameters:
+      - name: repository_name
+        in: path
+        description: The name of the snapshot repository configuration.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieve snapshot repository config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryConfig'
+      x-doc:
+        tag: Platform - Repository - CRUD
+    put:
+      tags:
+      - PlatformConfigurationSnapshots
+      summary: Set snapshot repository
+      description: Creates or updates the snapshot repository configuration.
+      operationId: set-snapshot-repository
+      parameters:
+      - name: version
+        in: query
+        description: Checks for conflicts against the metadata version, then returns the value in the `x-cloud-resource-version` header.
+        required: false
+        schema:
+          type: integer
+      - name: repository_name
+        in: path
+        description: The name of the snapshot repository configuration.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: New snapshot repository config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryConfig'
+      x-doc:
+        tag: Platform - Repository - CRUD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnapshotRepositoryConfiguration'
+        description: The Elasticsearch snapshot repository configuration
+        required: true
+    delete:
+      tags:
+      - PlatformConfigurationSnapshots
+      summary: Delete snapshot repository
+      description: Deletes the snapshot repository configuration.
+      operationId: delete-snapshot-repository
+      parameters:
+      - name: repository_name
+        in: path
+        description: The name of the snapshot repository configuration.
+        required: true
+        schema:
+          type: string
+      - name: cleanup_deployments
+        in: query
+        description: Removes references to this snapshot repository configuration and disables snapshots on the clusters that were referencing this configuration. If a request is made to delete a repository configuration that has already been deleted and this parameter is set to true and clusters still reference the configuration, then the request will have the side effects of removing references and disabling snapshots for clusters that reference the previously deleted configuration.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '202':
+          description: Delete snapshot repository config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '500':
+          description: Failed to delete references and disable snapshots in one or more referencing clusters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Repository - CRUD
+components:
+  schemas:
+    RepositoryConfig:
+      type: object
+      required:
+      - config
+      - repository_name
+      properties:
+        repository_name:
+          type: string
+          description: Elasticsearch snapshot repository name
+        config:
+          type: object
+          description: Elasticsearch configuration JSON for a snapshot repository
+          properties: {}
+      description: The snapshot repository configuration.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    RepositoryConfigs:
+      type: object
+      required:
+      - configs
+      properties:
+        configs:
+          type: array
+          description: List of snapshot configurations
+          items:
+            $ref: '#/components/schemas/RepositoryConfig'
+      description: A list of snapshot repository configurations.
+    EmptyResponse:
+      type: object
+    SnapshotRepositoryConfiguration:
+      type: object
+      required:
+      - settings
+      - type
+      properties:
+        type:
+          type: string
+          description: 'Repository type, (Currently supported: ''s3'')'
+        settings:
+          type: object
+          description: Elasticsearch repository configuration settings JSON. See [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html) for more information
+          properties: {}
+      description: The configuration for an Elasticsearch snapshot repository.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

@@ -1,0 +1,156 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Request & Response Specification Features API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+tags:
+- name: features
+paths:
+  /_features:
+    get:
+      tags:
+      - features
+      summary: Get the features
+      description: 'Get a list of features that can be included in snapshots using the `feature_states` field when creating a snapshot.
+
+        You can use this API to determine which feature states to include when taking a snapshot.
+
+        By default, all feature states are included in a snapshot if that snapshot includes the global state, or none if it does not.
+
+
+        A feature state includes one or more system indices necessary for a given feature to function.
+
+        In order to ensure data integrity, all system indices that comprise a feature state are snapshotted and restored together.
+
+
+        The features listed by this API are a combination of built-in features and features defined by plugins.
+
+        In order for a feature state to be listed in this API and recognized as a valid feature state by the create snapshot API, the plugin that defines that feature must be installed on the master node.'
+      externalDocs:
+        description: More about managing snapshots
+        url: https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore/create-snapshots
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/get-features-api.html
+      operationId: features-get-features
+      parameters:
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  features:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/features._types.Feature'
+                required:
+                - features
+              examples:
+                GetFeaturesResponseExample1:
+                  description: A successful response for retrieving a list of feature states that can be included when taking a snapshot.
+                  value: "{\n  \"features\": [\n    {\n      \"name\": \"tasks\",\n      \"description\": \"Manages task results\"\n    },\n    {\n      \"name\": \"kibana\",\n      \"description\": \"Manages Kibana configuration and reports\"\n    }\n  ]\n}"
+      x-state: Generally available; Added in 7.12.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_features/_reset:
+    post:
+      tags:
+      - features
+      summary: Reset the features
+      description: 'Clear all of the state information stored in system indices by Elasticsearch features, including the security and machine learning indices.
+
+
+        WARNING: Intended for development and testing use only. Do not reset features on a production cluster.
+
+
+        Return a cluster to the same state as a new installation by resetting the feature state for all Elasticsearch features.
+
+        This deletes all state information stored in system indices.
+
+
+        The response code is HTTP 200 if the state is successfully reset for all features.
+
+        It is HTTP 500 if the reset operation failed for any feature.
+
+
+        Note that select features might provide a way to reset particular system indices.
+
+        Using this API resets all features, both those that are built-in and implemented as plugins.
+
+
+        To list the features that will be affected, use the get features API.
+
+
+        IMPORTANT: The features installed on the node you submit this request to are the features that will be reset. Run on the master node if you have any doubts about which plugins are installed on individual nodes.'
+      operationId: features-reset-features
+      parameters:
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  features:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/features._types.Feature'
+                required:
+                - features
+              examples:
+                ResetFeaturesResponseExample1:
+                  description: A successful response for clearing state information stored in system indices by Elasticsearch features.
+                  value: "{\n  \"features\" : [\n    {\n      \"feature_name\" : \"security\",\n      \"status\" : \"SUCCESS\"\n    },\n    {\n      \"feature_name\" : \"tasks\",\n      \"status\" : \"SUCCESS\"\n    }\n  ]\n}"
+      x-state: Experimental; Added in 7.12.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    features._types.Feature:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+      - name
+      - description
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'

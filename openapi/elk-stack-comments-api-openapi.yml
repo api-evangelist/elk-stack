@@ -1,0 +1,507 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Comments API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: Comments
+paths:
+  /comments/{resource_type}/{resource_id}:
+    get:
+      tags:
+      - Comments
+      summary: List Comments
+      description: Retrieves all the comments for a given Resource, in reverse modified time order.
+      operationId: list-comment
+      parameters:
+      - name: resource_type
+        in: path
+        description: The kind of Resource that a Comment belongs to. Should be one of [elasticsearch, kibana, apm, appsearch, enterprise_search, integrations_server, allocator, constructor, runner, proxy].
+        required: true
+        schema:
+          type: string
+      - name: resource_id
+        in: path
+        description: Id of the Resource that a Comment belongs to.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The Comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentsWithMetas'
+      x-doc:
+        tag: Comments
+    post:
+      tags:
+      - Comments
+      summary: Create a Comment
+      description: Creates a comment for the given Resource.
+      operationId: create-comment
+      parameters:
+      - name: resource_type
+        in: path
+        description: The kind of Resource that a Comment belongs to. Should be one of [elasticsearch, kibana, apm, appsearch, enterprise_search, integrations_server, allocator, constructor, runner, proxy].
+        required: true
+        schema:
+          type: string
+      - name: resource_id
+        in: path
+        description: Id of the Resource that a Comment belongs to.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: The Comment that was just created.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          description: 'Your current session does not have a user id associated with it. (code: `comments.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'No Resource of the given type and id exist. (code: `comments.resource_does_not_exist`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.resource_does_not_exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'A Comment already exists with the generated id. Please try again. (code: `comments.id_already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.id_already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreateRequest'
+        description: Data for comment creation
+        required: true
+  /comments/{resource_type}/{resource_id}/{comment_id}:
+    get:
+      tags:
+      - Comments
+      summary: Get Comment
+      description: Retrieves a Comment.
+      operationId: get-comment
+      parameters:
+      - name: resource_type
+        in: path
+        description: The kind of Resource that a Comment belongs to. Should be one of [elasticsearch, kibana, apm, appsearch, enterprise_search, integrations_server, allocator, constructor, runner, proxy].
+        required: true
+        schema:
+          type: string
+      - name: resource_id
+        in: path
+        description: Id of the Resource that a Comment belongs to.
+        required: true
+        schema:
+          type: string
+      - name: comment_id
+        in: path
+        description: Id of a Comment
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The Comment
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          description: 'The Comment you want does not exist. (code: `comments.comment_does_not_exist`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.comment_does_not_exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Comments
+    put:
+      tags:
+      - Comments
+      summary: Update Comment
+      description: Updates a Comment.
+      operationId: update-comment
+      parameters:
+      - name: resource_type
+        in: path
+        description: The kind of Resource that a Comment belongs to. Should be one of [elasticsearch, kibana, apm, appsearch, enterprise_search, integrations_server, allocator, constructor, runner, proxy].
+        required: true
+        schema:
+          type: string
+      - name: resource_id
+        in: path
+        description: Id of the Resource that a Comment belongs to.
+        required: true
+        schema:
+          type: string
+      - name: comment_id
+        in: path
+        description: Id of a Comment
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: If specified then checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Comment updated successfully.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          description: '* The Comment does not belong to you. (code: `comments.unauthorised`)
+
+            * Your current session does not have a user id associated with it. (code: `comments.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.unauthorised
+                - comments.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The Comment you want does not exist. (code: `comments.comment_does_not_exist`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.comment_does_not_exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The version you sent does not match the persisted version. (code: `comments.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentUpdateRequest'
+        description: The Comment update data.
+        required: true
+    delete:
+      tags:
+      - Comments
+      summary: Delete Comment
+      description: Deletes a Comment.
+      operationId: delete-comment
+      parameters:
+      - name: resource_type
+        in: path
+        description: The kind of Resource that a Comment belongs to. Should be one of [elasticsearch, kibana, apm, appsearch, enterprise_search, integrations_server, allocator, constructor, runner, proxy].
+        required: true
+        schema:
+          type: string
+      - name: resource_id
+        in: path
+        description: Id of the Resource that a Comment belongs to.
+        required: true
+        schema:
+          type: string
+      - name: comment_id
+        in: path
+        description: Id of a Comment
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: If specified then checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Comment deleted successfully.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '401':
+          description: '* The Comment does not belong to you. (code: `comments.unauthorised`)
+
+            * Your current session does not have a user id associated with it. (code: `comments.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.unauthorised
+                - comments.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The Comment you want does not exist. (code: `comments.comment_does_not_exist`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.comment_does_not_exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The version you sent does not match the persisted version. (code: `comments.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - comments.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Comments
+components:
+  schemas:
+    Metadata:
+      type: object
+      required:
+      - created_time
+      - modified_time
+      - version
+      properties:
+        created_time:
+          type: string
+          format: date-time
+          description: Creation time
+        modified_time:
+          type: string
+          format: date-time
+          description: Modification time
+        version:
+          type: string
+          description: Version
+      description: Metadata of an entity
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    CommentUpdateRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: The message for the Comment.
+      description: A request for updating an existing Comment
+    EmptyResponse:
+      type: object
+    Comment:
+      type: object
+      required:
+      - id
+      - message
+      - user_id
+      properties:
+        id:
+          type: string
+          description: The id of this Comment
+        user_id:
+          type: string
+          description: The user id of the user who wrote this Comment
+        message:
+          type: string
+          description: The message content of this Comment
+      description: A persisted Comment
+    CommentsWithMetas:
+      type: object
+      required:
+      - values
+      properties:
+        values:
+          type: array
+          description: The list of comments
+          items:
+            $ref: '#/components/schemas/CommentWithMeta'
+      description: A list of persisted Comments
+    CommentWithMeta:
+      type: object
+      required:
+      - comment
+      - metadata
+      properties:
+        comment:
+          description: The comment
+          $ref: '#/components/schemas/Comment'
+        metadata:
+          description: The metadata
+          $ref: '#/components/schemas/Metadata'
+      description: A persisted Comment along with its metadata
+    CommentCreateRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: The message for the Comment.
+      description: A request for creating a new Comment
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

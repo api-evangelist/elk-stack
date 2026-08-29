@@ -3647,3 +3647,5 @@ x-enrichment:
   status: enriched
   artifacts_added: 29
   pass: local-v1
+x-parent: elastic
+x-relationship: product

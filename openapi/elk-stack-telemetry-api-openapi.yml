@@ -1,0 +1,161 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Telemetry API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: Telemetry
+paths:
+  /phone-home/config:
+    get:
+      tags:
+      - Telemetry
+      summary: Get ECE telemetry config
+      description: Returns whether ECE telemetry is enabled.
+      operationId: get-telemetry-config
+      responses:
+        '200':
+          description: The current ECE telemetry configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryConfig'
+        '403':
+          description: 'User must have Platform level permissions. (code: `root.unauthorized.rbac`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.unauthorized.rbac
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Telemetry
+    put:
+      tags:
+      - Telemetry
+      summary: Set ECE telemetry config
+      description: Sets whether to enable ECE telemetry.
+      operationId: set-telemetry-config
+      responses:
+        '200':
+          description: Telemetry configuration updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryConfig'
+        '403':
+          description: 'User must have Platform level permissions. (code: `root.unauthorized.rbac`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.unauthorized.rbac
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The telemetry configuration did not exist so there was an attempt to create one. Another request resulted in the creation of a telemetry configuration before this request completed, resulting in the failure of this request to create a configuration. Please retry. (code: `telemetry.already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - telemetry.already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '500':
+          description: 'Failed to set the configuration due to an internal server error. (code: `telemetry.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - telemetry.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Telemetry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryConfigRequest'
+        description: The desired ECE telemetry configuration
+        required: true
+components:
+  schemas:
+    TelemetryConfigRequest:
+      type: object
+      required:
+      - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: Whether to enable ECE telemetry
+      description: The desired ECE telemetry configuration
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    TelemetryConfig:
+      type: object
+      required:
+      - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: Whether ECE telemetry is enabled
+      description: The current ECE telemetry configuration
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

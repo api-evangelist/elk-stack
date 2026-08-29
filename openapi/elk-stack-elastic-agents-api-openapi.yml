@@ -1,0 +1,3129 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Elastic Agents API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Elastic Agents
+  description: 'Elastic Agents APIs enable you to manage Elastic Agents, including retrieving agent information, managing agent lifecycle, handling file uploads, and initiating agent setup.
+
+    '
+  x-displayName: Elastic Agents
+paths:
+  /api/fleet/agent_status/data:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_status/data</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the data streams that an agent is actively sending data to.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agent-status-data
+      parameters:
+      - description: Agent IDs to check data for, as an array or comma-separated string
+        in: query
+        name: agentsIds
+        required: true
+        schema:
+          items:
+            type: string
+          maxItems: 10000
+          type: array
+      - description: Filter by integration package name
+        in: query
+        name: pkgName
+        required: false
+        schema:
+          type: string
+      - description: Filter by integration package version
+        in: query
+        name: pkgVersion
+        required: false
+        schema:
+          type: string
+      - description: When true, return a preview of the ingested data
+        in: query
+        name: previewData
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAgentDataExample:
+                  description: Data streams the agent is actively sending data to
+                  value:
+                    items:
+                    - data:
+                        logs-nginx.access-default:
+                        - id: agent-id-1
+                          name: my-host
+                    total: 1
+                    totalMonitoring: 0
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  dataPreview:
+                    items: {}
+                    maxItems: 10000
+                    type: array
+                  items:
+                    items:
+                      additionalProperties:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          data:
+                            type: boolean
+                        required:
+                        - data
+                      type: object
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+                - dataPreview
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get incoming agent data
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        List agents, with optional filtering and pagination.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: false
+        schema:
+          type: number
+      - description: Number of results per page
+        in: query
+        name: perPage
+        required: false
+        schema:
+          default: 20
+          type: number
+      - description: A KQL query string to filter results
+        in: query
+        name: kuery
+        required: false
+        schema:
+          type: string
+      - description: When true, include agentless agents in the results
+        in: query
+        name: showAgentless
+        required: false
+        schema:
+          default: true
+          type: boolean
+      - description: When true, include inactive agents in the results
+        in: query
+        name: showInactive
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: When true, include CPU and memory metrics in the response
+        in: query
+        name: withMetrics
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: When true, only return agents that are upgradeable
+        in: query
+        name: showUpgradeable
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: When true, return a summary of agent statuses in the response
+        in: query
+        name: getStatusSummary
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Field to sort results by
+        in: query
+        name: sortField
+        required: false
+        schema:
+          type: string
+      - description: Sort order, ascending or descending
+        in: query
+        name: sortOrder
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+      - description: JSON-encoded array of sort values for `search_after` pagination
+        in: query
+        name: searchAfter
+        required: false
+        schema:
+          type: string
+      - description: When true, opens a new point-in-time for pagination
+        in: query
+        name: openPit
+        required: false
+        schema:
+          type: boolean
+      - description: Point-in-time ID for pagination
+        in: query
+        name: pitId
+        required: false
+        schema:
+          type: string
+      - description: Duration to keep the point-in-time alive, for example, `1m`
+        in: query
+        name: pitKeepAlive
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAgentsExample:
+                  description: List of agents
+                  value:
+                    items:
+                    - active: true
+                      enrolled_at: '2024-01-01T00:00:00.000Z'
+                      id: agent-id-1
+                      policy_id: agent-policy-id-1
+                      policy_revision: 1
+                      status: online
+                      type: PERMANENT
+                      updated_at: '2024-01-01T00:00:00.000Z'
+                    page: 1
+                    perPage: 20
+                    total: 1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        access_api_key:
+                          type: string
+                        access_api_key_id:
+                          type: string
+                        active:
+                          type: boolean
+                        agent:
+                          additionalProperties: true
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              type: string
+                            version:
+                              type: string
+                          required:
+                          - id
+                          - version
+                        audit_unenrolled_reason:
+                          type: string
+                        capabilities:
+                          items:
+                            type: string
+                          maxItems: 100
+                          type: array
+                        components:
+                          items:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              message:
+                                type: string
+                              status:
+                                enum:
+                                - STARTING
+                                - CONFIGURING
+                                - HEALTHY
+                                - DEGRADED
+                                - FAILED
+                                - STOPPING
+                                - STOPPED
+                                type: string
+                              type:
+                                type: string
+                              units:
+                                items:
+                                  additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    message:
+                                      type: string
+                                    payload:
+                                      additionalProperties: {}
+                                      type: object
+                                    status:
+                                      enum:
+                                      - STARTING
+                                      - CONFIGURING
+                                      - HEALTHY
+                                      - DEGRADED
+                                      - FAILED
+                                      - STOPPING
+                                      - STOPPED
+                                      type: string
+                                    type:
+                                      enum:
+                                      - input
+                                      - output
+                                      - ''
+                                      type: string
+                                  required:
+                                  - id
+                                  - type
+                                  - status
+                                  - message
+                                maxItems: 10000
+                                type: array
+                            required:
+                            - id
+                            - type
+                            - status
+                            - message
+                          maxItems: 10000
+                          type: array
+                        default_api_key:
+                          type: string
+                        default_api_key_history:
+                          items:
+                            additionalProperties: false
+                            deprecated: true
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              retired_at:
+                                type: string
+                            required:
+                            - id
+                            - retired_at
+                          maxItems: 100
+                          type: array
+                        default_api_key_id:
+                          type: string
+                        effective_config: {}
+                        enrolled_at:
+                          type: string
+                        health:
+                          additionalProperties: {}
+                          type: object
+                        id:
+                          type: string
+                        identifying_attributes:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        last_checkin:
+                          type: string
+                        last_checkin_message:
+                          type: string
+                        last_checkin_status:
+                          enum:
+                          - error
+                          - online
+                          - degraded
+                          - updating
+                          - starting
+                          - disconnected
+                          type: string
+                        last_known_status:
+                          enum:
+                          - offline
+                          - error
+                          - online
+                          - inactive
+                          - enrolling
+                          - unenrolling
+                          - unenrolled
+                          - updating
+                          - degraded
+                          - uninstalled
+                          - orphaned
+                          type: string
+                        local_metadata:
+                          additionalProperties: {}
+                          type: object
+                        metrics:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            cpu_avg:
+                              type: number
+                            memory_size_byte_avg:
+                              type: number
+                        namespaces:
+                          items:
+                            type: string
+                          maxItems: 100
+                          type: array
+                        non_identifying_attributes:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        outputs:
+                          additionalProperties:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              api_key_id:
+                                type: string
+                              to_retire_api_key_ids:
+                                items:
+                                  additionalProperties: false
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    retired_at:
+                                      type: string
+                                  required:
+                                  - id
+                                  - retired_at
+                                maxItems: 100
+                                type: array
+                              type:
+                                type: string
+                          type: object
+                        packages:
+                          items:
+                            type: string
+                          maxItems: 10000
+                          type: array
+                        pipeline_config:
+                          maxLength: 10000
+                          type: string
+                        policy_base_id:
+                          type: string
+                        policy_id:
+                          type: string
+                        policy_revision:
+                          type:
+                          - number
+                          - 'null'
+                        sequence_num:
+                          type: number
+                        signals:
+                          items:
+                            type: string
+                          maxItems: 50
+                          type: array
+                        sort:
+                          items: {}
+                          maxItems: 10
+                          type: array
+                        status:
+                          enum:
+                          - offline
+                          - error
+                          - online
+                          - inactive
+                          - enrolling
+                          - unenrolling
+                          - unenrolled
+                          - updating
+                          - degraded
+                          - uninstalled
+                          - orphaned
+                          type: string
+                        tags:
+                          items:
+                            type: string
+                          maxItems: 100
+                          type: array
+                        type:
+                          enum:
+                          - PERMANENT
+                          - EPHEMERAL
+                          - TEMPORARY
+                          - OPAMP
+                          type: string
+                        unenrolled_at:
+                          type: string
+                        unenrollment_started_at:
+                          type: string
+                        unhealthy_reason:
+                          items:
+                            enum:
+                            - input
+                            - output
+                            - other
+                            type: string
+                          maxItems: 3
+                          type:
+                          - array
+                          - 'null'
+                        upgrade:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            rollbacks:
+                              items:
+                                additionalProperties: false
+                                type: object
+                                properties:
+                                  valid_until:
+                                    type: string
+                                  version:
+                                    type: string
+                                required:
+                                - valid_until
+                                - version
+                              maxItems: 100
+                              type: array
+                        upgrade_attempts:
+                          items:
+                            type: string
+                          maxItems: 10000
+                          type:
+                          - array
+                          - 'null'
+                        upgrade_details:
+                          additionalProperties: false
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            action_id:
+                              type: string
+                            metadata:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                download_percent:
+                                  type: number
+                                download_rate:
+                                  type: number
+                                error_msg:
+                                  type: string
+                                failed_state:
+                                  enum:
+                                  - UPG_REQUESTED
+                                  - UPG_SCHEDULED
+                                  - UPG_DOWNLOADING
+                                  - UPG_EXTRACTING
+                                  - UPG_REPLACING
+                                  - UPG_RESTARTING
+                                  - UPG_FAILED
+                                  - UPG_WATCHING
+                                  - UPG_ROLLBACK
+                                  type: string
+                                reason:
+                                  type: string
+                                retry_error_msg:
+                                  type: string
+                                retry_until:
+                                  type: string
+                                scheduled_at:
+                                  type: string
+                            state:
+                              enum:
+                              - UPG_REQUESTED
+                              - UPG_SCHEDULED
+                              - UPG_DOWNLOADING
+                              - UPG_EXTRACTING
+                              - UPG_REPLACING
+                              - UPG_RESTARTING
+                              - UPG_FAILED
+                              - UPG_WATCHING
+                              - UPG_ROLLBACK
+                              type: string
+                            target_version:
+                              type: string
+                          required:
+                          - target_version
+                          - action_id
+                          - state
+                        upgrade_started_at:
+                          type:
+                          - string
+                          - 'null'
+                        upgraded_at:
+                          type:
+                          - string
+                          - 'null'
+                        user_provided_metadata:
+                          additionalProperties: {}
+                          type: object
+                      required:
+                      - id
+                      - packages
+                      - type
+                      - active
+                      - enrolled_at
+                      - local_metadata
+                      - effective_config
+                    maxItems: 10000
+                    type: array
+                  nextSearchAfter:
+                    type: string
+                  page:
+                    type: number
+                  perPage:
+                    type: number
+                  pit:
+                    type: string
+                  statusSummary:
+                    additionalProperties:
+                      type: number
+                    type: object
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                - page
+                - perPage
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get agents
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve agents associated with specific action IDs.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: post-fleet-agents
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postGetAgentsByActionsRequestExample:
+                description: Retrieve agents associated with specific action IDs
+                value:
+                  actionIds:
+                  - action-id-1
+                  - action-id-2
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                actionIds:
+                  items:
+                    type: string
+                  maxItems: 1000
+                  type: array
+              required:
+              - actionIds
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postGetAgentsByActionsExample:
+                  description: Agents associated with the given actions
+                  value:
+                    items:
+                    - active: true
+                      id: agent-id-1
+                      policy_id: agent-policy-id-1
+                      status: online
+                    total: 1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get agents by action ids
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete an agent by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: delete-fleet-agents-agentid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteAgentExample:
+                  description: Agent successfully deleted
+                  value:
+                    id: agent-id-1
+                    success: true
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  action:
+                    enum:
+                    - deleted
+                    type: string
+                required:
+                - action
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No agent was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Agent agent-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Delete an agent
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get an agent by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-agentid
+      parameters:
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      - description: When true, include CPU and memory metrics in the response
+        in: query
+        name: withMetrics
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAgentExample:
+                  description: Agent details
+                  value:
+                    item:
+                      active: true
+                      agent_id: agent-id-1
+                      enrolled_at: '2024-01-01T00:00:00.000Z'
+                      id: agent-id-1
+                      local_metadata:
+                        elastic:
+                          agent:
+                            version: 8.17.0
+                        host:
+                          hostname: my-host
+                        os:
+                          name: linux
+                      policy_id: agent-policy-id-1
+                      policy_revision: 1
+                      status: online
+                      type: PERMANENT
+                      updated_at: '2024-01-01T00:00:00.000Z'
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      access_api_key:
+                        type: string
+                      access_api_key_id:
+                        type: string
+                      active:
+                        type: boolean
+                      agent:
+                        additionalProperties: true
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          type:
+                            type: string
+                          version:
+                            type: string
+                        required:
+                        - id
+                        - version
+                      audit_unenrolled_reason:
+                        type: string
+                      capabilities:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      components:
+                        items:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            message:
+                              type: string
+                            status:
+                              enum:
+                              - STARTING
+                              - CONFIGURING
+                              - HEALTHY
+                              - DEGRADED
+                              - FAILED
+                              - STOPPING
+                              - STOPPED
+                              type: string
+                            type:
+                              type: string
+                            units:
+                              items:
+                                additionalProperties: false
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  message:
+                                    type: string
+                                  payload:
+                                    additionalProperties: {}
+                                    type: object
+                                  status:
+                                    enum:
+                                    - STARTING
+                                    - CONFIGURING
+                                    - HEALTHY
+                                    - DEGRADED
+                                    - FAILED
+                                    - STOPPING
+                                    - STOPPED
+                                    type: string
+                                  type:
+                                    enum:
+                                    - input
+                                    - output
+                                    - ''
+                                    type: string
+                                required:
+                                - id
+                                - type
+                                - status
+                                - message
+                              maxItems: 10000
+                              type: array
+                          required:
+                          - id
+                          - type
+                          - status
+                          - message
+                        maxItems: 10000
+                        type: array
+                      default_api_key:
+                        type: string
+                      default_api_key_history:
+                        items:
+                          additionalProperties: false
+                          deprecated: true
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            retired_at:
+                              type: string
+                          required:
+                          - id
+                          - retired_at
+                        maxItems: 100
+                        type: array
+                      default_api_key_id:
+                        type: string
+                      effective_config: {}
+                      enrolled_at:
+                        type: string
+                      health:
+                        additionalProperties: {}
+                        type: object
+                      id:
+                        type: string
+                      identifying_attributes:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      last_checkin:
+                        type: string
+                      last_checkin_message:
+                        type: string
+                      last_checkin_status:
+                        enum:
+                        - error
+                        - online
+                        - degraded
+                        - updating
+                        - starting
+                        - disconnected
+                        type: string
+                      last_known_status:
+                        enum:
+                        - offline
+                        - error
+                        - online
+                        - inactive
+                        - enrolling
+                        - unenrolling
+                        - unenrolled
+                        - updating
+                        - degraded
+                        - uninstalled
+                        - orphaned
+                        type: string
+                      local_metadata:
+                        additionalProperties: {}
+                        type: object
+                      metrics:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          cpu_avg:
+                            type: number
+                          memory_size_byte_avg:
+                            type: number
+                      namespaces:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      non_identifying_attributes:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      outputs:
+                        additionalProperties:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            api_key_id:
+                              type: string
+                            to_retire_api_key_ids:
+                              items:
+                                additionalProperties: false
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  retired_at:
+                                    type: string
+                                required:
+                                - id
+                                - retired_at
+                              maxItems: 100
+                              type: array
+                            type:
+                              type: string
+                        type: object
+                      packages:
+                        items:
+                          type: string
+                        maxItems: 10000
+                        type: array
+                      pipeline_config:
+                        maxLength: 10000
+                        type: string
+                      policy_base_id:
+                        type: string
+                      policy_id:
+                        type: string
+                      policy_revision:
+                        type:
+                        - number
+                        - 'null'
+                      sequence_num:
+                        type: number
+                      signals:
+                        items:
+                          type: string
+                        maxItems: 50
+                        type: array
+                      sort:
+                        items: {}
+                        maxItems: 10
+                        type: array
+                      status:
+                        enum:
+                        - offline
+                        - error
+                        - online
+                        - inactive
+                        - enrolling
+                        - unenrolling
+                        - unenrolled
+                        - updating
+                        - degraded
+                        - uninstalled
+                        - orphaned
+                        type: string
+                      tags:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      type:
+                        enum:
+                        - PERMANENT
+                        - EPHEMERAL
+                        - TEMPORARY
+                        - OPAMP
+                        type: string
+                      unenrolled_at:
+                        type: string
+                      unenrollment_started_at:
+                        type: string
+                      unhealthy_reason:
+                        items:
+                          enum:
+                          - input
+                          - output
+                          - other
+                          type: string
+                        maxItems: 3
+                        type:
+                        - array
+                        - 'null'
+                      upgrade:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          rollbacks:
+                            items:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                valid_until:
+                                  type: string
+                                version:
+                                  type: string
+                              required:
+                              - valid_until
+                              - version
+                            maxItems: 100
+                            type: array
+                      upgrade_attempts:
+                        items:
+                          type: string
+                        maxItems: 10000
+                        type:
+                        - array
+                        - 'null'
+                      upgrade_details:
+                        additionalProperties: false
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          action_id:
+                            type: string
+                          metadata:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              download_percent:
+                                type: number
+                              download_rate:
+                                type: number
+                              error_msg:
+                                type: string
+                              failed_state:
+                                enum:
+                                - UPG_REQUESTED
+                                - UPG_SCHEDULED
+                                - UPG_DOWNLOADING
+                                - UPG_EXTRACTING
+                                - UPG_REPLACING
+                                - UPG_RESTARTING
+                                - UPG_FAILED
+                                - UPG_WATCHING
+                                - UPG_ROLLBACK
+                                type: string
+                              reason:
+                                type: string
+                              retry_error_msg:
+                                type: string
+                              retry_until:
+                                type: string
+                              scheduled_at:
+                                type: string
+                          state:
+                            enum:
+                            - UPG_REQUESTED
+                            - UPG_SCHEDULED
+                            - UPG_DOWNLOADING
+                            - UPG_EXTRACTING
+                            - UPG_REPLACING
+                            - UPG_RESTARTING
+                            - UPG_FAILED
+                            - UPG_WATCHING
+                            - UPG_ROLLBACK
+                            type: string
+                          target_version:
+                            type: string
+                        required:
+                        - target_version
+                        - action_id
+                        - state
+                      upgrade_started_at:
+                        type:
+                        - string
+                        - 'null'
+                      upgraded_at:
+                        type:
+                        - string
+                        - 'null'
+                      user_provided_metadata:
+                        additionalProperties: {}
+                        type: object
+                    required:
+                    - id
+                    - packages
+                    - type
+                    - active
+                    - enrolled_at
+                    - local_metadata
+                    - effective_config
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No agent was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Agent agent-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Get an agent
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update an agent by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: put-fleet-agents-agentid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putAgentRequestExample:
+                description: Update agent tags
+                value:
+                  tags:
+                  - production
+                  - linux
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                tags:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+                user_provided_metadata:
+                  additionalProperties: {}
+                  type: object
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putAgentExample:
+                  description: Updated agent details
+                  value:
+                    item:
+                      active: true
+                      enrolled_at: '2024-01-01T00:00:00.000Z'
+                      id: agent-id-1
+                      policy_id: agent-policy-id-1
+                      policy_revision: 1
+                      status: online
+                      tags:
+                      - production
+                      - linux
+                      type: PERMANENT
+                      updated_at: '2024-01-01T00:00:00.000Z'
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      access_api_key:
+                        type: string
+                      access_api_key_id:
+                        type: string
+                      active:
+                        type: boolean
+                      agent:
+                        additionalProperties: true
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          type:
+                            type: string
+                          version:
+                            type: string
+                        required:
+                        - id
+                        - version
+                      audit_unenrolled_reason:
+                        type: string
+                      capabilities:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      components:
+                        items:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            message:
+                              type: string
+                            status:
+                              enum:
+                              - STARTING
+                              - CONFIGURING
+                              - HEALTHY
+                              - DEGRADED
+                              - FAILED
+                              - STOPPING
+                              - STOPPED
+                              type: string
+                            type:
+                              type: string
+                            units:
+                              items:
+                                additionalProperties: false
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  message:
+                                    type: string
+                                  payload:
+                                    additionalProperties: {}
+                                    type: object
+                                  status:
+                                    enum:
+                                    - STARTING
+                                    - CONFIGURING
+                                    - HEALTHY
+                                    - DEGRADED
+                                    - FAILED
+                                    - STOPPING
+                                    - STOPPED
+                                    type: string
+                                  type:
+                                    enum:
+                                    - input
+                                    - output
+                                    - ''
+                                    type: string
+                                required:
+                                - id
+                                - type
+                                - status
+                                - message
+                              maxItems: 10000
+                              type: array
+                          required:
+                          - id
+                          - type
+                          - status
+                          - message
+                        maxItems: 10000
+                        type: array
+                      default_api_key:
+                        type: string
+                      default_api_key_history:
+                        items:
+                          additionalProperties: false
+                          deprecated: true
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            retired_at:
+                              type: string
+                          required:
+                          - id
+                          - retired_at
+                        maxItems: 100
+                        type: array
+                      default_api_key_id:
+                        type: string
+                      effective_config: {}
+                      enrolled_at:
+                        type: string
+                      health:
+                        additionalProperties: {}
+                        type: object
+                      id:
+                        type: string
+                      identifying_attributes:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      last_checkin:
+                        type: string
+                      last_checkin_message:
+                        type: string
+                      last_checkin_status:
+                        enum:
+                        - error
+                        - online
+                        - degraded
+                        - updating
+                        - starting
+                        - disconnected
+                        type: string
+                      last_known_status:
+                        enum:
+                        - offline
+                        - error
+                        - online
+                        - inactive
+                        - enrolling
+                        - unenrolling
+                        - unenrolled
+                        - updating
+                        - degraded
+                        - uninstalled
+                        - orphaned
+                        type: string
+                      local_metadata:
+                        additionalProperties: {}
+                        type: object
+                      metrics:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          cpu_avg:
+                            type: number
+                          memory_size_byte_avg:
+                            type: number
+                      namespaces:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      non_identifying_attributes:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      outputs:
+                        additionalProperties:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            api_key_id:
+                              type: string
+                            to_retire_api_key_ids:
+                              items:
+                                additionalProperties: false
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  retired_at:
+                                    type: string
+                                required:
+                                - id
+                                - retired_at
+                              maxItems: 100
+                              type: array
+                            type:
+                              type: string
+                        type: object
+                      packages:
+                        items:
+                          type: string
+                        maxItems: 10000
+                        type: array
+                      pipeline_config:
+                        maxLength: 10000
+                        type: string
+                      policy_base_id:
+                        type: string
+                      policy_id:
+                        type: string
+                      policy_revision:
+                        type:
+                        - number
+                        - 'null'
+                      sequence_num:
+                        type: number
+                      signals:
+                        items:
+                          type: string
+                        maxItems: 50
+                        type: array
+                      sort:
+                        items: {}
+                        maxItems: 10
+                        type: array
+                      status:
+                        enum:
+                        - offline
+                        - error
+                        - online
+                        - inactive
+                        - enrolling
+                        - unenrolling
+                        - unenrolled
+                        - updating
+                        - degraded
+                        - uninstalled
+                        - orphaned
+                        type: string
+                      tags:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      type:
+                        enum:
+                        - PERMANENT
+                        - EPHEMERAL
+                        - TEMPORARY
+                        - OPAMP
+                        type: string
+                      unenrolled_at:
+                        type: string
+                      unenrollment_started_at:
+                        type: string
+                      unhealthy_reason:
+                        items:
+                          enum:
+                          - input
+                          - output
+                          - other
+                          type: string
+                        maxItems: 3
+                        type:
+                        - array
+                        - 'null'
+                      upgrade:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          rollbacks:
+                            items:
+                              additionalProperties: false
+                              type: object
+                              properties:
+                                valid_until:
+                                  type: string
+                                version:
+                                  type: string
+                              required:
+                              - valid_until
+                              - version
+                            maxItems: 100
+                            type: array
+                      upgrade_attempts:
+                        items:
+                          type: string
+                        maxItems: 10000
+                        type:
+                        - array
+                        - 'null'
+                      upgrade_details:
+                        additionalProperties: false
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          action_id:
+                            type: string
+                          metadata:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              download_percent:
+                                type: number
+                              download_rate:
+                                type: number
+                              error_msg:
+                                type: string
+                              failed_state:
+                                enum:
+                                - UPG_REQUESTED
+                                - UPG_SCHEDULED
+                                - UPG_DOWNLOADING
+                                - UPG_EXTRACTING
+                                - UPG_REPLACING
+                                - UPG_RESTARTING
+                                - UPG_FAILED
+                                - UPG_WATCHING
+                                - UPG_ROLLBACK
+                                type: string
+                              reason:
+                                type: string
+                              retry_error_msg:
+                                type: string
+                              retry_until:
+                                type: string
+                              scheduled_at:
+                                type: string
+                          state:
+                            enum:
+                            - UPG_REQUESTED
+                            - UPG_SCHEDULED
+                            - UPG_DOWNLOADING
+                            - UPG_EXTRACTING
+                            - UPG_REPLACING
+                            - UPG_RESTARTING
+                            - UPG_FAILED
+                            - UPG_WATCHING
+                            - UPG_ROLLBACK
+                            type: string
+                          target_version:
+                            type: string
+                        required:
+                        - target_version
+                        - action_id
+                        - state
+                      upgrade_started_at:
+                        type:
+                        - string
+                        - 'null'
+                      upgraded_at:
+                        type:
+                        - string
+                        - 'null'
+                      user_provided_metadata:
+                        additionalProperties: {}
+                        type: object
+                    required:
+                    - id
+                    - packages
+                    - type
+                    - active
+                    - enrolled_at
+                    - local_metadata
+                    - effective_config
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundExample:
+                  description: No agent was found with the given ID
+                  value:
+                    error: Not Found
+                    message: Agent agent-id-1 not found
+                    statusCode: 404
+          description: Not Found
+      summary: Update an agent by ID
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/effective_config:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/effective_config</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get an agent''s effective config by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-agentid-effective-config
+      parameters:
+      - description: The agent ID to get effective config of
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    effective_config: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  effective_config: {}
+                required:
+                - effective_config
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Get an agent's effective config
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/migrate:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/migrate</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Migrate a single agent to another cluster.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-migrate
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postMigrateAgentRequestExample:
+                description: Migrate a single agent to another cluster
+                value:
+                  enrollment_token: enrollment-token-value
+                  settings:
+                    retry_max: 5
+                  uri: https://fleet-server.example.com:8220
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                enrollment_token:
+                  type: string
+                settings:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    ca_sha256:
+                      type: string
+                    certificate_authorities:
+                      type: string
+                    elastic_agent_cert:
+                      type: string
+                    elastic_agent_cert_key:
+                      type: string
+                    elastic_agent_cert_key_passphrase:
+                      type: string
+                    headers:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    insecure:
+                      type: boolean
+                    proxy_disabled:
+                      type: boolean
+                    proxy_headers:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    proxy_url:
+                      type: string
+                    replace_token:
+                      type: string
+                    staging:
+                      type: string
+                    tags:
+                      items:
+                        type: string
+                      maxItems: 10
+                      type: array
+                uri:
+                  format: uri
+                  type: string
+              required:
+              - uri
+              - enrollment_token
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postMigrateAgentExample:
+                  description: Agent migration initiated
+                  value:
+                    actionId: action-id-1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  actionId:
+                    type: string
+                required:
+                - actionId
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Migrate a single agent
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/privilege_level_change:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/privilege_level_change</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Change the privilege level of a single agent to unprivileged.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-privilege-level-change
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID to change privilege level for
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              changeAgentPrivilegeLevelRequest:
+                value:
+                  user_info:
+                    groupname: groupname
+                    password: password
+                    username: username
+            schema:
+              additionalProperties: false
+              default: null
+              type:
+              - object
+              - 'null'
+              properties:
+                user_info:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    groupname:
+                      type: string
+                    password:
+                      type: string
+                    username:
+                      type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    actionId: actionId
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_action_id_response'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_action_message_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Change agent privilege level
+      tags:
+      - Elastic Agents
+      x-state: Experimental; added in 9.3.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/uploads:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/uploads</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of files uploaded by a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-agentid-uploads
+      parameters:
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAgentUploadsExample:
+                  description: List of files uploaded by the agent
+                  value:
+                    items:
+                    - actionId: action-id-1
+                      createTime: '2024-01-01T00:00:00.000Z'
+                      filePath: /tmp/diagnostics-2024-01-01.zip
+                      id: file-id-1
+                      name: diagnostics-2024-01-01.zip
+                      status: READY
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        actionId:
+                          type: string
+                        createTime:
+                          type: string
+                        error:
+                          type: string
+                        filePath:
+                          type: string
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        status:
+                          enum:
+                          - READY
+                          - AWAITING_UPLOAD
+                          - DELETED
+                          - EXPIRED
+                          - IN_PROGRESS
+                          - FAILED
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - filePath
+                      - createTime
+                      - status
+                      - actionId
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get agent uploads
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/available_versions:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/available_versions</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of Elastic Agent versions available for upgrade.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-available-versions
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAvailableVersionsExample:
+                  description: List of available agent versions for upgrade
+                  value:
+                    items:
+                    - 8.17.0
+                    - 8.16.3
+                    - 8.16.2
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get available agent versions
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_migrate:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_migrate</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Bulk migrate agents to another cluster.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-migrate
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkMigrateAgentsRequestExample:
+                description: Migrate multiple agents to another cluster
+                value:
+                  agents:
+                  - agent-id-1
+                  - agent-id-2
+                  enrollment_token: enrollment-token-value
+                  settings:
+                    retry_max: 5
+                  uri: https://fleet-server.example.com:8220
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                enrollment_token:
+                  type: string
+                settings:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    ca_sha256:
+                      type: string
+                    certificate_authorities:
+                      type: string
+                    elastic_agent_cert:
+                      type: string
+                    elastic_agent_cert_key:
+                      type: string
+                    elastic_agent_cert_key_passphrase:
+                      type: string
+                    headers:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    insecure:
+                      type: boolean
+                    proxy_disabled:
+                      type: boolean
+                    proxy_headers:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    proxy_url:
+                      type: string
+                    staging:
+                      type: string
+                    tags:
+                      items:
+                        type: string
+                      maxItems: 10
+                      type: array
+                uri:
+                  format: uri
+                  type: string
+              required:
+              - agents
+              - uri
+              - enrollment_token
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkMigrateAgentsExample:
+                  description: Bulk agent migration initiated
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Migrate multiple agents
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_privilege_level_change:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_privilege_level_change</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Change multiple agents'' privilege level to unprivileged.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-privilege-level-change
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkChangeAgentPrivilegeLevelRequest:
+                value:
+                  agents: agent
+                  user_info:
+                    groupname: groupname
+                    password: password
+                    username: username
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                user_info:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    groupname:
+                      type: string
+                    password:
+                      type: string
+                    username:
+                      type: string
+              required:
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    actionId: actionId
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Bulk change agent privilege level
+      tags:
+      - Elastic Agents
+      x-state: Experimental; added in 9.3.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/files/{fileId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/files/{fileId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a file uploaded by an agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: delete-fleet-agents-files-fileid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the uploaded file
+        in: path
+        name: fileId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteAgentUploadFileExample:
+                  description: Uploaded file successfully deleted
+                  value:
+                    deleted: true
+                    id: file-id-1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                  id:
+                    type: string
+                required:
+                - id
+                - deleted
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Delete an uploaded file
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/files/{fileId}/{fileName}:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/files/{fileId}/{fileName}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a file uploaded by an agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-files-fileid-filename
+      parameters:
+      - description: The ID of the uploaded file
+        in: path
+        name: fileId
+        required: true
+        schema:
+          type: string
+      - description: The name of the uploaded file
+        in: path
+        name: fileName
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAgentUploadFileExample:
+                  description: The uploaded file content as a stream
+                  value: <binary file content>
+              schema:
+                type: object
+          description: Successful response — returns the uploaded file content
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get an uploaded file
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/setup:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/setup</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the current Fleet setup status, including whether Fleet is ready to enroll agents and which requirements or optional features are missing.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read OR fleet-agent-policies-read OR fleet-settings-read OR fleet-setup.'
+      operationId: get-fleet-agents-setup
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                agentsSetupNotReadyExample:
+                  description: Fleet is not ready — a Fleet Server and API keys are required
+                  value:
+                    is_action_secrets_storage_enabled: false
+                    is_secrets_storage_enabled: false
+                    is_space_awareness_enabled: false
+                    is_ssl_secrets_storage_enabled: false
+                    isReady: false
+                    missing_optional_features:
+                    - encrypted_saved_object_encryption_key_required
+                    missing_requirements:
+                    - fleet_server
+                    - api_keys
+                agentsSetupReadyExample:
+                  description: Fleet is ready to enroll agents — all requirements are met
+                  value:
+                    is_action_secrets_storage_enabled: true
+                    is_secrets_storage_enabled: true
+                    is_space_awareness_enabled: false
+                    is_ssl_secrets_storage_enabled: false
+                    isReady: true
+                    missing_optional_features: []
+                    missing_requirements: []
+                    package_verification_key_id: D88DB4CC
+              schema:
+                additionalProperties: false
+                description: A summary of the agent setup status. `isReady` indicates whether the setup is ready. If the setup is not ready, `missing_requirements` lists which requirements are missing.
+                type: object
+                properties:
+                  is_action_secrets_storage_enabled:
+                    type: boolean
+                  is_secrets_storage_enabled:
+                    type: boolean
+                  is_space_awareness_enabled:
+                    type: boolean
+                  is_ssl_secrets_storage_enabled:
+                    type: boolean
+                  isReady:
+                    type: boolean
+                  missing_optional_features:
+                    items:
+                      enum:
+                      - encrypted_saved_object_encryption_key_required
+                      type: string
+                    maxItems: 1
+                    type: array
+                  missing_requirements:
+                    items:
+                      enum:
+                      - security_required
+                      - tls_required
+                      - api_keys
+                      - fleet_admin_user
+                      - fleet_server
+                      type: string
+                    maxItems: 5
+                    type: array
+                  package_verification_key_id:
+                    type: string
+                required:
+                - isReady
+                - missing_requirements
+                - missing_optional_features
+          description: Fleet setup status
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get agent setup info
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/setup</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Initialize Fleet. This endpoint is used by Elastic Agents to trigger Fleet setup. Safe to call multiple times; subsequent calls are idempotent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read OR fleet-agent-policies-read OR fleet-settings-read OR fleet-setup.'
+      operationId: post-fleet-agents-setup
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                agentsSetupSuccessExample:
+                  description: Fleet setup initialized successfully with no non-fatal errors
+                  value:
+                    isInitialized: true
+                    nonFatalErrors: []
+              schema:
+                additionalProperties: false
+                description: A summary of the result of Fleet's `setup` lifecycle. If `isInitialized` is true, Fleet is ready to accept agent enrollment. `nonFatalErrors` may include useful insight into non-blocking issues with Fleet setup.
+                type: object
+                properties:
+                  isInitialized:
+                    type: boolean
+                  nonFatalErrors:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - name
+                      - message
+                    maxItems: 10000
+                    type: array
+                required:
+                - isInitialized
+                - nonFatalErrors
+          description: Fleet setup completed
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Initiate Fleet setup
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/tags:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/tags</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of all tags used across enrolled agents.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-tags
+      parameters:
+      - description: A KQL query string to filter results
+        in: query
+        name: kuery
+        required: false
+        schema:
+          type: string
+      - description: When true, include tags from inactive agents
+        in: query
+        name: showInactive
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getAgentTagsExample:
+                  description: List of tags used across agents
+                  value:
+                    items:
+                    - production
+                    - linux
+                    - datacenter-1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get agent tags
+      tags:
+      - Elastic Agents
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_action_id_response:
+      additionalProperties: false
+      properties:
+        actionId:
+          type: string
+      required:
+      - actionId
+      title: action_id_response
+      type: object
+    Kibana_HTTP_APIs_action_message_response:
+      additionalProperties: false
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      title: action_message_response
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

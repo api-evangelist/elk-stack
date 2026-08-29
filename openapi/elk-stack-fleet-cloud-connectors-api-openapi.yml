@@ -1,0 +1,943 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Fleet cloud connectors API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Fleet cloud connectors
+  description: 'Fleet cloud connectors APIs enable you to manage Fleet cloud connectors, including creating, updating, and deleting cloud connector configurations for Fleet integrations.
+
+    '
+  x-displayName: Fleet cloud connectors
+paths:
+  /api/fleet/cloud_connectors:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        List all Fleet cloud connectors.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
+      operationId: get-fleet-cloud-connectors
+      parameters:
+      - description: The page number for pagination.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: The number of items per page.
+        in: query
+        name: perPage
+        required: false
+        schema:
+          type: string
+      - description: KQL query to filter cloud connectors.
+        in: query
+        name: kuery
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getCloudConnectorsExample:
+                  description: List of Fleet cloud connectors
+                  value:
+                    items:
+                    - accountType: single-account
+                      cloudProvider: aws
+                      created_at: '2024-01-15T10:00:00.000Z'
+                      id: cloud-connector-id-1
+                      name: My AWS connector
+                      packagePolicyCount: 2
+                      updated_at: '2024-01-15T10:00:00.000Z'
+                      vars: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        accountType:
+                          type: string
+                        cloudProvider:
+                          type: string
+                        created_at:
+                          type: string
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                        packagePolicyCount:
+                          type: number
+                        updated_at:
+                          type: string
+                        vars:
+                          additionalProperties: {}
+                          type: object
+                        verification_failed_at:
+                          type: string
+                        verification_started_at:
+                          type: string
+                        verification_status:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - cloudProvider
+                      - vars
+                      - packagePolicyCount
+                      - created_at
+                      - updated_at
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get cloud connectors
+      tags:
+      - Fleet cloud connectors
+      x-state: Experimental; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a new Fleet cloud connector.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
+      operationId: post-fleet-cloud-connectors
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postCloudConnectorRequestExample:
+                description: Create a new AWS cloud connector
+                value:
+                  accountType: single-account
+                  cloudProvider: aws
+                  name: My AWS connector
+                  vars: {}
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                accountType:
+                  description: 'The account type: single-account (single account/subscription) or organization-account (organization-wide).'
+                  enum:
+                  - single-account
+                  - organization-account
+                  type: string
+                cloudProvider:
+                  description: 'The cloud provider type: aws, azure, or gcp.'
+                  enum:
+                  - aws
+                  - azure
+                  - gcp
+                  type: string
+                name:
+                  description: The name of the cloud connector.
+                  maxLength: 255
+                  minLength: 1
+                  type: string
+                vars:
+                  additionalProperties:
+                    anyOf:
+                    - maxLength: 1000
+                      type: string
+                    - type: number
+                    - type: boolean
+                    - additionalProperties: false
+                      type: object
+                      properties:
+                        frozen:
+                          type: boolean
+                        type:
+                          maxLength: 50
+                          type: string
+                        value:
+                          anyOf:
+                          - maxLength: 1000
+                            type: string
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                maxLength: 255
+                                type: string
+                              isSecretRef:
+                                type: boolean
+                            required:
+                            - isSecretRef
+                            - id
+                      required:
+                      - type
+                      - value
+                  type: object
+              required:
+              - name
+              - cloudProvider
+              - vars
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postCloudConnectorExample:
+                  description: The created Fleet cloud connector
+                  value:
+                    item:
+                      accountType: single-account
+                      cloudProvider: aws
+                      created_at: '2024-01-15T10:00:00.000Z'
+                      id: cloud-connector-id-2
+                      name: My AWS connector
+                      packagePolicyCount: 0
+                      updated_at: '2024-01-15T10:00:00.000Z'
+                      vars: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      accountType:
+                        type: string
+                      cloudProvider:
+                        type: string
+                      created_at:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                      packagePolicyCount:
+                        type: number
+                      updated_at:
+                        type: string
+                      vars:
+                        additionalProperties: {}
+                        type: object
+                      verification_failed_at:
+                        type: string
+                      verification_started_at:
+                        type: string
+                      verification_status:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - cloudProvider
+                    - vars
+                    - packagePolicyCount
+                    - created_at
+                    - updated_at
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Create cloud connector
+      tags:
+      - Fleet cloud connectors
+      x-state: Experimental; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/cloud_connectors/{cloudConnectorId}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a cloud connector by ID. Use the `force` query parameter to delete even if package policies are still using it.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
+      operationId: delete-fleet-cloud-connectors-cloudconnectorid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The unique identifier of the cloud connector to delete.
+        in: path
+        name: cloudConnectorId
+        required: true
+        schema:
+          type: string
+      - description: If true, forces deletion even if the cloud connector is in use.
+        in: query
+        name: force
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteCloudConnectorExample:
+                  description: The cloud connector was successfully deleted
+                  value:
+                    id: cloud-connector-id-1
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                - id
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Delete cloud connector (supports force deletion)
+      tags:
+      - Fleet cloud connectors
+      x-state: Experimental; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a cloud connector by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
+      operationId: get-fleet-cloud-connectors-cloudconnectorid
+      parameters:
+      - description: The unique identifier of the cloud connector.
+        in: path
+        name: cloudConnectorId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getCloudConnectorExample:
+                  description: A Fleet cloud connector
+                  value:
+                    item:
+                      accountType: single-account
+                      cloudProvider: aws
+                      created_at: '2024-01-15T10:00:00.000Z'
+                      id: cloud-connector-id-1
+                      name: My AWS connector
+                      packagePolicyCount: 2
+                      updated_at: '2024-01-15T10:00:00.000Z'
+                      vars: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      accountType:
+                        type: string
+                      cloudProvider:
+                        type: string
+                      created_at:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                      packagePolicyCount:
+                        type: number
+                      updated_at:
+                        type: string
+                      vars:
+                        additionalProperties: {}
+                        type: object
+                      verification_failed_at:
+                        type: string
+                      verification_started_at:
+                        type: string
+                      verification_status:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - cloudProvider
+                    - vars
+                    - packagePolicyCount
+                    - created_at
+                    - updated_at
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get cloud connector
+      tags:
+      - Fleet cloud connectors
+      x-state: Experimental; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Update a cloud connector by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
+      operationId: put-fleet-cloud-connectors-cloudconnectorid
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The unique identifier of the cloud connector to update.
+        in: path
+        name: cloudConnectorId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putCloudConnectorRequestExample:
+                description: Update a Fleet cloud connector
+                value:
+                  name: Updated AWS connector
+                  vars: {}
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                accountType:
+                  description: 'The account type: single-account (single account/subscription) or organization-account (organization-wide).'
+                  enum:
+                  - single-account
+                  - organization-account
+                  type: string
+                name:
+                  description: The name of the cloud connector.
+                  maxLength: 255
+                  minLength: 1
+                  type: string
+                vars:
+                  additionalProperties:
+                    anyOf:
+                    - maxLength: 1000
+                      type: string
+                    - type: number
+                    - type: boolean
+                    - additionalProperties: false
+                      type: object
+                      properties:
+                        frozen:
+                          type: boolean
+                        type:
+                          maxLength: 50
+                          type: string
+                        value:
+                          anyOf:
+                          - maxLength: 1000
+                            type: string
+                          - additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                maxLength: 255
+                                type: string
+                              isSecretRef:
+                                type: boolean
+                            required:
+                            - isSecretRef
+                            - id
+                      required:
+                      - type
+                      - value
+                  type: object
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                putCloudConnectorExample:
+                  description: The updated Fleet cloud connector
+                  value:
+                    item:
+                      accountType: single-account
+                      cloudProvider: aws
+                      created_at: '2024-01-15T10:00:00.000Z'
+                      id: cloud-connector-id-1
+                      name: Updated AWS connector
+                      packagePolicyCount: 2
+                      updated_at: '2024-01-15T11:00:00.000Z'
+                      vars: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      accountType:
+                        type: string
+                      cloudProvider:
+                        type: string
+                      created_at:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                      packagePolicyCount:
+                        type: number
+                      updated_at:
+                        type: string
+                      vars:
+                        additionalProperties: {}
+                        type: object
+                      verification_failed_at:
+                        type: string
+                      verification_started_at:
+                        type: string
+                      verification_status:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - cloudProvider
+                    - vars
+                    - packagePolicyCount
+                    - created_at
+                    - updated_at
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Update cloud connector
+      tags:
+      - Fleet cloud connectors
+      x-state: Experimental; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/cloud_connectors/{cloudConnectorId}/usage:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}/usage</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of package policies that are using a given cloud connector.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
+      operationId: get-fleet-cloud-connectors-cloudconnectorid-usage
+      parameters:
+      - description: The unique identifier of the cloud connector.
+        in: path
+        name: cloudConnectorId
+        required: true
+        schema:
+          type: string
+      - description: The page number for pagination.
+        in: query
+        name: page
+        required: false
+        schema:
+          minimum: 1
+          type: number
+      - description: The number of items per page.
+        in: query
+        name: perPage
+        required: false
+        schema:
+          minimum: 1
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getCloudConnectorUsageResponseExample:
+                  description: Example response showing package policies using the cloud connector
+                  value:
+                    items:
+                    - created_at: '2025-01-16T09:00:00.000Z'
+                      id: package-policy-1
+                      name: CSPM AWS Policy
+                      package:
+                        name: cloud_security_posture
+                        title: Cloud Security Posture Management
+                        version: 3.1.1
+                      policy_ids:
+                      - policy-id-123
+                      - policy-id-456
+                      updated_at: '2025-01-16T09:00:00.000Z'
+                    page: 1
+                    perPage: 20
+                    total: 2
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        created_at:
+                          type: string
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        package:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            title:
+                              type: string
+                            version:
+                              type: string
+                          required:
+                          - name
+                          - title
+                          - version
+                        policy_ids:
+                          items:
+                            type: string
+                          maxItems: 10000
+                          type: array
+                        updated_at:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - policy_ids
+                      - created_at
+                      - updated_at
+                    maxItems: 10000
+                    type: array
+                  page:
+                    type: number
+                  perPage:
+                    type: number
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                - page
+                - perPage
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: Cloud connector not found
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Get cloud connector usage (package policies using the connector)
+      tags:
+      - Fleet cloud connectors
+      x-state: Experimental; added in 9.2.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

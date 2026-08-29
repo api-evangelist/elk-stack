@@ -1,0 +1,673 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana APM sourcemaps API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- description: 'Configure APM source maps. A source map allows minified files to be mapped back to original source code--allowing you to maintain the speed advantage of minified code, without losing the ability to quickly and easily debug your application.
+
+    For best results, uploading source maps should become a part of your deployment procedure, and not something you only do when you see unhelpful errors. That''s because uploading source maps after errors happen won''t make old errors magically readable--errors must occur again for source mapping to occur.
+
+    '
+  name: APM sourcemaps
+paths:
+  /api/apm/sourcemaps:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/apm/sourcemaps</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get an array of Fleet artifacts, including source map uploads. You must have `read` or `all` Kibana privileges for the APM and User Experience feature.
+
+        '
+      operationId: getSourceMaps
+      parameters:
+      - $ref: '#/components/parameters/APM_UI_elastic_api_version'
+      - description: Page number
+        in: query
+        name: page
+        schema:
+          type: number
+      - description: Number of records per page
+        in: query
+        name: perPage
+        schema:
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSourceMapsResponse1:
+                  $ref: '#/components/examples/APM_UI_source_maps_get_200_response1'
+              schema:
+                $ref: '#/components/schemas/APM_UI_source_maps_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  $ref: '#/components/examples/APM_UI_error_400_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_400_response'
+          description: Bad Request response
+        '401':
+          content:
+            application/json:
+              examples:
+                unauthorizedResponse:
+                  $ref: '#/components/examples/APM_UI_error_401_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_401_response'
+          description: Unauthorized response
+        '500':
+          content:
+            application/json:
+              examples:
+                internalServerErrorResponse:
+                  $ref: '#/components/examples/APM_UI_error_500_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_500_response'
+          description: Internal Server Error response
+        '501':
+          content:
+            application/json:
+              examples:
+                notImplementedResponse:
+                  $ref: '#/components/examples/APM_UI_error_501_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_501_response'
+          description: Not Implemented response
+      summary: Get source maps
+      tags:
+      - APM sourcemaps
+      x-codeSamples:
+      - lang: Curl
+        source: 'curl -X GET "http://localhost:5601/api/apm/sourcemaps" \
+
+          -H ''Content-Type: application/json'' \
+
+          -H ''kbn-xsrf: true'' \
+
+          -H ''Authorization: ApiKey ${YOUR_API_KEY}''
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/apm/sourcemaps</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Upload a source map for a specific service and version. You must have `all` Kibana privileges for the APM and User Experience feature.
+
+        The maximum payload size is `1mb`. If you attempt to upload a source map that exceeds the maximum payload size, you will get a 413 error. Before uploading source maps that exceed this default, change the maximum payload size allowed by Kibana with the `server.maxPayload` variable.
+
+        '
+      operationId: uploadSourceMap
+      parameters:
+      - $ref: '#/components/parameters/APM_UI_elastic_api_version'
+      - $ref: '#/components/parameters/APM_UI_kbn_xsrf'
+      requestBody:
+        content:
+          multipart/form-data:
+            examples:
+              uploadSourceMapRequest:
+                $ref: '#/components/examples/APM_UI_source_maps_upload_request1'
+            schema:
+              $ref: '#/components/schemas/APM_UI_upload_source_map_object'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                uploadSourceMapResponse1:
+                  $ref: '#/components/examples/APM_UI_source_maps_upload_200_response1'
+              schema:
+                $ref: '#/components/schemas/APM_UI_upload_source_maps_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  $ref: '#/components/examples/APM_UI_error_400_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_400_response'
+          description: Bad Request response
+        '401':
+          content:
+            application/json:
+              examples:
+                unauthorizedResponse:
+                  $ref: '#/components/examples/APM_UI_error_401_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_401_response'
+          description: Unauthorized response
+        '403':
+          content:
+            application/json:
+              examples:
+                forbiddenResponse:
+                  $ref: '#/components/examples/APM_UI_error_403_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_403_response'
+          description: Forbidden response
+        '500':
+          content:
+            application/json:
+              examples:
+                internalServerErrorResponse:
+                  $ref: '#/components/examples/APM_UI_error_500_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_500_response'
+          description: Internal Server Error response
+        '501':
+          content:
+            application/json:
+              examples:
+                notImplementedResponse:
+                  $ref: '#/components/examples/APM_UI_error_501_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_501_response'
+          description: Not Implemented response
+      summary: Upload a source map
+      tags:
+      - APM sourcemaps
+      x-codeSamples:
+      - lang: Curl
+        source: "curl -X POST \"http://localhost:5601/api/apm/sourcemaps\" \\\n-H 'Content-Type: multipart/form-data' \\\n-H 'kbn-xsrf: true' \\\n-H 'Authorization: ApiKey ${YOUR_API_KEY}' \\\n-F 'service_name=\"foo\"' \\\n-F 'service_version=\"1.0.0\"' \\\n-F 'bundle_filepath=\"/test/e2e/general-usecase/bundle.js\"' \\\n-F 'sourcemap=\"{\\\"version\\\":3,\\\"file\\\":\\\"static/js/main.chunk.js\\\",\\\"sources\\\":[\\\"fleet-source-map-client/src/index.css\\\",\\\"fleet-source-map-client/src/App.js\\\",\\\"webpack:///./src/index.css?bb0a\\\",\\\"fleet-source-map-client/src/index.js\\\",\\\"fleet-source-map-client/src/reportWebVitals.js\\\"],\\\"sourcesContent\\\":[\\\"content\\\"],\\\"mappings\\\":\\\"mapping\\\",\\\"sourceRoot\\\":\\\"\\\"}\"' \n"
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/apm/sourcemaps/{id}:
+    delete:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/apm/sourcemaps/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Delete a previously uploaded source map. You must have `all` Kibana privileges for the APM and User Experience feature.
+
+        '
+      operationId: deleteSourceMap
+      parameters:
+      - $ref: '#/components/parameters/APM_UI_elastic_api_version'
+      - $ref: '#/components/parameters/APM_UI_kbn_xsrf'
+      - description: Source map identifier
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteSourceMapResponseExample1:
+                  $ref: '#/components/examples/APM_UI_source_maps_delete_200_response1'
+              schema:
+                additionalProperties: false
+                description: The response body is intentionally empty for this endpoint.
+                type: object
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  $ref: '#/components/examples/APM_UI_error_400_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_400_response'
+          description: Bad Request response
+        '401':
+          content:
+            application/json:
+              examples:
+                unauthorizedResponse:
+                  $ref: '#/components/examples/APM_UI_error_401_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_401_response'
+          description: Unauthorized response
+        '403':
+          content:
+            application/json:
+              examples:
+                forbiddenResponse:
+                  $ref: '#/components/examples/APM_UI_error_403_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_403_response'
+          description: Forbidden response
+        '500':
+          content:
+            application/json:
+              examples:
+                internalServerErrorResponse:
+                  $ref: '#/components/examples/APM_UI_error_500_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_500_response'
+          description: Internal Server Error response
+        '501':
+          content:
+            application/json:
+              examples:
+                notImplementedResponse:
+                  $ref: '#/components/examples/APM_UI_error_501_response'
+              schema:
+                $ref: '#/components/schemas/APM_UI_501_response'
+          description: Not Implemented response
+      summary: Delete source map
+      tags:
+      - APM sourcemaps
+      x-codeSamples:
+      - lang: Curl
+        source: 'curl -X DELETE "http://localhost:5601/api/apm/sourcemaps/apm:foo-1.0.0-644fd5a9" \
+
+          -H ''Content-Type: application/json'' \
+
+          -H ''kbn-xsrf: true'' \
+
+          -H ''Authorization: ApiKey ${YOUR_API_KEY}''
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    APM_UI_401_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Unauthorized
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 401
+          type: number
+    APM_UI_500_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Internal Server Error
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 500
+          type: number
+    APM_UI_source_maps_response:
+      type: object
+      properties:
+        artifacts:
+          description: Artifacts
+          items:
+            allOf:
+            - type: object
+              properties:
+                body:
+                  type: object
+                  properties:
+                    bundleFilepath:
+                      type: string
+                    serviceName:
+                      type: string
+                    serviceVersion:
+                      type: string
+                    sourceMap:
+                      type: object
+                      properties:
+                        file:
+                          type: string
+                        mappings:
+                          type: string
+                        sourceRoot:
+                          type: string
+                        sources:
+                          items:
+                            type: string
+                          type: array
+                        sourcesContent:
+                          items:
+                            type: string
+                          type: array
+                        version:
+                          type: number
+            - $ref: '#/components/schemas/APM_UI_base_source_map_object'
+          type: array
+    APM_UI_403_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Forbidden
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 403
+          type: number
+    APM_UI_upload_source_maps_response:
+      allOf:
+      - type: object
+        properties:
+          body:
+            type: string
+      - $ref: '#/components/schemas/APM_UI_base_source_map_object'
+    APM_UI_501_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Implemented
+          type: string
+        message:
+          description: Error message
+          example: Not Implemented
+          type: string
+        statusCode:
+          description: Error status code
+          example: 501
+          type: number
+    APM_UI_upload_source_map_object:
+      type: object
+      properties:
+        bundle_filepath:
+          description: The absolute path of the final bundle as used in the web application.
+          type: string
+        service_name:
+          description: The name of the service that the service map should apply to.
+          type: string
+        service_version:
+          description: The version of the service that the service map should apply to.
+          type: string
+        sourcemap:
+          description: 'The source map. It can be a string or file upload. It must follow the
+
+            [source map format specification](https://tc39.es/ecma426/).
+
+            '
+          format: binary
+          type: string
+      required:
+      - service_name
+      - service_version
+      - bundle_filepath
+      - sourcemap
+    APM_UI_base_source_map_object:
+      type: object
+      properties:
+        compressionAlgorithm:
+          description: Compression Algorithm
+          type: string
+        created:
+          description: Created date
+          type: string
+        decodedSha256:
+          description: Decoded SHA-256
+          type: string
+        decodedSize:
+          description: Decoded size
+          type: number
+        encodedSha256:
+          description: Encoded SHA-256
+          type: string
+        encodedSize:
+          description: Encoded size
+          type: number
+        encryptionAlgorithm:
+          description: Encryption Algorithm
+          type: string
+        id:
+          description: Identifier
+          type: string
+        identifier:
+          description: Identifier
+          type: string
+        packageName:
+          description: Package name
+          type: string
+        relative_url:
+          description: Relative URL
+          type: string
+        type:
+          description: Type
+          type: string
+    APM_UI_400_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Found
+          type: string
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 400
+          type: number
+  examples:
+    APM_UI_error_400_response:
+      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
+      value:
+        error: Bad Request
+        message: '[request body]: expected value of type [string] but got [undefined]'
+        statusCode: 400
+    APM_UI_source_maps_upload_200_response1:
+      description: A successful response from `POST /api/apm/sourcemaps`.
+      value:
+        body: eJyFkL1OwzAUhd/Fc+MbYMuCEBIbHRjKgBgc96R16tiWr1OQqr47NwqJxEK3q/PzWccXxchnZ7E1A1SjuhjVZtF2yOxiEPlO17oWox3D3uPFeSRTjmJQARfCPeiAgGx8NTKsYdAc1T3rwaSJGcds8Sp3c1HnhfywUZ3QhMTFFGepZxqMC9oex3CS9tpk1XyozgOlmoVKuJX1DqEQZ0su7PGtLU+V/3JPKc3cL7TJ2FNDRPov4bFta3MDM4f7W69lpJjLO9qdK8bzVPhcJz3HUCQ4LbO/p5hCSC4cZPByrp/wFqOklbpefwAhzpqI
+        compressionAlgorithm: zlib
+        created: '2021-07-09T20:47:44.812Z'
+        decodedSha256: 644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+        decodedSize: 441
+        encodedSha256: 024c72749c3e3dd411b103f7040ae62633558608f480bce4b108cf5b2275bd24
+        encodedSize: 237
+        encryptionAlgorithm: none
+        id: apm:foo-1.0.0-644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+        identifier: foo-1.0.0
+        packageName: apm
+        relative_url: /api/fleet/artifacts/foo-1.0.0/644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+        type: sourcemap
+    APM_UI_source_maps_delete_200_response1:
+      description: An example of a successful response from `DELETE /api/apm/sourcemaps/{id}`. The response body is intentionally empty.
+      value: {}
+    APM_UI_source_maps_upload_request1:
+      description: 'An example of a multipart/form-data request body for `POST /api/apm/sourcemaps`.
+
+        Each field is a separate form part; `sourcemap` is the source map file content (typically uploaded as a file).
+
+        '
+      value:
+        bundle_filepath: /test/e2e/general-usecase/bundle.js.map
+        service_name: opbeans-node
+        service_version: 1.0.0
+        sourcemap: '{"version":3,"sources":["bundle.js"],"names":[],"mappings":"AAAA","file":"bundle.js","sourcesContent":["console.log(''hello'');"]}'
+    APM_UI_source_maps_get_200_response1:
+      description: A successful response from `GET /api/apm/sourcemaps`.
+      value:
+        artifacts:
+        - body:
+            bundleFilepath: /test/e2e/general-usecase/bundle.js
+            serviceName: foo
+            serviceVersion: 1.0.0
+            sourceMap:
+              file: static/js/main.chunk.js
+              mappings: mapping
+              sourceRoot: ''
+              sources:
+              - fleet-source-map-client/src/index.css
+              - fleet-source-map-client/src/App.js
+              - webpack:///./src/index.css?bb0a
+              - fleet-source-map-client/src/index.js
+              - fleet-source-map-client/src/reportWebVitals.js
+              sourcesContent:
+              - content
+              version: 3
+          compressionAlgorithm: zlib
+          created: '2021-07-09T20:47:44.812Z'
+          decodedSha256: 644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+          decodedSize: 441
+          encodedSha256: 024c72749c3e3dd411b103f7040ae62633558608f480bce4b108cf5b2275bd24
+          encodedSize: 237
+          encryptionAlgorithm: none
+          id: apm:foo-1.0.0-644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+          identifier: foo-1.0.0
+          packageName: apm
+          relative_url: /api/fleet/artifacts/foo-1.0.0/644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+          type: sourcemap
+    APM_UI_error_500_response:
+      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
+      value:
+        error: Internal Server Error
+        message: An internal server error occurred. Check the Kibana server logs for details.
+        statusCode: 500
+    APM_UI_error_403_response:
+      description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
+      value:
+        error: Forbidden
+        message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
+        statusCode: 403
+    APM_UI_error_501_response:
+      description: An example of a 501 Not Implemented response, returned when the source map feature is not available on the current deployment.
+      value:
+        error: Not Implemented
+        message: Not Implemented
+        statusCode: 501
+    APM_UI_error_401_response:
+      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
+      value:
+        error: Unauthorized
+        message: '[security_exception]: missing authentication credentials for REST request'
+        statusCode: 401
+  parameters:
+    APM_UI_elastic_api_version:
+      description: The version of the API to use
+      in: header
+      name: elastic-api-version
+      required: true
+      schema:
+        default: '2023-10-31'
+        enum:
+        - '2023-10-31'
+        type: string
+    APM_UI_kbn_xsrf:
+      description: A required header to protect against CSRF attacks
+      in: header
+      name: kbn-xsrf
+      required: true
+      schema:
+        example: 'true'
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

@@ -1,0 +1,1967 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Elastic Agent actions API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Elastic Agent actions
+  description: 'Elastic Agent actions APIs enable you to manage actions performed on Elastic Agents, including agent reassignment, diagnostics collection, enrollment management, upgrades, and bulk operations for agent lifecycle management.
+
+    '
+  x-displayName: Elastic Agent actions
+paths:
+  /api/fleet/agents/{agentId}/actions:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/actions</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create a new action for a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-actions
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postAgentActionRequestExample:
+                description: Create a UNENROLL action for an agent
+                value:
+                  action:
+                    type: UNENROLL
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                action:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      ack_data: {}
+                      data: {}
+                      type:
+                        enum:
+                        - UNENROLL
+                        - UPGRADE
+                        - POLICY_REASSIGN
+                        type: string
+                    required:
+                    - type
+                    - data
+                    - ack_data
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      data:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          log_level:
+                            default: null
+                            enum:
+                            - debug
+                            - info
+                            - warning
+                            - error
+                            - null
+                            type:
+                            - string
+                            - 'null'
+                      type:
+                        enum:
+                        - SETTINGS
+                        type: string
+                    required:
+                    - type
+                    - data
+              required:
+              - action
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postAgentActionExample:
+                  description: Created agent action
+                  value:
+                    item:
+                      agents:
+                      - agent-id-1
+                      created_at: '2024-01-01T00:00:00.000Z'
+                      id: action-id-1
+                      type: UNENROLL
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      ack_data: {}
+                      agents:
+                        items:
+                          type: string
+                        maxItems: 10000
+                        type: array
+                      created_at:
+                        type: string
+                      data: {}
+                      expiration:
+                        type: string
+                      id:
+                        type: string
+                      minimum_execution_duration:
+                        type: number
+                      namespaces:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      rollout_duration_seconds:
+                        type: number
+                      sent_at:
+                        type: string
+                      source_uri:
+                        type: string
+                      start_time:
+                        type: string
+                      total:
+                        type: number
+                      type:
+                        type: string
+                    required:
+                    - id
+                    - type
+                    - data
+                    - created_at
+                    - ack_data
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Create an agent action
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/reassign:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/reassign</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Reassign an agent to a different agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-reassign
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postReassignAgentRequestExample:
+                description: Reassign an agent to a different policy
+                value:
+                  policy_id: agent-policy-id-2
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                policy_id:
+                  type: string
+              required:
+              - policy_id
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postReassignAgentExample:
+                  description: Agent successfully reassigned
+                  value: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties: {}
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Reassign an agent
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/remove_collector:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/remove_collector</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Remove a specific OpAMP collector from the Fleet agents list. Marks the collector as unenrolled. This action does not invalidate API keys, so the collector can reconnect on its own.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-remove-collector
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The collector agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postRemoveCollectorExample:
+                  description: Collector successfully removed
+                  value: {}
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+          description: Bad Request
+      summary: Remove an OpAMP collector
+      tags:
+      - Elastic Agent actions
+      x-state: Experimental; added in 9.5.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/request_diagnostics:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/request_diagnostics</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Request a diagnostics bundle from a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: post-fleet-agents-agentid-request-diagnostics
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postRequestDiagnosticsRequestExample:
+                description: Request a diagnostics bundle from an agent
+                value:
+                  additional_metrics:
+                  - CPU
+            schema:
+              additionalProperties: false
+              default: null
+              type:
+              - object
+              - 'null'
+              properties:
+                additional_metrics:
+                  items:
+                    enum:
+                    - CPU
+                    type: string
+                  maxItems: 1
+                  type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postRequestDiagnosticsExample:
+                  description: Diagnostics action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: Agent agent-id-1 does not support request diagnostics action.
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Request agent diagnostics
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/rollback:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/rollback</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Rollback an agent to the previous version.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-rollback
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID to rollback
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    actionId: actionId
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_action_id_response'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_action_message_response'
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Rollback an agent
+      tags:
+      - Elastic Agent actions
+      x-state: Experimental; added in 9.4.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/unenroll:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/unenroll</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Unenroll a specific agent, optionally revoking its enrollment API key.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-unenroll
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postUnenrollAgentRequestExample:
+                description: Unenroll an agent, optionally revoking the enrollment API key
+                value:
+                  revoke: false
+            schema:
+              additionalProperties: false
+              default: null
+              type:
+              - object
+              - 'null'
+              properties:
+                force:
+                  type: boolean
+                revoke:
+                  type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postUnenrollAgentExample:
+                  description: Agent successfully unenrolled
+                  value: {}
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+          description: Bad Request
+      summary: Unenroll an agent
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/{agentId}/upgrade:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/upgrade</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Upgrade a specific agent to a newer version.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-agentid-upgrade
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The agent ID
+        in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postUpgradeAgentRequestExample:
+                description: Upgrade an agent to a specific version
+                value:
+                  version: 8.17.0
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                force:
+                  type: boolean
+                skipRateLimitCheck:
+                  type: boolean
+                source_uri:
+                  type: string
+                version:
+                  type: string
+              required:
+              - version
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postUpgradeAgentExample:
+                  description: Agent upgrade initiated
+                  value: {}
+              schema:
+                additionalProperties: false
+                type: object
+                properties: {}
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Upgrade an agent
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/action_status:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/action_status</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the current status of recent agent actions.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: get-fleet-agents-action-status
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: Number of results per page
+        in: query
+        name: perPage
+        required: false
+        schema:
+          default: 20
+          type: number
+      - description: Return actions created before this date
+        in: query
+        name: date
+        required: false
+        schema:
+          type: string
+      - description: Return only the latest N actions
+        in: query
+        name: latest
+        required: false
+        schema:
+          type: number
+      - description: Return only actions whose start_time is in the future
+        in: query
+        name: scheduledOnly
+        required: false
+        schema:
+          type: boolean
+      - description: Number of error details to include per action
+        in: query
+        name: errorSize
+        required: false
+        schema:
+          default: 5
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getActionStatusExample:
+                  description: Status of recent agent actions
+                  value:
+                    items:
+                    - actionId: action-id-1
+                      completionTime: '2024-01-01T00:05:00.000Z'
+                      creationTime: '2024-01-01T00:00:00.000Z'
+                      nbAgentsAck: 2
+                      nbAgentsActioned: 2
+                      nbAgentsFailed: 0
+                      status: COMPLETE
+                      type: UPGRADE
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  items:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        actionId:
+                          type: string
+                        cancellationTime:
+                          type: string
+                        completionTime:
+                          type: string
+                        creationTime:
+                          description: creation time of action
+                          type: string
+                        expiration:
+                          type: string
+                        hasRolloutPeriod:
+                          type: boolean
+                        is_automatic:
+                          type: boolean
+                        latestErrors:
+                          items:
+                            additionalProperties: false
+                            description: latest errors that happened when the agents executed the action
+                            type: object
+                            properties:
+                              agentId:
+                                type: string
+                              error:
+                                type: string
+                              hostname:
+                                type: string
+                              timestamp:
+                                type: string
+                            required:
+                            - agentId
+                            - error
+                            - timestamp
+                          maxItems: 10
+                          type: array
+                        nbAgentsAck:
+                          description: number of agents that acknowledged the action
+                          type: number
+                        nbAgentsActionCreated:
+                          description: number of agents included in action from kibana
+                          type: number
+                        nbAgentsActioned:
+                          description: number of agents actioned
+                          type: number
+                        nbAgentsFailed:
+                          description: number of agents that failed to execute the action
+                          type: number
+                        newPolicyId:
+                          description: new policy id (POLICY_REASSIGN action)
+                          type: string
+                        policyId:
+                          description: policy id (POLICY_CHANGE action)
+                          type: string
+                        revision:
+                          description: new policy revision (POLICY_CHANGE action)
+                          type: number
+                        startTime:
+                          description: start time of action (scheduled actions)
+                          type: string
+                        status:
+                          enum:
+                          - COMPLETE
+                          - EXPIRED
+                          - CANCELLED
+                          - FAILED
+                          - IN_PROGRESS
+                          - ROLLOUT_PASSED
+                          type: string
+                        type:
+                          enum:
+                          - UPGRADE
+                          - UNENROLL
+                          - SETTINGS
+                          - POLICY_REASSIGN
+                          - CANCEL
+                          - FORCE_UNENROLL
+                          - REQUEST_DIAGNOSTICS
+                          - UPDATE_TAGS
+                          - POLICY_CHANGE
+                          - INPUT_ACTION
+                          - MIGRATE
+                          - PRIVILEGE_LEVEL_CHANGE
+                          - ROLLBACK
+                          - REMOVE_COLLECTOR
+                          type: string
+                        version:
+                          description: agent version number (UPGRADE action)
+                          type: string
+                      required:
+                      - actionId
+                      - nbAgentsActionCreated
+                      - nbAgentsAck
+                      - nbAgentsFailed
+                      - type
+                      - nbAgentsActioned
+                      - status
+                      - creationTime
+                    maxItems: 10000
+                    type: array
+                required:
+                - items
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get an agent action status
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/actions/{actionId}/cancel:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/actions/{actionId}/cancel</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Cancel a pending action for a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-actions-actionid-cancel
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The ID of the action to cancel
+        in: path
+        name: actionId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postCancelActionRequestExample:
+                description: Cancel an agent action
+                value: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postCancelActionExample:
+                  description: Cancellation action created
+                  value:
+                    item:
+                      agents:
+                      - agent-id-1
+                      created_at: '2024-01-01T00:00:00.000Z'
+                      id: cancel-action-id-1
+                      type: CANCEL
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  item:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      ack_data: {}
+                      agents:
+                        items:
+                          type: string
+                        maxItems: 10000
+                        type: array
+                      created_at:
+                        type: string
+                      data: {}
+                      expiration:
+                        type: string
+                      id:
+                        type: string
+                      minimum_execution_duration:
+                        type: number
+                      namespaces:
+                        items:
+                          type: string
+                        maxItems: 100
+                        type: array
+                      rollout_duration_seconds:
+                        type: number
+                      sent_at:
+                        type: string
+                      source_uri:
+                        type: string
+                      start_time:
+                        type: string
+                      total:
+                        type: number
+                      type:
+                        type: string
+                    required:
+                    - id
+                    - type
+                    - data
+                    - created_at
+                    - ack_data
+                required:
+                - item
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Cancel an agent action
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_reassign:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_reassign</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Reassign multiple agents to a different agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-reassign
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkReassignAgentsRequestExample:
+                description: Reassign multiple agents to a different policy
+                value:
+                  agents:
+                  - agent-id-1
+                  - agent-id-2
+                  policy_id: agent-policy-id-2
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                includeInactive:
+                  default: false
+                  type: boolean
+                policy_id:
+                  type: string
+              required:
+              - policy_id
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkReassignAgentsExample:
+                  description: Bulk reassign action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk reassign agents
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_remove_collectors:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_remove_collectors</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Remove multiple OpAMP collectors from the Fleet agents list. Marks the collectors as unenrolled. This action does not invalidate API keys, so collectors can reconnect on their own.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-remove-collectors
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkRemoveCollectorsRequestExample:
+                description: Remove multiple OpAMP collectors
+                value:
+                  agents:
+                  - collector-id-1
+                  - collector-id-2
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      description: List of collector agent IDs
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - description: KQL query string. Leave empty to target all collectors
+                    type: string
+                dryRun:
+                  type: boolean
+                includeInactive:
+                  description: When passing collectors by KQL query, also removes inactive collectors
+                  type: boolean
+              required:
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkRemoveCollectorsExample:
+                  description: Bulk remove collectors action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk remove OpAMP collectors
+      tags:
+      - Elastic Agent actions
+      x-state: Experimental; added in 9.5.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_request_diagnostics:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_request_diagnostics</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Request diagnostics bundles from multiple agents.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+      operationId: post-fleet-agents-bulk-request-diagnostics
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkRequestDiagnosticsRequestExample:
+                description: Request diagnostics bundles from multiple agents
+                value:
+                  additional_metrics:
+                  - CPU
+                  agents:
+                  - agent-id-1
+                  - agent-id-2
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                additional_metrics:
+                  items:
+                    enum:
+                    - CPU
+                    type: string
+                  maxItems: 1
+                  type: array
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+              required:
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkRequestDiagnosticsExample:
+                  description: Bulk diagnostics action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk request diagnostics from agents
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_rollback:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_rollback</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Rollback multiple agents to the previous version.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-rollback
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkRollbackAgentsRequest:
+                value:
+                  agents:
+                  - agent-1
+                  - agent-2
+                  batchSize: 100
+                  includeInactive: false
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                includeInactive:
+                  default: false
+                  type: boolean
+              required:
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                successResponse:
+                  value:
+                    actionIds:
+                    - actionId1
+                    - actionId2
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionIds:
+                      items:
+                        maxLength: 36
+                        type: string
+                      maxItems: 10000
+                      type: array
+                  required:
+                  - actionIds
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: 'OK: A successful request.'
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  value:
+                    message: Bad Request
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: A bad request.
+      summary: Bulk rollback agents
+      tags:
+      - Elastic Agent actions
+      x-state: Experimental; added in 9.4.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_unenroll:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_unenroll</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Unenroll multiple agents, optionally revoking their enrollment API keys.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-unenroll
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkUnenrollAgentsRequestExample:
+                description: Unenroll multiple agents
+                value:
+                  agents:
+                  - agent-id-1
+                  - agent-id-2
+                  revoke: false
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      description: list of agent IDs
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - description: KQL query string, leave empty to action all agents
+                    type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                force:
+                  description: Unenrolls hosted agents too
+                  type: boolean
+                includeInactive:
+                  description: When passing agents by KQL query, unenrolls inactive agents too
+                  type: boolean
+                revoke:
+                  description: Revokes API keys of agents
+                  type: boolean
+              required:
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkUnenrollAgentsExample:
+                  description: Bulk unenroll action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk unenroll agents
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_update_agent_tags:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_update_agent_tags</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Add or remove tags across multiple agents.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-update-agent-tags
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkUpdateAgentTagsRequestExample:
+                description: Add and remove tags across multiple agents
+                value:
+                  agents:
+                  - agent-id-1
+                  - agent-id-2
+                  tagsToAdd:
+                  - production
+                  tagsToRemove:
+                  - staging
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                includeInactive:
+                  default: false
+                  type: boolean
+                tagsToAdd:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+                tagsToRemove:
+                  items:
+                    type: string
+                  maxItems: 10
+                  type: array
+              required:
+              - agents
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkUpdateAgentTagsExample:
+                  description: Bulk action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk update agent tags
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/agents/bulk_upgrade:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_upgrade</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Upgrade multiple agents to a newer version, with optional rollout controls.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+      operationId: post-fleet-agents-bulk-upgrade
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              postBulkUpgradeAgentsRequestExample:
+                description: Upgrade multiple agents to a specific version
+                value:
+                  agents:
+                  - agent-id-1
+                  - agent-id-2
+                  rollout_duration_seconds: 3600
+                  version: 8.17.0
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                agents:
+                  anyOf:
+                  - items:
+                      type: string
+                    maxItems: 10000
+                    type: array
+                  - type: string
+                batchSize:
+                  type: number
+                dryRun:
+                  type: boolean
+                force:
+                  type: boolean
+                includeInactive:
+                  default: false
+                  type: boolean
+                rollout_duration_seconds:
+                  minimum: 600
+                  type: number
+                skipRateLimitCheck:
+                  type: boolean
+                source_uri:
+                  type: string
+                start_time:
+                  type: string
+                version:
+                  type: string
+              required:
+              - agents
+              - version
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                postBulkUpgradeAgentsExample:
+                  description: Bulk upgrade action result
+                  value:
+                    actionId: action-id-1
+              schema:
+                anyOf:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    actionId:
+                      type: string
+                  required:
+                  - actionId
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    count:
+                      type: number
+                  required:
+                  - count
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Bulk upgrade agents
+      tags:
+      - Elastic Agent actions
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_action_id_response:
+      additionalProperties: false
+      properties:
+        actionId:
+          type: string
+      required:
+      - actionId
+      title: action_id_response
+      type: object
+    Kibana_HTTP_APIs_action_message_response:
+      additionalProperties: false
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      title: action_message_response
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

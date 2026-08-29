@@ -1,0 +1,2016 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Platform Configuration Security API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: PlatformConfigurationSecurity
+paths:
+  /platform/configuration/security/deployment:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Get current security deployment
+      description: Retrieves the current security deployment.
+      operationId: get-security-deployment
+      responses:
+        '200':
+          description: The security deployment was successfully returned
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityDeployment'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_deployment.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_deployment.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Deployment
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Create security deployment
+      description: Creates a new security deployment configuration.
+      operationId: create-security-deployment
+      responses:
+        '201':
+          description: The security deployment was successfully created
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '409':
+          description: '* There is a version conflict. (code: `security_deployment.version_conflict`)
+
+            * There is a version conflict. (code: `security_deployment.already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_deployment.version_conflict
+                - security_deployment.already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Deployment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityDeploymentCreateRequest'
+        description: The deployment request
+        required: true
+    put:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Update security deployment
+      description: Updates an existing security deployment configuration.
+      operationId: update-security-deployment
+      responses:
+        '200':
+          description: The security deployment was successfully updated
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '409':
+          description: '* There is a version conflict. (code: `security_deployment.version_conflict`)
+
+            * There is a version conflict. (code: `security_deployment.already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_deployment.version_conflict
+                - security_deployment.already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The security deployment was not found. (code: `security_deployment.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_deployment.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Deployment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityDeploymentUpdateRequest'
+        description: The update request
+        required: true
+  /platform/configuration/security/enrollment-tokens:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Get enrollment tokens
+      description: Retrieves a list of active enrollment tokens.
+      operationId: get-enrollment-tokens
+      responses:
+        '200':
+          description: A token has been generated that can be used to start new servers with the requested roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEnrollmentTokenReply'
+      x-doc:
+        tag: Platform - Configuration - Security
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Create enrollment token
+      description: Creates an enrollment token.
+      operationId: create-enrollment-token
+      responses:
+        '200':
+          description: A token has been generated that can be used to start new servers with the requested roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestEnrollmentTokenReply'
+        '400':
+          description: 'The token request format was invalid, details in the error (code: ''enrollment_tokens.invalid_token_request'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'No signing key is available to generate a token (code: ''enrollment_tokens.signing_key_not_found'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentTokenRequest'
+        description: Request parameters for the enrollment token
+        required: true
+  /platform/configuration/security/enrollment-tokens/{token}:
+    delete:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Delete enrollment token
+      description: Revokes and deletes the enrollment token.
+      operationId: delete-enrollment-token
+      parameters:
+      - name: token
+        in: path
+        description: The token or token identifier to revoke.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The supplied token has been revoked and can no longer be used to start services on new servers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'Token not found (code: ''enrollment_tokens.invalid_token_id'')'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security
+  /platform/configuration/security/realms:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: List security realm configurations
+      description: Retrieves a list of security realm configurations.
+      operationId: get-security-realm-configurations
+      responses:
+        '200':
+          description: The security realm configurations were successfully returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityRealmInfoList'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+  /platform/configuration/security/realms/_reorder:
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Reorder security realms
+      description: Reorder security realms.
+      operationId: reorder-security-realms
+      responses:
+        '200':
+          description: The reorder request was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* Invalid ids . (code: `security_realm.invalid_ids`)
+
+            * Missing ids . (code: `security_realm.missing_ids`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.invalid_ids
+                - security_realm.missing_ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityRealmsReorderRequest'
+        description: The reorder request
+        required: true
+  /platform/configuration/security/realms/active-directory:
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Create Active Directory configuration
+      description: 'Creates a new Active Directory configuration. '
+      operationId: create-active-directory-configuration
+      responses:
+        '201':
+          description: The Active Directory configuration was successfully created
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The realm id is already in use. (code: `security_realm.id_conflict`)
+
+            * The selected id is not valid. (code: `security_realm.invalid_id`)
+
+            * Order must be greater than zero. (code: `security_realm.invalid_order`)
+
+            * Invalid Elasticsearch Security realm type. (code: `security_realm.invalid_type`)
+
+            * The realm order is already in use. (code: `security_realm.order_conflict`)
+
+            * Advanced YAML format is invalid. (code: `security_realm.invalid_yaml`)
+
+            * The url format is invalid. (code: `security_realm.invalid_url`)
+
+            * Invalid Active Directory URL. (code: `security_realm.active_directory.invalid_url`)
+
+            * Invalid certificate bundle URL. (code: `security_realm.invalid_bundle_url`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.id_conflict
+                - security_realm.invalid_id
+                - security_realm.invalid_order
+                - security_realm.invalid_type
+                - security_realm.order_conflict
+                - security_realm.invalid_yaml
+                - security_realm.invalid_url
+                - security_realm.active_directory.invalid_url
+                - security_realm.invalid_bundle_url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiveDirectorySettings'
+        description: The Active Directory configuration
+        required: true
+  /platform/configuration/security/realms/active-directory/{realm_id}:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Get Active Directory configuration
+      description: 'Retrieves a single Active Directory security realm configuration. '
+      operationId: get-active-directory-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The Active Directory configuration was successfully retrieved
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveDirectorySettings'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+    put:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Update Active Directory configuration
+      description: 'Updates an existing Active Directory configuration. '
+      operationId: update-active-directory-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: When specified, checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The Active Directory configuration was successfully updated
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The realm id is already in use. (code: `security_realm.id_conflict`)
+
+            * The selected id is not valid. (code: `security_realm.invalid_id`)
+
+            * Order must be greater than zero. (code: `security_realm.invalid_order`)
+
+            * Invalid Elasticsearch Security realm type. (code: `security_realm.invalid_type`)
+
+            * The realm order is already in use. (code: `security_realm.order_conflict`)
+
+            * Advanced YAML format is invalid. (code: `security_realm.invalid_yaml`)
+
+            * The url format is invalid. (code: `security_realm.invalid_url`)
+
+            * Invalid Active Directory URL. (code: `security_realm.active_directory.invalid_url`)
+
+            * Invalid certificate bundle URL. (code: `security_realm.invalid_bundle_url`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.id_conflict
+                - security_realm.invalid_id
+                - security_realm.invalid_order
+                - security_realm.invalid_type
+                - security_realm.order_conflict
+                - security_realm.invalid_yaml
+                - security_realm.invalid_url
+                - security_realm.active_directory.invalid_url
+                - security_realm.invalid_bundle_url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'There is a version conflict. (code: `security_realm.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiveDirectorySettings'
+        description: The Active Directory configuration
+        required: true
+    delete:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Delete Active Directory configuration
+      description: 'Deletes a single Active Directory configuration. '
+      operationId: delete-active-directory-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: When specified, checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The Active Directory configuration was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'There is a version conflict. (code: `security_realm.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+  /platform/configuration/security/realms/ldap:
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Create LDAP configuration
+      description: Creates a new LDAP configuration.
+      operationId: create-ldap-configuration
+      responses:
+        '201':
+          description: The LDAP configuration was successfully created
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The realm id is already in use. (code: `security_realm.id_conflict`)
+
+            * The selected id is not valid. (code: `security_realm.invalid_id`)
+
+            * Order must be greater than zero. (code: `security_realm.invalid_order`)
+
+            * Invalid Elasticsearch Security realm type. (code: `security_realm.invalid_type`)
+
+            * The realm order is already in use. (code: `security_realm.order_conflict`)
+
+            * Advanced YAML format is invalid. (code: `security_realm.invalid_yaml`)
+
+            * The url format is invalid. (code: `security_realm.invalid_url`)
+
+            * Invalid LDAP URL. (code: `security_realm.ldap.invalid_url`)
+
+            * Invalid certificate bundle URL. (code: `security_realm.invalid_bundle_url`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.id_conflict
+                - security_realm.invalid_id
+                - security_realm.invalid_order
+                - security_realm.invalid_type
+                - security_realm.order_conflict
+                - security_realm.invalid_yaml
+                - security_realm.invalid_url
+                - security_realm.ldap.invalid_url
+                - security_realm.invalid_bundle_url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LdapSettings'
+        description: The LDAP configuration
+        required: true
+  /platform/configuration/security/realms/ldap/{realm_id}:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Get LDAP configuration
+      description: Retrieves a single LDAP security realm configuration.
+      operationId: get-ldap-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The LDAP configuration was successfully retrieved
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapSettings'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+    put:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Update LDAP configuration
+      description: Updates an existing LDAP configuration.
+      operationId: update-ldap-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: When specified, checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The LDAP configuration was successfully updated
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The realm id is already in use. (code: `security_realm.id_conflict`)
+
+            * The selected id is not valid. (code: `security_realm.invalid_id`)
+
+            * Order must be greater than zero. (code: `security_realm.invalid_order`)
+
+            * Invalid Elasticsearch Security realm type. (code: `security_realm.invalid_type`)
+
+            * The realm order is already in use. (code: `security_realm.order_conflict`)
+
+            * Advanced YAML format is invalid. (code: `security_realm.invalid_yaml`)
+
+            * The url format is invalid. (code: `security_realm.invalid_url`)
+
+            * Invalid LDAP URL. (code: `security_realm.ldap.invalid_url`)
+
+            * Invalid certificate bundle URL. (code: `security_realm.invalid_bundle_url`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.id_conflict
+                - security_realm.invalid_id
+                - security_realm.invalid_order
+                - security_realm.invalid_type
+                - security_realm.order_conflict
+                - security_realm.invalid_yaml
+                - security_realm.invalid_url
+                - security_realm.ldap.invalid_url
+                - security_realm.invalid_bundle_url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'There is a version conflict. (code: `security_realm.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LdapSettings'
+        description: The LDAP configuration
+        required: true
+    delete:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Delete LDAP configuration
+      description: Deletes a single LDAP configuration.
+      operationId: delete-ldap-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: When specified, checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The LDAP configuration was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'There is a version conflict. (code: `security_realm.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+  /platform/configuration/security/realms/saml:
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Create SAML configuration
+      description: Creates a new SAML configuration.
+      operationId: create-saml-configuration
+      responses:
+        '201':
+          description: The SAML configuration was successfully created
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The realm id is already in use. (code: `security_realm.id_conflict`)
+
+            * The selected id is not valid. (code: `security_realm.invalid_id`)
+
+            * Order must be greater than zero. (code: `security_realm.invalid_order`)
+
+            * Invalid Elasticsearch Security realm type. (code: `security_realm.invalid_type`)
+
+            * The realm order is already in use. (code: `security_realm.order_conflict`)
+
+            * Advanced YAML format is invalid. (code: `security_realm.invalid_yaml`)
+
+            * The SAML IDP metadata endpoint returned an error response code 200 OK. (code: `security_realm.saml.invalid_idp_metadata_url`)
+
+            * Invalid certificate bundle URL. (code: `security_realm.invalid_bundle_url`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.id_conflict
+                - security_realm.invalid_id
+                - security_realm.invalid_order
+                - security_realm.invalid_type
+                - security_realm.order_conflict
+                - security_realm.invalid_yaml
+                - security_realm.saml.invalid_idp_metadata_url
+                - security_realm.invalid_bundle_url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlSettings'
+        description: The SAML configuration
+        required: true
+  /platform/configuration/security/realms/saml/{realm_id}:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Get SAML configuration
+      description: Retrieves a single SAML security realm configuration.
+      operationId: get-saml-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The SAML configuration was successfully retrieved
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlSettings'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+    put:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Update SAML configuration
+      description: Updates an existing SAML configuration.
+      operationId: update-saml-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: When specified, checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The SAML configuration was successfully updated
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: '* The realm id is already in use. (code: `security_realm.id_conflict`)
+
+            * The selected id is not valid. (code: `security_realm.invalid_id`)
+
+            * Order must be greater than zero. (code: `security_realm.invalid_order`)
+
+            * Invalid Elasticsearch Security realm type. (code: `security_realm.invalid_type`)
+
+            * The realm order is already in use. (code: `security_realm.order_conflict`)
+
+            * Advanced YAML format is invalid. (code: `security_realm.invalid_yaml`)
+
+            * The SAML IDP metadata endpoint returned an error response code 200 OK. (code: `security_realm.saml.invalid_idp_metadata_url`)
+
+            * Invalid certificate bundle URL. (code: `security_realm.invalid_bundle_url`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.id_conflict
+                - security_realm.invalid_id
+                - security_realm.invalid_order
+                - security_realm.invalid_type
+                - security_realm.order_conflict
+                - security_realm.invalid_yaml
+                - security_realm.saml.invalid_idp_metadata_url
+                - security_realm.invalid_bundle_url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'There is a version conflict. (code: `security_realm.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlSettings'
+        description: The SAML configuration
+        required: true
+    delete:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Delete SAML configuration
+      description: Deletes a single SAML configuration.
+      operationId: delete-saml-configuration
+      parameters:
+      - name: realm_id
+        in: path
+        description: The Elasticsearch Security realm identifier.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: When specified, checks for conflicts against the version stored in the persistent store (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The SAML configuration was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The realm specified by {realm_id} cannot be found. (code: `security_realm.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'There is a version conflict. (code: `security_realm.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - security_realm.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Platform - Configuration - Security Realms
+  /platform/configuration/security/tls/{service_name}:
+    get:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Get TLS certificate
+      description: Retrieves a certificate in the TLS certificate chain.
+      operationId: get-tls-certificate
+      parameters:
+      - name: service_name
+        in: path
+        description: The service certificate chain to read.
+        required: true
+        schema:
+          type: string
+          enum:
+          - adminconsole
+          - proxy
+          - ui
+          - internalca
+      responses:
+        '200':
+          description: The TLS certificate chain, with private key omitted, for the given service and whether it was user specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TlsPublicCertChain'
+      x-doc:
+        tag: Platform - Configuration - TLS
+    post:
+      tags:
+      - PlatformConfigurationSecurity
+      summary: Set TLS certificate
+      description: Creates or updates the TLS certificate chain.
+      operationId: set-tls-certificate
+      parameters:
+      - name: service_name
+        in: path
+        description: The service certificate chain to read.
+        required: true
+        schema:
+          type: string
+          enum:
+          - adminconsole
+          - proxy
+          - ui
+          - internalca
+      responses:
+        '202':
+          description: The TLS update has been accepted for the given service and will take effect throughout the system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedTlsChain'
+      x-doc:
+        tag: Platform - Configuration - TLS
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: 'New certificate chain: the PEM encoded RSA private key, followed by the server certificate, followed by the CA certificate'
+        required: true
+components:
+  schemas:
+    LdapUserSearch:
+      type: object
+      properties:
+        base_dn:
+          type: string
+          description: Specifies a container DN to search for users
+        scope:
+          type: string
+          description: The scope of the user search. Valid values are sub_tree, one_level, or base. one_level only searches objects directly contained in the base_dn. sub_tree searches all objects contained in base_dn. base specifies that the base_dn is the user object, and that it is the only user considered. Defaults to sub_tree.
+          enum:
+          - sub_tree
+          - one_level
+          - base
+        filter:
+          type: string
+          description: Specifies the filter to search the directory and match an entry with the username provided by the user. Defaults to (uid={0}). {0} is substituted with the username provided when searching.
+      description: The user search configuration for the Elasticsearch security LDAP realm.
+    SecurityDeployment:
+      type: object
+      required:
+      - cluster_id
+      - has_pending_plan
+      - is_enabled
+      - is_healthy
+      - name
+      - status
+      properties:
+        cluster_id:
+          type: string
+          description: The identifier for the security deployment cluster
+        deployment_id:
+          type: string
+          description: The identifier for the security deployment
+        name:
+          type: string
+          description: The name of the security deployment cluster
+        version:
+          type: string
+          description: The version of the Elasticsearch cluster
+        status:
+          type: string
+          description: The current status of the cluster
+          enum:
+          - initializing
+          - stopping
+          - stopped
+          - rebooting
+          - restarting
+          - reconfiguring
+          - started
+        has_pending_plan:
+          type: boolean
+          description: True if a pending plan is in progress
+        is_healthy:
+          type: boolean
+          description: True if the cluster is healthy
+        is_enabled:
+          type: boolean
+          description: True if the security cluster is currently enabled
+      description: The Elasticsearch security deployment.
+    ActiveDirectorySettings:
+      type: object
+      required:
+      - bind_anonymously
+      - domain_name
+      - id
+      - name
+      - urls
+      properties:
+        id:
+          type: string
+          description: The identifier for the security realm
+        name:
+          type: string
+          description: The friendly name of the security realm
+        urls:
+          type: array
+          description: The Active Directory URLs used to authenticate against, in the format ldap[s]://server:port. Note that ldap and ldaps protocols cannot be mixed together.
+          items:
+            type: string
+        domain_name:
+          type: string
+          description: Specifies the domain name of the Active Directory (the forest root domain name).
+        bind_anonymously:
+          type: boolean
+          description: When true, bindDb credentials are ignored
+        group_search:
+          description: The Active Directory group search configuration
+          $ref: '#/components/schemas/ActiveDirectoryGroupSearch'
+        user_search:
+          description: The Active Directory user search configuration.
+          $ref: '#/components/schemas/ActiveDirectoryUserSearch'
+        bind_dn:
+          type: string
+          description: The distinguished name of the user that is used to bind to the Active Directory and perform searches.
+        bind_password:
+          type: string
+          description: The user password that is used to bind to the Active Directory server.
+        load_balance:
+          description: The Active Directory load balancing behavior
+          $ref: '#/components/schemas/ActiveDirectorySecurityRealmLoadBalance'
+        certificate_url:
+          type: string
+          description: The SSL trusted CA certificate bundle URL. The bundle should be a zip file containing a single keystore file 'keystore.ks' in the directory '/active_directory/:id/truststore', where :id is the value of the [id] field.
+        certificate_url_truststore_password:
+          type: string
+          description: The password to the certificate bundle URL truststore
+        certificate_url_truststore_type:
+          type: string
+          description: The format of the truststore file. Should be jks to use the Java Keystore format or PKCS12 to use PKCS#12 files.  The default is jks.
+          enum:
+          - jks
+          - PKCS12
+        role_mappings:
+          description: The role mapping rules associated with the security realm
+          $ref: '#/components/schemas/ActiveDirectorySecurityRealmRoleMappingRules'
+        enabled:
+          type: boolean
+          description: When true, enables the security realm
+        order:
+          type: integer
+          format: int32
+          description: The order that the security realm is evaluated
+        override_yaml:
+          type: string
+          description: 'Advanced configuration options in YAML format. Any settings defined here will override any configuration set via the API. Note that all keys should omit the ''xpack.security.authc.realms.active_directory.{realm_id}'' prefix. For example, when the realm ID is set to ''ad1'', the advanced configuration ''xpack.security.authc.realms.active_directory.ad1.ssl.verification_mode: full'' should be added as ''ssl.verification_mode: full''.'
+      description: Elasticsearch Security Active Directory realm configuration
+    SamlAttributeSettings:
+      type: object
+      required:
+      - groups
+      - principal
+      properties:
+        principal:
+          type: string
+          description: The name of the SAML attribute that contains the user's principal (username). This name should map to a value that does not contain commas or slashes.
+        groups:
+          type: string
+          description: The name of the SAML attribute that contains the user's groups
+        name:
+          type: string
+          description: The name of the SAML attribute that contains the user's full name
+        mail:
+          type: string
+          description: The name of the SAML attribute that contains the user's email address
+        dn:
+          type: string
+          description: The name of the SAML attribute that contains the user's X.50 Distinguished Name
+      description: The mapping configuration for the Elasticsearch security SAML attribute.
+    SamlSpSettings:
+      type: object
+      required:
+      - acs
+      - entity_id
+      - logout
+      properties:
+        entity_id:
+          type: string
+          description: The Entity ID to use for this SAML Service Provider. This should be entered as a URI.
+        acs:
+          type: string
+          description: The URL of the Assertion Consumer service
+        logout:
+          type: string
+          description: The URL of the Single Logout service
+      description: The configuration for the Elasticsearch security SAML Service Provider.
+    ActiveDirectorySecurityRealmRoleMappingRule:
+      type: object
+      required:
+      - roles
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The type of role mapping rule
+          enum:
+          - user_dn
+          - group_dn
+        roles:
+          type: array
+          description: The roles that are applied when the mapping rule is successfully evaluated
+          items:
+            type: string
+        value:
+          type: string
+          description: The value to match when evaluating this rule
+      description: Elasticsearch Security Active Directory role mapping rule
+    SecurityDeploymentCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security deployment cluster
+        version:
+          type: string
+          description: The version of the Elasticsearch cluster
+        topology:
+          description: The cluster topology used to create the security deployment cluster
+          $ref: '#/components/schemas/SecurityDeploymentTopology'
+      description: The creation request for the Elasticsearch security deployment.
+    SecurityDeploymentTopology:
+      type: object
+      properties:
+        size:
+          description: The security deployment topology size
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: The number of zones in which data nodes will be placed
+      description: The cluster topology for the Elasticsearch security deployment.
+    LdapSettings:
+      type: object
+      required:
+      - bind_anonymously
+      - bind_type
+      - id
+      - name
+      - urls
+      properties:
+        id:
+          type: string
+          description: The identifier for the security realm
+        name:
+          type: string
+          description: The friendly name of the security realm
+        urls:
+          type: array
+          description: The LDAP URLs used to authenticate against, in the format ldap[s]://server:port. Note that ldap and ldaps protocols cannot be mixed together.
+          items:
+            type: string
+        bind_anonymously:
+          type: boolean
+          description: When true, bindDb credentials are ignored
+        bind_type:
+          type: string
+          description: The type of user binding to apply
+          enum:
+          - user_search
+          - user_templates
+        group_search:
+          description: The LDAP group search configuration
+          $ref: '#/components/schemas/LdapGroupSearch'
+        user_search:
+          description: The LDAP user search configuration. Only used when bind_type is set to 'user_search'.
+          $ref: '#/components/schemas/LdapUserSearch'
+        user_dn_templates:
+          type: array
+          description: The distinguished name template that replaces the user name with the string {0}. Only used when bind_type is set to 'user_templates'.
+          items:
+            type: string
+        bind_dn:
+          type: string
+          description: The distinguished name of the user that is used to bind to the LDAP and perform searches. Only used when bind_type is set to 'user_search'.
+        bind_password:
+          type: string
+          description: The user password that is used to bind to the LDAP server. Only used when bind_type is set to 'user_search'.
+        user_group_attribute:
+          type: string
+          description: Specifies the attribute to examine on the user for group membership. If any 'group_search' settings are specified, this setting is ignored. Defaults to 'memberOf'.
+        load_balance:
+          description: The LDAP load balancing behavior
+          $ref: '#/components/schemas/LdapSecurityRealmLoadBalance'
+        certificate_url:
+          type: string
+          description: The SSL trusted CA certificate bundle URL. The bundle should be a zip file containing a single keystore file 'keystore.ks' in the directory '/ldap/:id/truststore', where :id is the value of the [id] field.
+        certificate_url_truststore_password:
+          type: string
+          description: The password to the certificate bundle URL truststore
+        certificate_url_truststore_type:
+          type: string
+          description: The format of the truststore file. Should be jks to use the Java Keystore format or PKCS12 to use PKCS#12 files.  The default is jks.
+          enum:
+          - jks
+          - PKCS12
+        role_mappings:
+          description: The role mapping rules associated with the security realm
+          $ref: '#/components/schemas/LdapSecurityRealmRoleMappingRules'
+        enabled:
+          type: boolean
+          description: When true, enables the security realm
+        order:
+          type: integer
+          format: int32
+          description: The order that the security realm is evaluated
+        override_yaml:
+          type: string
+          description: 'Advanced configuration options in YAML format. Any settings defined here will override any configuration set via the API. Note that all keys should omit the ''xpack.security.authc.realms.ldap.{realm_id}'' prefix. For example, when the realm ID is set to ''ldap1'', the advanced configuration ''xpack.security.authc.realms.ldap.ldap1.ssl.verification_mode: full'' should be added as ''ssl.verification_mode: full''.'
+      description: The configuration for the Elasticsearch security LDAP realm.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    UpdatedTlsChain:
+      type: object
+      required:
+      - service
+      properties:
+        service:
+          type: string
+          description: The service certificate chain that has been updated
+          enum:
+          - adminconsole
+          - proxy
+          - ui
+          - internalca
+      description: Details on the updated TLS chain
+    TlsPublicCertChain:
+      type: object
+      required:
+      - chain
+      - user_supplied
+      properties:
+        user_supplied:
+          type: boolean
+          description: Was this certificate chain user supplied or automatically generated?
+        chain:
+          type: array
+          description: The list of PEM encoded X509 certificates that make up the certificate chain
+          items:
+            type: string
+        chain_status:
+          description: Details on the validity and lifetime of the certification chain
+          $ref: '#/components/schemas/ChainStatus'
+        api_managed:
+          type: boolean
+          description: Whether or not this certificate can be updated using the API
+      description: 'The public portion of the certificate chain that contains the PEM encoded server certificate, intermediate certificates, and the CA certificate. NOTE: The private key, normally included in certificate chains, is omitted.'
+    RequestEnrollmentTokenReply:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: The requested token
+        token_id:
+          type: string
+          description: An identifier for the requested token (if persistent) that can be used in listing and deletion
+      description: Returns the enrollment token that is used to securely start a new server with designated roles.
+    EnrollmentTokenRequest:
+      type: object
+      required:
+      - persistent
+      properties:
+        roles:
+          type: array
+          description: The additional services for which this enrollment token applies (empty if not specified, ie system services only)
+          items:
+            type: string
+        persistent:
+          type: boolean
+          description: Whether this token can subsequently to its grant be revoked from the UI
+        validity_in_seconds:
+          type: integer
+          format: int32
+          description: 'The time in seconds for which this token is valid (defaults to 1 hour). Currently this can only be set for ephemeral (persistent: false) tokens.'
+      description: An enrollment token request for one or more services.
+    SecurityRealmsReorderRequest:
+      type: object
+      required:
+      - realms
+      properties:
+        realms:
+          type: array
+          description: The list of security realms in the desired order
+          items:
+            type: string
+      description: A reorder request for Elasticsearch security realms.
+    ActiveDirectoryUserSearch:
+      type: object
+      properties:
+        base_dn:
+          type: string
+          description: Specifies a container DN to search for users
+        scope:
+          type: string
+          description: The scope of the user search. Valid values are sub_tree, one_level, or base. one_level only searches objects directly contained in the base_dn. sub_tree searches all objects contained in base_dn. base specifies that the base_dn is the user object, and that it is the only user considered. Defaults to sub_tree.
+          enum:
+          - sub_tree
+          - one_level
+          - base
+        filter:
+          type: string
+          description: Specifies the filter to search the directory and match an entry with the username provided by the user. Defaults to (uid={0}). {0} is substituted with the username provided when searching.
+      description: Elasticsearch Security Active Directory realm user search configuration
+    SamlSettings:
+      type: object
+      required:
+      - attributes
+      - id
+      - idp
+      - name
+      - sp
+      properties:
+        id:
+          type: string
+          description: The identifier for the security realm
+        name:
+          type: string
+          description: The friendly name of the security realm
+        idp:
+          description: The SAML Identity Provider configuration
+          $ref: '#/components/schemas/SamlIdpSettings'
+        sp:
+          description: The SAML Service Provider configuration
+          $ref: '#/components/schemas/SamlSpSettings'
+        attributes:
+          description: The SAML attribute mapping configuration
+          $ref: '#/components/schemas/SamlAttributeSettings'
+        nameid_format:
+          type: string
+          description: 'The NameID format. If not specified the IdP default is used. Example: ''urn:oasis:names:tc:SAML:2.0:nameid-format:persistent'''
+        role_mappings:
+          description: The role mapping rules associated with the security realm
+          $ref: '#/components/schemas/SamlSecurityRealmRoleMappingRules'
+        enabled:
+          type: boolean
+          description: When true, enables the security realm
+        order:
+          type: integer
+          format: int32
+          description: The order that the security realm is evaluated
+        force_authn:
+          type: boolean
+          description: Specifies whether to set the ForceAuthn attribute when requesting that the IdP authenticate the current user. If set to true, the IdP is required to verify the user's identity, irrespective of any existing sessions they might have.
+        signing_certificate_url:
+          type: string
+          description: The SAML signing certificate bundle URL. The bundle should be a zip file containing 'signing.key' and 'signing.pem' files in the directory '/saml/:id', where :id is the value of the [id] field.
+        signing_certificate_url_password:
+          type: string
+          description: The password to the signing certificate bundle
+        signing_saml_messages:
+          type: array
+          description: A list of SAML message types that should be signed. Each element in the list should be the local name of a SAML XML Element. Supported element types are AuthnRequest, LogoutRequest and LogoutResponse. Only valid if a signing certificate is also specified.
+          items:
+            type: string
+        encryption_certificate_url:
+          type: string
+          description: The SAML encryption certificate bundle URL. The bundle should be a zip file containing 'encryption.key' and 'encryption.pem' files in the directory '/saml/:id', where :id is the value of the [id] field.
+        encryption_certificate_url_password:
+          type: string
+          description: The password to the encryption certificate bundle
+        ssl_certificate_url:
+          type: string
+          description: 'The SSL trusted CA certificate bundle URL. The bundle should be a zip file containing a single keystore file ''keystore.ks'' Note that all keys should omit the ''xpack.security.authc.realms.saml.{realm_id}'' prefix. For example, when the realm ID is set to ''saml1'', the advanced configuration ''xpack.security.authc.realms.saml.saml1.ssl.verification_mode: full'' should be added as ''ssl.verification_mode: full''.'
+        ssl_certificate_url_truststore_password:
+          type: string
+          description: The password to the SSL certificate bundle URL truststore
+        ssl_certificate_url_truststore_type:
+          type: string
+          description: The format of the keystore file. Should be jks to use the Java Keystore format or PKCS12 to use PKCS#12 files. The default is jks.
+          enum:
+          - jks
+          - PKCS12
+        override_yaml:
+          type: string
+          description: Advanced configuration options in YAML format. Any settings defined here will override any configuration set via the API. Note that all keys should omit 'xpack.security.authc.realms.{realm_type}.{realm_id}'.
+      description: The configuration for the Elasticsearch security SAML realm.
+    LdapSecurityRealmLoadBalance:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The behavior to use when there are multiple LDAP URLs defined
+          enum:
+          - failover
+          - dns_failover
+          - round_robin
+          - dns_round_robin
+        cache_ttl:
+          type: string
+          description: When using dns_failover or dns_round_robin as the load balancing type, this setting controls the amount of time to cache DNS lookups. Defaults to 1h.
+      description: The load balancing configuration for the Elasticsearch security LDAP realm.
+    ActiveDirectorySecurityRealmLoadBalance:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The behavior to use when there are multiple Active Directory URLs defined
+          enum:
+          - failover
+          - dns_failover
+          - round_robin
+          - dns_round_robin
+        cache_ttl:
+          type: string
+          description: When using dns_failover or dns_round_robin as the load balancing type, this setting controls the amount of time to cache DNS lookups. Defaults to 1h.
+      description: Elasticsearch Security Active Directory load balancing configuration
+    SamlIdpSettings:
+      type: object
+      required:
+      - entity_id
+      - metadata_path
+      properties:
+        entity_id:
+          type: string
+          description: The Entity ID of the SAML Identity Provider. An Entity ID is a URI with a maximum length of 1024 characters. It can be a URL or a URN and can be found in the configuration or the SAML metadata of the Identity Provider.
+        metadata_path:
+          type: string
+          description: The URL to a SAML 2.0 metadata file describing the capabilities and configuration of the Identity Provider
+        use_single_logout:
+          type: boolean
+          description: Indicates whether to utilise the Identity Provider's Single Logout service
+      description: The configuration for the Elasticsearch security SAML Identity Provider.
+    ListEnrollmentTokenReply:
+      type: object
+      required:
+      - tokens
+      properties:
+        tokens:
+          type: array
+          description: The list of currently active enrollment tokens
+          items:
+            $ref: '#/components/schemas/ListEnrollmentTokenElement'
+      description: Information about active enrollment tokens.
+    EmptyResponse:
+      type: object
+    SecurityDeploymentUpdateRequest:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of Elasticsearch to upgrade to. When not included, no upgrade is performed.
+        topology:
+          description: The cluster topology changes to apply to the security deployment cluster. When not included, no topology changes are performed.
+          $ref: '#/components/schemas/SecurityDeploymentTopology'
+      description: The update request for the Elasticsearch security deployment.
+    SecurityRealmInfo:
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - urls
+      properties:
+        id:
+          type: string
+          description: The identifier for the security realm
+        name:
+          type: string
+          description: The friendly name of the security realm
+        type:
+          type: string
+          description: The type of the security realm
+          enum:
+          - native
+          - ldap
+          - saml
+          - active_directory
+        enabled:
+          type: boolean
+          description: True if the security realm is enabled
+        order:
+          type: integer
+          format: int32
+          description: The order the security realm should be evaluated
+        urls:
+          type: array
+          description: The URLs associated with the security realm
+          items:
+            type: string
+      description: The overview for the Elasticsearch security realm.
+    SamlSecurityRealmRoleMappingRule:
+      type: object
+      required:
+      - roles
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The type of role mapping rule
+          enum:
+          - username
+          - groups
+          - dn
+        roles:
+          type: array
+          description: The roles that are applied when the mapping rule is successfully evaluated
+          items:
+            type: string
+        value:
+          type: string
+          description: The value to match when evaluating this rule
+      description: The mapping rule for the Elasticsearch security SAML role.
+    LdapSecurityRealmRoleMappingRule:
+      type: object
+      required:
+      - roles
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The type of role mapping rule
+          enum:
+          - user_dn
+          - group_dn
+        roles:
+          type: array
+          description: The roles that are applied when the mapping rule is successfully evaluated
+          items:
+            type: string
+        value:
+          type: string
+          description: The value to match when evaluating this rule
+      description: The role mapping rule for the Elasticsearch security LDAP realm.
+    LdapSecurityRealmRoleMappingRules:
+      type: object
+      required:
+      - default_roles
+      - rules
+      properties:
+        default_roles:
+          type: array
+          description: The default roles applied to all users
+          items:
+            type: string
+        rules:
+          type: array
+          description: The role mapping rules to evaluate
+          items:
+            $ref: '#/components/schemas/LdapSecurityRealmRoleMappingRule'
+      description: The role mapping ruleset for the Elasticsearch security LDAP realm.
+    LdapGroupSearch:
+      type: object
+      properties:
+        base_dn:
+          type: string
+          description: Specifies a container DN to search for groups in which the user has membership
+        scope:
+          type: string
+          description: Specifies whether the group search should be sub_tree, one_level or base. one_level only searches objects directly contained within the base_dn. The default sub_tree searches all objects contained under base_dn. base specifies that the base_dn is a group object, and that it is the only group considered.
+          enum:
+          - sub_tree
+          - one_level
+          - base
+        filter:
+          type: string
+          description: Specifies a filter to search for a group. When unspecified, the security realm searches for group, groupOfNames, groupOfUniqueNames, or posixGroup with the attributes member, memberOf, or memberUid. Any instance of {0} in the filter is replaced by the user attribute defined in user_attribute.
+        user_attribute:
+          type: string
+          description: Specifies the user attribute that is fetched and provided as a parameter to the filter. When unspecified, the user DN is passed to the filter.
+      description: The group search configuration for the Elasticsearch security LDAP realm.
+    ChainStatus:
+      type: object
+      required:
+      - expiration_date
+      - first_certificate_to_expire
+      properties:
+        expiration_date:
+          type: string
+          format: date-time
+          description: When this chain is going to expire due any of its certificates expiring (ISO format in UTC)
+        first_certificate_to_expire:
+          type: string
+          description: Information on the first certificate expiring in the chain
+      description: Chain expiration information
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    TopologySize:
+      type: object
+      required:
+      - resource
+      - value
+      properties:
+        value:
+          type: integer
+          format: int32
+          description: Amount of resource
+        resource:
+          type: string
+          description: Type of resource. In ESS the resource used should always be `memory`.
+          enum:
+          - memory
+          - storage
+      description: Measured by the amount of a resource. The final cluster size is calculated using multipliers from the topology instance configuration.
+    ListEnrollmentTokenElement:
+      type: object
+      required:
+      - roles
+      - token_id
+      properties:
+        token_id:
+          type: string
+          description: An identifier for the token
+        roles:
+          type: array
+          description: The services for which this enrollment token applies
+          items:
+            type: string
+      description: Information about an active enrollment token.
+    ActiveDirectorySecurityRealmRoleMappingRules:
+      type: object
+      required:
+      - default_roles
+      - rules
+      properties:
+        default_roles:
+          type: array
+          description: The default roles applied to all users
+          items:
+            type: string
+        rules:
+          type: array
+          description: The role mapping rules to evaluate
+          items:
+            $ref: '#/components/schemas/ActiveDirectorySecurityRealmRoleMappingRule'
+      description: Elasticsearch Security Active Directory role mapping rule set
+    IdResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The ID
+    ActiveDirectoryGroupSearch:
+      type: object
+      properties:
+        base_dn:
+          type: string
+          description: Specifies a container DN to search for groups in which the user has membership
+        scope:
+          type: string
+          description: Specifies whether the group search should be sub_tree, one_level or base. one_level only searches objects directly contained within the base_dn. The default sub_tree searches all objects contained under base_dn. base specifies that the base_dn is a group object, and that it is the only group considered.
+          enum:
+          - sub_tree
+          - one_level
+          - base
+      description: Elasticsearch Security Active Directory realm group search configuration
+    SecurityRealmInfoList:
+      type: object
+      required:
+      - realms
+      properties:
+        realms:
+          type: array
+          description: The list of security realms
+          items:
+            $ref: '#/components/schemas/SecurityRealmInfo'
+      description: A list of Elasticsearch security realms.
+    SamlSecurityRealmRoleMappingRules:
+      type: object
+      required:
+      - default_roles
+      - rules
+      properties:
+        default_roles:
+          type: array
+          description: The default roles applied to all users
+          items:
+            type: string
+        rules:
+          type: array
+          description: The role mapping rules to evaluate
+          items:
+            $ref: '#/components/schemas/SamlSecurityRealmRoleMappingRule'
+      description: The mapping ruleset for the Elasticsearch security SAML role.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

@@ -1,0 +1,187 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana user session API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: user session
+  x-displayName: User session management
+  description: 'Enables you to invalidate user sessions for security and session management purposes.
+
+    '
+paths:
+  /api/security/session/_invalidate:
+    post:
+      description: 'Invalidate user sessions that match a query. To use this API, you must be a superuser.
+
+        '
+      operationId: post-security-session-invalidate
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              invalidateRequestExample1:
+                description: Run `POST api/security/session/_invalidate` to invalidate all existing sessions.
+                summary: Invalidate all sessions
+                value: "{\n  \"match\" : \"all\"\n}"
+              invalidateRequestExample2:
+                description: Run `POST api/security/session/_invalidate` to invalidate sessions that were created by any SAML authentication provider.
+                summary: Invalidate all SAML sessions
+                value: "{\n  \"match\" : \"query\",\n  \"query\": {\n    \"provider\" : { \"type\": \"saml\" }\n  }\n}"
+              invalidateRequestExample3:
+                description: Run `POST api/security/session/_invalidate` to invalidate sessions that were created by the SAML authentication provider named `saml1`.
+                summary: Invalidate sessions for a provider
+                value: "{\n  \"match\" : \"query\",\n  \"query\": {\n    \"provider\" : { \"type\": \"saml\", \"name\": \"saml1\" }\n  }\n}"
+              invalidateRequestExample4:
+                description: Run `POST api/security/session/_invalidate` to invalidate sessions that were created by any OpenID Connect authentication provider for the user with the username `user@my-oidc-sso.com`.
+                summary: Invalidate sessions for a user
+                value: "{\n  \"match\" : \"query\",\n  \"query\": {\n    \"provider\" : { \"type\": \"oidc\" },\n    \"username\": \"user@my-oidc-sso.com\"\n  }\n}"
+            schema:
+              type: object
+              properties:
+                match:
+                  description: 'The method Kibana uses to determine which sessions to invalidate. If it is `all`, all existing sessions will be invalidated. If it is `query`, only the sessions that match the query will be invalidated.
+
+                    '
+                  enum:
+                  - all
+                  - query
+                  type: string
+                query:
+                  description: 'The query that Kibana uses to match the sessions to invalidate when the `match` parameter is set to `query`.
+
+                    '
+                  type: object
+                  properties:
+                    provider:
+                      description: The authentication providers that will have their user sessions invalidated.
+                      type: object
+                      properties:
+                        name:
+                          description: The authentication provider name.
+                          type: string
+                        type:
+                          description: 'The authentication provide type. For example: `basic`, `token`, `saml`, `oidc`, `kerberos`, or `pki`.
+
+                            '
+                          type: string
+                      required:
+                      - type
+                    username:
+                      description: The username that will have its sessions invalidated.
+                      type: string
+                  required:
+                  - provider
+              required:
+              - match
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    description: The number of sessions that were successfully invalidated.
+                    type: integer
+          description: Indicates a successful call
+        '403':
+          description: Indicates that the user may not be authorized to invalidate sessions for other users.
+      summary: Invalidate user sessions
+      tags:
+      - user session
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

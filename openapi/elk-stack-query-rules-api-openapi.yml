@@ -1,0 +1,719 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Request & Response Specification Query Rules API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+tags:
+- name: query_rules
+paths:
+  /_query_rules/{ruleset_id}/_rule/{rule_id}:
+    get:
+      tags:
+      - query_rules
+      summary: Get a query rule
+      description: 'Get details about a query rule within a query ruleset.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About seeing rules and rulesets
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#accessing-the-query-rules-ui
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/get-query-rule.html
+      operationId: query-rules-get-rule
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset containing the rule to retrieve
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      - in: path
+        name: rule_id
+        description: The unique identifier of the query rule within the specified ruleset to retrieve
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/query_rules._types.QueryRule'
+              examples:
+                QueryRuleGetResponseExample1:
+                  description: A successful response from `GET _query_rules/my-ruleset/_rule/my-rule1`.
+                  value: "{\n  \"rule_id\": \"my-rule1\",\n  \"type\": \"pinned\",\n  \"criteria\": [\n    {\n      \"type\": \"contains\",\n      \"metadata\": \"query_string\",\n      \"values\": [\n        \"pugs\",\n        \"puggles\"\n      ]\n    }\n  ],\n  \"actions\": {\n    \"ids\": [\n      \"id1\",\n      \"id2\"\n    ]\n  }\n}"
+      x-state: Generally available; Added in 8.15.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - query_rules
+      summary: Create or update a query rule
+      description: 'Create or update a query rule within a query ruleset.
+
+
+        IMPORTANT: Due to limitations within pinned queries, you can only pin documents using ids or docs, but cannot use both in single rule.
+
+        It is advised to use one or the other in query rulesets, to avoid errors.
+
+        Additionally, pinned queries have a maximum limit of 100 pinned hits.
+
+        If multiple matching rules pin more than 100 documents, only the first 100 documents are pinned in the order they are specified in the ruleset.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About editing rules and rulesets
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#edit-a-rule
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/put-query-rule.html
+      operationId: query-rules-put-rule
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset containing the rule to be created or updated.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      - in: path
+        name: rule_id
+        description: The unique identifier of the query rule within the specified ruleset to be created or updated.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  description: The type of rule.
+                  allOf:
+                  - $ref: '#/components/schemas/query_rules._types.QueryRuleType'
+                criteria:
+                  description: 'The criteria that must be met for the rule to be applied.
+
+                    If multiple criteria are specified for a rule, all criteria must be met for the rule to be applied.'
+                  oneOf:
+                  - $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
+                actions:
+                  description: 'The actions to take when the rule is matched.
+
+                    The format of this action depends on the rule type.'
+                  allOf:
+                  - $ref: '#/components/schemas/query_rules._types.QueryRuleActions'
+                priority:
+                  type: number
+              required:
+              - type
+              - criteria
+              - actions
+            examples:
+              QueryRulePutRequestExample1:
+                description: 'Run `POST _query_rules/my-ruleset/_test` to test a ruleset. Provide the match criteria that you want to test against.
+
+                  '
+                value: "{\n  \"match_criteria\": {\n    \"query_string\": \"puggles\"\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+      x-state: Generally available; Added in 8.15.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - query_rules
+      summary: Delete a query rule
+      description: 'Delete a query rule within a query ruleset.
+
+        This is a destructive action that is only recoverable by re-adding the same rule with the create or update query rule API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About deleting a query rule
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#delete-a-rule
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/delete-query-rule.html
+      operationId: query-rules-delete-rule
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset containing the rule to delete
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      - in: path
+        name: rule_id
+        description: The unique identifier of the query rule within the specified ruleset to delete
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 8.15.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_query_rules/{ruleset_id}:
+    get:
+      tags:
+      - query_rules
+      summary: Get a query ruleset
+      description: 'Get details about a query ruleset.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About seeing rules and rulesets
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#accessing-the-query-rules-ui
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/get-query-ruleset.html
+      operationId: query-rules-get-ruleset
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/query_rules._types.QueryRuleset'
+              examples:
+                QueryRulesetGetResponseExample1:
+                  description: A successful response from `GET _query_rules/my-ruleset/`.
+                  value: "{\n    \"ruleset_id\": \"my-ruleset\",\n    \"rules\": [\n        {\n            \"rule_id\": \"my-rule1\",\n            \"type\": \"pinned\",\n            \"criteria\": [\n                {\n                    \"type\": \"contains\",\n                    \"metadata\": \"query_string\",\n                    \"values\": [ \"pugs\", \"puggles\" ]\n                }\n            ],\n            \"actions\": {\n                \"ids\": [\n                    \"id1\",\n                    \"id2\"\n                ]\n            }\n        },\n        {\n            \"rule_id\": \"my-rule2\",\n            \"type\": \"pinned\",\n            \"criteria\": [\n                {\n                    \"type\": \"fuzzy\",\n                    \"metadata\": \"query_string\",\n                    \"values\": [ \"rescue dogs\" ]\n                }\n            ],\n            \"actions\": {\n                \"docs\": [\n                    {\n                        \"_index\": \"index1\",\n                        \"_id\": \"id3\"\n                    },\n                    {\n                        \"_index\": \"index2\",\n                        \"_id\": \"id4\"\n                    }\n                ]\n            }\n        }\n    ]\n}"
+      x-state: Generally available; Added in 8.10.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - query_rules
+      summary: Create or update a query ruleset
+      description: 'There is a limit of 100 rules per ruleset.
+
+        This limit can be increased by using the `xpack.applications.rules.max_rules_per_ruleset` cluster setting.
+
+
+        IMPORTANT: Due to limitations within pinned queries, you can only select documents using `ids` or `docs`, but cannot use both in single rule.
+
+        It is advised to use one or the other in query rulesets, to avoid errors.
+
+        Additionally, pinned queries have a maximum limit of 100 pinned hits.
+
+        If multiple matching rules pin more than 100 documents, only the first 100 documents are pinned in the order they are specified in the ruleset.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About editing rules and rulesets
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#edit-a-rule
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/put-query-ruleset.html
+      operationId: query-rules-put-ruleset
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset to be created or updated.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rules:
+                  oneOf:
+                  - $ref: '#/components/schemas/query_rules._types.QueryRule'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/query_rules._types.QueryRule'
+              required:
+              - rules
+            examples:
+              QueryRulesetPutRequestExample1:
+                description: 'Run `PUT _query_rules/my-ruleset` to create a new query ruleset. Two rules are associated with `my-ruleset`. `my-rule1` will pin documents with IDs `id1` and `id2` when `user_query` contains `pugs` or `puggles` and `user_country` exactly matches `us`. `my-rule2` will exclude documents from different specified indices with IDs `id3` and `id4` when the `query_string` fuzzily matches `rescue dogs`.
+
+                  '
+                value: "{\n    \"rules\": [\n        {\n            \"rule_id\": \"my-rule1\",\n            \"type\": \"pinned\",\n            \"criteria\": [\n                {\n                    \"type\": \"contains\",\n                    \"metadata\": \"user_query\",\n                    \"values\": [ \"pugs\", \"puggles\" ]\n                },\n                {\n                    \"type\": \"exact\",\n                    \"metadata\": \"user_country\",\n                    \"values\": [ \"us\" ]\n                }\n            ],\n            \"actions\": {\n                \"ids\": [\n                    \"id1\",\n                    \"id2\"\n                ]\n            }\n        },\n        {\n            \"rule_id\": \"my-rule2\",\n            \"type\": \"pinned\",\n            \"criteria\": [\n                {\n                    \"type\": \"fuzzy\",\n                    \"metadata\": \"user_query\",\n                    \"values\": [ \"rescue dogs\" ]\n                }\n            ],\n            \"actions\": {\n                \"docs\": [\n                    {\n                        \"_index\": \"index1\",\n                        \"_id\": \"id3\"\n                    },\n                    {\n                        \"_index\": \"index2\",\n                        \"_id\": \"id4\"\n                    }\n                ]\n            }\n        }\n    ]\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+      x-state: Generally available; Added in 8.10.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - query_rules
+      summary: Delete a query ruleset
+      description: 'Remove a query ruleset and its associated data.
+
+        This is a destructive action that is not recoverable.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About deleting a query ruleset
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#delete-a-ruleset
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/delete-query-ruleset.html
+      operationId: query-rules-delete-ruleset
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset to delete
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 8.10.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_query_rules:
+    get:
+      tags:
+      - query_rules
+      summary: Get all query rulesets
+      description: 'Get summarized information about the query rulesets.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      externalDocs:
+        description: About seeing rules and rulesets
+        url: https://www.elastic.co/docs/solutions/search/query-rules-ui#accessing-the-query-rules-ui
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/list-query-rulesets.html
+      operationId: query-rules-list-rulesets
+      parameters:
+      - in: query
+        name: from
+        description: The offset from the first result to fetch.
+        deprecated: false
+        schema:
+          default: 0.0
+          type: number
+        style: form
+      - in: query
+        name: size
+        description: The maximum number of results to retrieve.
+        deprecated: false
+        schema:
+          default: 100.0
+          type: number
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/query_rules.list_rulesets.QueryRulesetListItem'
+                required:
+                - count
+                - results
+              examples:
+                QueryRulesetListResponseExample1:
+                  description: A successful response from `GET _query_rules/?from=0&size=3`.
+                  value: "{\n    \"count\": 3,\n    \"results\": [\n        {\n            \"ruleset_id\": \"ruleset-1\",\n            \"rule_total_count\": 1,\n            \"rule_criteria_types_counts\": {\n                \"exact\": 1\n            }\n        },\n        {\n            \"ruleset_id\": \"ruleset-2\",\n            \"rule_total_count\": 2,\n            \"rule_criteria_types_counts\": {\n                \"exact\": 1,\n                \"fuzzy\": 1\n            }\n        },\n        {\n            \"ruleset_id\": \"ruleset-3\",\n            \"rule_total_count\": 3,\n            \"rule_criteria_types_counts\": {\n                \"exact\": 1,\n                \"fuzzy\": 2\n            }\n        }\n    ]\n}"
+      x-state: Generally available; Added in 8.10.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_query_rules/{ruleset_id}/_test:
+    post:
+      tags:
+      - query_rules
+      summary: Test a query ruleset
+      description: 'Evaluate match criteria against a query ruleset to identify the rules that would match that criteria.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_search_query_rules`
+
+        '
+      operationId: query-rules-test
+      parameters:
+      - in: path
+        name: ruleset_id
+        description: The unique identifier of the query ruleset to be created or updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                match_criteria:
+                  description: 'The match criteria to apply to rules in the given query ruleset.
+
+                    Match criteria should match the keys defined in the `criteria.metadata` field of the rule.'
+                  type: object
+                  additionalProperties:
+                    type: object
+              required:
+              - match_criteria
+            examples:
+              QueryRulesetTestRequestExample1:
+                description: 'Run `PUT _query_rules/my-ruleset` to create a new query ruleset. Two rules are associated with `my-ruleset`. `my-rule1` will pin documents with IDs `id1` and `id2` when `user_query` contains `pugs` or `puggles` and `user_country` exactly matches `us`. `my-rule2` will exclude documents from different specified indices with IDs `id3` and `id4` when the `query_string` fuzzily matches `rescue dogs`.
+
+                  '
+                value: "{\n    \"rules\": [\n        {\n            \"rule_id\": \"my-rule1\",\n            \"type\": \"pinned\",\n            \"criteria\": [\n                {\n                    \"type\": \"contains\",\n                    \"metadata\": \"user_query\",\n                    \"values\": [ \"pugs\", \"puggles\" ]\n                },\n                {\n                    \"type\": \"exact\",\n                    \"metadata\": \"user_country\",\n                    \"values\": [ \"us\" ]\n                }\n            ],\n            \"actions\": {\n                \"ids\": [\n                    \"id1\",\n                    \"id2\"\n                ]\n            }\n        },\n        {\n            \"rule_id\": \"my-rule2\",\n            \"type\": \"pinned\",\n            \"criteria\": [\n                {\n                    \"type\": \"fuzzy\",\n                    \"metadata\": \"user_query\",\n                    \"values\": [ \"rescue dogs\" ]\n                }\n            ],\n            \"actions\": {\n                \"docs\": [\n                    {\n                        \"_index\": \"index1\",\n                        \"_id\": \"id3\"\n                    },\n                    {\n                        \"_index\": \"index2\",\n                        \"_id\": \"id4\"\n                    }\n                ]\n            }\n        }\n    ]\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_matched_rules:
+                    type: number
+                  matched_rules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/query_rules.test.QueryRulesetMatchedRule'
+                required:
+                - total_matched_rules
+                - matched_rules
+              examples:
+                QueryRulesetTestResponseExample1:
+                  description: A successful response from `POST _query_rules/my-ruleset/_test`.
+                  value: "{\n  \"total_matched_rules\": 1,\n  \"matched_rules\": [\n    {\n      \"ruleset_id\": \"my-ruleset\",\n      \"rule_id\": \"my-rule1\"\n    }\n  ]\n}"
+      x-state: Generally available; Added in 8.10.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    query_rules._types.QueryRuleCriteria:
+      type: object
+      properties:
+        type:
+          description: 'The type of criteria. The following criteria types are supported:
+
+
+            * `always`: Matches all queries, regardless of input.
+
+            * `contains`: Matches that contain this value anywhere in the field meet the criteria defined by the rule. Only applicable for string values.
+
+            * `exact`: Only exact matches meet the criteria defined by the rule. Applicable for string or numerical values.
+
+            * `fuzzy`: Exact matches or matches within the allowed Levenshtein Edit Distance meet the criteria defined by the rule. Only applicable for string values.
+
+            * `gt`: Matches with a value greater than this value meet the criteria defined by the rule. Only applicable for numerical values.
+
+            * `gte`: Matches with a value greater than or equal to this value meet the criteria defined by the rule. Only applicable for numerical values.
+
+            * `lt`: Matches with a value less than this value meet the criteria defined by the rule. Only applicable for numerical values.
+
+            * `lte`: Matches with a value less than or equal to this value meet the criteria defined by the rule. Only applicable for numerical values.
+
+            * `prefix`: Matches that start with this value meet the criteria defined by the rule. Only applicable for string values.
+
+            * `suffix`: Matches that end with this value meet the criteria defined by the rule. Only applicable for string values.'
+          allOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleCriteriaType'
+        metadata:
+          description: 'The metadata field to match against.
+
+            This metadata will be used to match against `match_criteria` sent in the rule.
+
+            It is required for all criteria types except `always`.'
+          type: string
+        values:
+          description: 'The values to match against the `metadata` field.
+
+            Only one value must match for the criteria to be met.
+
+            It is required for all criteria types except `always`.'
+          type: array
+          items:
+            type: object
+      required:
+      - type
+    query_rules._types.QueryRuleType:
+      type: string
+      enum:
+      - pinned
+      - exclude
+    query_rules.list_rulesets.QueryRulesetListItem:
+      type: object
+      properties:
+        ruleset_id:
+          description: A unique identifier for the ruleset.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        rule_total_count:
+          description: The number of rules associated with the ruleset.
+          type: number
+        rule_criteria_types_counts:
+          description: 'A map of criteria type (for example, `exact`) to the number of rules of that type.
+
+
+            NOTE: The counts in `rule_criteria_types_counts` may be larger than the value of `rule_total_count` because a rule may have multiple criteria.'
+          type: object
+          additionalProperties:
+            type: number
+        rule_type_counts:
+          description: A map of rule type (for example, `pinned`) to the number of rules of that type.
+          type: object
+          additionalProperties:
+            type: number
+      required:
+      - ruleset_id
+      - rule_total_count
+      - rule_criteria_types_counts
+      - rule_type_counts
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    query_rules._types.QueryRuleActions:
+      type: object
+      properties:
+        ids:
+          description: 'The unique document IDs of the documents to apply the rule to.
+
+            Only one of `ids` or `docs` may be specified and at least one must be specified.'
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.Id'
+        docs:
+          description: 'The documents to apply the rule to.
+
+            Only one of `ids` or `docs` may be specified and at least one must be specified.
+
+            There is a maximum value of 100 documents in a rule.
+
+            You can specify the following attributes for each document:
+
+
+            * `_index`: The index of the document to pin.
+
+            * `_id`: The unique document ID.'
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.query_dsl.PinnedDoc'
+    _types.IndexName:
+      type: string
+    _types.Id:
+      type: string
+    query_rules._types.QueryRuleset:
+      type: object
+      properties:
+        ruleset_id:
+          description: A unique identifier for the ruleset.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        rules:
+          description: Rules associated with the query ruleset.
+          type: array
+          items:
+            $ref: '#/components/schemas/query_rules._types.QueryRule'
+      required:
+      - ruleset_id
+      - rules
+    query_rules._types.QueryRule:
+      type: object
+      properties:
+        rule_id:
+          description: A unique identifier for the rule.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        type:
+          description: 'The type of rule.
+
+            `pinned` will identify and pin specific documents to the top of search results.
+
+            `exclude` will exclude specific documents from search results.'
+          allOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleType'
+        criteria:
+          description: 'The criteria that must be met for the rule to be applied.
+
+            If multiple criteria are specified for a rule, all criteria must be met for the rule to be applied.'
+          oneOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
+          - type: array
+            items:
+              $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
+        actions:
+          description: 'The actions to take when the rule is matched.
+
+            The format of this action depends on the rule type.'
+          allOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleActions'
+        priority:
+          type: number
+      required:
+      - rule_id
+      - type
+      - criteria
+      - actions
+    query_rules.test.QueryRulesetMatchedRule:
+      type: object
+      properties:
+        ruleset_id:
+          description: Ruleset unique identifier
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        rule_id:
+          description: Rule unique identifier within that ruleset
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+      required:
+      - ruleset_id
+      - rule_id
+    _types.query_dsl.PinnedDoc:
+      type: object
+      properties:
+        _id:
+          description: The unique document ID.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        _index:
+          description: The index that contains the document.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+      required:
+      - _id
+    query_rules._types.QueryRuleCriteriaType:
+      type: string
+      enum:
+      - global
+      - exact
+      - fuzzy
+      - prefix
+      - suffix
+      - contains
+      - lt
+      - lte
+      - gt
+      - gte
+      - always

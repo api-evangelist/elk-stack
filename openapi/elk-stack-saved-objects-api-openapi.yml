@@ -1,0 +1,2259 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana saved objects API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: saved objects
+  x-displayName: Saved objects
+  description: 'Export sets of saved objects that you want to import into Kibana, resolve import errors, and rotate an encryption key for encrypted saved objects with the saved objects APIs.
+
+
+    To manage a specific type of saved object, use the corresponding APIs.
+
+    For example, use:
+
+
+    * [Data views](../group/endpoint-data-views)
+
+    * [Spaces](../group/endpoint-spaces)
+
+    * [Short URLs](../group/endpoint-short-url)
+
+
+    Warning: Do not write documents directly to the `.kibana` index. When you write directly to the `.kibana` index, the data becomes corrupted and permanently breaks future Kibana versions.
+
+    '
+paths:
+  /api/encrypted_saved_objects/_rotate_key:
+    post:
+      description: 'Superuser role required.
+
+
+        If a saved object cannot be decrypted using the primary encryption key, then Kibana will attempt to decrypt it using the specified decryption-only keys. In most of the cases this overhead is negligible, but if you''re dealing with a large number of saved objects and experiencing performance issues, you may want to rotate the encryption key.
+
+
+        This functionality is in technical preview and may be changed or removed in a future release. Elastic will work to fix any issues, but features in technical preview are not subject to the support SLA of official GA features.
+
+        '
+      operationId: rotateEncryptionKey
+      parameters:
+      - description: 'Specifies a maximum number of saved objects that Kibana can process in a single batch. Bulk key rotation is an iterative process since Kibana may not be able to fetch and process all required saved objects in one go and splits processing into consequent batches. By default, the batch size is 10000, which is also a maximum allowed value.
+
+          '
+        in: query
+        name: batch_size
+        required: false
+        schema:
+          default: 10000
+          type: number
+      - description: 'Limits encryption key rotation only to the saved objects with the specified type. By default, Kibana tries to rotate the encryption key for all saved object types that may contain encrypted attributes.
+
+          '
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                rotateEncryptionKeyResponse:
+                  $ref: '#/components/examples/Saved_objects_key_rotation_response'
+              schema:
+                type: object
+                properties:
+                  failed:
+                    description: 'Indicates the number of the saved objects that were still encrypted with one of the old encryption keys that Kibana failed to re-encrypt with the primary key.
+
+                      '
+                    type: number
+                  successful:
+                    description: 'Indicates the total number of all encrypted saved objects (optionally filtered by the requested `type`), regardless of the key Kibana used for encryption.
+
+
+                      NOTE: In most cases, `total` will be greater than `successful` even if `failed` is zero. The reason is that Kibana may not need or may not be able to rotate encryption keys for all encrypted saved objects.
+
+                      '
+                    type: number
+                  total:
+                    description: 'Indicates the total number of all encrypted saved objects (optionally filtered by the requested `type`), regardless of the key Kibana used for encryption.
+
+                      '
+                    type: number
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Saved_objects_400_response'
+          description: Bad request
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Already in progress.
+      summary: Rotate a key for encrypted saved objects
+      tags:
+      - saved objects
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_bulk_create:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_bulk_create</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Creates multiple Kibana saved objects in a single request.
+
+
+        For transferring or backing up saved objects, prefer the import and export APIs (`POST /api/saved_objects/_import` and `POST /api/saved_objects/_export`).'
+      operationId: post-saved-objects-bulk-create
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Overwrite existing saved objects that match the same type and ID.
+        in: query
+        name: overwrite
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkCreateRequest:
+                summary: Create multiple saved objects (partial success)
+                value:
+                - attributes:
+                    title: Example dashboard 1
+                  id: example-dashboard-1
+                  references: []
+                  type: dashboard
+                - attributes:
+                    title: Example dashboard 2
+                  id: example-dashboard-2
+                  references: []
+                  type: dashboard
+            schema:
+              items:
+                additionalProperties: false
+                type: object
+                properties:
+                  attributes:
+                    additionalProperties: {}
+                    type: object
+                  coreMigrationVersion:
+                    maxLength: 256
+                    type: string
+                  id:
+                    maxLength: 512
+                    type: string
+                  initialNamespaces:
+                    items:
+                      maxLength: 512
+                      type: string
+                    maxItems: 100
+                    minItems: 1
+                    type: array
+                  migrationVersion:
+                    additionalProperties:
+                      maxLength: 256
+                      type: string
+                    type: object
+                  references:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        id:
+                          maxLength: 512
+                          type: string
+                        name:
+                          maxLength: 1024
+                          type: string
+                        type:
+                          maxLength: 256
+                          type: string
+                      required:
+                      - name
+                      - type
+                      - id
+                    maxItems: 1000
+                    type: array
+                  type:
+                    maxLength: 256
+                    type: string
+                  typeMigrationVersion:
+                    maxLength: 256
+                    type: string
+                  version:
+                    maxLength: 256
+                    type: string
+                required:
+                - type
+                - attributes
+              maxItems: 10000
+              type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                bulkCreateResponse:
+                  summary: A bulk create response with one conflict
+                  value:
+                    saved_objects:
+                    - attributes:
+                        title: Example dashboard 1
+                      id: example-dashboard-1
+                      managed: false
+                      namespaces:
+                      - default
+                      references: []
+                      type: dashboard
+                      updated_at: '2026-04-17T12:00:00.000Z'
+                      version: WzEsMV0=
+                    - error:
+                        error: Conflict
+                        message: Saved object [dashboard/example-dashboard-2] conflict
+                        statusCode: 409
+                      id: example-dashboard-2
+                      type: dashboard
+          description: A bulk create response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Create saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_bulk_create?overwrite=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\",\"attributes\":{\"title\":\"Example dashboard 1\"},\"references\":[]},{\"type\":\"dashboard\",\"id\":\"example-dashboard-2\",\"attributes\":{\"title\":\"Example dashboard 2\"},\"references\":[]}]'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_bulk_create?overwrite=false
+
+          [{"type":"dashboard","id":"example-dashboard-1","attributes":{"title":"Example dashboard 1"},"references":[]},{"type":"dashboard","id":"example-dashboard-2","attributes":{"title":"Example dashboard 2"},"references":[]}]
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_bulk_delete:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_bulk_delete</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Deletes multiple Kibana saved objects in a single request.
+
+
+        There is currently no complete replacement for deleting arbitrary saved objects via an HTTP API.'
+      operationId: post-saved-objects-bulk-delete
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: When true, force deletion of multi-namespace objects from all namespaces.
+        in: query
+        name: force
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkDeleteRequest:
+                summary: Delete multiple saved objects
+                value:
+                - id: example-dashboard-1
+                  type: dashboard
+                - id: does-not-exist
+                  type: dashboard
+            schema:
+              items:
+                additionalProperties: false
+                type: object
+                properties:
+                  id:
+                    maxLength: 512
+                    type: string
+                  type:
+                    maxLength: 256
+                    type: string
+                required:
+                - type
+                - id
+              maxItems: 10000
+              type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                bulkDeleteResponse:
+                  summary: A bulk delete response with one not found result
+                  value:
+                    statuses:
+                    - id: example-dashboard-1
+                      success: true
+                      type: dashboard
+                    - error:
+                        error: Not Found
+                        message: Saved object [dashboard/does-not-exist] not found
+                        statusCode: 404
+                      id: does-not-exist
+                      success: false
+                      type: dashboard
+          description: A bulk delete response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Delete saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_bulk_delete?force=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\"},{\"type\":\"dashboard\",\"id\":\"does-not-exist\"}]'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_bulk_delete?force=false
+
+          [{"type":"dashboard","id":"example-dashboard-1"},{"type":"dashboard","id":"does-not-exist"}]
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_bulk_get:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_bulk_get</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Retrieves multiple Kibana saved objects by type and ID in a single request.
+
+
+        For transferring or backing up saved objects, prefer the export API (`POST /api/saved_objects/_export`).'
+      operationId: post-saved-objects-bulk-get
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkGetRequest:
+                summary: Get multiple saved objects
+                value:
+                - id: example-dashboard-1
+                  type: dashboard
+                - id: does-not-exist
+                  type: dashboard
+            schema:
+              items:
+                additionalProperties: false
+                type: object
+                properties:
+                  fields:
+                    items:
+                      maxLength: 1024
+                      type: string
+                    maxItems: 100
+                    type: array
+                  id:
+                    maxLength: 512
+                    type: string
+                  namespaces:
+                    items:
+                      maxLength: 512
+                      type: string
+                    maxItems: 100
+                    type: array
+                  type:
+                    maxLength: 256
+                    type: string
+                required:
+                - type
+                - id
+              maxItems: 10000
+              type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                bulkGetResponse:
+                  summary: A bulk get response with one not found result
+                  value:
+                    saved_objects:
+                    - attributes:
+                        title: Example dashboard 1
+                      id: example-dashboard-1
+                      managed: false
+                      namespaces:
+                      - default
+                      references: []
+                      type: dashboard
+                      updated_at: '2026-04-17T12:00:00.000Z'
+                      version: WzEsMV0=
+                    - error:
+                        error: Not Found
+                        message: Saved object [dashboard/does-not-exist] not found
+                        statusCode: 404
+                      id: does-not-exist
+                      type: dashboard
+          description: A bulk get response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Get saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_bulk_get\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\"},{\"type\":\"dashboard\",\"id\":\"does-not-exist\"}]'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_bulk_get
+
+          [{"type":"dashboard","id":"example-dashboard-1"},{"type":"dashboard","id":"does-not-exist"}]
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_bulk_resolve:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_bulk_resolve</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Retrieve multiple Kibana saved objects by ID, using any legacy URL aliases if they exist.
+
+
+        Under certain circumstances, when Kibana is upgraded, saved object migrations may necessitate regenerating some object IDs to enable new features. When an object''s ID is regenerated, a legacy URL alias is created for that object, preserving its old ID. In such a scenario, that object can be retrieved with the bulk resolve API using either its new ID or its old ID.'
+      operationId: post-saved-objects-bulk-resolve
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkResolveRequest:
+                summary: Resolve multiple saved objects
+                value:
+                - id: example-dashboard-1
+                  type: dashboard
+                - id: legacy-id
+                  type: dashboard
+            schema:
+              items:
+                additionalProperties: false
+                type: object
+                properties:
+                  id:
+                    maxLength: 512
+                    type: string
+                  type:
+                    maxLength: 256
+                    type: string
+                required:
+                - type
+                - id
+              maxItems: 10000
+              type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                bulkResolveResponse:
+                  summary: A bulk resolve response with an exact and alias match
+                  value:
+                    resolved_objects:
+                    - outcome: exactMatch
+                      saved_object:
+                        attributes:
+                          title: Example dashboard 1
+                        id: example-dashboard-1
+                        managed: false
+                        namespaces:
+                        - default
+                        references: []
+                        type: dashboard
+                        updated_at: '2026-04-17T12:00:00.000Z'
+                        version: WzEsMV0=
+                    - alias_target_id: example-dashboard-2
+                      outcome: aliasMatch
+                      saved_object:
+                        attributes:
+                          title: Example dashboard 2
+                        id: example-dashboard-2
+                        managed: false
+                        namespaces:
+                        - default
+                        references: []
+                        type: dashboard
+                        updated_at: '2026-04-17T12:00:00.000Z'
+                        version: WzEsMl0=
+          description: A bulk resolve response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Resolve saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_bulk_resolve\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\"},{\"type\":\"dashboard\",\"id\":\"legacy-id\"}]'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_bulk_resolve
+
+          [{"type":"dashboard","id":"example-dashboard-1"},{"type":"dashboard","id":"legacy-id"}]
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_bulk_update:
+    put:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_bulk_update</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Updates multiple Kibana saved objects in a single request.
+
+
+        For transferring or backing up saved objects, prefer the import and export APIs (`POST /api/saved_objects/_import` and `POST /api/saved_objects/_export`).'
+      operationId: put-saved-objects-bulk-update
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              bulkUpdateRequest:
+                summary: Update multiple saved objects (partial success)
+                value:
+                - attributes:
+                    title: Updated dashboard title
+                  id: example-dashboard-1
+                  references: []
+                  type: dashboard
+                - attributes:
+                    title: Updated dashboard title
+                  id: does-not-exist
+                  type: dashboard
+            schema:
+              items:
+                additionalProperties: false
+                type: object
+                properties:
+                  attributes:
+                    additionalProperties: {}
+                    type: object
+                  id:
+                    maxLength: 512
+                    type: string
+                  namespace:
+                    maxLength: 512
+                    minLength: 1
+                    type: string
+                  references:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        id:
+                          maxLength: 512
+                          type: string
+                        name:
+                          maxLength: 1024
+                          type: string
+                        type:
+                          maxLength: 256
+                          type: string
+                      required:
+                      - name
+                      - type
+                      - id
+                    maxItems: 1000
+                    type: array
+                  type:
+                    maxLength: 256
+                    type: string
+                  version:
+                    maxLength: 256
+                    type: string
+                required:
+                - type
+                - id
+                - attributes
+              maxItems: 10000
+              type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                bulkUpdateResponse:
+                  summary: A bulk update response with one not found result
+                  value:
+                    saved_objects:
+                    - attributes:
+                        title: Updated dashboard title
+                      id: example-dashboard-1
+                      managed: false
+                      namespaces:
+                      - default
+                      references: []
+                      type: dashboard
+                      updated_at: '2026-04-17T12:00:00.000Z'
+                      version: WzIsMV0=
+                    - error:
+                        error: Not Found
+                        message: Saved object [dashboard/does-not-exist] not found
+                        statusCode: 404
+                      id: does-not-exist
+                      type: dashboard
+          description: A bulk update response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Update saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X PUT \"${KIBANA_URL}/api/saved_objects/_bulk_update\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\",\"attributes\":{\"title\":\"Updated dashboard title\"},\"references\":[]},{\"type\":\"dashboard\",\"id\":\"does-not-exist\",\"attributes\":{\"title\":\"Updated dashboard title\"}}]'\n"
+      - lang: Console
+        source: 'PUT kbn://api/saved_objects/_bulk_update
+
+          [{"type":"dashboard","id":"example-dashboard-1","attributes":{"title":"Updated dashboard title"},"references":[]},{"type":"dashboard","id":"does-not-exist","attributes":{"title":"Updated dashboard title"}}]
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_export:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_export</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Retrieve sets of saved objects that you want to import into Kibana. You must include `type` or `objects` in the request body. The output of exporting saved objects must be treated as opaque. Tampering with exported data risks introducing unspecified errors and data loss.
+
+
+        Exported saved objects are not backwards compatible and cannot be imported into an older version of Kibana.
+
+
+        NOTE: The exported saved objects include `coreMigrationVersion` and `typeMigrationVersion` metadata. If you store exported saved objects outside of Kibana (for example in NDJSON files) or generate them yourself, you must preserve or include these fields to retain forward compatibility across Kibana versions.
+
+
+        NOTE: The `savedObjects.maxImportExportSize` configuration setting limits the number of saved objects which may be exported.'
+      operationId: post-saved-objects-export
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              exportSavedObjectsRequest:
+                summary: Export a specific saved object
+                value:
+                  excludeExportDetails: true
+                  includeReferencesDeep: false
+                  objects:
+                  - id: example-dashboard-1
+                    type: dashboard
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                excludeExportDetails:
+                  default: false
+                  description: Do not add export details entry at the end of the stream.
+                  type: boolean
+                hasReference:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        maxLength: 512
+                        type: string
+                      type:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - type
+                    - id
+                  - items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        id:
+                          maxLength: 512
+                          type: string
+                        type:
+                          maxLength: 256
+                          type: string
+                      required:
+                      - type
+                      - id
+                    maxItems: 100
+                    type: array
+                includeReferencesDeep:
+                  default: false
+                  description: Includes all of the referenced objects in the exported objects.
+                  type: boolean
+                objects:
+                  description: 'A list of objects to export. NOTE: this optional parameter cannot be combined with the `types` option'
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        maxLength: 512
+                        type: string
+                      type:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - type
+                    - id
+                  maxItems: 10000
+                  type: array
+                search:
+                  description: Search for documents to export using the Elasticsearch Simple Query String syntax.
+                  maxLength: 10000
+                  type: string
+                type:
+                  anyOf:
+                  - maxLength: 256
+                    type: string
+                  - items:
+                      maxLength: 256
+                      type: string
+                    maxItems: 100
+                    type: array
+                  description: The saved object types to include in the export. Use `*` to export all the types. Valid options depend on enabled plugins, but may include `visualization`, `dashboard`, `search`, `index-pattern`, `tag`, `config`, `config-global`, `lens`, `map`, `event-annotation-group`, `query`, `url`, `action`, `alert`, `alerting_rule_template`, `apm-indices`, `cases-user-actions`, `cases`, `cases-comments`, `infrastructure-monitoring-log-view`, `ml-trained-model`, `osquery-saved-query`, `osquery-pack`, `osquery-pack-asset`.
+      responses:
+        '200':
+          content:
+            application/x-ndjson:
+              examples:
+                exportSavedObjectsResponse:
+                  summary: The export response contains an NDJSON record for each exported object
+                  value: '{"id":"example-dashboard-1","type":"dashboard","attributes":{"title":"Example dashboard 1"},"references":[],"managed":false}
+
+                    {"exportedCount":1,"missingRefCount":0,"missingReferences":[]}
+
+                    '
+              schema: {}
+          description: Indicates a successfull call.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Either `type` or `objects` are required.: Bad Request'
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Indicates an unsuccessful response.
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    enum:
+                    - 400
+                    type: integer
+                required:
+                - error
+                - message
+                - statusCode
+          description: Bad request.
+      summary: Export saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_export\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"objects\":[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\"}],\"includeReferencesDeep\":false,\"excludeExportDetails\":true}'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_export
+
+          {"objects":[{"type":"dashboard","id":"example-dashboard-1"}],"includeReferencesDeep":false,"excludeExportDetails":true}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_find:
+    get:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_find</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Searches for Kibana saved objects.
+
+
+        For transferring or backing up saved objects, prefer the export API (`POST /api/saved_objects/_export`).'
+      operationId: get-saved-objects-find
+      parameters:
+      - description: The number of items per page.
+        in: query
+        name: per_page
+        required: false
+        schema:
+          default: 20
+          minimum: 0
+          type: number
+      - description: The page index to return.
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          minimum: 0
+          type: number
+      - description: The saved object type or types to search for. Use multiple `type` values to search across types.
+        in: query
+        name: type
+        required: true
+        schema:
+          items:
+            maxLength: 256
+            type: string
+          maxItems: 100
+          type: array
+      - description: A text search string.
+        in: query
+        name: search
+        required: false
+        schema:
+          maxLength: 10000
+          type: string
+      - description: The boolean operator to use when combining multiple values.
+        in: query
+        name: default_search_operator
+        required: false
+        schema:
+          default: OR
+          enum:
+          - OR
+          - AND
+          type: string
+      - description: The fields to search on.
+        in: query
+        name: search_fields
+        required: false
+        schema:
+          items:
+            maxLength: 1024
+            type: string
+          maxItems: 100
+          type: array
+      - description: The field to sort on.
+        in: query
+        name: sort_field
+        required: false
+        schema:
+          maxLength: 1024
+          type: string
+      - description: Return only saved objects that have a reference to the specified saved object(s).
+        in: query
+        name: has_reference
+        required: false
+        schema:
+          anyOf:
+          - additionalProperties: false
+            type: object
+            properties:
+              id:
+                maxLength: 512
+                type: string
+              type:
+                maxLength: 256
+                type: string
+            required:
+            - type
+            - id
+          - items:
+              additionalProperties: false
+              type: object
+              properties:
+                id:
+                  maxLength: 512
+                  type: string
+                type:
+                  maxLength: 256
+                  type: string
+              required:
+              - type
+              - id
+            maxItems: 100
+            type: array
+      - description: The boolean operator to use when combining multiple values.
+        in: query
+        name: has_reference_operator
+        required: false
+        schema:
+          default: OR
+          enum:
+          - OR
+          - AND
+          type: string
+      - description: Return only saved objects that do not have a reference to the specified saved object(s).
+        in: query
+        name: has_no_reference
+        required: false
+        schema:
+          anyOf:
+          - additionalProperties: false
+            type: object
+            properties:
+              id:
+                maxLength: 512
+                type: string
+              type:
+                maxLength: 256
+                type: string
+            required:
+            - type
+            - id
+          - items:
+              additionalProperties: false
+              type: object
+              properties:
+                id:
+                  maxLength: 512
+                  type: string
+                type:
+                  maxLength: 256
+                  type: string
+              required:
+              - type
+              - id
+            maxItems: 100
+            type: array
+      - description: The boolean operator to use when combining multiple values.
+        in: query
+        name: has_no_reference_operator
+        required: false
+        schema:
+          default: OR
+          enum:
+          - OR
+          - AND
+          type: string
+      - description: The fields to return for each saved object.
+        in: query
+        name: fields
+        required: false
+        schema:
+          items:
+            maxLength: 1024
+            type: string
+          maxItems: 100
+          type: array
+      - description: A KQL filter to apply to the search.
+        in: query
+        name: filter
+        required: false
+        schema:
+          maxLength: 10000
+          type: string
+      - description: Aggregations as a JSON string.
+        in: query
+        name: aggs
+        required: false
+        schema:
+          maxLength: 100000
+          type: string
+      - description: The namespaces (spaces) to search in.
+        in: query
+        name: namespaces
+        required: false
+        schema:
+          items:
+            maxLength: 512
+            type: string
+          maxItems: 100
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                findSavedObjectsResponse:
+                  summary: A page of saved objects
+                  value:
+                    page: 1
+                    per_page: 20
+                    saved_objects:
+                    - attributes:
+                        title: Example dashboard 1
+                      id: example-dashboard-1
+                      managed: false
+                      namespaces:
+                      - default
+                      references: []
+                      type: dashboard
+                      updated_at: '2026-04-17T12:00:00.000Z'
+                      version: WzEsMV0=
+                    total: 1
+          description: A search response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'This type dashboard is not allowed: Bad Request'
+                    statusCode: 400
+          description: A bad request.
+      summary: Search for saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/saved_objects/_find?type=dashboard&fields=title&per_page=20&page=1\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/saved_objects/_find?type=dashboard&fields=title&per_page=20&page=1
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_import:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_import</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Create sets of Kibana saved objects from a file created by the export API. Saved objects can only be imported into the same version, a newer minor on the same major, or the next major. Tampering with exported data risks introducing unspecified errors and data loss.
+
+
+        Exported saved objects are not backwards compatible and cannot be imported into an older version of Kibana.
+
+
+        NOTE: The exported saved objects include `coreMigrationVersion` and `typeMigrationVersion` metadata. If you store exported saved objects outside of Kibana (for example in NDJSON files) or generate them yourself, you must preserve or include these fields to retain forwards compatibility across Kibana versions.'
+      operationId: post-saved-objects-import
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: 'Overwrites saved objects when they already exist. When used, potential conflict errors are automatically resolved by overwriting the destination object. NOTE: This option cannot be used with the `createNewCopies` option.'
+        in: query
+        name: overwrite
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: 'Creates copies of saved objects, regenerates each object ID, and resets the origin. When used, potential conflict errors are avoided. NOTE: This option cannot be used with the `overwrite` and `compatibilityMode` options.'
+        in: query
+        name: createNewCopies
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: 'Applies various adjustments to the saved objects that are being imported to maintain compatibility between different Kibana versions. Use this option only if you encounter issues with imported saved objects. NOTE: This option cannot be used with the `createNewCopies` option.'
+        in: query
+        name: compatibilityMode
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          multipart/form-data:
+            examples:
+              importObjectsRequest:
+                summary: Import saved objects from an NDJSON file
+                value:
+                  file: file.ndjson
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                file:
+                  description: 'A file exported using the export API. Changing the contents of the exported file in any way before importing it can cause errors, crashes or data loss. NOTE: The `savedObjects.maxImportExportSize` configuration setting limits the number of saved objects which may be included in this file. Similarly, the `savedObjects.maxImportPayloadBytes` setting limits the overall size of the file that can be imported.'
+                  type: object
+              required:
+              - file
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                importObjectsResponse:
+                  summary: A successful import response
+                  value:
+                    errors: []
+                    success: true
+                    successCount: 1
+                    successResults:
+                    - destinationId: example-dashboard-1-copy
+                      id: example-dashboard-1
+                      managed: false
+                      type: dashboard
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  errors:
+                    description: 'Indicates the import was unsuccessful and specifies the objects that failed to import.
+
+
+                      NOTE: One object may result in multiple errors, which requires separate steps to resolve. For instance, a `missing_references` error and conflict error.'
+                    items:
+                      additionalProperties: true
+                      type: object
+                      properties: {}
+                    type: array
+                  success:
+                    description: Indicates when the import was successfully completed. When set to false, some objects may not have been created. For additional information, refer to the `errors` and `successResults` properties.
+                    type: boolean
+                  successCount:
+                    description: Indicates the number of successfully imported records.
+                    type: number
+                  successResults:
+                    description: 'Indicates the objects that are successfully imported, with any metadata if applicable.
+
+
+                      NOTE: Objects are created only when all resolvable errors are addressed, including conflicts and missing references. If objects are created as new copies, each entry in the `successResults` array includes a `destinationId` attribute.'
+                    items:
+                      additionalProperties: true
+                      type: object
+                      properties: {}
+                    type: array
+                required:
+                - success
+                - successCount
+                - errors
+                - successResults
+          description: Indicates a successful call.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: Invalid file extension .txt
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Indicates an unsuccessful response.
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    enum:
+                    - 400
+                    type: integer
+                required:
+                - error
+                - message
+                - statusCode
+          description: Bad request.
+      summary: Import saved objects
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_import?createNewCopies=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  --form file=@file.ndjson\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_import?createNewCopies=true
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/_resolve_import_errors:
+    post:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/_resolve_import_errors</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        To resolve errors from the import objects API, you can retry certain saved objects, overwrite specific saved objects, and change references to different saved objects'
+      operationId: post-saved-objects-resolve-import-errors
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: Creates copies of saved objects, regenerates each object ID, and resets the origin.
+        in: query
+        name: createNewCopies
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Applies adjustments to maintain compatibility between different Kibana versions.
+        in: query
+        name: compatibilityMode
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          multipart/form-data:
+            examples:
+              resolveImportErrorsRequest:
+                summary: Resolve import errors by retrying objects
+                value:
+                  file: file.ndjson
+                  retries:
+                  - id: example-dashboard-1
+                    overwrite: true
+                    replaceReferences: []
+                    type: dashboard
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                file:
+                  type: object
+                retries:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      createNewCopy:
+                        type: boolean
+                      destinationId:
+                        maxLength: 512
+                        type: string
+                      id:
+                        maxLength: 512
+                        type: string
+                      ignoreMissingReferences:
+                        type: boolean
+                      overwrite:
+                        default: false
+                        type: boolean
+                      replaceReferences:
+                        default: []
+                        items:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            from:
+                              maxLength: 512
+                              type: string
+                            to:
+                              maxLength: 512
+                              type: string
+                            type:
+                              maxLength: 256
+                              type: string
+                          required:
+                          - type
+                          - from
+                          - to
+                        maxItems: 100
+                        type: array
+                      type:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - type
+                    - id
+                  maxItems: 10000
+                  type: array
+              required:
+              - file
+              - retries
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                resolveImportErrorsResponse:
+                  summary: A successful resolve import errors response
+                  value:
+                    errors: []
+                    success: true
+                    successCount: 1
+                    successResults:
+                    - id: example-dashboard-1
+                      managed: false
+                      type: dashboard
+          description: A successful resolve import errors response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: Invalid file extension .txt
+                    statusCode: 400
+          description: A bad request.
+      summary: Resolve import errors
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/_resolve_import_errors\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  --form file=@file.ndjson \\\n  --form retries='[{\"type\":\"dashboard\",\"id\":\"example-dashboard-1\",\"overwrite\":true,\"replaceReferences\":[]}]'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/_resolve_import_errors
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/{type}:
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/{type}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Creates a Kibana saved object; if an ID is provided it is used, otherwise Kibana generates one.
+
+
+        For transferring or backing up saved objects, prefer the import and export APIs (`POST /api/saved_objects/_import` and `POST /api/saved_objects/_export`).'
+      operationId: post-saved-objects-type
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The saved object type.
+        in: path
+        name: type
+        required: true
+        schema:
+          maxLength: 256
+          type: string
+      - description: Overwrite an existing saved object.
+        in: query
+        name: overwrite
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createDashboardRequest:
+                summary: Create a dashboard saved object
+                value:
+                  attributes:
+                    title: Example dashboard
+                  references: []
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                attributes:
+                  additionalProperties: {}
+                  type: object
+                coreMigrationVersion:
+                  maxLength: 256
+                  type: string
+                initialNamespaces:
+                  items:
+                    maxLength: 512
+                    type: string
+                  maxItems: 100
+                  minItems: 1
+                  type: array
+                migrationVersion:
+                  additionalProperties:
+                    maxLength: 256
+                    type: string
+                  type: object
+                references:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        maxLength: 512
+                        type: string
+                      name:
+                        maxLength: 1024
+                        type: string
+                      type:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - name
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+                typeMigrationVersion:
+                  maxLength: 256
+                  type: string
+              required:
+              - attributes
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                createDashboardResponse:
+                  summary: A created saved object
+                  value:
+                    attributes:
+                      title: Example dashboard
+                    id: example-dashboard-id
+                    managed: false
+                    namespaces:
+                    - default
+                    references: []
+                    type: dashboard
+                    updated_at: '2026-04-17T12:00:00.000Z'
+                    version: WzEsMV0=
+          description: A successful create response.
+        '409':
+          content:
+            application/json:
+              examples:
+                conflictResponse:
+                  summary: A conflict error
+                  value:
+                    error: Conflict
+                    message: Saved object [dashboard/example-dashboard-id] conflict
+                    statusCode: 409
+          description: A conflict error.
+      summary: Create a saved object
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/dashboard/example-dashboard-id?overwrite=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"attributes\":{\"title\":\"Example dashboard\"},\"references\":[]}'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/dashboard/example-dashboard-id?overwrite=false
+
+          {"attributes":{"title":"Example dashboard"},"references":[]}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/{type}/{id}:
+    delete:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/{type}/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Deletes a single Kibana saved object by type and ID.
+
+
+        There is currently no complete replacement for deleting arbitrary saved objects via an HTTP API.'
+      operationId: delete-saved-objects-type-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The saved object type.
+        in: path
+        name: type
+        required: true
+        schema:
+          maxLength: 256
+          type: string
+      - description: The saved object identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 512
+          type: string
+      - description: When true, force deletion of multi-namespace objects from all namespaces.
+        in: query
+        name: force
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                deleteSavedObjectResponse:
+                  summary: Successful delete
+                  value: {}
+          description: A successful delete response.
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundResponse:
+                  summary: A not found error
+                  value:
+                    error: Not Found
+                    message: Saved object [dashboard/does-not-exist] not found
+                    statusCode: 404
+          description: Not found.
+      summary: Delete a saved object
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X DELETE \"${KIBANA_URL}/api/saved_objects/dashboard/example-dashboard-1?force=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
+      - lang: Console
+        source: 'DELETE kbn://api/saved_objects/dashboard/example-dashboard-1?force=false
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    get:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/{type}/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Retrieves a single Kibana saved object by type and ID.
+
+
+        For transferring or backing up saved objects, prefer the export API (`POST /api/saved_objects/_export`).'
+      operationId: get-saved-objects-type-id
+      parameters:
+      - description: The saved object type.
+        in: path
+        name: type
+        required: true
+        schema:
+          maxLength: 256
+          type: string
+      - description: The saved object identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 512
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getSavedObjectResponse:
+                  summary: A saved object
+                  value:
+                    attributes:
+                      title: Example dashboard 1
+                    id: example-dashboard-1
+                    managed: false
+                    namespaces:
+                    - default
+                    references: []
+                    type: dashboard
+                    updated_at: '2026-04-17T12:00:00.000Z'
+                    version: WzEsMV0=
+          description: A saved object.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Get a saved object
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/saved_objects/dashboard/example-dashboard-1\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/saved_objects/dashboard/example-dashboard-1
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    post:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/{type}/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Creates a Kibana saved object; if an ID is provided it is used, otherwise Kibana generates one.
+
+
+        For transferring or backing up saved objects, prefer the import and export APIs (`POST /api/saved_objects/_import` and `POST /api/saved_objects/_export`).'
+      operationId: post-saved-objects-type-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The saved object type.
+        in: path
+        name: type
+        required: true
+        schema:
+          maxLength: 256
+          type: string
+      - description: The saved object identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 512
+          type: string
+      - description: Overwrite an existing saved object.
+        in: query
+        name: overwrite
+        required: false
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createDashboardRequest:
+                summary: Create a dashboard saved object
+                value:
+                  attributes:
+                    title: Example dashboard
+                  references: []
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                attributes:
+                  additionalProperties: {}
+                  type: object
+                coreMigrationVersion:
+                  maxLength: 256
+                  type: string
+                initialNamespaces:
+                  items:
+                    maxLength: 512
+                    type: string
+                  maxItems: 100
+                  minItems: 1
+                  type: array
+                migrationVersion:
+                  additionalProperties:
+                    maxLength: 256
+                    type: string
+                  type: object
+                references:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        maxLength: 512
+                        type: string
+                      name:
+                        maxLength: 1024
+                        type: string
+                      type:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - name
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+                typeMigrationVersion:
+                  maxLength: 256
+                  type: string
+              required:
+              - attributes
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                createDashboardResponse:
+                  summary: A created saved object
+                  value:
+                    attributes:
+                      title: Example dashboard
+                    id: example-dashboard-id
+                    managed: false
+                    namespaces:
+                    - default
+                    references: []
+                    type: dashboard
+                    updated_at: '2026-04-17T12:00:00.000Z'
+                    version: WzEsMV0=
+          description: A successful create response.
+        '409':
+          content:
+            application/json:
+              examples:
+                conflictResponse:
+                  summary: A conflict error
+                  value:
+                    error: Conflict
+                    message: Saved object [dashboard/example-dashboard-id] conflict
+                    statusCode: 409
+          description: A conflict error.
+      summary: Create a saved object
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X POST \"${KIBANA_URL}/api/saved_objects/dashboard/example-dashboard-id?overwrite=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"attributes\":{\"title\":\"Example dashboard\"},\"references\":[]}'\n"
+      - lang: Console
+        source: 'POST kbn://api/saved_objects/dashboard/example-dashboard-id?overwrite=false
+
+          {"attributes":{"title":"Example dashboard"},"references":[]}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+    put:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/{type}/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Updates a single Kibana saved object by type and ID.
+
+
+        For transferring or backing up saved objects, prefer the import and export APIs (`POST /api/saved_objects/_import` and `POST /api/saved_objects/_export`).'
+      operationId: put-saved-objects-type-id
+      parameters:
+      - description: A required header to protect against CSRF attacks
+        in: header
+        name: kbn-xsrf
+        required: true
+        schema:
+          example: 'true'
+          type: string
+      - description: The saved object type.
+        in: path
+        name: type
+        required: true
+        schema:
+          maxLength: 256
+          type: string
+      - description: The saved object identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 512
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              updateDashboardRequest:
+                summary: Update a dashboard saved object
+                value:
+                  attributes:
+                    title: Updated dashboard title
+                  references: []
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                attributes:
+                  additionalProperties: {}
+                  type: object
+                references:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        maxLength: 512
+                        type: string
+                      name:
+                        maxLength: 1024
+                        type: string
+                      type:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - name
+                    - type
+                    - id
+                  maxItems: 1000
+                  type: array
+                upsert:
+                  additionalProperties: {}
+                  type: object
+                version:
+                  maxLength: 256
+                  type: string
+              required:
+              - attributes
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                updateDashboardResponse:
+                  summary: An updated saved object
+                  value:
+                    attributes:
+                      title: Updated dashboard title
+                    id: example-dashboard-1
+                    managed: false
+                    namespaces:
+                    - default
+                    references: []
+                    type: dashboard
+                    updated_at: '2026-04-17T12:00:00.000Z'
+                    version: WzIsMV0=
+          description: A successful update response.
+        '404':
+          content:
+            application/json:
+              examples:
+                notFoundResponse:
+                  summary: A not found error
+                  value:
+                    error: Not Found
+                    message: Saved object [dashboard/does-not-exist] not found
+                    statusCode: 404
+          description: Not found.
+        '409':
+          content:
+            application/json:
+              examples:
+                conflictResponse:
+                  summary: A conflict error
+                  value:
+                    error: Conflict
+                    message: Saved object [dashboard/example-dashboard-1] conflict
+                    statusCode: 409
+          description: A conflict error.
+      summary: Update a saved object
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X PUT \"${KIBANA_URL}/api/saved_objects/dashboard/example-dashboard-1\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"attributes\":{\"title\":\"Updated dashboard title\"},\"references\":[]}'\n"
+      - lang: Console
+        source: 'PUT kbn://api/saved_objects/dashboard/example-dashboard-1
+
+          {"attributes":{"title":"Updated dashboard title"},"references":[]}
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/saved_objects/resolve/{type}/{id}:
+    get:
+      deprecated: true
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/saved_objects/resolve/{type}/{id}</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        WARNING: This API is deprecated. This is a legacy Saved Objects API and may be removed in a future version of Kibana.
+
+
+        Retrieve a single Kibana saved object by ID, using any legacy URL alias if it exists.
+
+
+        Under certain circumstances, when Kibana is upgraded, saved object migrations may necessitate regenerating some object IDs to enable new features. When an object''s ID is regenerated, a legacy URL alias is created for that object, preserving its old ID. In such a scenario, that object can be retrieved with the resolve API using either its new ID or its old ID.'
+      operationId: get-saved-objects-resolve-type-id
+      parameters:
+      - description: The saved object type.
+        in: path
+        name: type
+        required: true
+        schema:
+          maxLength: 256
+          type: string
+      - description: The saved object identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          maxLength: 512
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                resolveSavedObjectResponse:
+                  summary: A resolved saved object (alias match)
+                  value:
+                    alias_target_id: example-dashboard-2
+                    outcome: aliasMatch
+                    saved_object:
+                      attributes:
+                        title: Example dashboard 2
+                      id: example-dashboard-2
+                      managed: false
+                      namespaces:
+                      - default
+                      references: []
+                      type: dashboard
+                      updated_at: '2026-04-17T12:00:00.000Z'
+                      version: WzEsMl0=
+          description: A resolve response.
+        '400':
+          content:
+            application/json:
+              examples:
+                badRequestResponse:
+                  summary: A bad request error
+                  value:
+                    error: Bad Request
+                    message: 'Unsupported saved object type(s): unknownType'
+                    statusCode: 400
+          description: A bad request.
+      summary: Resolve a saved object
+      tags:
+      - saved objects
+      x-codeSamples:
+      - lang: curl
+        source: "curl \\\n  -X GET \"${KIBANA_URL}/api/saved_objects/resolve/dashboard/legacy-id\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
+      - lang: Console
+        source: 'GET kbn://api/saved_objects/resolve/dashboard/legacy-id
+
+          '
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Saved_objects_400_response:
+      title: Bad request
+      type: object
+      properties:
+        error:
+          enum:
+          - Bad Request
+          type: string
+        message:
+          type: string
+        statusCode:
+          enum:
+          - 400
+          type: integer
+      required:
+      - error
+      - message
+      - statusCode
+  examples:
+    Saved_objects_key_rotation_response:
+      summary: Encryption key rotation using default parameters.
+      value:
+        failed: 0
+        successful: 300
+        total: 1000
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

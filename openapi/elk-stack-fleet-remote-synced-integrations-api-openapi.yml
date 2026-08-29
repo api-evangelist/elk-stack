@@ -1,0 +1,463 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Fleet remote synced integrations API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Fleet remote synced integrations
+  description: 'Use the Fleet remote synced integrations API to check the status of the automatic integrations synchronization on a remote cluster:
+
+    * Use the `/api/fleet/remote_synced_integrations/{outputId}/remote_status` endpoint on the management cluster to query the synchronization status of the integrations installed on the remote cluster by the ID of the configured remote Elasticsearch output.
+
+    * Use the `/api/fleet/remote_synced_integrations/status` endpoint on the remote cluster to query the synchronization status of the installed integrations.
+
+    '
+  externalDocs:
+    description: Automatic integrations synchronization documentation
+    url: https://www.elastic.co/docs/reference/fleet/automatic-integrations-synchronization
+paths:
+  /api/fleet/remote_synced_integrations/{outputId}/remote_status:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/remote_synced_integrations/{outputId}/remote_status</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the synchronization status of remote integrations for a specific output by its ID.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read AND integrations-read.'
+      operationId: get-fleet-remote-synced-integrations-outputid-remote-status
+      parameters:
+      - description: The ID of the output
+        in: path
+        name: outputId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getRemoteSyncedIntegrationsInfoExample:
+                  description: Synchronization status of remote integrations for a specific output
+                  value:
+                    integrations:
+                    - id: nginx-remote
+                      install_status:
+                        main: installed
+                        remote: installed
+                      package_name: nginx
+                      package_version: 1.20.0
+                      sync_status: COMPLETED
+                      updated_at: '2024-01-01T00:00:00.000Z'
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  custom_assets:
+                    additionalProperties:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        error:
+                          type: string
+                        is_deleted:
+                          type: boolean
+                        name:
+                          type: string
+                        package_name:
+                          type: string
+                        package_version:
+                          type: string
+                        sync_status:
+                          enum:
+                          - completed
+                          - synchronizing
+                          - failed
+                          - warning
+                          type: string
+                        type:
+                          type: string
+                        warning:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            title:
+                              type: string
+                          required:
+                          - title
+                      required:
+                      - type
+                      - name
+                      - package_name
+                      - package_version
+                      - sync_status
+                    type: object
+                  error:
+                    type: string
+                  integrations:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        error:
+                          type: string
+                        id:
+                          type: string
+                        install_status:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            main:
+                              type: string
+                            remote:
+                              type: string
+                          required:
+                          - main
+                        package_name:
+                          type: string
+                        package_version:
+                          type: string
+                        sync_status:
+                          enum:
+                          - completed
+                          - synchronizing
+                          - failed
+                          - warning
+                          type: string
+                        updated_at:
+                          type: string
+                        warning:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            title:
+                              type: string
+                          required:
+                          - title
+                      required:
+                      - sync_status
+                      - install_status
+                    maxItems: 10000
+                    type: array
+                  warning:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      title:
+                        type: string
+                    required:
+                    - title
+                required:
+                - integrations
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get remote synced integrations status by outputId
+      tags:
+      - Fleet remote synced integrations
+      x-state: Generally available; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/remote_synced_integrations/status:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/remote_synced_integrations/status</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get the synchronization status of all remote integrations across connected remote clusters.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read AND integrations-read.'
+      operationId: get-fleet-remote-synced-integrations-status
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getRemoteSyncedIntegrationsStatusExample:
+                  description: Synchronization status of remote integrations across connected remote clusters
+                  value:
+                    integrations:
+                    - id: nginx-remote
+                      install_status:
+                        main: installed
+                        remote: installed
+                      package_name: nginx
+                      package_version: 1.20.0
+                      sync_status: COMPLETED
+                      updated_at: '2024-01-01T00:00:00.000Z'
+                    - error: Failed to sync package to remote cluster
+                      id: system-remote
+                      install_status:
+                        main: installed
+                        remote: not_installed
+                      package_name: system
+                      package_version: 1.38.0
+                      sync_status: FAILED
+                      updated_at: '2024-01-01T00:00:00.000Z'
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  custom_assets:
+                    additionalProperties:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        error:
+                          type: string
+                        is_deleted:
+                          type: boolean
+                        name:
+                          type: string
+                        package_name:
+                          type: string
+                        package_version:
+                          type: string
+                        sync_status:
+                          enum:
+                          - completed
+                          - synchronizing
+                          - failed
+                          - warning
+                          type: string
+                        type:
+                          type: string
+                        warning:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            title:
+                              type: string
+                          required:
+                          - title
+                      required:
+                      - type
+                      - name
+                      - package_name
+                      - package_version
+                      - sync_status
+                    type: object
+                  error:
+                    type: string
+                  integrations:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        error:
+                          type: string
+                        id:
+                          type: string
+                        install_status:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            main:
+                              type: string
+                            remote:
+                              type: string
+                          required:
+                          - main
+                        package_name:
+                          type: string
+                        package_version:
+                          type: string
+                        sync_status:
+                          enum:
+                          - completed
+                          - synchronizing
+                          - failed
+                          - warning
+                          type: string
+                        updated_at:
+                          type: string
+                        warning:
+                          additionalProperties: false
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            title:
+                              type: string
+                          required:
+                          - title
+                      required:
+                      - sync_status
+                      - install_status
+                    maxItems: 10000
+                    type: array
+                  warning:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      title:
+                        type: string
+                    required:
+                    - title
+                required:
+                - integrations
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get remote synced integrations status
+      tags:
+      - Fleet remote synced integrations
+      x-state: Generally available; added in 9.1.0
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

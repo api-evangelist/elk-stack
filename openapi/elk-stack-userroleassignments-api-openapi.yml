@@ -1,0 +1,329 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise User Role Assignments API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: UserRoleAssignments
+paths:
+  /users/{user_id}/role_assignments:
+    post:
+      tags:
+      - UserRoleAssignments
+      summary: Add Role Assignments
+      description: Adds a set of RoleAssignments to the specified User. Currently unavailable in self-hosted ECE.
+      operationId: add-role-assignments
+      parameters:
+      - name: user_id
+        in: path
+        description: Identifier for the user; include realm name and id if required
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Role Assignments were successfully added to the target User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: 'The target user Id is invalid. (code: `role_assignments.invalid_target_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - role_assignments.invalid_target_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'Credentials were invalid. (code: `root.unauthorized`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'You are not authorised to add the specified RoleAssignments. (code: `role_assignments.unauthorized_role_assignments`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - role_assignments.unauthorized_role_assignments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users - Role Assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleAssignments'
+        description: The Role Assignments to add
+        required: true
+    delete:
+      tags:
+      - UserRoleAssignments
+      summary: Remove Role Assignments
+      description: Removes a set of RoleAssignments from the specified User. Currently unavailable in self-hosted ECE.
+      operationId: remove-role-assignments
+      parameters:
+      - name: user_id
+        in: path
+        description: Identifier for the user; include realm name and id if required
+        required: true
+        schema:
+          type: string
+      - name: force
+        in: query
+        description: Whether or not to force the removal of role assignments (effective only for Platform Admins)
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Role Assignments were successfully removed from the target User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: 'The target user Id is invalid. (code: `role_assignments.invalid_target_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - role_assignments.invalid_target_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'Credentials were invalid. (code: `root.unauthorized`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - root.unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '403':
+          description: 'You are not authorised to remove the specified RoleAssignments. (code: `role_assignments.unauthorized_role_assignments`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - role_assignments.unauthorized_role_assignments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Users - Role Assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleAssignments'
+        description: The Role Assignments to remove
+        required: true
+components:
+  schemas:
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
+    ProjectRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
+        project_ids:
+          type: array
+          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with project scope.
+    PlatformRoleAssignment:
+      type: object
+      required:
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+      description: Assignment for a role with platform scope.
+    DeploymentRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
+        deployment_ids:
+          type: array
+          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with deployment scope.
+    RoleAssignments:
+      type: object
+      properties:
+        platform:
+          type: array
+          description: Assignments for roles with platform scope.
+          items:
+            $ref: '#/components/schemas/PlatformRoleAssignment'
+        organization:
+          type: array
+          description: Assignments for roles with organization scope.
+          items:
+            $ref: '#/components/schemas/OrganizationRoleAssignment'
+        deployment:
+          type: array
+          description: Assignments for roles with deployment scope.
+          items:
+            $ref: '#/components/schemas/DeploymentRoleAssignment'
+        project:
+          description: Assignments for roles with project scope.
+          $ref: '#/components/schemas/ProjectRoleAssignments'
+      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+    OrganizationRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to a deployment or project
+          items:
+            type: string
+      description: Assignment for a role with organization scope.
+    ProjectRoleAssignments:
+      type: object
+      properties:
+        elasticsearch:
+          type: array
+          description: The Elasticsearch project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        observability:
+          type: array
+          description: The Observability project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        security:
+          type: array
+          description: The Security project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        workplaceai:
+          type: array
+          description: The WorkplaceAI project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        vectordb:
+          type: array
+          description: The VectorDB project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+      description: Assignments for roles with project scope.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

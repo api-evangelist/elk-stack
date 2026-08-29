@@ -1,0 +1,229 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Request & Response Specification Analytics API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+tags:
+- name: analytics
+paths:
+  /_application/analytics/{name}:
+    get:
+      tags:
+      - analytics
+      summary: Get behavioral analytics collections
+      operationId: search-application-get-behavioral-analytics-1
+      parameters:
+      - $ref: '#/components/parameters/search_application.get_behavioral_analytics-name'
+      responses:
+        '200':
+          $ref: '#/components/responses/search_application.get_behavioral_analytics-200'
+      deprecated: true
+      x-state: Experimental; Added in 8.8.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - analytics
+      summary: Create a behavioral analytics collection
+      operationId: search-application-put-behavioral-analytics
+      parameters:
+      - in: path
+        name: name
+        description: The name of the analytics collection to be created or updated.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search_application.put_behavioral_analytics.AnalyticsAcknowledgeResponseBase'
+      deprecated: true
+      x-state: Experimental; Added in 8.8.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - analytics
+      summary: Delete a behavioral analytics collection
+      description: The associated data stream is also deleted.
+      operationId: search-application-delete-behavioral-analytics
+      parameters:
+      - in: path
+        name: name
+        description: The name of the analytics collection to be deleted
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      deprecated: true
+      x-state: Experimental; Added in 8.8.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_application/analytics:
+    get:
+      tags:
+      - analytics
+      summary: Get behavioral analytics collections
+      operationId: search-application-get-behavioral-analytics
+      responses:
+        '200':
+          $ref: '#/components/responses/search_application.get_behavioral_analytics-200'
+      deprecated: true
+      x-state: Experimental; Added in 8.8.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_application/analytics/{collection_name}/event/{event_type}:
+    post:
+      tags:
+      - analytics
+      summary: Create a behavioral analytics collection event
+      externalDocs:
+        description: About behavioral analytics events
+        url: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/behavioral-analytics-event-reference.html
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/post-analytics-collection-event.html
+      operationId: search-application-post-behavioral-analytics-event
+      parameters:
+      - in: path
+        name: collection_name
+        description: The name of the behavioral analytics collection.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: path
+        name: event_type
+        description: The analytics event type.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/search_application._types.EventType'
+        style: simple
+      - in: query
+        name: debug
+        description: Whether the response type has to include more details
+        deprecated: false
+        schema:
+          type: boolean
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              BehavioralAnalyticsEventPostRequestExample1:
+                description: Run `POST _application/analytics/my_analytics_collection/event/search_click` to send a `search_click` event to an analytics collection called `my_analytics_collection`.
+                value: "{\n  \"session\": {\n    \"id\": \"1797ca95-91c9-4e2e-b1bd-9c38e6f386a9\"\n  },\n  \"user\": {\n    \"id\": \"5f26f01a-bbee-4202-9298-81261067abbd\"\n  },\n  \"search\":{\n    \"query\": \"search term\",\n    \"results\": {\n      \"items\": [\n        {\n          \"document\": {\n            \"id\": \"123\",\n            \"index\": \"products\"\n          }\n        }\n      ],\n      \"total_results\": 10\n    },\n    \"sort\": {\n      \"name\": \"relevance\"\n    },\n    \"search_application\": \"website\"\n  },\n  \"document\":{\n    \"id\": \"123\",\n    \"index\": \"products\"\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accepted:
+                    type: boolean
+                  event:
+                    type: object
+                required:
+                - accepted
+      deprecated: true
+      x-state: Experimental
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    search_application._types.AnalyticsCollection:
+      type: object
+      properties:
+        event_data_stream:
+          description: Data stream for the collection.
+          allOf:
+          - $ref: '#/components/schemas/search_application._types.EventDataStream'
+      required:
+      - event_data_stream
+    search_application.put_behavioral_analytics.AnalyticsAcknowledgeResponseBase:
+      allOf:
+      - $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      - type: object
+        properties:
+          name:
+            description: The name of the analytics collection created or updated
+            allOf:
+            - $ref: '#/components/schemas/_types.Name'
+        required:
+        - name
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    _types.IndexName:
+      type: string
+    _types.Name:
+      type: string
+    search_application._types.EventDataStream:
+      type: object
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+      required:
+      - name
+    search_application._types.EventType:
+      type: string
+      enum:
+      - page_view
+      - search
+      - search_click
+  responses:
+    search_application.get_behavioral_analytics-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/search_application._types.AnalyticsCollection'
+          examples:
+            BehavioralAnalyticsGetResponseExample1:
+              description: A successful response from `GET _application/analytics/my*`
+              value: "{\n  \"my_analytics_collection\": {\n      \"event_data_stream\": {\n          \"name\": \"behavioral_analytics-events-my_analytics_collection\"\n      }\n  },\n  \"my_analytics_collection2\": {\n      \"event_data_stream\": {\n          \"name\": \"behavioral_analytics-events-my_analytics_collection2\"\n      }\n  }\n}"
+  parameters:
+    search_application.get_behavioral_analytics-name:
+      in: path
+      name: name
+      description: A list of analytics collections to limit the returned information
+      required: true
+      deprecated: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/_types.Name'
+      style: simple

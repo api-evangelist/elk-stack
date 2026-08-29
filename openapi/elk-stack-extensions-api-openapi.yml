@@ -1,0 +1,584 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Extensions API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: Extensions
+paths:
+  /deployments/extensions:
+    get:
+      tags:
+      - Extensions
+      summary: List Extensions
+      description: Retrieves all of the available extensions.
+      operationId: list-extensions
+      responses:
+        '200':
+          description: The extensions that are available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extensions'
+      x-doc:
+        tag: Deployments - Extensions
+    post:
+      tags:
+      - Extensions
+      summary: Create an extension
+      description: "Creates the extension.\n The extensions API supports two types of usage patterns.\n A). Specify a `download_url`, http or https URL,  where the extension is currently hosted. This will result in extension being copied to elastic repository.\n B). Create only the extension metadata using the `POST` endpoint and then use `PUT` to upload the extension file. Leave the `download_url` unspecified in this case.\n"
+      operationId: create-extension
+      responses:
+        '201':
+          description: The extension that was just created.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+        '404':
+          description: 'Your current session does not have a user id associated with it. (code: `extensions.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'Could not download the extension from the specified URL. (code: `extensions.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'An extension already exists with the generated id. Please try again. (code: `extensions.id_already_exists`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.id_already_exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Extensions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExtensionRequest'
+        description: the data that creates the extension
+        required: true
+  /deployments/extensions/{extension_id}:
+    get:
+      tags:
+      - Extensions
+      summary: Get Extension
+      description: Retrieves an extension.
+      operationId: get-extension
+      parameters:
+      - name: extension_id
+        in: path
+        description: Id of an extension
+        required: true
+        schema:
+          type: string
+      - name: include_deployments
+        in: query
+        description: Include deployments referencing this extension. Up to only 10000 deployments will be included.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The Extension
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+        '404':
+          description: 'The extension requested does not exist. (code: `extensions.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Extensions
+    post:
+      tags:
+      - Extensions
+      summary: Update Extension
+      description: Updates an extension.
+      operationId: update-extension
+      parameters:
+      - name: extension_id
+        in: path
+        description: Id of an extension
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Extension updated successfully.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+        '401':
+          description: '* The extension does not belong to you. (code: `extensions.unauthorised`)
+
+            * Your current session does not have a user id associated with it. (code: `extensions.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.unauthorised
+                - extensions.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The extension you want does not exist. (code: `extensions.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'Could not download the extension from the specified URL. (code: `extensions.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The version you sent does not match the persisted version. (code: `extensions.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Extensions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateExtensionRequest'
+        description: The extension update data.
+        required: true
+    put:
+      tags:
+      - Extensions
+      summary: Uploads the Extension
+      description: Uploads archive for an extension.
+      operationId: upload-extension
+      parameters:
+      - name: extension_id
+        in: path
+        description: Id of an extension
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Archive uploaded successfully.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+        '401':
+          description: '* The extension does not belong to you. (code: `extensions.unauthorised`)
+
+            * Your current session does not have a user id associated with it. (code: `extensions.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.unauthorised
+                - extensions.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The extension you want does not exist. (code: `extensions.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'Could not accept the extensions file. (code: `extensions.request_execution_failed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.request_execution_failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Extensions
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Zip file that contains the extension
+                  format: binary
+              required:
+              - file
+    delete:
+      tags:
+      - Extensions
+      summary: Delete Extension
+      description: Deletes a Extension.
+      operationId: delete-extension
+      parameters:
+      - name: extension_id
+        in: path
+        description: Id of an extension
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Extension deleted successfully.
+          headers:
+            x-cloud-resource-version:
+              description: The resource version, which is used to avoid update conflicts with concurrent operations
+              schema:
+                type: string
+            x-cloud-resource-created:
+              description: The date-time when the resource was created (ISO format relative to UTC)
+              schema:
+                type: string
+            x-cloud-resource-last-modified:
+              description: The date-time when the resource was last modified (ISO format relative to UTC)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '401':
+          description: '* The extension does not belong to you. (code: `extensions.unauthorised`)
+
+            * Your current session does not have a user id associated with it. (code: `extensions.no_user_id`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.unauthorised
+                - extensions.no_user_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The extension requested does not exist. (code: `extensions.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The version you sent does not match the persisted version. (code: `extensions.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - extensions.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Extensions
+components:
+  schemas:
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    Extensions:
+      type: object
+      required:
+      - extensions
+      properties:
+        extensions:
+          type: array
+          description: The list of extensions.
+          items:
+            $ref: '#/components/schemas/Extension'
+      description: A collection of extensions
+    EmptyResponse:
+      type: object
+    Extension:
+      type: object
+      required:
+      - extension_type
+      - id
+      - name
+      - url
+      - version
+      properties:
+        id:
+          type: string
+          description: The extension ID
+        name:
+          type: string
+          description: The extension name.
+        description:
+          type: string
+          description: The extension description.
+        url:
+          type: string
+          description: The extension URL to be used in the plan.
+        download_url:
+          type: string
+          description: The download URL specified during extension creation.
+        extension_type:
+          type: string
+          description: The extension type.
+          enum:
+          - plugin
+          - bundle
+        version:
+          type: string
+          description: The Elasticsearch version.
+        deployments:
+          type: array
+          description: List of deployments using this extension. Up to only 10000 deployments will be included in the list.
+          items:
+            type: string
+        file_metadata:
+          description: The extension file metadata.
+          $ref: '#/components/schemas/ExtensionFileMetadata'
+      description: An API extension. It represents clusters' plugins and bundles
+    UpdateExtensionRequest:
+      type: object
+      required:
+      - extension_type
+      - name
+      - version
+      properties:
+        name:
+          type: string
+          description: The extension name.
+        description:
+          type: string
+          description: The extension description.
+        download_url:
+          type: string
+          description: The URL to download the extension archive.
+        extension_type:
+          type: string
+          description: The extension type.
+          enum:
+          - plugin
+          - bundle
+        version:
+          type: string
+          description: The Elasticsearch version.
+      description: The body of a request to update an extension
+    CreateExtensionRequest:
+      type: object
+      required:
+      - extension_type
+      - name
+      - version
+      properties:
+        name:
+          type: string
+          description: The extension name. Only ASCII alphanumeric and [_.-] characters allowed
+        description:
+          type: string
+          description: The extension description.
+        download_url:
+          type: string
+          description: The URL to download the extension archive.
+        extension_type:
+          type: string
+          description: The extension type.
+          enum:
+          - plugin
+          - bundle
+        version:
+          type: string
+          description: The Elasticsearch version.
+      description: The body of a request to create a new extension
+    ExtensionFileMetadata:
+      type: object
+      properties:
+        last_modified_date:
+          type: string
+          format: date-time
+          description: The date and time the extension was last modified.
+        size:
+          type: integer
+          format: int64
+          description: The extension file size in bytes.
+        url:
+          type: string
+          format: uri
+          description: The temporary URL to download the extension file. Usable for verification.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

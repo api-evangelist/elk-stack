@@ -1,0 +1,180 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Accounts API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: Accounts
+paths:
+  /account:
+    get:
+      tags:
+      - Accounts
+      summary: Fetch current account information
+      description: Fetch current account information.
+      operationId: get-current-account
+      responses:
+        '200':
+          description: Account fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: 'Account not found. (code: `accounts.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - accounts.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Accounts
+    put:
+      tags:
+      - Accounts
+      summary: Updates the current account
+      description: Updates the current account.
+      operationId: update-current-account
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: 'Account not found. (code: `accounts.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - accounts.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+        description: the current account
+        required: true
+    patch:
+      tags:
+      - Accounts
+      summary: Updates the current account
+      description: Updates the current account.
+      operationId: patch-current-account
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: 'Account not found. (code: `accounts.not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - accounts.not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: All changes in the specified object are applied to the current account according to the JSON Merge Patch processing rules. Omitting existing fields causes the same values to be reapplied. Specifying a `null` value reverts the field to the default value, or removes the field when no default value exists.
+        required: true
+components:
+  schemas:
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    AccountUpdateRequest:
+      type: object
+      properties:
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: A request to update an account
+    AccountResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The account's identifier
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: An account is the entity that owns deployments, and it is accessed by users. Accounts are isolated from each other.
+    AccountTrustSettings:
+      type: object
+      required:
+      - trust_all
+      properties:
+        trust_all:
+          type: boolean
+          description: If true, all clusters in this account will by default trust all other clusters in the same account
+      description: Settings related to the level of trust of the clusters in this account
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

@@ -1,0 +1,2686 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Elastic Cloud Enterprise Deployment Templates API
+  termsOfService: ''
+servers:
+- url: https://{{hostname}}/api/v1
+security:
+- basicAuth: []
+- apiKey: []
+tags:
+- name: DeploymentTemplates
+paths:
+  /deployments/templates:
+    get:
+      tags:
+      - DeploymentTemplates
+      summary: Get deployment templates
+      description: Retrieves all deployment templates.
+      operationId: get-deployment-templates-v2
+      parameters:
+      - name: metadata
+        in: query
+        description: An optional key/value pair in the form of (key:value) that will act as a filter and exclude any templates that do not have a matching metadata item associated.
+        required: false
+        schema:
+          type: string
+      - name: show_instance_configurations
+        in: query
+        description: If true, will return details for each instance configuration referenced by the template.
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: show_max_zones
+        in: query
+        description: If true, will populate the max_zones field in the instance configurations. Only relevant if show_instance_configurations=true.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: stack_version
+        in: query
+        description: If present, it will cause the returned deployment templates to be adapted to return only the elements allowed in that version.
+        required: false
+        schema:
+          type: string
+      - name: hide_deprecated
+        in: query
+        description: If true, templates flagged as deprecated will NOT be returned.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: show_hidden
+        in: query
+        description: If true, templates flagged as hidden will be returned.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: region
+        in: query
+        description: Region of the deployment templates
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The deployment templates were returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeploymentTemplateInfoV2'
+        '401':
+          description: 'The user is not authorized to access requested region. (code: `templates.region_not_allowed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'The requested region was not found. (code: `templates.region_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Templates
+    post:
+      tags:
+      - DeploymentTemplates
+      summary: Create deployment template
+      description: Creates a deployment template.
+      operationId: create-deployment-template-v2
+      parameters:
+      - name: validate_only
+        in: query
+        description: If true, the deployment template definition will be validated but the template will not be created.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: region
+        in: query
+        description: Region of the deployment template
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: The deployment definition was valid and the template has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '200':
+          description: The request was valid (used when validate_only is true).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '400':
+          description: 'The requested region is not supported. (code: `templates.region_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'The user is not authorized to access requested region. (code: `templates.region_not_allowed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Templates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentTemplateRequestBody'
+        description: The deployment template definition.
+        required: true
+  /deployments/templates/{template_id}:
+    get:
+      tags:
+      - DeploymentTemplates
+      summary: Get deployment template
+      description: Retrieves a deployment template by id.
+      operationId: get-deployment-template-v2
+      parameters:
+      - name: template_id
+        in: path
+        description: The identifier for the deployment template.
+        required: true
+        schema:
+          type: string
+      - name: show_instance_configurations
+        in: query
+        description: If true, will return details for each instance configuration referenced by the template.
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: show_max_zones
+        in: query
+        description: If true, will populate the max_zones field in the instance configurations. Only relevant if show_instance_configurations=true.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: stack_version
+        in: query
+        description: If present, it will cause the returned deployment template to be adapted to return only the elements allowed in that version.
+        required: false
+        schema:
+          type: string
+      - name: region
+        in: query
+        description: Region of the deployment template
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The deployment template was found and returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentTemplateInfoV2'
+        '404':
+          description: 'The deployment template specified by {template_id} cannot be found. (code: `templates.template_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.template_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'The user is not authorized to access requested region. (code: `templates.region_not_allowed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'The requested region is not supported. (code: `templates.region_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Templates
+    put:
+      tags:
+      - DeploymentTemplates
+      summary: Set deployment template
+      description: Creates or updates a deployment template.
+      operationId: set-deployment-template-v2
+      parameters:
+      - name: template_id
+        in: path
+        description: The identifier for the deployment template.
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: If specified, checks for conflicts against the version of the template (returned in 'x-cloud-resource-version' of the GET request)
+        required: false
+        schema:
+          type: string
+      - name: create_only
+        in: query
+        description: If true, will fail if the deployment template already exists at the given id
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: validate_only
+        in: query
+        description: If true, the deployment template definition will be validated but the template will not be updated.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: region
+        in: query
+        description: Region of the deployment template
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The deployment definition was valid and the template has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '201':
+          description: The deployment definition was valid and the template was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '400':
+          description: 'The requested region is not supported. (code: `templates.region_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'The user is not authorized to access requested region. (code: `templates.region_not_allowed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '404':
+          description: 'The deployment template specified by {template_id} cannot be found. (code: `templates.template_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.template_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '409':
+          description: 'The version supplied in the request conflicted with the version found on the server. (code: `templates.version_conflict`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.version_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Templates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentTemplateRequestBody'
+        description: The deployment template definition.
+        required: true
+    delete:
+      tags:
+      - DeploymentTemplates
+      summary: Delete deployment template
+      description: Deletes a deployment template by id.
+      operationId: delete-deployment-template-v2
+      parameters:
+      - name: template_id
+        in: path
+        description: The identifier for the deployment template.
+        required: true
+        schema:
+          type: string
+      - name: region
+        in: query
+        description: Region of the deployment template
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The deployment template was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '404':
+          description: 'The deployment template specified by {template_id} cannot be found. (code: `templates.template_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.template_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '401':
+          description: 'The user is not authorized to access requested region. (code: `templates.region_not_allowed`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+        '400':
+          description: 'The requested region is not supported. (code: `templates.region_not_found`)'
+          headers:
+            x-cloud-error-codes:
+              description: The error codes associated with the response
+              schema:
+                type: string
+                enum:
+                - templates.region_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicFailedReply'
+      x-doc:
+        tag: Deployments - Templates
+components:
+  schemas:
+    ElasticsearchPayload:
+      type: object
+      required:
+      - plan
+      - ref_id
+      - region
+      properties:
+        ref_id:
+          type: string
+          description: A locally-unique user-specified id for this Elasticsearch cluster
+        display_name:
+          type: string
+          description: The human readable name for the cluster (defaults to the generated cluster id if not specified)
+        region:
+          type: string
+          description: The region where this resource exists
+        plan:
+          description: The plan for building this Elasticsearch cluster
+          $ref: '#/components/schemas/ElasticsearchClusterPlan'
+        settings:
+          description: The settings for building this Elasticsearch cluster
+          $ref: '#/components/schemas/ElasticsearchClusterSettings'
+      description: An alias for an Elasticsearch Cluster paired with a request for creating one
+    AppSearchConfiguration:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of the AppSearch cluster (must be one of the ECE supported versions, and won't work unless it matches the Elasticsearch version. Leave blank to auto-detect version.)
+        docker_image:
+          type: string
+          description: A docker URI that allows overriding of the default docker image specified for this version
+        system_settings:
+          $ref: '#/components/schemas/AppSearchSystemSettings'
+        user_settings_json:
+          type: object
+          description: An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided the parameters are on the allowlist and not on the denylist. (This field together with 'user_settings_override*' and 'system_settings' defines the total set of AppSearch settings)
+          properties: {}
+        user_settings_yaml:
+          type: string
+          description: An arbitrary YAML object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_json' is allowed), provided the parameters are on the allowlist and not on the denylist. (These field together with 'user_settings_override*' and 'system_settings' defines the total set of AppSearch settings)
+        user_settings_override_json:
+          type: object
+          description: An arbitrary JSON object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_yaml' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of AppSearch settings)
+          properties: {}
+        user_settings_override_yaml:
+          type: string
+          description: An arbitrary YAML object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_json' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of AppSearch settings)
+    TransientEnterpriseSearchPlanConfiguration:
+      type: object
+      properties:
+        strategy:
+          $ref: '#/components/schemas/PlanStrategy'
+        plan_configuration:
+          $ref: '#/components/schemas/EnterpriseSearchPlanControlConfiguration'
+      description: Defines configuration parameters that control how the plan (i.e. consisting of the cluster topology and Enterprise Search settings) is applied
+    ElasticsearchNodeType:
+      type: object
+      properties:
+        master:
+          type: boolean
+          description: 'Defines whether this node can be elected master (default: false)'
+        data:
+          type: boolean
+          description: 'Defines whether this node can hold data (default: false)'
+        ingest:
+          type: boolean
+          description: 'Defines whether this node can run an ingest pipeline (default: false)'
+        ml:
+          type: boolean
+          description: 'Defines whether this node can run ml jobs, valid only for versions 5.4.0 or greater (default: false)'
+      description: 'Controls the combinations of Elasticsearch node types. TIP: By default, the Elasticsearch node is master eligible, can hold data, and run ingest pipelines. WARNING: Do not set for tiebreaker topologies.'
+    ClusterMetadataResourcesSettings:
+      type: object
+      properties:
+        cpu:
+          $ref: '#/components/schemas/ClusterMetadataCpuResourcesSettings'
+      description: The top-level configuration settings for the Elasticsearch cluster resources.
+    DeploymentCreateResources:
+      type: object
+      properties:
+        elasticsearch:
+          type: array
+          description: A list of payloads for Elasticsearch cluster creation.
+          items:
+            $ref: '#/components/schemas/ElasticsearchPayload'
+        kibana:
+          type: array
+          description: A list of payloads for Kibana creation.
+          items:
+            $ref: '#/components/schemas/KibanaPayload'
+        apm:
+          type: array
+          description: 'A list of payloads for APM creation. WARNING: For stack versions 8.0.0 and higher the integrations_server payload should be used instead, as this field becomes deprecated.'
+          items:
+            $ref: '#/components/schemas/ApmPayload'
+        appsearch:
+          type: array
+          description: A list of payloads for AppSearch updates. AppSearch has been replaced by Enterprise Search in the Elastic Stack 7.7 and higher.
+          items:
+            $ref: '#/components/schemas/AppSearchPayload'
+        enterprise_search:
+          type: array
+          description: A list of payloads for Enterprise Search creation.
+          items:
+            $ref: '#/components/schemas/EnterpriseSearchPayload'
+        integrations_server:
+          type: array
+          description: A list of payloads for Integrations Server creation.
+          items:
+            $ref: '#/components/schemas/IntegrationsServerPayload'
+      description: Describes the resources that will belong to a Deployment
+    RestoreSnapshotConfiguration:
+      type: object
+      required:
+      - snapshot_name
+      properties:
+        repository_name:
+          type: string
+          description: If specified, contains the name of the snapshot repository - else will default to the Elastic Cloud system repo ('found-snapshots')
+        snapshot_name:
+          type: string
+          description: The name of the snapshot to restore. Use '\_\_latest_success\_\_' to get the most recent snapshot from the specified repository
+        repository_config:
+          description: Raw remote snapshot restore settings. Do not send this if you are sending source_cluster_id
+          $ref: '#/components/schemas/RestoreSnapshotRepoConfiguration'
+        restore_payload:
+          $ref: '#/components/schemas/RestoreSnapshotApiConfiguration'
+        strategy:
+          type: string
+          description: The restore strategy to use. Defaults to a full restore. Partial restore will attempt to restore unavailable indices only
+          enum:
+          - partial
+          - full
+          - recovery
+        source_cluster_id:
+          type: string
+          description: If specified, contains the name of the source cluster id. Do not send this if you are sending repository_config
+      description: Restores a snapshot from a local or remote repository.
+    ElasticsearchScriptTypeSettings:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: 'If enabled (default: true) then scripts are enabled, either for sandboxing languages (by default), or for all installed languages if ''sandbox_mode'' is disabled (or for 6.x). NOTES: (Corresponds to the parameter ''script.file|stored/indexed|inline'')'
+        sandbox_mode:
+          type: boolean
+          description: 'If enabled (default: true) and this script type is enabled, then only the sandbox languages are allowed. By default the sandbox languages are painless, expressions and mustache, but this can be restricted via the ''painless_enabled'', ''mustache_enabled'' ''expression_enabled'' settings.NOTES: Not supported in 6.x. (Corresponds to the parameters ''script.engine.[painless|mustache|expressions].[file|stored|inline]'')'
+      description: Enables scripting for the specified type and controls other parameters. Store scripts in indexes (`stored`), upload in file bundles (`file`), or use in API requests (`inline`).
+    ElasticsearchConfiguration:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of the Elasticsearch cluster (must be one of the ECE supported versions). Currently cannot be different across the topology (and is generally specified in the globals). Defaults to the latest version if not specified.
+        docker_image:
+          type: string
+          description: A docker URI that allows overriding of the default docker image specified for this version
+        system_settings:
+          $ref: '#/components/schemas/ElasticsearchSystemSettings'
+        user_settings_json:
+          type: object
+          description: 'An arbitrary JSON object allowing cluster owners to set their parameters (only one of this and ''user_settings_yaml'' is allowed), provided the parameters arey are on the allowlist and not on the denylist. NOTES: (This field together with ''user_settings_override*'' and ''system_settings'' defines the total set of Elasticsearch settings)'
+          properties: {}
+        user_settings_yaml:
+          type: string
+          description: 'An arbitrary YAML object allowing cluster owners to set their parameters (only one of this and ''user_settings_json'' is allowed), provided the parameters arey are on the allowlist and not on the denylist. NOTES: (This field together with ''user_settings_override*'' and ''system_settings'' defines the total set of Elasticsearch settings)'
+        user_settings_override_json:
+          type: object
+          description: 'An arbitrary JSON object allowing ECE admins owners to set clusters'' parameters (only one of this and ''user_settings_override_yaml'' is allowed), ie in addition to the documented ''system_settings''. NOTES: (This field together with ''system_settings'' and ''user_settings*'' defines the total set of Elasticsearch settings)'
+          properties: {}
+        user_settings_override_yaml:
+          type: string
+          description: 'An arbitrary YAML object allowing ECE admins owners to set clusters'' parameters (only one of this and ''user_settings_override_json'' is allowed), ie in addition to the documented ''system_settings''. NOTES: (This field together with ''system_settings'' and ''user_settings*'' defines the total set of Elasticsearch settings)'
+        enabled_built_in_plugins:
+          type: array
+          description: 'A list of plugin names from the Elastic-supported subset that are bundled with the version images. NOTES: (Users should consult the Elastic stack objects to see what plugins are available, this is currently only available from the UI)'
+          items:
+            type: string
+        user_plugins:
+          type: array
+          description: A list of admin-uploaded plugin objects that are available for this user.
+          items:
+            $ref: '#/components/schemas/ElasticsearchUserPlugin'
+        user_bundles:
+          type: array
+          description: A list of admin-uploaded bundle objects (eg scripts, synonym files) that are available for this user.
+          items:
+            $ref: '#/components/schemas/ElasticsearchUserBundle'
+        curation:
+          description: Defines the index curation routing for the cluster
+          $ref: '#/components/schemas/ElasticsearchCuration'
+        node_attributes:
+          type: object
+          description: Defines the Elasticsearch node attributes for the instances in the topology
+          additionalProperties:
+            type: string
+      description: The Elasticsearch cluster settings. When specified at the top level, provides a field-by-field default. When specified at the topology level, provides the override settings.
+    EmptyResponse:
+      type: object
+    DiscreteSizes:
+      type: object
+      required:
+      - sizes
+      properties:
+        sizes:
+          type: array
+          description: List of supported sizes
+          items:
+            type: integer
+            format: int32
+        default_size:
+          type: integer
+          format: int32
+          description: The default size
+        resource:
+          type: string
+          description: The unit that each size represents. If not specified, it will default to 'memory'.
+          enum:
+          - memory
+          - storage
+      description: Instance sizes that are supported by the Elasticsearch instance, Kibana instance, or APM Server configuration.
+    ApmConfiguration:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of the Apm cluster (must be one of the ECE supported versions, and won't work unless it matches the APM version. Leave blank to auto-detect version.)
+        docker_image:
+          type: string
+          description: A docker URI that allows overriding of the default docker image specified for this version
+        system_settings:
+          $ref: '#/components/schemas/ApmSystemSettings'
+        user_settings_json:
+          type: object
+          description: An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided the parameters are on the allowlist and not on the denylist. (This field together with 'user_settings_override*' and 'system_settings' defines the total set of Apm settings)
+          properties: {}
+        user_settings_yaml:
+          type: string
+          description: An arbitrary YAML object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_json' is allowed), provided the parameters are on the allowlist and not on the denylist. (These field together with 'user_settings_override*' and 'system_settings' defines the total set of Apm settings)
+        user_settings_override_json:
+          type: object
+          description: An arbitrary JSON object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_yaml' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Apm settings)
+          properties: {}
+        user_settings_override_yaml:
+          type: string
+          description: An arbitrary YAML object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_json' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Apm settings)
+      description: The configuration options for the APM Server.
+    ManagedMonitoringSettings:
+      type: object
+      required:
+      - target_cluster_id
+      properties:
+        target_cluster_id:
+          type: string
+          description: The Id of the target cluster to which to send monitoring information
+      description: The settings for sending monitoring information to another cluster.
+    ElasticsearchClusterTrustSettings:
+      type: object
+      properties:
+        accounts:
+          type: array
+          description: The list of trust relationships with different accounts
+          items:
+            $ref: '#/components/schemas/AccountTrustRelationship'
+        external:
+          type: array
+          description: The list of trust relationships with external entities
+          items:
+            $ref: '#/components/schemas/ExternalTrustRelationship'
+        direct:
+          type: array
+          description: The list of trust relationships where the certificate is bundled with the trust setting. Allows configuring trust for clusters running outside of an Elastic Cloud managed environment or in an Elastic Cloud environment without an environment level trust established.
+          items:
+            $ref: '#/components/schemas/DirectTrustRelationship'
+      description: Configuration of trust with other clusters.
+    IntegrationsServerConfiguration:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of the Integrations Server cluster (must be one of the ECE supported versions, and won't work unless it matches the Integrations Server version. Leave blank to auto-detect version.)
+        docker_image:
+          type: string
+          description: A docker URI that allows overriding of the default docker image specified for this version
+        system_settings:
+          $ref: '#/components/schemas/IntegrationsServerSystemSettings'
+        user_settings_json:
+          type: object
+          description: An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided the parameters are on the allowlist and not on the denylist. (This field together with 'user_settings_override*' and 'system_settings' defines the total set of Integrations Server settings)
+          properties: {}
+        user_settings_yaml:
+          type: string
+          description: An arbitrary YAML object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_json' is allowed), provided the parameters are on the allowlist and not on the denylist. (These field together with 'user_settings_override*' and 'system_settings' defines the total set of Integrations Server settings)
+        user_settings_override_json:
+          type: object
+          description: An arbitrary JSON object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_yaml' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Integrations Server settings)
+          properties: {}
+        user_settings_override_yaml:
+          type: string
+          description: An arbitrary YAML object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_json' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Integrations Server settings)
+        mode:
+          type: string
+          description: The mode the Integrations Server is operating in.
+          enum:
+          - standalone
+          - managed
+      description: The configuration options for the Integrations Server.
+    DeploymentCreateMetadata:
+      type: object
+      properties:
+        system_owned:
+          type: boolean
+          description: Indicates if a deployment is system owned (restricts the set of operations that can be performed on it)
+        tags:
+          type: array
+          description: Arbitrary user-defined metadata associated with this deployment
+          items:
+            $ref: '#/components/schemas/MetadataItem'
+      description: Additional information about the new deployment object.
+    ClusterCurationSpec:
+      type: object
+      required:
+      - index_pattern
+      - trigger_interval_seconds
+      properties:
+        index_pattern:
+          type: string
+          description: Index matching pattern
+        trigger_interval_seconds:
+          type: integer
+          format: int32
+          description: Number of seconds after index creation to trigger this spec
+      description: Specifies the conditions to trigger an Elasticsearch cluster curation.
+    EnterpriseSearchPayload:
+      type: object
+      required:
+      - elasticsearch_cluster_ref_id
+      - plan
+      - ref_id
+      - region
+      properties:
+        ref_id:
+          type: string
+          description: A locally-unique user-specified id for Enterprise Search
+        elasticsearch_cluster_ref_id:
+          type: string
+          description: Alias to the Elasticsearch Cluster to attach Enterprise Search to
+        display_name:
+          type: string
+          description: 'The human readable name for the Enterprise Search cluster (default: takes the name of its Elasticsearch cluster)'
+        region:
+          type: string
+          description: The region where this resource exists
+        plan:
+          $ref: '#/components/schemas/EnterpriseSearchPlan'
+        settings:
+          description: The settings for building this Enterprise Search cluster
+          $ref: '#/components/schemas/EnterpriseSearchSettings'
+      description: An Enterprise Search creation request paired with the alias of the Elasticsearch cluster it should be paired with
+    TopologyElementControl:
+      type: object
+      required:
+      - min
+      properties:
+        min:
+          description: Absolute minimum size limit for a topology element created with a deployment template. If the value is 0, that means the topology element can be disabled.
+          $ref: '#/components/schemas/TopologySize'
+      description: Controls for the topology element. Only used as part of the deployment template. Ignored if included as part of a deployment.
+    InstanceMoveRequest:
+      type: object
+      required:
+      - from
+      properties:
+        from:
+          type: string
+          description: The instance id that is going to be moved
+        to:
+          type: array
+          description: An optional list of allocator ids to which the instance should be moved. If not specified then any available allocator can be used (including the current one if it is healthy)
+          items:
+            type: string
+        instance_down:
+          type: boolean
+          description: 'Tells the infrastructure that the instance should be considered as permanently down when deciding how to migrate data to new nodes. If left blank then the system will automatically decide (currently: will treat the instances as up)'
+      description: The request that specifies the Elasticsearch or stateless (eg Kibana) instances to move to allocators as part of the upgrade plan. When used in conjunction with '\_\_all\_\_' (roll all instances as a single unit) strategy, these instances are not restarted, which can sometimes enable recovery plans when these instances are boot-looping.
+    AllocatorMoveRequest:
+      type: object
+      required:
+      - from
+      properties:
+        from:
+          type: string
+          description: The allocator id off which all instances in the cluster should be moved
+        to:
+          type: array
+          description: An optional list of allocator ids to which the instance(s) should be moved. If not specified then any available allocator can be used (including the current one if it is healthy)
+          items:
+            type: string
+        allocator_down:
+          type: boolean
+          description: 'Tells the infrastructure that all instances on the allocator should be considered as permanently down when deciding how to migrate data to new nodes. If left blank then the system will auto-decide (currently: will treat the allocator as up)'
+      description: As part of the upgrade plan, identifies the move requests for the Kibana instances or APM Servers on the allocators.
+    KibanaPlanControlConfiguration:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          description: The total timeout in seconds after which the plan is cancelled even if it is not complete. Defaults to 4x the max memory capacity per node (in MB)
+        calm_wait_time:
+          type: integer
+          format: int64
+          description: This timeout determines how long to give a cluster after it responds to API calls before performing actual operations on it. It defaults to 5s
+        move_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceMoveRequest'
+        move_allocators:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocatorMoveRequest'
+        reallocate_instances:
+          type: boolean
+          description: 'If true (default: false) does not allow re-using any existing instances currently in the cluster, ie even unchanged instances will be re-created'
+        preferred_allocators:
+          type: array
+          description: List of allocators on which instances are placed if possible (if not possible/not specified then any available allocator with space is used)
+          items:
+            type: string
+        preferred_allocator_tags:
+          type: object
+          description: Map containing allocators tags in form of key value pairs, increasing the likelihood during move requests for allocators with matching tags, to be selected as target allocators
+          additionalProperties:
+            type: string
+        extended_maintenance:
+          type: boolean
+          description: If true (default false), does not clear the maintenance flag (which prevents its API from being accessed except by the constructor) on new instances added until after a snapshot has been restored, otherwise, the maintenance flag is cleared once the new instances successfully join the new cluster
+        cluster_reboot:
+          type: string
+          description: Set to 'forced' to force a reboot as part of the upgrade plan
+          enum:
+          - forced
+        override_failsafe:
+          type: boolean
+          description: If false (the default), the plan fails if it determines that the request can result in unsafe operations. Setting this flag overrides some of these check restraints.
+      description: The configuration settings for the timeout and fallback parameters.
+    RollingGrowShrinkStrategyConfig:
+      type: object
+      description: A strategy that creates new Elasticsearch instances, Kibana instances, and APM Servers with the new plan, then migrates the node data to minimize the amount of spare capacity.
+    ElasticsearchUserPlugin:
+      type: object
+      required:
+      - elasticsearch_version
+      - name
+      - url
+      properties:
+        name:
+          type: string
+          description: The name of the plugin
+        url:
+          type: string
+          description: The URL of the plugin (must be accessible from the ECE infrastructure)
+        elasticsearch_version:
+          type: string
+          description: The supported Elasticsearch version (must match the version in the plan)
+      description: A list of admin-uploaded plugin objects.
+    KibanaPayload:
+      type: object
+      required:
+      - elasticsearch_cluster_ref_id
+      - plan
+      - ref_id
+      - region
+      properties:
+        ref_id:
+          type: string
+          description: A locally-unique user-specified id for Kibana
+        elasticsearch_cluster_ref_id:
+          type: string
+          description: Alias to the Elasticsearch Cluster to attach Kibana to
+        display_name:
+          type: string
+          description: 'The human readable name for the Kibana cluster (default: takes the name of its Elasticsearch cluster)'
+        region:
+          type: string
+          description: The region where this resource exists
+        plan:
+          $ref: '#/components/schemas/KibanaClusterPlan'
+        settings:
+          description: The settings for building this Kibana cluster
+          $ref: '#/components/schemas/KibanaClusterSettings'
+      description: A Kibana creation request paired with the alias of the Elasticsearch cluster it should be paired with
+    GrowShrinkStrategyConfig:
+      type: object
+      description: A strategy that creates instances with the new plan, migrates data from the old instances, then shuts down the old instances. `GrowShrinkStrategyConfig` is safer than 'rolling' and ensures single node availability during a plan change, but can be a lot slower on larger clusters.
+    ClusterSnapshotRetention:
+      type: object
+      properties:
+        snapshots:
+          type: integer
+          format: int32
+          description: Number of snapshots to retain
+        max_age:
+          type: string
+          description: 'Total retention period for all snapshots, with the format ''length unit'' (space is optional), where unit can be one of: d (day), h (hour), min (minute)'
+      description: Information about the Elasticsearch cluster snapshot retention.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    KibanaDeeplink:
+      type: object
+      required:
+      - semver
+      - uri
+      properties:
+        semver:
+          type: string
+          description: Semver condition when to apply the URI.
+        uri:
+          type: string
+          description: URI to which the user should be directed.
+      description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
+    ElasticsearchCuration:
+      type: object
+      required:
+      - from_instance_configuration_id
+      - to_instance_configuration_id
+      properties:
+        from_instance_configuration_id:
+          type: string
+          description: The source instance configuration
+        to_instance_configuration_id:
+          type: string
+          description: The destination instance configuration
+      description: The structure that defines the routing settings for index curation.
+    IntegrationsServerPayload:
+      type: object
+      required:
+      - elasticsearch_cluster_ref_id
+      - plan
+      - ref_id
+      - region
+      properties:
+        ref_id:
+          type: string
+          description: A locally-unique user-specified id for the Integrations Server
+        elasticsearch_cluster_ref_id:
+          type: string
+          description: Alias to the Elasticsearch Cluster to attach the Integrations Server to
+        display_name:
+          type: string
+          description: 'The human readable name for the Integrations Server cluster (default: takes the name of its Elasticsearch cluster)'
+        region:
+          type: string
+          description: The region where this resource exists
+        plan:
+          $ref: '#/components/schemas/IntegrationsServerPlan'
+        settings:
+          description: The settings for building this Integrations Server cluster
+          $ref: '#/components/schemas/IntegrationsServerSettings'
+      description: An Integrations Server creation request paired with the alias of the Elasticsearch cluster it should be paired with
+    InstanceConfigurationInfo:
+      type: object
+      required:
+      - discrete_sizes
+      - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the instance configuration
+        name:
+          type: string
+          description: Display name for the instance configuration.
+        config_version:
+          type: integer
+          format: int32
+          description: If the IC is configuration controlled, this field is the version either being read back (reads return the latest IC unless specified by the 'config_version' URL param), or the version to update. Cannot be used in creates. For unversioned IC reads it is left empty.
+        description:
+          type: string
+          description: Optional description for the instance configuration
+        instance_type:
+          type: string
+          description: The type of instance. For instance configurations where the type is specified in the 'id', the default value of 'instance_type' will be automatically inferred.
+          enum:
+          - elasticsearch
+          - kibana
+          - apm
+          - integrations_server
+          - appsearch
+          - enterprise_search
+        node_types:
+          type: array
+          description: Node types (master, data) for the instance. For instance configurations where the type (and tier) is specified in the 'id', the default value of 'node_types' will be automatically inferred.
+          items:
+            type: string
+        discrete_sizes:
+          description: Numerics representing possible instance sizes that the instance configuration supports.
+          $ref: '#/components/schemas/DiscreteSizes'
+        storage_multiplier:
+          type: number
+          format: double
+          description: Settings for the instance storage multiplier
+        cpu_multiplier:
+          type: number
+          format: double
+          description: Settings for the instance CPU multiplier
+        metadata:
+          type: object
+          description: Optional arbitrary metadata to associate with this template.
+          properties: {}
+        max_zones:
+          type: integer
+          format: int32
+          description: The maximum number of availability zones in which this instance configuration has allocators. This field will be missing unless explicitly requested with the show_max_zones parameter.
+          readOnly: true
+      description: The configuration template for Elasticsearch instances, Kibana instances, and APM Servers.
+    EnterpriseSearchSettings:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ClusterMetadataSettings'
+      description: The settings for the Enterprise Search.
+    AppSearchTopologyElement:
+      type: object
+      properties:
+        node_type:
+          description: Defines the AppSearch node type
+          $ref: '#/components/schemas/AppSearchNodeTypes'
+        instance_configuration_id:
+          type: string
+          description: Controls the allocation of this topology element as well as allowed sizes and node_types. It needs to match the id of an existing instance configuration.
+        instance_configuration_version:
+          type: integer
+          format: int32
+          description: The version of the Instance Configuration Id. If it is unset, the meaning depends on read vs writes. For deployment reads, it is equivalent to version 0 (or the IC is unversioned); for deployment creates and deployment template use, it is equivalent to 'the latest version'; and for deployment updates, it is equivalent to 'retain the current version'.
+        size:
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: number of zones in which nodes will be placed
+        appsearch:
+          $ref: '#/components/schemas/AppSearchConfiguration'
+      description: Defines the topology of the AppSearch nodes (eg number/capacity of nodes, and where they can be allocated)
+    AutodetectStrategyConfig:
+      type: object
+      description: A strategy that lets constructor choose the most optimal way to execute the plan.
+    TransientAppSearchPlanConfiguration:
+      type: object
+      properties:
+        strategy:
+          $ref: '#/components/schemas/PlanStrategy'
+        plan_configuration:
+          $ref: '#/components/schemas/AppSearchPlanControlConfiguration'
+      description: Defines configuration parameters that control how the plan (ie consisting of the cluster topology and AppSearch settings) is applied
+    RestoreSnapshotRepoConfiguration:
+      type: object
+      properties:
+        raw_settings:
+          type: object
+          description: The remote snapshot settings raw JSON - see the Elasticsearch '_snapshot' documentation for more details on supported formats
+          properties: {}
+      description: Configures the location of a remote repository. The default is the system repository.
+    TrustedCertificate:
+      type: object
+      required:
+      - pem
+      properties:
+        pem:
+          type: string
+          description: The public ca certificate as string in PEM format.
+        metadata:
+          description: Metadata about the certificate, including fingerprint and expiry date. Generated by the Cloud service and ignored on write.
+          readOnly: true
+          $ref: '#/components/schemas/CertificateMetaData'
+      description: An x509 certificate used by a DirectTrustRelationship
+    ApmSettings:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ClusterMetadataSettings'
+      description: The settings for the APM Server.
+    RollingStrategyConfig:
+      type: object
+      properties:
+        group_by:
+          type: string
+          description: Specifies the grouping attribute to use when rolling several instances. Instances that share the same value for the provided attribute key are rolled together as a unit. Examples that make sense to use are '\_\_all\_\_' (roll all instances as a single unit), 'logical_zone_name' (roll instances by zone), '\_\_name\_\_' (roll one instance at a time, the default if not specified). Note that '\_\_all\_\_' is required when performing a major version upgrade
+        allow_inline_resize:
+          type: boolean
+          description: 'Whether we allow changing the capacity of instances (default false). This is currently implemented by stopping, re-creating then starting the affected instance on its associated allocator when performing the changes. NOTES: This requires a round-trip through the allocation infrastructure of the active constructor, as it has to reserve the target capacity without over-committing'
+        skip_synced_flush:
+          type: boolean
+          description: 'Whether to skip attempting to do a synced flush on the filesystem of the container (default: false), which is less safe but may be required if the container is unhealthy'
+        shard_init_wait_time:
+          type: integer
+          format: int64
+          description: 'The time, in seconds, to wait for shards that show no progress of initializing before rolling the next group (default: 10 minutes)'
+      description: 'Performs inline, rolling configuration changes that mutate existing containers. TIP: This is the fastest way to update a plan, but can fail for complex plan changes, such as topology changes. Also, this is less safe for configuration changes that leave a cluster in a non running state. NOTE: When you perform a major version upgrade, and ''group_by'' is set to ''pass:macros[__all__]'';, rolling is required.'
+    ApmPlan:
+      type: object
+      required:
+      - apm
+      properties:
+        cluster_topology:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApmTopologyElement'
+        apm:
+          $ref: '#/components/schemas/ApmConfiguration'
+        transient:
+          $ref: '#/components/schemas/TransientApmPlanConfiguration'
+      description: The plan for the APM Server.
+    KibanaSystemSettings:
+      type: object
+      properties:
+        elasticsearch_username:
+          type: string
+          description: Optionally override the account within Elasticsearch - defaults to a system account that always exists (if specified, the password must also be specified). Note that this field is never returned from the API, it is write only.
+        elasticsearch_password:
+          type: string
+          description: Optionally override the account within Elasticsearch - defaults to a system account that always exists (if specified, the username must also be specified). Note that this field is never returned from the API, it is write only.
+      description: 'A subset of Kibana settings. TIP: To define the complete set of Elasticsearch settings, use `KibanaSystemSettings` with `user_settings_override_` and `user_settings_`.'
+    IntegrationsServerPlanControlConfiguration:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          description: The total timeout in seconds after which the plan is cancelled even if it is not complete. Defaults to 4x the max memory capacity per node (in MB)
+        calm_wait_time:
+          type: integer
+          format: int64
+          description: This timeout determines how long to give a cluster after it responds to API calls before performing actual operations on it. It defaults to 5s
+        move_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceMoveRequest'
+        move_allocators:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocatorMoveRequest'
+        reallocate_instances:
+          type: boolean
+          description: 'If true (default: false) does not allow re-using any existing instances currently in the cluster, ie even unchanged instances will be re-created'
+        preferred_allocators:
+          type: array
+          description: List of allocators on which instances are placed if possible (if not possible/not specified then any available allocator with space is used)
+          items:
+            type: string
+        preferred_allocator_tags:
+          type: object
+          description: Map containing allocators tags in form of key value pairs, increasing the likelihood during move requests for allocators with matching tags, to be selected as target allocators
+          additionalProperties:
+            type: string
+        extended_maintenance:
+          type: boolean
+          description: If true (default false), does not clear the maintenance flag (which prevents its API from being accessed except by the constructor) on new instances added until after a snapshot has been restored, otherwise, the maintenance flag is cleared once the new instances successfully join the new cluster
+        cluster_reboot:
+          type: string
+          description: Set to 'forced' to force a reboot as part of the upgrade plan
+          enum:
+          - forced
+        override_failsafe:
+          type: boolean
+          description: If false (the default), the plan fails if it determines that the request can result in unsafe operations. Setting this flag overrides some of these check restraints.
+      description: The plan control configuration options for the Integrations Server.
+    DeploymentCreateSettings:
+      type: object
+      properties:
+        traffic_filter_settings:
+          description: The traffic filter rulesets to apply to this deployment.
+          $ref: '#/components/schemas/TrafficFilterSettings'
+        observability:
+          description: Observability settings for this deployment
+          $ref: '#/components/schemas/DeploymentObservabilitySettings'
+        byok:
+          description: BYOK settings for this deployment. Not supported on ECE.
+          $ref: '#/components/schemas/ByokSettings'
+        autoscaling_enabled:
+          type: boolean
+          description: Enable autoscaling for this deployment.
+        solution_type:
+          type: string
+          description: 'An optional string that declares the deployment''s expected application. Example supported values are: elasticsearch, observability, security.'
+      description: Additional configuration for the new deployment object.
+    ClusterSnapshotRepositoryStatic:
+      type: object
+      properties:
+        repository_type:
+          type: string
+          description: 'Type of snapshot repository, ie: S3'
+        settings:
+          type: object
+          description: Settings associated with snapshot repository
+          properties: {}
+      description: The static object for the Elasticsearch cluster snapshot repository.
+    KibanaClusterSettings:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ClusterMetadataSettings'
+      description: The settings for multiple Kibana instances.
+    ApmPayload:
+      type: object
+      required:
+      - elasticsearch_cluster_ref_id
+      - plan
+      - ref_id
+      - region
+      properties:
+        ref_id:
+          type: string
+          description: A locally-unique user-specified id for APM
+        elasticsearch_cluster_ref_id:
+          type: string
+          description: Alias to the Elasticsearch Cluster to attach APM to
+        display_name:
+          type: string
+          description: 'The human readable name for the APM cluster (default: takes the name of its Elasticsearch cluster)'
+        region:
+          type: string
+          description: The region where this resource exists
+        plan:
+          $ref: '#/components/schemas/ApmPlan'
+        settings:
+          description: The settings for building this APM cluster
+          $ref: '#/components/schemas/ApmSettings'
+      description: An APM creation request paired with the alias of the Elasticsearch cluster it should be paired with
+    DirectTrustRelationship:
+      type: object
+      required:
+      - certificates
+      - name
+      - trust_all
+      properties:
+        uid:
+          type: string
+          description: Auto generated identifier for this trust, allows distinguishing between update vs remove and add.
+        name:
+          type: string
+          description: a human readable name of the trust relationship
+        type:
+          type: string
+          description: The type can either be ESS, ECE, generic or proxy. If none is specified, then generic is assumed. If proxy is specified, trust_all should be false and trust_allowlist, scope_id and additional_node_names should be omitted.
+          enum:
+          - ECE
+          - ESS
+          - generic
+          - proxy
+        trust_all:
+          type: boolean
+          description: If true, scope_id is required and the `trust_allowlist` is ignored and all clusters matching the scope id will be trusted.
+        trust_allowlist:
+          type: array
+          description: The list of clusters with matching scope to trust. Only used when `trust_all` is false. Providing one or more clusters makes scope_id mandatory.
+          items:
+            type: string
+        scope_id:
+          type: string
+          example: abc123
+          description: A lowercase alphanumerical string of max 32 characters. Usually an organization id or an environment id, but could really be any suitable suffix for clusters using the CA certificate of this trust. Required unless trust_all is false and trust_allowlist is empty.
+        additional_node_names:
+          type: array
+          description: A list of node names trusted in addition to those deducible from trust_allowlist and scope id. Allows trusting nodes that don't have a scoped name at the cost of maintaining the list. Mandatory if scope id is not defined. Wildcards are not allowed.
+          items:
+            type: string
+        certificates:
+          type: array
+          description: The public ca certificate(s) to trust. Only one is required, but it is possible to specify multiple certificates in order to facilitate key rotation.
+          items:
+            $ref: '#/components/schemas/TrustedCertificate'
+      description: The trust relationship with entities trusted directly having their certificate bundled together with the trust settings.
+    ClusterSnapshotSettings:
+      type: object
+      properties:
+        repository:
+          description: Snapshot repository configuration
+          $ref: '#/components/schemas/ClusterSnapshotRepositoryInfo'
+        interval:
+          type: string
+          description: 'Interval between snapshots, with the format ''length unit'' (space is optional), where unit can be one of: d (day), h (hour), min (minute). Default is 30 minutes'
+        pending_interval:
+          type: string
+          description: 'Interval between snapshot progress checks, with the format ''length unit'' (space is optional), where unit can be one of: d (day), h (hour), min (minute). Default is 1 minute'
+        wait_time_after_snapshotting:
+          type: string
+          description: 'The time to wait between snapshot phases (snapshot, purge), with the format ''length unit'' (space is optional), where unit can be one of: d (day), h (hour), min (minute). Default is 10 minutes'
+        enabled:
+          type: boolean
+          description: Indicates if Snapshotting is enabled
+        suspended:
+          type: array
+          description: List of temporary snapshot suspensions
+          items:
+            type: string
+        retention:
+          description: Cluster snapshot retention information
+          $ref: '#/components/schemas/ClusterSnapshotRetention'
+        slm:
+          type: boolean
+          description: When set to true, the deployment will have SLM enabled. Default value is true.
+          readOnly: true
+        cron_expression:
+          type: string
+          description: Cron expression indicating when should snapshots be taken. This can be enabled only if SLM is enabled for the deployment and 'interval' is not present
+      description: The snapshot configuration settings for an Elasticsearch cluster.
+    SnapshotDependencyConfiguration:
+      type: object
+      required:
+      - source_cluster_id
+      properties:
+        source_cluster_id:
+          type: string
+          description: The cluster ID of the source cluster whose snapshots will be made available
+      description: Configuration for attaching a snapshot repository dependency from another cluster. This creates a snapshot repository in the target cluster pointing to the source cluster's snapshots.
+    ByokSettings:
+      type: object
+      required:
+      - key_resource_path
+      properties:
+        key_resource_path:
+          type: string
+          description: Key path (i.e arn:aws:kms:us-east-1:1234567890:key/12345678-0000-0000-0000-000000000000).
+      description: Information required to create a Bring Your Own Key (BYOK) deployment.
+    KeystoreSecret:
+      type: object
+      properties:
+        value:
+          type: object
+          description: 'Value of this setting. This can either be a string or a JSON object that is stored as a JSON string in the keystore. NOTE: When the keystore secret is unspecified, it is removed.'
+          properties: {}
+        as_file:
+          type: boolean
+          description: Stores the keystore secret as a file. The default is false, which stores the keystore secret as string when value is a plain string, or true when value is an object.
+        is_allowlisted:
+          type: boolean
+          description: Read-only field, ignored on write. Only returned when calling the set-deployment-es-resource-keystore endpoint with `validate_only=true`. True if this setting/value pair is allowlisted (the allowlist is for informational purposes).
+        is_reloadable:
+          type: boolean
+          description: Read-only field, ignored on write. Only returned when calling the set-deployment-es-resource-keystore endpoint with `validate_only=true`. True if this setting is reloadable, or if false it requires a cluster restart.
+      description: The value that you configure for the Elasticsearch keystore secret.
+    ApmSystemSettings:
+      type: object
+      properties:
+        elasticsearch_username:
+          type: string
+          description: Optionally override the account within APM - defaults to a system account that always exists (if specified, the password must also be specified). Note that this field is never returned from the API, it is write only.
+        elasticsearch_password:
+          type: string
+          description: Optionally override the account within APM - defaults to a system account that always exists (if specified, the username must also be specified). Note that this field is never returned from the API, it is write only.
+        secret_token:
+          type: string
+          description: Optionally override the secret token within APM - defaults to the previously existing secretToken
+        debug_enabled:
+          type: boolean
+          description: Optionally enable debug mode for APM servers - defaults false
+      description: "A structure that defines a curated subset of the APM Server settings. \nTIP: To define the complete set of APM Server setting, use `ApmSystemSettings` with `user_settings_override_` and `user_settings_`."
+    EnterpriseSearchNodeTypes:
+      type: object
+      required:
+      - appserver
+      - connector
+      - worker
+      properties:
+        appserver:
+          type: boolean
+          description: Defines whether this instance should run as Application/API server
+        worker:
+          type: boolean
+          description: Defines whether this instance should run as background worker
+        connector:
+          type: boolean
+          description: Defines whether this instance should run as Connector
+      description: Node types to enable for an Enterprise Search instance
+    ClusterMetadataSettings:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The display name of the cluster
+        owner_id:
+          type: string
+          description: The user id (referencing whatever user database is in use) of the cluster owner
+        organization_id:
+          type: string
+          description: The organization that owns the deployment
+          readOnly: true
+        subscription_level:
+          type: string
+          description: Subscription level of the cluster
+        system_owned:
+          type: boolean
+          description: Indicates if a cluster is system owned (restricts the set of operations that can be performed on it)
+        contact_email:
+          type: string
+          description: Contact email for the cluster
+        hidden:
+          type: boolean
+          description: Whether or not this cluster is hidden from the normal clusters list
+          readOnly: true
+        resources:
+          $ref: '#/components/schemas/ClusterMetadataResourcesSettings'
+      description: The top-level configuration settings for the Elasticsearch cluster.
+    ElasticsearchPlanControlConfiguration:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          description: 'The total timeout in seconds after which the plan is cancelled even if it is not complete. Defaults to 4x the max memory capacity per node (in MB). NOTES: A 3 zone cluster with 2 nodes of 2048 each would have a timeout of 4*2048=8192 seconds. Timeout does not include time required to run rollback actions.'
+        calm_wait_time:
+          type: integer
+          format: int64
+          description: This timeout determines how long to give a cluster after it responds to API calls before performing actual operations on it. It defaults to 5s
+        move_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceMoveRequest'
+        move_allocators:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocatorMoveRequest'
+        move_only:
+          type: boolean
+          description: 'If true (default: false) only move_instances and move_allocators instructions will be executed, all other changes will be ignored'
+        reallocate_instances:
+          type: boolean
+          description: 'If true (default: false) does not allow re-using any existing instances currently in the cluster, ie even unchanged instances will be re-created'
+        preferred_allocators:
+          type: array
+          description: List of allocators on which instances are placed if possible (if not possible/not specified then any available allocator with space is used)
+          items:
+            type: string
+        preferred_allocator_tags:
+          type: object
+          description: Map containing allocators tags in form of key value pairs, increasing the likelihood during move requests for allocators with matching tags, to be selected as target allocators
+          additionalProperties:
+            type: string
+        skip_snapshot:
+          type: boolean
+          description: 'If true (default: false), does not take (or require) a successful snapshot to be taken before performing any potentially destructive changes to this cluster'
+        max_snapshot_attempts:
+          type: integer
+          format: int32
+          description: 'If taking a snapshot (ie unless ''skip_snapshots'': true) then will retry on failure at most this number of times (default: 5)'
+        max_snapshot_age:
+          type: integer
+          format: int64
+          description: When you take a snapshot and 'skip_snapshots' is false, specifies the maximum age in seconds of the most recent snapshot before a new snapshot is created. Default is 300
+        extended_maintenance:
+          type: boolean
+          description: If true (default false), does not clear the maintenance flag (which prevents its API from being accessed except by the constructor) on new instances added until after a snapshot has been restored, otherwise, the maintenance flag is cleared once the new instances successfully join the new cluster
+        cluster_reboot:
+          type: string
+          description: 'Set to ''forced'' to force a reboot as part of the upgrade plan. NOTES: (ie taking an existing plan and leaving it alone except for setting ''transient.plan_configuration.cluster_reboot'': ''forced'' will reboot the cluster)'
+          enum:
+          - forced
+        override_failsafe:
+          type: boolean
+          description: If false (the default) then the plan will fail out if it believes the requested sequence of operations can result in data loss - this flag will override some of these restraints
+        skip_data_migration:
+          type: boolean
+          description: 'If true (default: false) then the plan will not wait for data to be migrated from old instances to new instances before continuing the plan (potentially deleting the old instances and losing data)'
+        skip_upgrade_checker:
+          type: boolean
+          description: If false, the cluster is checked for issues that should be resolved before migration (eg contains old Lucene segments), if true this is bypassed
+        skip_post_upgrade_steps:
+          type: boolean
+          description: If false (the default), the cluster will run (currently) 2.x->5.x operations for any plan change ending with a 5.x cluster (eg apply a cluster license, ensure Monitoring is configured)
+        skip_snapshot_post_major_upgrade:
+          type: boolean
+          description: If false (the default), the cluster will perform a snapshot after a major version upgrade takes place
+      description: The configuration settings for the timeout and fallback parameters.
+    IntegrationsServerPlan:
+      type: object
+      required:
+      - integrations_server
+      properties:
+        cluster_topology:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntegrationsServerTopologyElement'
+        integrations_server:
+          $ref: '#/components/schemas/IntegrationsServerConfiguration'
+        transient:
+          $ref: '#/components/schemas/TransientIntegrationsServerPlanConfiguration'
+      description: The plan for the Integrations Server.
+    TrafficFilterSettings:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: IDs of the traffic filter rulesets
+          items:
+            type: string
+      description: The configuration settings for the traffic filter.
+    TransientKibanaPlanConfiguration:
+      type: object
+      properties:
+        strategy:
+          $ref: '#/components/schemas/PlanStrategy'
+        plan_configuration:
+          $ref: '#/components/schemas/KibanaPlanControlConfiguration'
+      description: Defines the configuration parameters that control how the plan is applied. For example, the Elasticsearch cluster topology and Kibana instance settings.
+    IntegrationsServerTopologyElement:
+      type: object
+      properties:
+        instance_configuration_id:
+          type: string
+          description: Controls the allocation of this topology element as well as allowed sizes and node_types. It needs to match the id of an existing instance configuration.
+        instance_configuration_version:
+          type: integer
+          format: int32
+          description: The version of the Instance Configuration Id. If it is unset, the meaning depends on read vs writes. For deployment reads, it is equivalent to version 0 (or the IC is unversioned); for deployment creates and deployment template use, it is equivalent to 'the latest version'; and for deployment updates, it is equivalent to 'retain the current version'.
+        size:
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: number of zones in which nodes will be placed
+        integrations_server:
+          $ref: '#/components/schemas/IntegrationsServerConfiguration'
+      description: Defines the topology of the Integrations Server nodes. For example, the number or capacity of the nodes, and where you can allocate the nodes.
+    TransientIntegrationsServerPlanConfiguration:
+      type: object
+      properties:
+        strategy:
+          $ref: '#/components/schemas/PlanStrategy'
+        plan_configuration:
+          $ref: '#/components/schemas/IntegrationsServerPlanControlConfiguration'
+      description: Defines the configuration parameters that control how the plan is applied. For example, the Elasticsearch cluster topology and Integrations Server settings.
+    RestoreSnapshotApiConfiguration:
+      type: object
+      properties:
+        indices:
+          type: array
+          description: The list of indices to restore (supports +ve and -ve selection and wildcarding - see the default Elasticsearch index format documentation)
+          items:
+            type: string
+        raw_settings:
+          type: object
+          description: This JSON object (merged with the 'indices' field (if present) is passed untouched into the restore command - see the Elasticsearch '_snapshot' documentation for more details on supported formats
+          properties: {}
+      description: The configuration for the restore command, such as which indices you want to restore.
+    AppSearchNodeTypes:
+      type: object
+      required:
+      - appserver
+      - worker
+      properties:
+        appserver:
+          type: boolean
+          description: Defines whether this instance should run as Application/API server
+        worker:
+          type: boolean
+          description: Defines whether this instance should run as background worker
+      description: Node types to enable for an AppSearch instance
+    DeploymentCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name for the deployment; otherwise this will be the generated deployment id
+        resources:
+          description: The Resources that will belong to this Deployment
+          $ref: '#/components/schemas/DeploymentCreateResources'
+        settings:
+          description: Additional configuration for this Deployment
+          $ref: '#/components/schemas/DeploymentCreateSettings'
+        metadata:
+          description: Additional information about this deployment
+          $ref: '#/components/schemas/DeploymentCreateMetadata'
+        alias:
+          type: string
+          description: A user-defined alias to use in place of Cluster IDs for user-friendly URLs
+        region:
+          type: string
+          description: Identifier of the region to be used as the default for all the resources of the deployment
+        version:
+          type: string
+          description: The version for all the resources of the deployment (must be one of the supported versions). Defaults to the latest version if not specified.
+      description: A request for creating a new Deployment consisting of multiple clusters
+    ElasticsearchClusterSettings:
+      type: object
+      properties:
+        snapshot:
+          description: The snapshot settings for this deployment. When provided, snapshot settings are changed as specified. A `null` value reverts the field to the default value. Otherwise, all snapshot settings remain as they were set previously.
+          $ref: '#/components/schemas/ClusterSnapshotSettings'
+        monitoring:
+          description: The monitoring settings for this deployment. When provided, monitoring settings are changed as specified. A `null` value reverts the field to the default value. Otherwise, all monitoring settings remain as they were set previously.
+          $ref: '#/components/schemas/ManagedMonitoringSettings'
+        metadata:
+          $ref: '#/components/schemas/ClusterMetadataSettings'
+        curation:
+          description: The curation settings for this deployment. When provided, curation settings are changed as specified. A `null` value reverts the field to the default value. Otherwise, all curation settings remain as they were set previously.
+          $ref: '#/components/schemas/ClusterCurationSettings'
+        dedicated_masters_threshold:
+          type: integer
+          format: int32
+          description: Threshold starting from which the number of instances in the cluster results in the introduction of dedicated masters. If the cluster is downscaled to a number of nodes below this one, dedicated masters will be removed. Limit is inclusive. When provided the threshold setting is updated. A `null` value removes the field. Otherwise, the setting remains as it was set previously.
+        traffic_filter:
+          description: The rulesets to apply to all resources in this cluster. When specified, the set of rulesets is updated and the same rulesets will be applied to Kibana and APM clusters as well. If not specified, the rulesets remain as they were set previously.
+          $ref: '#/components/schemas/TrafficFilterSettings'
+        trust:
+          description: Configuration of trust with other clusters. When provided, trust settings are changed as specified. A `null` value reverts the field to the default value. Otherwise, all trust settings remain as they were set previously.
+          $ref: '#/components/schemas/ElasticsearchClusterTrustSettings'
+        keystore_contents:
+          description: The contents of the Elasticsearch keystore. It's a write only field.
+          $ref: '#/components/schemas/KeystoreContents'
+      description: The settings for an Elasticsearch cluster.
+    EnterpriseSearchPlanControlConfiguration:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          description: The total timeout in seconds after which the plan is cancelled even if it is not complete. Defaults to 4x the max memory capacity per node (in MB)
+        calm_wait_time:
+          type: integer
+          format: int64
+          description: This timeout determines how long to give a cluster after it responds to API calls before performing actual operations on it. It defaults to 5s
+        move_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceMoveRequest'
+        move_allocators:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocatorMoveRequest'
+        reallocate_instances:
+          type: boolean
+          description: 'If true (default: false) does not allow re-using any existing instances currently in the cluster, i.e. even unchanged instances will be re-created'
+        preferred_allocators:
+          type: array
+          description: List of allocators on which instances are placed if possible (if not possible/not specified then any available allocator with space is used)
+          items:
+            type: string
+        preferred_allocator_tags:
+          type: object
+          description: Map containing allocators tags in form of key value pairs, increasing the likelihood during move requests for allocators with matching tags, to be selected as target allocators
+          additionalProperties:
+            type: string
+        extended_maintenance:
+          type: boolean
+          description: If true (default false), does not clear the maintenance flag (which prevents its API from being accessed except by the constructor) on new instances added until after a snapshot has been restored, otherwise, the maintenance flag is cleared once the new instances successfully join the new cluster
+        cluster_reboot:
+          type: string
+          description: Set to 'forced' to force a reboot as part of the upgrade plan
+          enum:
+          - forced
+        override_failsafe:
+          type: boolean
+          description: If false (the default), the plan fails if it determines that the request can result in unsafe operations. Setting this flag overrides some of these check restraints.
+    AccountTrustRelationship:
+      type: object
+      required:
+      - account_id
+      - trust_all
+      properties:
+        account_id:
+          type: string
+          description: the ID of the Account
+        name:
+          type: string
+          description: A human readable name of the trust relationship
+        trust_all:
+          type: boolean
+          description: If true, all clusters in this account will by default be trusted and the `trust_allowlist` is ignored.
+        trust_allowlist:
+          type: array
+          description: The list of clusters to trust. Only used when `trust_all` is false.
+          items:
+            type: string
+      description: The trust relationship with the clusters of one account.
+    RemoteResources:
+      type: object
+      required:
+      - resources
+      properties:
+        resources:
+          type: array
+          description: The remote resources
+          items:
+            $ref: '#/components/schemas/RemoteResourceRef'
+      description: The list of resources used as remote clusters
+    AppSearchPlanControlConfiguration:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          description: The total timeout in seconds after which the plan is cancelled even if it is not complete. Defaults to 4x the max memory capacity per node (in MB)
+        calm_wait_time:
+          type: integer
+          format: int64
+          description: This timeout determines how long to give a cluster after it responds to API calls before performing actual operations on it. It defaults to 5s
+        move_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceMoveRequest'
+        move_allocators:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocatorMoveRequest'
+        reallocate_instances:
+          type: boolean
+          description: 'If true (default: false) does not allow re-using any existing instances currently in the cluster, ie even unchanged instances will be re-created'
+        preferred_allocators:
+          type: array
+          description: List of allocators on which instances are placed if possible (if not possible/not specified then any available allocator with space is used)
+          items:
+            type: string
+        preferred_allocator_tags:
+          type: object
+          description: Map containing allocators tags in form of key value pairs, increasing the likelihood during move requests for allocators with matching tags, to be selected as target allocators
+          additionalProperties:
+            type: string
+        extended_maintenance:
+          type: boolean
+          description: If true (default false), does not clear the maintenance flag (which prevents its API from being accessed except by the constructor) on new instances added until after a snapshot has been restored, otherwise, the maintenance flag is cleared once the new instances successfully join the new cluster
+        cluster_reboot:
+          type: string
+          description: Set to 'forced' to force a reboot as part of the upgrade plan
+          enum:
+          - forced
+        override_failsafe:
+          type: boolean
+          description: If false (the default), the plan fails if it determines that the request can result in unsafe operations. Setting this flag overrides some of these check restraints.
+    ClusterCurationSettings:
+      type: object
+      required:
+      - specs
+      properties:
+        specs:
+          type: array
+          description: Specifications for curation
+          items:
+            $ref: '#/components/schemas/ClusterCurationSpec'
+      description: The index curation settings for an Elasticsearch cluster.
+    IntegrationsServerSettings:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ClusterMetadataSettings'
+      description: The settings for the Integrations Server.
+    DeploymentObservabilitySettings:
+      type: object
+      properties:
+        logging:
+          description: The logging settings for the deployment
+          $ref: '#/components/schemas/DeploymentLoggingSettings'
+        metrics:
+          description: The metrics settings for the deployment
+          $ref: '#/components/schemas/DeploymentMetricsSettings'
+      description: The observability settings for a deployment
+    ObservabilityAbsoluteDeployment:
+      type: object
+      required:
+      - deployment_id
+      properties:
+        deployment_id:
+          type: string
+          description: The deployment to send logs and/or metrics to. Contains either the deployment's ID or 'self'.
+        ref_id:
+          type: string
+          description: RefId of the Elasticsearch cluster to send logs and/or metrics to. If not specified, refId is resolved automatically as long as the destination deployment contains a single Elasticsearch resource.
+      description: The destination to send logs and metrics to
+    KeystoreContents:
+      type: object
+      required:
+      - secrets
+      properties:
+        secrets:
+          type: object
+          description: List of secrets
+          additionalProperties:
+            $ref: '#/components/schemas/KeystoreSecret'
+      description: The contents of the Elasticsearch keystore.
+    AppSearchSystemSettings:
+      type: object
+      properties:
+        elasticsearch_url:
+          type: string
+          description: Optionally override the URL to which to send data (for advanced users only, if unspecified the system selects an internal URL)
+        elasticsearch_username:
+          type: string
+          description: Optionally override the account within App Search - defaults to a system account that always exists (if specified, the password must also be specified). Note that this field is never returned from the API, it is write only.
+        elasticsearch_password:
+          type: string
+          description: Optionally override the account within App Search - defaults to a system account that always exists (if specified, the username must also be specified). Note that this field is never returned from the API, it is write only.
+        secret_session_key:
+          type: string
+          description: Optionally override the secret session key within App Search - defaults to the previously existing secretSession. Note that this field is never returned from the API, it is write only.
+      description: This structure defines a curated subset of the AppSearch settings. (This field together with 'user_settings_override*' and  'user_settings*' defines the total set of AppSearch settings)
+    DeploymentTemplateInfoV2:
+      type: object
+      required:
+      - deployment_template
+      - id
+      - instance_configurations
+      - name
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the template.
+        name:
+          type: string
+          description: A human readable name for the template.
+        description:
+          type: string
+          description: An optional description for the template.
+        deployment_template:
+          description: The body of the deployment template to use for creating a deployment.
+          $ref: '#/components/schemas/DeploymentCreateRequest'
+        system_owned:
+          type: boolean
+          description: Whether or not if this is system owned template.
+        source:
+          description: Information describing the source that created or modified the template.
+          $ref: '#/components/schemas/ChangeSourceInfo'
+        metadata:
+          type: array
+          description: Optional arbitrary metadata to associate with this template.
+          items:
+            $ref: '#/components/schemas/MetadataItem'
+        instance_configurations:
+          type: array
+          description: List of instance configurations used in the cluster template.
+          items:
+            $ref: '#/components/schemas/InstanceConfigurationInfo'
+        order:
+          type: integer
+          format: int32
+          description: Determines the order in which this template should be returned when listed. Templates are returned in ascending order. If not specified, then the template willbe appended to the end of the list.
+        hidden:
+          type: boolean
+          description: Whether or not the deployment template is hidden by default.
+        min_version:
+          type: string
+          description: Minimum stack version required by this template, if any.
+        template_category_id:
+          type: string
+          description: Provider and version agnostic template identifier used for grouping related template types.
+        kibana_deeplink:
+          type: array
+          description: The Kibana Deeplink for this type of deployment.
+          items:
+            $ref: '#/components/schemas/KibanaDeeplink'
+      description: Deployment template detailed information
+    DeploymentLoggingSettings:
+      type: object
+      required:
+      - destination
+      properties:
+        destination:
+          description: The destination deployment that this deployment's logs will be sent to
+          $ref: '#/components/schemas/ObservabilityAbsoluteDeployment'
+      description: The logging settings for a deployment
+    ClusterMetadataCpuResourcesSettings:
+      type: object
+      properties:
+        boost:
+          type: boolean
+          description: Indicates if the CPU boost flag is enabled or not.
+        hard_limit:
+          type: boolean
+          description: Indicates if the CPU hard limit flag is enabled or not. When set to true (default), allocates CPU timeshare based on the total CPU time multiplied by the relative RAM capacity of the instance on a given host. When set to false, delegates CPU allocation to the operating system to schedule CPU timeshares.
+      description: Specifies the CPU resource settings for the Elasticsearch cluster.
+    KibanaClusterPlan:
+      type: object
+      required:
+      - kibana
+      properties:
+        cluster_topology:
+          type: array
+          items:
+            $ref: '#/components/schemas/KibanaClusterTopologyElement'
+        kibana:
+          $ref: '#/components/schemas/KibanaConfiguration'
+        transient:
+          $ref: '#/components/schemas/TransientKibanaPlanConfiguration'
+      description: The plan for the Kibana instance.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EnterpriseSearchTopologyElement:
+      type: object
+      properties:
+        node_type:
+          description: Defines the EnterpriseSearch node type
+          $ref: '#/components/schemas/EnterpriseSearchNodeTypes'
+        instance_configuration_id:
+          type: string
+          description: Controls the allocation of this topology element as well as allowed sizes and node_types. It needs to match the id of an existing instance configuration.
+        instance_configuration_version:
+          type: integer
+          format: int32
+          description: The version of the Instance Configuration Id. If it is unset, the meaning depends on read vs writes. For deployment reads, it is equivalent to version 0 (or the IC is unversioned); for deployment creates and deployment template use, it is equivalent to 'the latest version'; and for deployment updates, it is equivalent to 'retain the current version'.
+        size:
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: number of zones in which nodes will be placed
+        enterprise_search:
+          $ref: '#/components/schemas/EnterpriseSearchConfiguration'
+        allocator_filter:
+          type: object
+          properties: {}
+        node_configuration:
+          type: string
+        memory_per_node:
+          type: object
+          properties: {}
+        node_count_per_zone:
+          type: object
+          properties: {}
+      description: Defines the topology of the Enterprise Search nodes (e.g. number/capacity of nodes, and where they can be allocated)
+    RemoteResourceInfo:
+      type: object
+      required:
+      - compatible
+      - connected
+      - healthy
+      - trusted
+      - trusted_back
+      properties:
+        healthy:
+          type: boolean
+          description: Whether or not the remote cluster is healthy
+        connected:
+          type: boolean
+          description: Whether or not there is at least one connection to the remote cluster.
+        compatible:
+          type: boolean
+          description: Whether or not the remote cluster version is compatible with this cluster version.
+        trusted:
+          type: boolean
+          description: Whether or not the remote cluster is trusted by this cluster.
+        trusted_back:
+          type: boolean
+          description: Whether or not the remote cluster trusts this cluster back.
+      description: Information about a Remote Cluster.
+    TopologySize:
+      type: object
+      required:
+      - resource
+      - value
+      properties:
+        value:
+          type: integer
+          format: int32
+          description: Amount of resource
+        resource:
+          type: string
+          description: Type of resource. In ESS the resource used should always be `memory`.
+          enum:
+          - memory
+          - storage
+      description: Measured by the amount of a resource. The final cluster size is calculated using multipliers from the topology instance configuration.
+    AppSearchSettings:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ClusterMetadataSettings'
+      description: The settings for the App Search.
+    RemoteResourceRef:
+      type: object
+      required:
+      - alias
+      - deployment_id
+      - elasticsearch_ref_id
+      properties:
+        deployment_id:
+          type: string
+          description: The id of the deployment
+        elasticsearch_ref_id:
+          type: string
+          description: The locally-unique user-specified id of an Elasticsearch Resource
+        alias:
+          type: string
+          description: The alias for this remote cluster. Aliases must only contain letters, digits, dashes and underscores
+        skip_unavailable:
+          type: boolean
+          description: 'If true, skip this cluster during search if it is disconnected. Default: false'
+        info:
+          description: Information about a Remote Cluster.
+          readOnly: true
+          $ref: '#/components/schemas/RemoteResourceInfo'
+      description: The Elasticsearch resource used as a Remote Cluster.
+    ElasticsearchUserBundle:
+      type: object
+      required:
+      - elasticsearch_version
+      - name
+      - url
+      properties:
+        name:
+          type: string
+          description: The name of the bundle
+        url:
+          type: string
+          description: The URL of the bundle, which must be accessible from the ECE infrastructure. This URL could be cached by platform, make sure to change it when updating the bundle
+        elasticsearch_version:
+          type: string
+          description: The supported Elasticsearch version (must match the version in the plan)
+      description: A list of admin-uploaded bundle objects, such as scripts and synonym files.
+    ClusterSnapshotRepositoryDefault:
+      type: object
+      description: The default object for the Elasticsearch cluster snapshot repository.
+    ApmTopologyElement:
+      type: object
+      properties:
+        instance_configuration_id:
+          type: string
+          description: Controls the allocation of this topology element as well as allowed sizes and node_types. It needs to match the id of an existing instance configuration.
+        instance_configuration_version:
+          type: integer
+          format: int32
+          description: The version of the Instance Configuration Id. If it is unset, the meaning depends on read vs writes. For deployment reads, it is equivalent to version 0 (or the IC is unversioned); for deployment creates and deployment template use, it is equivalent to 'the latest version'; and for deployment updates, it is equivalent to 'retain the current version'.
+        size:
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: number of zones in which nodes will be placed
+        apm:
+          $ref: '#/components/schemas/ApmConfiguration'
+      description: Defines the topology of the APM Server nodes. For example, the number or capacity of the nodes, and where you can allocate the nodes.
+    TransientApmPlanConfiguration:
+      type: object
+      properties:
+        strategy:
+          $ref: '#/components/schemas/PlanStrategy'
+        plan_configuration:
+          $ref: '#/components/schemas/ApmPlanControlConfiguration'
+      description: Defines the configuration parameters that control how the plan is applied. For example, the Elasticsearch cluster topology and APM Server settings.
+    AppSearchPlan:
+      type: object
+      required:
+      - appsearch
+      properties:
+        cluster_topology:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppSearchTopologyElement'
+        appsearch:
+          $ref: '#/components/schemas/AppSearchConfiguration'
+        transient:
+          $ref: '#/components/schemas/TransientAppSearchPlanConfiguration'
+      description: The plan for the App Search cluster.
+    EnterpriseSearchPlan:
+      type: object
+      required:
+      - enterprise_search
+      properties:
+        cluster_topology:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnterpriseSearchTopologyElement'
+        enterprise_search:
+          $ref: '#/components/schemas/EnterpriseSearchConfiguration'
+        transient:
+          $ref: '#/components/schemas/TransientEnterpriseSearchPlanConfiguration'
+      description: The plan for the Enterprise Search cluster.
+    ApmPlanControlConfiguration:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          description: The total timeout in seconds after which the plan is cancelled even if it is not complete. Defaults to 4x the max memory capacity per node (in MB)
+        calm_wait_time:
+          type: integer
+          format: int64
+          description: This timeout determines how long to give a cluster after it responds to API calls before performing actual operations on it. It defaults to 5s
+        move_instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceMoveRequest'
+        move_allocators:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocatorMoveRequest'
+        reallocate_instances:
+          type: boolean
+          description: 'If true (default: false) does not allow re-using any existing instances currently in the cluster, ie even unchanged instances will be re-created'
+        preferred_allocators:
+          type: array
+          description: List of allocators on which instances are placed if possible (if not possible/not specified then any available allocator with space is used)
+          items:
+            type: string
+        preferred_allocator_tags:
+          type: object
+          description: Map containing allocators tags in form of key value pairs, increasing the likelihood during move requests for allocators with matching tags, to be selected as target allocators
+          additionalProperties:
+            type: string
+        extended_maintenance:
+          type: boolean
+          description: If true (default false), does not clear the maintenance flag (which prevents its API from being accessed except by the constructor) on new instances added until after a snapshot has been restored, otherwise, the maintenance flag is cleared once the new instances successfully join the new cluster
+        cluster_reboot:
+          type: string
+          description: Set to 'forced' to force a reboot as part of the upgrade plan
+          enum:
+          - forced
+        override_failsafe:
+          type: boolean
+          description: If false (the default), the plan fails if it determines that the request can result in unsafe operations. Setting this flag overrides some of these check restraints.
+      description: The plan control configuration options for the APM Server.
+    KibanaConfiguration:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of the Kibana cluster (must be one of the ECE supported versions, and won't work unless it matches the Elasticsearch version. Leave blank to auto-detect version.)
+        docker_image:
+          type: string
+          description: A docker URI that allows overriding of the default docker image specified for this version
+        system_settings:
+          $ref: '#/components/schemas/KibanaSystemSettings'
+        user_settings_json:
+          type: object
+          description: An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided the parameters are on the allowlist and not on the denylist. (This field together with 'user_settings_override*' and 'system_settings' defines the total set of Kibana settings)
+          properties: {}
+        user_settings_yaml:
+          type: string
+          description: An arbitrary YAML object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_json' is allowed), provided the parameters are on the allowlist and not on the denylist. (These field together with 'user_settings_override*' and 'system_settings' defines the total set of Kibana settings)
+        user_settings_override_json:
+          type: object
+          description: An arbitrary JSON object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_yaml' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Kibana settings)
+          properties: {}
+        user_settings_override_yaml:
+          type: string
+          description: An arbitrary YAML object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_json' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Kibana settings)
+      description: The Kibana instance settings. When specified at the top level, provides a field-by-field default. When specified at the topology level, provides the override settings.
+    ExternalTrustRelationship:
+      type: object
+      required:
+      - trust_all
+      - trust_relationship_id
+      properties:
+        trust_relationship_id:
+          type: string
+          description: The ID of the external trust relationship
+        name:
+          type: string
+          description: The name of the external trust relationship. Retrieved from the TrustRelationship and ignored on write.
+        trust_all:
+          type: boolean
+          description: If true, all clusters in this external entity will be trusted and the `trust_allowlist` is ignored.
+        trust_allowlist:
+          type: array
+          description: The list of clusters to trust. Only used when `trust_all` is false.
+          items:
+            type: string
+      description: The trust relationship with external entities (remote environments, remote accounts...).
+    ElasticsearchSystemSettings:
+      type: object
+      properties:
+        scripting:
+          $ref: '#/components/schemas/ElasticsearchScriptingUserSettings'
+        reindex_whitelist:
+          type: array
+          description: Limits remote Elasticsearch clusters that can be used as the source for '_reindex' API commands
+          items:
+            type: string
+        auto_create_index:
+          type: boolean
+          description: 'If true (the default), then any write operation on an index that does not currently exist will create it. NOTES: (Corresponds to the parameter ''action.auto_create_index'')'
+        enable_close_index:
+          type: boolean
+          description: 'Defaults to false on versions <= 7.2.0, true otherwise. If false, then the API commands to close indices are disabled. This is important because Elasticsearch does not snapshot or migrate close indices on versions under 7.2.0, therefore standard Elastic Cloud configuration operations will cause irretrievable loss of indices'' data. NOTES: (Corresponds to the parameter ''cluster.indices.close.enable'')'
+        destructive_requires_name:
+          type: boolean
+          description: 'If true (default is false) then the index deletion API will not support wildcards or ''_all''. NOTES: (Corresponds to the parameter ''action.destructive_requires_name'')'
+        watcher_trigger_engine:
+          type: string
+          description: 'The trigger engine for Watcher, defaults to ''scheduler'' - see the xpack documentation for more information. NOTES: (Corresponds to the parameter ''(xpack.)watcher.trigger.schedule.engine'', depending on version. Ignored from 6.x onwards.)'
+        default_shards_per_index:
+          type: integer
+          format: int32
+          description: (2.x only - to get the same result in 5.x template mappings must be used) Sets the default number of shards per index, defaulting to 1 if not specified. (Corresponds to the parameter 'index.number_of_shards' in 2.x, not supported in 5.x)
+        monitoring_collection_interval:
+          type: integer
+          format: int32
+          description: 'The default interval at which monitoring information from the cluster if collected, if monitoring is enabled. NOTES: (Corresponds to the parameter ''marvel.agent.interval'' in 2.x and ''xpack.monitoring.collection.interval'' in 5.x)'
+        monitoring_history_duration:
+          type: string
+          description: 'The duration for which monitoring history is stored (format ''(NUMBER)d'' eg ''3d'' for 3 days). NOTES: (''Corresponds to the parameter xpack.monitoring.history.duration'' in 5.x, defaults to ''7d'')'
+      description: 'A subset of Elasticsearch settings. TIP: To define the complete set of Elasticsearch settings, use `ElasticsearchSystemSettings` with `user_settings_override*` and `user_settings*`.'
+    EnterpriseSearchSystemSettings:
+      type: object
+      properties:
+        elasticsearch_username:
+          type: string
+          description: Optionally override the account within Enterprise Search - defaults to a system account that always exists (if specified, the password must also be specified). Note that this field is never returned from the API, it is write only.
+        elasticsearch_password:
+          type: string
+          description: Optionally override the account within Enterprise Search - defaults to a system account that always exists (if specified, the username must also be specified). Note that this field is never returned from the API, it is write only.
+        secret_session_key:
+          type: string
+          description: Optionally override the secret session key within Enterprise Search - defaults to the previously existing secretSession. Note that this field is never returned from the API, it is write only.
+      description: This structure defines a curated subset of the Enterprise Search settings. (This field together with 'user_settings_override*' and  'user_settings*' defines the total set of Enterprise Search settings)
+    ChangeSourceInfo:
+      type: object
+      required:
+      - action
+      - date
+      - facilitator
+      properties:
+        facilitator:
+          type: string
+          description: The service where the change originated from
+        action:
+          type: string
+          description: The type of plan change that was initiated
+        date:
+          type: string
+          format: date-time
+          description: The time the change was initiated
+        user_id:
+          type: string
+          description: The user that requested the change
+        admin_id:
+          type: string
+          description: The admin user that requested the change
+        remote_addresses:
+          type: array
+          description: The host addresses of the user that originated the change
+          items:
+            type: string
+      description: A container for information about the source of a change.
+    PlanStrategy:
+      type: object
+      properties:
+        rolling:
+          $ref: '#/components/schemas/RollingStrategyConfig'
+        grow_and_shrink:
+          $ref: '#/components/schemas/GrowShrinkStrategyConfig'
+        rolling_grow_and_shrink:
+          $ref: '#/components/schemas/RollingGrowShrinkStrategyConfig'
+        autodetect:
+          $ref: '#/components/schemas/AutodetectStrategyConfig'
+      description: The options for performing a plan change. Specify only one property each time. The default is `grow_and_shrink`.
+    MetadataItem:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The metadata field name
+        value:
+          type: string
+          description: The metadata value
+      description: The key-value pair.
+    ElasticsearchClusterTopologyElement:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of this topology element
+        node_type:
+          $ref: '#/components/schemas/ElasticsearchNodeType'
+        node_roles:
+          type: array
+          description: 'The list of node roles for this topology element (ES version >= 7.10). Allowable values are: master, ingest, ml, data_hot, data_content, data_warm, data_cold, data_frozen, remote_cluster_client, transform'
+          items:
+            type: string
+            enum:
+            - master
+            - ingest
+            - ml
+            - data_hot
+            - data_content
+            - data_warm
+            - data_cold
+            - data_frozen
+            - remote_cluster_client
+            - transform
+        memory_per_node:
+          type: integer
+          format: int32
+          description: The memory capacity in MB for each node of this type built in each zone.
+        node_count_per_zone:
+          type: integer
+          format: int32
+          description: The number of nodes of this type that are allocated within each zone. (i.e. total capacity per zone = `node_count_per_zone` * `memory_per_node` in MB). Cannot be set for tiebreaker topologies. For dedicated master nodes, must be 1 if an entry exists.
+        zone_count:
+          type: integer
+          format: int32
+          description: The default number of zones in which data nodes will be placed
+        elasticsearch:
+          $ref: '#/components/schemas/ElasticsearchConfiguration'
+        instance_configuration_id:
+          type: string
+          description: Controls the allocation of this topology element as well as allowed sizes and node_types. It needs to match the id of an existing instance configuration.
+        instance_configuration_version:
+          type: integer
+          format: int32
+          description: The version of the Instance Configuration Id. If it is unset, the meaning depends on read vs writes. For deployment reads, it is equivalent to version 0 (or the IC is unversioned); for deployment creates and deployment template use, it is equivalent to 'the latest version'; and for deployment updates, it is equivalent to 'retain the current version'.
+        size:
+          $ref: '#/components/schemas/TopologySize'
+        autoscaling_min:
+          description: The minimum size of this topology element when autoscaling is enabled. This property is only supported, and must be provided, for ML topology elements.
+          $ref: '#/components/schemas/TopologySize'
+        autoscaling_max:
+          description: The maximum size of this topology element when autoscaling is enabled. This property is only supported, and must be provided, for data and ML topology elements.
+          $ref: '#/components/schemas/TopologySize'
+        autoscaling_policy_override_json:
+          type: object
+          description: An arbitrary JSON object overriding the default autoscaling policy. Don't set unless you really know what you are doing.
+          properties: {}
+        topology_element_control:
+          $ref: '#/components/schemas/TopologyElementControl'
+        autoscaling_tier_override:
+          type: boolean
+          description: Set to true to enable autoscaling for this topology element, even if the cluster-level 'autoscaling_enabled' field is false. Note that 'autoscaling_tier_override' cannot be set to false if cluster-level 'autoscaling_enabled' is true. Currently only supported for the 'ml' tier
+      description: The topology of the Elasticsearch nodes, including the number, capacity, and type of nodes, and where they can be allocated.
+    ElasticsearchClusterPlan:
+      type: object
+      required:
+      - cluster_topology
+      - elasticsearch
+      properties:
+        cluster_topology:
+          type: array
+          items:
+            $ref: '#/components/schemas/ElasticsearchClusterTopologyElement'
+        elasticsearch:
+          $ref: '#/components/schemas/ElasticsearchConfiguration'
+        deployment_template:
+          description: Documents which deployment template was used in the creation of this plan
+          $ref: '#/components/schemas/DeploymentTemplateReference'
+        transient:
+          $ref: '#/components/schemas/TransientElasticsearchPlanConfiguration'
+        autoscaling_enabled:
+          type: boolean
+          description: Enable autoscaling for this Elasticsearch cluster.
+      description: The plan for the Elasticsearch cluster.
+    CertificateMetaData:
+      type: object
+      required:
+      - fingerprint
+      - valid_from
+      - valid_to
+      properties:
+        fingerprint:
+          type: string
+          description: The fingerprint of the certificate
+        valid_to:
+          type: string
+          format: date-time
+          description: The expiry date of the certificate in UTC
+        valid_from:
+          type: string
+          format: date-time
+          description: The valid from date of the certificate in UTC
+        also_trusted_by:
+          type: array
+          description: Other deployments also trusting this certificate
+          items:
+            type: string
+      description: The certificate MetaData
+    ElasticsearchScriptingUserSettings:
+      type: object
+      properties:
+        painless_enabled:
+          type: boolean
+          description: '(5.x+ only) If enabled (the default) then the painless scripting engine is allowed as a sandboxed language. Sandboxed languages are the only ones allowed if ''sandbox_mode'' is set to true. NOTES: (Corresponds to the parameters ''script.engine.painless.[file|stored|inline]'')'
+        mustache_enabled:
+          type: boolean
+          description: '(5.x+ only) If enabled (the default) then the mustache scripting engine is allowed as a sandboxed language. Sandboxed languages are the only ones allowed if ''sandbox_mode'' is set to true. NOTES: (Corresponds to the parameters ''script.engine.mustache.[file|stored|inline]'')'
+        expressions_enabled:
+          type: boolean
+          description: '(5.x+ only) If enabled (the default) then the expressions scripting engine is allowed as a sandboxed language. Sandboxed languages are the only ones allowed if ''sandbox_mode'' is set to true. NOTES: (Corresponds to the parameters ''script.engine.expression.[file|stored|inline]'')'
+        stored:
+          $ref: '#/components/schemas/ElasticsearchScriptTypeSettings'
+        file:
+          $ref: '#/components/schemas/ElasticsearchScriptTypeSettings'
+        inline:
+          $ref: '#/components/schemas/ElasticsearchScriptTypeSettings'
+      description: 'Controls the languages supported by the Elasticsearch cluster, such as Painless, Mustache, and Expressions. Controls how the languages are used, such as file, index, and inline. TIP: For complex configurations, leave these blank and configure these settings in the user YAML or JSON.'
+    EnterpriseSearchConfiguration:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of the Enterprise Search cluster (must be one of the ECE supported versions, and won't work unless it matches the Elasticsearch version. Leave blank to auto-detect version.)
+        docker_image:
+          type: string
+          description: A docker URI that allows overriding of the default docker image specified for this version
+        system_settings:
+          $ref: '#/components/schemas/EnterpriseSearchSystemSettings'
+        user_settings_json:
+          type: object
+          description: An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided the parameters are on the allowlist and not on the denylist. (This field together with 'user_settings_override*' and 'system_settings' defines the total set of Enterprise Search settings)
+          properties: {}
+        user_settings_yaml:
+          type: string
+          description: An arbitrary YAML object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_json' is allowed), provided the parameters are on the allowlist and not on the denylist. (This field together with 'user_settings_override*' and 'system_settings' defines the total set of Enterprise Search settings)
+        user_settings_override_json:
+          type: object
+          description: An arbitrary JSON object allowing ECE admins to set clusters' parameters (only one of this and 'user_settings_override_yaml' is allowed), i.e. in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Enterprise Search settings)
+          properties: {}
+        user_settings_override_yaml:
+          type: string
+          description: An arbitrary YAML object allowing ECE admins to set clusters' parameters (only one of this and 'user_settings_override_json' is allowed), i.e. in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of Enterprise Search settings)
+    DeploymentMetricsSettings:
+      type: object
+      required:
+      - destination
+      properties:
+        destination:
+          description: The destination deployment that this deployment's metrics will be sent to
+          $ref: '#/components/schemas/ObservabilityAbsoluteDeployment'
+        force_legacy_monitoring:
+          type: boolean
+          description: Set to true to force the deployment to use legacy monitoring instead of Metricbeat-based monitoring. Only available for versions lower than 9.0.
+      description: The metrics settings for a deployment
+    KibanaClusterTopologyElement:
+      type: object
+      properties:
+        memory_per_node:
+          type: integer
+          format: int32
+          description: The memory capacity in MB for each node of this type built in each zone.
+        node_count_per_zone:
+          type: integer
+          format: int32
+          description: The number of nodes of this type that are allocated within each zone (i.e. total capacity per zone = `node_count_per_zone` * `memory_per_node` in MB).
+        instance_configuration_id:
+          type: string
+          description: Controls the allocation of this topology element as well as allowed sizes and node_types. It needs to match the id of an existing instance configuration.
+        instance_configuration_version:
+          type: integer
+          format: int32
+          description: The version of the Instance Configuration Id. If it is unset, the meaning depends on read vs writes. For deployment reads, it is equivalent to version 0 (or the IC is unversioned); for deployment creates and deployment template use, it is equivalent to 'the latest version'; and for deployment updates, it is equivalent to 'retain the current version'.
+        size:
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: number of zones in which nodes will be placed
+        kibana:
+          $ref: '#/components/schemas/KibanaConfiguration'
+      description: The topology of the Kibana nodes, including the number, capacity, and type of nodes, and where they can be allocated.
+    ClusterSnapshotRepositoryInfo:
+      type: object
+      properties:
+        static:
+          description: Cluster snapshot static repository settings, containing repository type and settings
+          $ref: '#/components/schemas/ClusterSnapshotRepositoryStatic'
+        reference:
+          description: Cluster snapshot reference repository settings, containing the repository name in ECE fashion
+          $ref: '#/components/schemas/ClusterSnapshotRepositoryReference'
+        default:
+          description: Cluster snapshot default repository settings
+          $ref: '#/components/schemas/ClusterSnapshotRepositoryDefault'
+      description: Information about the Elasticsearch cluster snapshot repository.
+    ClusterSnapshotRepositoryReference:
+      type: object
+      properties:
+        repository_name:
+          type: string
+          description: ECE snapshot repository name, from the '/platform/configuration/snapshots/repositories' endpoint
+      description: The reference object for the Elasticsearch cluster snapshot repository.
+    AppSearchPayload:
+      type: object
+      required:
+      - elasticsearch_cluster_ref_id
+      - plan
+      - ref_id
+      - region
+      properties:
+        ref_id:
+          type: string
+          description: A locally-unique user-specified id for AppSearch
+        elasticsearch_cluster_ref_id:
+          type: string
+          description: Alias to the Elasticsearch Cluster to attach AppSearch to
+        display_name:
+          type: string
+          description: 'The human readable name for the AppSearch cluster (default: takes the name of its Elasticsearch cluster)'
+        region:
+          type: string
+          description: The region where this resource exists
+        plan:
+          $ref: '#/components/schemas/AppSearchPlan'
+        settings:
+          description: The settings for building this AppSearch cluster
+          $ref: '#/components/schemas/AppSearchSettings'
+      description: An AppSearch creation request paired with the alias of the Elasticsearch cluster it should be paired with
+    IntegrationsServerSystemSettings:
+      type: object
+      properties:
+        elasticsearch_username:
+          type: string
+          description: Optionally override the account within Integrations Server - defaults to a system account that always exists (if specified, the password must also be specified). Note that this field is never returned from the API, it is write only.
+        elasticsearch_password:
+          type: string
+          description: Optionally override the account within Integrations Server - defaults to a system account that always exists (if specified, the username must also be specified). Note that this field is never returned from the API, it is write only.
+        secret_token:
+          type: string
+          description: Optionally override the secret token within Integrations Server - defaults to the previously existing secretToken
+        debug_enabled:
+          type: boolean
+          description: Optionally enable debug mode for Integrations Server - defaults false
+      description: "A structure that defines a curated subset of the Integrations Server settings. \nTIP: To define the complete set of Integrations Server setting, use `IntegrationsSystemSettings` with `user_settings_override_` and `user_settings_`."
+    TransientElasticsearchPlanConfiguration:
+      type: object
+      properties:
+        strategy:
+          $ref: '#/components/schemas/PlanStrategy'
+        plan_configuration:
+          $ref: '#/components/schemas/ElasticsearchPlanControlConfiguration'
+        restore_snapshot:
+          $ref: '#/components/schemas/RestoreSnapshotConfiguration'
+        snapshot_dependency:
+          description: Configuration for attaching a snapshot dependency from another cluster
+          $ref: '#/components/schemas/SnapshotDependencyConfiguration'
+        remote_clusters:
+          description: The list of resources that will be configured as remote clusters
+          $ref: '#/components/schemas/RemoteResources'
+        cluster_settings_json:
+          type: object
+          description: 'If specified, contains transient settings to be applied to an Elasticsearch cluster during changes,default values shown below applied.
+
+            These can be overridden by specifying them in the map (or null to unset). Additional settings can also be set. Settings will be cleared after the plan has finished. If not specified, no settings will be applied.
+
+            NOTE: These settings are only explicitly cleared for 5.x+ clusters, they must be hand-reset to their defaults in 2.x- (or a cluster reboot will clear them).
+
+            - indices.store.throttle.max_bytes_per_sec: 120Mb
+
+            - indices.recovery.max_bytes_per_sec: 120Mb
+
+            - cluster.routing.allocation.cluster_concurrent_rebalance: 5
+
+            - cluster.routing.allocation.node_initial_primaries_recoveries: 5
+
+            - cluster.routing.allocation.node_concurrent_incoming_recoveries: 5
+
+            For version 8.1 and later no defaults are provided through this mechanism, but instead hardware dependent settings are provided to each instance.'
+          properties: {}
+      description: Defines the configuration parameters that control how the plan is applied. For example, the Elasticsearch cluster topology and Elasticsearch settings.
+    DeploymentTemplateRequestBody:
+      type: object
+      required:
+      - deployment_template
+      - name
+      properties:
+        name:
+          type: string
+          description: A human readable name for the template.
+        description:
+          type: string
+          description: An optional description for the template.
+        deployment_template:
+          description: The body of the deployment template to use for creating a deployment.
+          $ref: '#/components/schemas/DeploymentCreateRequest'
+        system_owned:
+          type: boolean
+          description: Whether or not if this is system owned template.
+        metadata:
+          type: array
+          description: Optional arbitrary metadata to associate with this template.
+          items:
+            $ref: '#/components/schemas/MetadataItem'
+        order:
+          type: integer
+          format: int32
+          description: Determines the order in which this template should be returned when listed. Templates are returned in ascending order. If not specified, then the template willbe appended to the end of the list.
+        hidden:
+          type: boolean
+          description: Whether or not the deployment template is hidden by default.
+        min_version:
+          type: string
+          description: Minimum stack version required by this template, if any.
+        template_category_id:
+          type: string
+          description: Provider and version agnostic template identifier used for grouping related template types.
+        kibana_deeplink:
+          type: array
+          description: The Kibana Deeplink for this type of deployment.
+          items:
+            $ref: '#/components/schemas/KibanaDeeplink'
+      description: Request body to create or update a Deployment Template
+    DeploymentTemplateReference:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the deployment template
+        version:
+          type: string
+          description: A version identifier to disambiguate multiple revisions of the same template
+      description: Specifies the deployment template used to create the plan.
+    IdResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The ID
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
+    basicAuth:
+      type: http
+      scheme: basic
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

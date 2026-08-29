@@ -1,0 +1,370 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Kibana Team
+  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
+
+    The API calls are stateless.
+
+    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
+
+    request.
+
+    API requests return JSON output, which is a format that is machine-readable and works well for automation.
+
+
+    To interact with Kibana APIs, use the following operations:
+
+
+    - GET: Fetches the information.
+
+    - PATCH: Applies partial modifications to the existing information.
+
+    - POST: Adds new information.
+
+    - PUT: Updates the existing information.
+
+    - DELETE: Removes the information.
+
+
+    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
+
+    For example:
+
+
+    ```
+
+    GET kbn:/api/data_views
+
+    ```
+
+
+    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
+
+
+    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
+
+
+    ## Documentation source and versions
+
+
+    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
+
+    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.
+
+    '
+  title: Kibana Data streams API
+  version: ''
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+security:
+- apiKeyAuth: []
+- basicAuth: []
+tags:
+- name: Data streams
+  description: 'Data stream APIs enable you to manage data streams, which are collections of indices that share the same index template and are managed as a single unit for time-series data.
+
+    '
+  x-displayName: Data streams
+paths:
+  /api/fleet/data_streams:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/data_streams</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        List all Fleet-managed data streams with metadata including package, namespace, size, and last activity.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all AND fleet-agent-policies-all AND fleet-settings-all.'
+      operationId: get-fleet-data-streams
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getDataStreamsExample:
+                  description: List of Fleet-managed data streams
+                  value:
+                    data_streams:
+                    - dashboards:
+                      - id: nginx-overview
+                        title: Nginx Overview
+                      dataset: nginx.access
+                      index: logs-nginx.access-default
+                      last_activity_ms: 1700000000000
+                      namespace: default
+                      package: nginx
+                      package_version: 1.20.0
+                      serviceDetails: null
+                      size_in_bytes: 1048576
+                      size_in_bytes_formatted: 1mb
+                      type: logs
+                    - dashboards: []
+                      dataset: system.cpu
+                      index: metrics-system.cpu-default
+                      last_activity_ms: 1699999000000
+                      namespace: default
+                      package: system
+                      package_version: 1.38.0
+                      serviceDetails: null
+                      size_in_bytes: 524288
+                      size_in_bytes_formatted: 512kb
+                      type: metrics
+              schema:
+                additionalProperties: false
+                type: object
+                properties:
+                  data_streams:
+                    items:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        dashboards:
+                          items:
+                            additionalProperties: false
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              title:
+                                type: string
+                            required:
+                            - id
+                            - title
+                          maxItems: 10000
+                          type: array
+                        dataset:
+                          type: string
+                        index:
+                          type: string
+                        last_activity_ms:
+                          type: number
+                        namespace:
+                          type: string
+                        package:
+                          type: string
+                        package_version:
+                          type: string
+                        serviceDetails:
+                          additionalProperties: false
+                          default: null
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            environment:
+                              type: string
+                            serviceName:
+                              type: string
+                          required:
+                          - environment
+                          - serviceName
+                        size_in_bytes:
+                          type: number
+                        size_in_bytes_formatted:
+                          anyOf:
+                          - type: number
+                          - type: string
+                        type:
+                          type: string
+                      required:
+                      - index
+                      - dataset
+                      - namespace
+                      - type
+                      - package
+                      - package_version
+                      - last_activity_ms
+                      - size_in_bytes
+                      - size_in_bytes_formatted
+                      - dashboards
+                    maxItems: 10000
+                    type: array
+                required:
+                - data_streams
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get data streams
+      tags:
+      - Data streams
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+  /api/fleet/epm/data_streams:
+    get:
+      description: '**Spaces method and path for this operation:**
+
+
+        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/data_streams</span></div>
+
+
+        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+
+
+        Get a list of data streams created by installed integration packages.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+      operationId: get-fleet-epm-data-streams
+      parameters:
+      - description: Filter by data stream type
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - logs
+          - metrics
+          - traces
+          - synthetics
+          - profiles
+          type: string
+      - description: Filter data streams by dataset name
+        in: query
+        name: datasetQuery
+        required: false
+        schema:
+          type: string
+      - description: Sort order, ascending or descending
+        in: query
+        name: sortOrder
+        required: false
+        schema:
+          default: asc
+          enum:
+          - asc
+          - desc
+          type: string
+      - description: When true, only return data streams that are not associated with a package
+        in: query
+        name: uncategorisedOnly
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getDataStreamsExample:
+                  description: List of data streams from installed packages
+                  value:
+                    data_streams:
+                    - ilm_policy: logs-default
+                      index_template: logs-system.syslog
+                      name: logs-system.syslog-default
+                      package: system
+                      package_version: 1.55.0
+                      title: System syslog logs
+              schema:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_get_data_streams_response'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              examples:
+                genericErrorResponseExample:
+                  description: Example of a generic error response
+                  value:
+                    error: Bad Request
+                    message: An error message describing what went wrong
+                    statusCode: 400
+              schema:
+                additionalProperties: false
+                description: Generic Error
+                type: object
+                properties:
+                  attributes: {}
+                  error:
+                    type: string
+                  errorType:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: number
+                required:
+                - message
+                - attributes
+          description: Bad Request
+      summary: Get data streams
+      tags:
+      - Data streams
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+components:
+  schemas:
+    Kibana_HTTP_APIs_get_data_streams_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+            required:
+            - name
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_data_streams_response
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-topics:
+- title: Kibana spaces
+  content: "Spaces enable you to organize your dashboards and other saved objects into meaningful categories.\nYou can use the default space or create your own spaces.\n\nTo run APIs in non-default spaces, you must add `s/{space_id}/` to the path.\nFor example:\n\n```bash\ncurl -X GET \"http://${KIBANA_URL}/s/marketing/api/data_views\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nIf you use the Kibana console to send API requests, it automatically adds the appropriate space identifier.\n\nTo learn more, check out [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces).\n"

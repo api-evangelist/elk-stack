@@ -1,0 +1,496 @@
+openapi: 3.2.0
+info:
+  title: Elk Stack Logstash API
+  version: ''
+  x-refined-note:
+  - x-doc-license differs across the merged source definitions and was not carried
+  - x-feedbackLink differs across the merged source definitions and was not carried
+  description: 'Operations tagged logstash across 2 of this provider''s published API definitions: elk-stack-elasticsearch-openapi.json, elk-stack-kibana-openapi.yaml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{kibana_url}
+  variables:
+    kibana_url:
+      default: localhost:5601
+tags:
+- name: logstash
+paths:
+  /_logstash/pipeline/{id}:
+    get:
+      tags:
+      - logstash
+      summary: Get Logstash pipelines
+      description: 'Get pipelines that are used for Logstash Central Management.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_logstash_pipelines`
+
+        '
+      externalDocs:
+        description: Centralized pipeline management
+        url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/logstash-api-get-pipeline.html
+      operationId: logstash-get-pipeline-1
+      parameters:
+      - $ref: '#/components/parameters/logstash.get_pipeline-id'
+      responses:
+        '200':
+          $ref: '#/components/responses/logstash.get_pipeline-200'
+      x-state: Generally available; Added in 7.12.0
+      x-metaTags:
+      - content: Elasticsearch, Logstash
+        name: product_name
+    put:
+      tags:
+      - logstash
+      summary: Create or update a Logstash pipeline
+      description: 'Create a pipeline that is used for Logstash Central Management.
+
+        If the specified pipeline exists, it is replaced.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_logstash_pipelines`
+
+        '
+      externalDocs:
+        description: Centralized pipeline management
+        url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/logstash-api-put-pipeline.html
+      operationId: logstash-put-pipeline
+      parameters:
+      - in: path
+        name: id
+        description: 'An identifier for the pipeline.
+
+          Pipeline IDs must begin with a letter or underscore and contain only letters, underscores, dashes, hyphens and numbers.'
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/logstash._types.Pipeline'
+            examples:
+              LogstashPutPipelineRequestExample1:
+                summary: Create a pipeline
+                description: Run `PUT _logstash/pipeline/my_pipeline` to create a pipeline.
+                value: "{\n  \"description\": \"Sample pipeline for illustration purposes\",\n  \"last_modified\": \"2021-01-02T02:50:51.250Z\",\n  \"pipeline_metadata\": {\n    \"type\": \"logstash_pipeline\",\n    \"version\": 1\n  },\n  \"username\": \"elastic\",\n  \"pipeline\": \"input {}\\\\n filter { grok {} }\\\\n output {}\",\n  \"pipeline_settings\": {\n    \"pipeline.workers\": 1,\n    \"pipeline.batch.size\": 125,\n    \"pipeline.batch.delay\": 50,\n    \"queue.type\": \"memory\",\n    \"queue.max_bytes\": \"1gb\",\n    \"queue.checkpoint.writes\": 1024\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json: {}
+      x-state: Generally available; Added in 7.12.0
+      x-metaTags:
+      - content: Elasticsearch, Logstash
+        name: product_name
+    delete:
+      tags:
+      - logstash
+      summary: Delete a Logstash pipeline
+      description: 'Delete a pipeline that is used for Logstash Central Management.
+
+        If the request succeeds, you receive an empty response with an appropriate status code.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_logstash_pipelines`
+
+        '
+      externalDocs:
+        description: Centralized pipeline management
+        url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/logstash-api-delete-pipeline.html
+      operationId: logstash-delete-pipeline
+      parameters:
+      - in: path
+        name: id
+        description: An identifier for the pipeline.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json: {}
+      x-state: Generally available; Added in 7.12.0
+      x-metaTags:
+      - content: Elasticsearch, Logstash
+        name: product_name
+  /_logstash/pipeline:
+    get:
+      tags:
+      - logstash
+      summary: Get Logstash pipelines
+      description: 'Get pipelines that are used for Logstash Central Management.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_logstash_pipelines`
+
+        '
+      externalDocs:
+        description: Centralized pipeline management
+        url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/logstash-api-get-pipeline.html
+      operationId: logstash-get-pipeline
+      responses:
+        '200':
+          $ref: '#/components/responses/logstash.get_pipeline-200'
+      x-state: Generally available; Added in 7.12.0
+      x-metaTags:
+      - content: Elasticsearch, Logstash
+        name: product_name
+  /api/logstash/pipeline/{id}:
+    delete:
+      description: 'Delete a centrally-managed Logstash pipeline.
+
+        If your Elasticsearch cluster is protected with basic authentication, you must have either the `logstash_admin` built-in role or a customized Logstash writer role.
+
+        '
+      externalDocs:
+        description: Secure your connection
+        url: https://www.elastic.co/docs/reference/logstash/secure-connection
+      operationId: delete-logstash-pipeline
+      parameters:
+      - description: An identifier for the pipeline.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Indicates a successful call
+      summary: Delete a Logstash pipeline
+      tags:
+      - logstash
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    get:
+      description: 'Get information for a centrally-managed Logstash pipeline.
+
+        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash reader role.
+
+        '
+      externalDocs:
+        description: Secure your connection
+        url: https://www.elastic.co/docs/reference/logstash/secure-connection
+      operationId: get-logstash-pipeline
+      parameters:
+      - description: An identifier for the pipeline.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getLogstashPipelineResponseExample1:
+                  value: "{\n  \"id\": \"hello-world\",\n  \"description\": \"Just a simple pipeline\",\n  \"username\": \"elastic\",\n  \"pipeline\": \"input { stdin {} } output { stdout {} }\",\n  \"settings\": {\n    \"queue.type\": \"persistent\"\n  }\n}"
+              schema:
+                type: object
+          description: Indicates a successful call
+      summary: Get a Logstash pipeline
+      tags:
+      - logstash
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    put:
+      description: 'Create a centrally-managed Logstash pipeline or update a pipeline.
+
+        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash writer role.
+
+        '
+      externalDocs:
+        description: Secure your connection
+        url: https://www.elastic.co/docs/reference/logstash/secure-connection
+      operationId: put-logstash-pipeline
+      parameters:
+      - description: 'An identifier for the pipeline. Pipeline ID must begin with a letter or underscore and can contain only letters, underscores, dashes, hyphens, and numbers.
+
+          '
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              putLogstashPipelineRequestExample1:
+                value: "{\n  \"pipeline\": \"input { stdin {} } output { stdout {} }\",\n  \"settings\": {\n    \"queue.type\": \"persisted\"\n  }\n}"
+            schema:
+              type: object
+              properties:
+                description:
+                  description: A description of the pipeline.
+                  maxLength: 1024
+                  type: string
+                pipeline:
+                  description: A definition for the pipeline.
+                  type: string
+                settings:
+                  description: 'Supported settings, represented as object keys, include the following:
+
+
+                    - `pipeline.workers`
+
+                    - `pipeline.batch.size`
+
+                    - `pipeline.batch.delay`
+
+                    - `pipeline.ecs_compatibility`
+
+                    - `pipeline.ordered`
+
+                    - `queue.type`
+
+                    - `queue.max_bytes`
+
+                    - `queue.checkpoint.writes`
+
+                    '
+                  type: object
+              required:
+              - pipeline
+      responses:
+        '204':
+          description: Indicates a successful call
+      summary: Create or update a Logstash pipeline
+      tags:
+      - logstash
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+  /api/logstash/pipelines:
+    get:
+      description: 'Get a list of all centrally-managed Logstash pipelines.
+
+
+        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash reader role.
+
+        > info
+
+        > Limit the number of pipelines to 10,000 or fewer. As the number of pipelines nears and surpasses 10,000, you may see performance issues on Kibana.
+
+
+        The `username` property appears in the response when security is enabled and depends on when the pipeline was created or last updated.
+
+        '
+      externalDocs:
+        description: Secure your connection
+        url: https://www.elastic.co/docs/reference/logstash/secure-connection
+      operationId: get-logstash-pipelines
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getLogstashPipelinesResponseExample1:
+                  value: "{\n  \"pipelines\": [\n    {\n      \"id\": \"hello-world\",\n      \"description\": \"Just a simple pipeline\",\n      \"last_modified\": \"2018-04-14T12:23:29.772Z\",\n      \"username\": \"elastic\" \n    },\n    {\n      \"id\": \"sleepy-pipeline\",\n      \"description\": \"\",\n      \"last_modified\": \"2018-03-24T03:41:30.554Z\"\n    }\n  ]\n}"
+              schema:
+                type: object
+          description: Indicates a successful call
+      summary: Get all Logstash pipelines
+      tags:
+      - logstash
+      x-state: Technical Preview
+      x-metaTags:
+      - content: Kibana
+        name: product_name
+      security:
+      - apiKeyAuth: []
+      - basicAuth: []
+    servers:
+    - url: https://{kibana_url}
+      variables:
+        kibana_url:
+          default: localhost:5601
+components:
+  responses:
+    logstash.get_pipeline-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/logstash._types.Pipeline'
+          examples:
+            LogstashGetPipelineResponseExample1:
+              description: 'A successful response from `GET _logstash/pipeline/my_pipeline`.
+
+                '
+              value: "{\n  \"my_pipeline\": {\n    \"description\": \"Sample pipeline for illustration purposes\",\n    \"last_modified\": \"2021-01-02T02:50:51.250Z\",\n    \"pipeline_metadata\": {\n      \"type\": \"logstash_pipeline\",\n      \"version\": \"1\"\n    },\n    \"username\": \"elastic\",\n    \"pipeline\": \"input {}\\\\n filter { grok {} }\\\\n output {}\",\n    \"pipeline_settings\": {\n      \"pipeline.workers\": 1,\n      \"pipeline.batch.size\": 125,\n      \"pipeline.batch.delay\": 50,\n      \"queue.type\": \"memory\",\n      \"queue.max_bytes\": \"1gb\",\n      \"queue.checkpoint.writes\": 1024\n    }\n  }\n}"
+  parameters:
+    logstash.get_pipeline-id:
+      in: path
+      name: id
+      description: A comma-separated list of pipeline identifiers.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Ids'
+      style: simple
+  schemas:
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    logstash._types.PipelineSettings:
+      type: object
+      properties:
+        pipeline.workers:
+          description: The number of workers that will, in parallel, execute the filter and output stages of the pipeline.
+          type: number
+        pipeline.batch.size:
+          description: The maximum number of events an individual worker thread will collect from inputs before attempting to execute its filters and outputs.
+          type: number
+        pipeline.batch.delay:
+          description: When creating pipeline event batches, how long in milliseconds to wait for each event before dispatching an undersized batch to pipeline workers.
+          type: number
+        queue.type:
+          description: The internal queuing model to use for event buffering.
+          type: string
+        queue.max_bytes:
+          description: 'The total capacity of the queue (`queue.type: persisted`) in number of bytes.'
+          type: string
+        queue.checkpoint.writes:
+          description: 'The maximum number of written events before forcing a checkpoint when persistent queues are enabled (`queue.type: persisted`).'
+          type: number
+      required:
+      - pipeline.workers
+      - pipeline.batch.size
+      - pipeline.batch.delay
+      - queue.type
+      - queue.max_bytes
+      - queue.checkpoint.writes
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    logstash._types.PipelineMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        version:
+          type: string
+      required:
+      - type
+      - version
+    _types.Id:
+      type: string
+    logstash._types.Pipeline:
+      type: object
+      properties:
+        description:
+          description: 'A description of the pipeline.
+
+            This description is not used by Elasticsearch or Logstash.'
+          type: string
+        last_modified:
+          description: 'The date the pipeline was last updated.
+
+            It must be in the `yyyy-MM-dd''T''HH:mm:ss.SSSZZ` strict_date_time format.'
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        pipeline:
+          externalDocs:
+            url: https://www.elastic.co/docs/reference/logstash/configuration-file-structure
+          description: The configuration for the pipeline.
+          type: string
+        pipeline_metadata:
+          description: 'Optional metadata about the pipeline, which can have any contents.
+
+            This metadata is not generated or used by Elasticsearch or Logstash.'
+          allOf:
+          - $ref: '#/components/schemas/logstash._types.PipelineMetadata'
+        pipeline_settings:
+          externalDocs:
+            url: https://www.elastic.co/docs/reference/logstash/logstash-settings-file
+          description: 'Settings for the pipeline.
+
+            It supports only flat keys in dot notation.'
+          allOf:
+          - $ref: '#/components/schemas/logstash._types.PipelineSettings'
+        username:
+          description: The user who last updated the pipeline.
+          type: string
+      required:
+      - description
+      - last_modified
+      - pipeline
+      - pipeline_metadata
+      - pipeline_settings
+      - username
+    _types.Ids:
+      oneOf:
+      - $ref: '#/components/schemas/_types.Id'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.Id'
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+  securitySchemes:
+    apiKeyAuth:
+      description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
+
+        '
+      in: header
+      name: Authorization
+      type: apiKey
+    basicAuth:
+      scheme: basic
+      type: http
+x-refined-from:
+- elk-stack-elasticsearch-openapi.json
+- elk-stack-kibana-openapi.yaml
+x-elastic:
+  curl:
+    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'
