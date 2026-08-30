@@ -52,6 +52,16 @@ tags:
   - Security
   - Vector Database
   - SIEM
+  - Machine-Learning
+tags_raw:
+  - Analytics
+  - Logging
+  - Monitoring
+  - Observability
+  - Search
+  - Security
+  - Vector Database
+  - SIEM
   - Machine Learning
 created: '2024-01-01'
 modified: '2026-08-27'
@@ -70,6 +80,12 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/cloud/
   baseURL: https://api.elastic-cloud.com/api/v1
   tags:
+  - Cloud
+  - Deployment
+  - Provisioning
+  - Billing
+  - IAM
+  tags_raw:
   - Cloud
   - Deployments
   - Provisioning
@@ -90,6 +106,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -149,6 +167,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Agent Builder
+  tags_raw:
   - agent builder
   properties:
   - type: OpenAPI
@@ -176,6 +196,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Alerting
+  tags_raw:
   - alerting
   properties:
   - type: OpenAPI
@@ -227,6 +249,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Analytics
+  tags_raw:
   - analytics
   properties:
   - type: OpenAPI
@@ -433,6 +457,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Cases
+  tags_raw:
   - cases
   properties:
   - type: OpenAPI
@@ -457,6 +483,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Cat
+  tags_raw:
   - cat
   properties:
   - type: OpenAPI
@@ -481,6 +509,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Ccr
+  tags_raw:
   - ccr
   properties:
   - type: OpenAPI
@@ -505,6 +535,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Cluster
+  tags_raw:
   - cluster
   properties:
   - type: OpenAPI
@@ -553,6 +585,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Connector
+  tags_raw:
   - connector
   properties:
   - type: OpenAPI
@@ -580,6 +614,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Connectors
+  tags_raw:
   - connectors
   properties:
   - type: OpenAPI
@@ -633,6 +669,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Datastream
+  tags_raw:
   - data stream
   properties:
   - type: OpenAPI
@@ -659,6 +697,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Data Streams
+  tags_raw:
   - Data streams
   properties:
   - type: OpenAPI
@@ -683,6 +723,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - DataViews
+  tags_raw:
   - data views
   properties:
   - type: OpenAPI
@@ -707,6 +749,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Deployment
+  tags_raw:
   - Deployments
   properties:
   - type: OpenAPI
@@ -781,6 +825,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Document
+  tags_raw:
   - document
   properties:
   - type: OpenAPI
@@ -963,6 +1009,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Enrich
+  tags_raw:
   - enrich
   properties:
   - type: OpenAPI
@@ -987,6 +1035,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Eql
+  tags_raw:
   - eql
   properties:
   - type: OpenAPI
@@ -1059,6 +1109,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Features
+  tags_raw:
   - features
   properties:
   - type: OpenAPI
@@ -1109,6 +1161,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Fleet
+  tags_raw:
   - fleet
   properties:
   - type: OpenAPI
@@ -1424,6 +1478,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Graph
+  tags_raw:
   - graph
   properties:
   - type: OpenAPI
@@ -1447,7 +1503,8 @@ apis:
   description: The health_report API from Elastic Stack (ELK Stack) — 2 operation(s) for health_report.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - health_report
   properties:
   - type: OpenAPI
@@ -1520,6 +1577,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Indices
+  tags_raw:
   - indices
   properties:
   - type: OpenAPI
@@ -1544,6 +1603,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Inference
+  tags_raw:
   - inference
   properties:
   - type: OpenAPI
@@ -1568,6 +1629,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Info
+  tags_raw:
   - info
   properties:
   - type: OpenAPI
@@ -1592,6 +1655,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Ingest
+  tags_raw:
   - ingest
   properties:
   - type: OpenAPI
@@ -1616,6 +1681,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - License
+  tags_raw:
   - license
   properties:
   - type: OpenAPI
@@ -1762,6 +1829,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Migration
+  tags_raw:
   - migration
   properties:
   - type: OpenAPI
@@ -1810,6 +1879,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - ML
+  tags_raw:
   - ml
   properties:
   - type: OpenAPI
@@ -1883,7 +1954,8 @@ apis:
   description: Interact with the Observability AI Assistant resources.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - observability_ai_assistant
   properties:
   - type: OpenAPI
@@ -1909,6 +1981,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -2132,7 +2206,8 @@ apis:
   description: The query_rules API from Elastic Stack (ELK Stack) — 4 operation(s) for query_rules.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - query_rules
   properties:
   - type: OpenAPI
@@ -2181,6 +2256,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Roles
+  tags_raw:
   - roles
   properties:
   - type: OpenAPI
@@ -2205,6 +2282,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Rollup
+  tags_raw:
   - rollup
   properties:
   - type: OpenAPI
@@ -2247,6 +2326,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - SavedObjects
+  tags_raw:
   - saved objects
   properties:
   - type: OpenAPI
@@ -2271,6 +2352,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Script
+  tags_raw:
   - script
   properties:
   - type: OpenAPI
@@ -2295,6 +2378,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Search
+  tags_raw:
   - search
   properties:
   - type: OpenAPI
@@ -2319,7 +2404,8 @@ apis:
     The search_application API from Elastic Stack (ELK Stack) — 4 operation(s) for search_application.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - search_application
   properties:
   - type: OpenAPI
@@ -2344,7 +2430,8 @@ apis:
     The searchable_snapshots API from Elastic Stack (ELK Stack) — 7 operation(s) for searchable_snapshots.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - searchable_snapshots
   properties:
   - type: OpenAPI
@@ -2393,6 +2480,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Security
+  tags_raw:
   - security
   properties:
   - type: OpenAPI
@@ -2841,6 +2930,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Short URL
+  tags_raw:
   - short url
   properties:
   - type: OpenAPI
@@ -2865,7 +2956,8 @@ apis:
     The significant_events API from Elastic Stack (ELK Stack) — 4 operation(s) for significant_events.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - significant_events
   properties:
   - type: OpenAPI
@@ -2914,6 +3006,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - SLO
+  tags_raw:
   - slo
   properties:
   - type: OpenAPI
@@ -2938,6 +3032,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Snapshot
+  tags_raw:
   - snapshot
   properties:
   - type: OpenAPI
@@ -2986,6 +3082,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - SQL
+  tags_raw:
   - sql
   properties:
   - type: OpenAPI
@@ -3034,6 +3132,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Streams
+  tags_raw:
   - streams
   properties:
   - type: OpenAPI
@@ -3058,6 +3158,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Synonyms
+  tags_raw:
   - synonyms
   properties:
   - type: OpenAPI
@@ -3082,6 +3184,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Synthetics
+  tags_raw:
   - synthetics
   properties:
   - type: OpenAPI
@@ -3107,6 +3211,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - System
+  tags_raw:
   - system
   properties:
   - type: OpenAPI
@@ -3157,6 +3263,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Task Manager
+  tags_raw:
   - task manager
   properties:
   - type: OpenAPI
@@ -3181,6 +3289,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Task
+  tags_raw:
   - tasks
   properties:
   - type: OpenAPI
@@ -3229,7 +3339,8 @@ apis:
     The text_structure API from Elastic Stack (ELK Stack) — 4 operation(s) for text_structure.
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
-  tags:
+  tags: []
+  tags_raw:
   - text_structure
   properties:
   - type: OpenAPI
@@ -3254,6 +3365,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Transforms
+  tags_raw:
   - transform
   properties:
   - type: OpenAPI
@@ -3312,6 +3425,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Upgrade
+  tags_raw:
   - upgrade
   properties:
   - type: OpenAPI
@@ -3336,6 +3451,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Uptime
+  tags_raw:
   - uptime
   properties:
   - type: OpenAPI
@@ -3360,6 +3477,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - User Session
+  tags_raw:
   - user session
   properties:
   - type: OpenAPI
@@ -3409,6 +3528,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -3462,6 +3583,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Watcher
+  tags_raw:
   - watcher
   properties:
   - type: OpenAPI
@@ -3493,6 +3616,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Workflows
+  tags_raw:
   - workflows
   properties:
   - type: OpenAPI
