@@ -3661,6 +3661,9 @@ apis:
   - type: ToolCrosswalk
     url: mcp/elk-stack-tool-crosswalk.yml
 common:
+  - type: License
+    name: Apache-2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
   - type: CapabilityMap
     url: capabilities/elk-stack-capability-edges.yml
     name: Elastic Stack (ELK Stack) Business Capability Map
