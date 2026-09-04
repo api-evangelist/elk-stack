@@ -28,19 +28,20 @@ deliveryModel:
   generated: '2026-08-28'
   method: derived
 accessModel:
-  pricing: freemium
-  onboarding: self-serve
-  trial: true
+  pricing: paid
+  onboarding: unknown
+  trial: false
   try_now: false
-  public: true
-  label: Freemium · Self-serve signup · Free trial
+  public: false
+  label: Paid
   confidence: high
   source:
   - plans
   - authentication
+  - rate-limits
   - security
   - sandbox
-  generated: '2026-08-27'
+  generated: '2026-09-03'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/elk-stack.png
 tags:
@@ -66,7 +67,7 @@ tags_raw:
 created: '2024-01-01'
 modified: '2026-08-27'
 url: https://www.elastic.co/elastic-stack/
-position: Consumer
+position: Consuming
 access: 3rd-Party
 specificationVersion: '0.23'
 apis:
