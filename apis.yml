@@ -85,7 +85,7 @@ apis:
   - Deployment
   - Provisioning
   - Billing
-  - IAM
+  - Identity and Access Management
   tags_raw:
   - Cloud
   - Deployments
@@ -94,7 +94,7 @@ apis:
   - IAM
   properties:
   - type: Swagger
-    url: openapi/elk-stack-elastic-cloud-swagger.json
+    url: openapi/_original/elk-stack-elastic-cloud-swagger.json
   - type: Overlay
     url: overlays/elk-stack-elastic-cloud-overlay.yaml
   - type: Documentation
@@ -484,7 +484,7 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
-  - Cat
+  - Cats
   tags_raw:
   - cat
   properties:
@@ -826,7 +826,7 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
-  - Document
+  - Documents
   tags_raw:
   - document
   properties:
@@ -1880,7 +1880,7 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
-  - ML
+  - Machine-Learning
   tags_raw:
   - ml
   properties:
@@ -3059,6 +3059,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Space
+  tags_raw:
   - Spaces
   properties:
   - type: OpenAPI
@@ -3560,6 +3562,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Visualization
+  tags_raw:
   - Visualizations
   properties:
   - type: OpenAPI
