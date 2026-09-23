@@ -6,12 +6,12 @@ info:
     url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
   version: ''
 tags:
-- name: features
+- name: Features
 paths:
   /_features:
     get:
       tags:
-      - features
+      - Features
       summary: Get the features
       description: 'Get a list of features that can be included in snapshots using the `feature_states` field when creating a snapshot.
 
@@ -68,7 +68,7 @@ paths:
   /_features/_reset:
     post:
       tags:
-      - features
+      - Features
       summary: Reset the features
       description: 'Clear all of the state information stored in system indices by Elasticsearch features, including the security and machine learning indices.
 
@@ -130,16 +130,6 @@ paths:
         name: product_name
 components:
   schemas:
-    features._types.Feature:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-      required:
-      - name
-      - description
     _types.Duration:
       externalDocs:
         url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
@@ -154,3 +144,13 @@ components:
       - type: string
         enum:
         - '0'
+    features._types.Feature:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+      - name
+      - description

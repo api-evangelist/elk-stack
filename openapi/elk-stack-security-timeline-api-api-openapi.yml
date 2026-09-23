@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Security Timeline API
   version: ''
   x-doc-license:
@@ -82,10 +29,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/note</span></div>
+        delete /s/{space_id}/api/note
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Deletes notes by saved object ID. Send either `noteId` (single ID) or `noteIds` (array of IDs) in the JSON body.
@@ -94,9 +41,7 @@ paths:
         The response has HTTP 200 with an empty body on success.
 
 
-        Requires the **Timeline and Notes** write privilege (`notes_write`).
-
-        '
+        Requires the **Timeline and Notes** write privilege (`notes_write`).'
       operationId: DeleteNote
       requestBody:
         content:
@@ -149,10 +94,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/note</span></div>
+        get /s/{space_id}/api/note
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns Security Timeline notes as saved objects.
@@ -170,9 +115,7 @@ paths:
         3. **Neither `documentIds` nor `savedObjectIds`** — Lists notes using saved-objects find semantics: `page` (default 1), `perPage` (default 10), optional `search`, `sortField`, `sortOrder`, `filter`, `createdByFilter`, and `associatedFilter`.
 
 
-        Requires the **Timeline and Notes** read privilege (`notes_read`).
-
-        '
+        Requires the **Timeline and Notes** read privilege (`notes_read`).'
       operationId: GetNotes
       parameters:
       - description: 'Event document `_id` values to match against each note''s `eventId`. When this parameter is present, the response is all matching notes (up to the server''s hard limit), not a paged list using `page`/`perPage`.
@@ -298,10 +241,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/note</span></div>
+        patch /s/{space_id}/api/note
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Creates a new note or updates an existing one.
@@ -313,9 +256,7 @@ paths:
         **Update:** Send `note` with the changed fields and set `noteId` to the note''s saved object ID. Optionally include `version` for optimistic concurrency when the client has it from a prior read.
 
 
-        Requires the **Timeline and Notes** write privilege (`notes_write`).
-
-        '
+        Requires the **Timeline and Notes** write privilege (`notes_write`).'
       externalDocs:
         description: Add or update a note on a Timeline
         url: https://www.elastic.co/guide/en/security/current/timeline-api-update.html
@@ -385,10 +326,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/pinned_event</span></div>
+        patch /s/{space_id}/api/pinned_event
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Pin/unpin an event to/from an existing Timeline.'
@@ -454,10 +395,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline</span></div>
+        delete /s/{space_id}/api/timeline
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Delete one or more Timelines or Timeline templates.'
@@ -520,10 +461,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline</span></div>
+        get /s/{space_id}/api/timeline
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get the details of an existing saved Timeline or Timeline template.'
@@ -568,10 +509,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline</span></div>
+        patch /s/{space_id}/api/timeline
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Update an existing Timeline. You can update the title, description, date range, pinned events, pinned queries, and/or pinned saved queries of an existing Timeline.'
@@ -657,10 +598,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline</span></div>
+        post /s/{space_id}/api/timeline
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Create a new Timeline or Timeline template.'
@@ -758,15 +699,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_copy</span></div>
+        post /s/{space_id}/api/timeline/_copy
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Copies and returns a timeline or timeline template.
-
-        '
+        Copies and returns a timeline or timeline template.'
       operationId: CopyTimeline
       requestBody:
         content:
@@ -819,13 +758,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_draft</span></div>
+        get /s/{space_id}/api/timeline/_draft
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the details of the draft Timeline  or Timeline template for the current user. If the user doesn''t have a draft Timeline, an empty Timeline is returned.'
+        Get the details of the draft Timeline or Timeline template for the current user. If the user doesn''t have a draft Timeline, an empty Timeline is returned.'
       operationId: GetDraftTimelines
       parameters:
       - description: Which draft to load (`default` investigation timeline or `template` timeline template).
@@ -894,19 +833,17 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_draft</span></div>
+        post /s/{space_id}/api/timeline/_draft
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Create a clean draft Timeline or Timeline template for the current user.
 
         > info
 
-        > If the user already has a draft Timeline, the existing draft Timeline is cleared and returned.
-
-        '
+        > If the user already has a draft Timeline, the existing draft Timeline is cleared and returned.'
       operationId: CleanDraftTimelines
       requestBody:
         content:
@@ -988,10 +925,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_export</span></div>
+        post /s/{space_id}/api/timeline/_export
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Export Timelines as an NDJSON file.'
@@ -1065,10 +1002,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_favorite</span></div>
+        patch /s/{space_id}/api/timeline/_favorite
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Favorite a Timeline or Timeline template for the current user.'
@@ -1153,10 +1090,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_import</span></div>
+        post /s/{space_id}/api/timeline/_import
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Import Timelines.'
@@ -1271,10 +1208,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/_prepackaged</span></div>
+        post /s/{space_id}/api/timeline/_prepackaged
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Install or update prepackaged Timelines.'
@@ -1354,10 +1291,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timeline/resolve</span></div>
+        get /s/{space_id}/api/timeline/resolve
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Resolve a Timeline or Timeline template, surfacing outcomes such as `exactMatch`, `aliasMatch`, or `conflict` when object IDs have been remapped during upgrades or imports. Provide **either** `id` for default Timelines or `template_timeline_id` for templates.'
@@ -1423,10 +1360,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/timelines</span></div>
+        get /s/{space_id}/api/timelines
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get a list of all saved Timelines or Timeline templates.'
@@ -1570,766 +1507,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Timeline_API_DocumentIds:
-      description: One document ID or an array of IDs (Elasticsearch `_id` of the event).
-      oneOf:
-      - items:
-          type: string
-        type: array
-      - type: string
-    Security_Timeline_API_ResolvedTimeline:
-      type: object
-      properties:
-        alias_purpose:
-          $ref: '#/components/schemas/Security_Timeline_API_SavedObjectResolveAliasPurpose'
-        alias_target_id:
-          type: string
-        outcome:
-          $ref: '#/components/schemas/Security_Timeline_API_SavedObjectResolveOutcome'
-        timeline:
-          $ref: '#/components/schemas/Security_Timeline_API_TimelineSavedToReturnObject'
-      required:
-      - timeline
-      - outcome
-    Security_Timeline_API_BareNote:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_NoteCreatedAndUpdatedMetadata'
-      - type: object
-        properties:
-          eventId:
-            description: 'Elasticsearch document `_id` for the event or alert this note refers to. Same value as the `documentIds` query parameter when fetching notes via GET /api/note.
-
-              '
-            example: d3a1d35a3e84a81b2f8f3859e064c224cdee1b4bc
-            type:
-            - string
-            - 'null'
-          note:
-            description: The text of the note
-            example: This is an example text
-            type:
-            - string
-            - 'null'
-          timelineId:
-            description: The `savedObjectId` of the Timeline this note belongs to (not the note's own ID).
-            example: 15c1929b-0af7-42bd-85a8-56e234cc7c4e
-            type: string
-        required:
-        - timelineId
-    Security_Timeline_API_FavoriteTimelineResult:
-      description: Indicates when and who marked a Timeline as a favorite.
-      example:
-        favoriteDate: 1741337636741
-        userName: elastic
-      type: object
-      properties:
-        favoriteDate:
-          type:
-          - number
-          - 'null'
-        fullName:
-          type:
-          - string
-          - 'null'
-        userName:
-          type:
-          - string
-          - 'null'
-    Security_Timeline_API_DataProviderType:
-      description: The type of data provider.
-      enum:
-      - default
-      - template
-      type: string
-    Security_Timeline_API_TimelineSavedToReturnObject:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
-      - type: object
-        properties:
-          eventIdToNoteIds:
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_Note'
-            type:
-            - array
-            - 'null'
-          noteIds:
-            items:
-              type: string
-            type:
-            - array
-            - 'null'
-          notes:
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_Note'
-            type:
-            - array
-            - 'null'
-          pinnedEventIds:
-            items:
-              type: string
-            type:
-            - array
-            - 'null'
-          pinnedEventsSaveObject:
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_PinnedEvent'
-            type:
-            - array
-            - 'null'
-          savedObjectId:
-            type: string
-          version:
-            type: string
-        required:
-        - savedObjectId
-        - version
-    Security_Timeline_API_TimelineType:
-      description: The type of Timeline.
-      enum:
-      - default
-      - template
-      type: string
-    Security_Timeline_API_PinnedEventCreatedAndUpdatedMetadata:
-      type: object
-      properties:
-        created:
-          description: The time the pinned event was created, using a 13-digit Epoch timestamp.
-          example: 1587468588922
-          type:
-          - number
-          - 'null'
-        createdBy:
-          description: The user who created the pinned event.
-          example: casetester
-          type:
-          - string
-          - 'null'
-        updated:
-          description: The last time the pinned event was updated, using a 13-digit Epoch timestamp
-          example: 1741344876825
-          type:
-          - number
-          - 'null'
-        updatedBy:
-          description: The user who last updated the pinned event
-          example: casetester
-          type:
-          - string
-          - 'null'
-    Security_Timeline_API_FavoriteTimelineResponse:
-      type: object
-      properties:
-        favorite:
-          items:
-            $ref: '#/components/schemas/Security_Timeline_API_FavoriteTimelineResult'
-          type: array
-        savedObjectId:
-          type: string
-        templateTimelineId:
-          type:
-          - string
-          - 'null'
-        templateTimelineVersion:
-          type:
-          - number
-          - 'null'
-        timelineType:
-          $ref: '#/components/schemas/Security_Timeline_API_TimelineType'
-        version:
-          type: string
-      required:
-      - savedObjectId
-      - version
-    Security_Timeline_API_TimelineResponse:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
-      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimelineWithSavedObjectId'
-      - type: object
-        properties:
-          eventIdToNoteIds:
-            description: A list of all the notes that are associated to this Timeline.
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_Note'
-            type:
-            - array
-            - 'null'
-          noteIds:
-            description: A list of all the ids of notes that are associated to this Timeline.
-            example:
-            - 709f99c6-89b6-4953-9160-35945c8e174e
-            items:
-              type: string
-            type:
-            - array
-            - 'null'
-          notes:
-            description: A list of all the notes that are associated to this Timeline.
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_Note'
-            type:
-            - array
-            - 'null'
-          pinnedEventIds:
-            description: A list of all the ids of pinned events that are associated to this Timeline.
-            example:
-            - 983f99c6-89b6-4953-9160-35945c8a194f
-            items:
-              type: string
-            type:
-            - array
-            - 'null'
-          pinnedEventsSaveObject:
-            description: A list of all the pinned events that are associated to this Timeline.
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_PinnedEvent'
-            type:
-            - array
-            - 'null'
-    Security_Timeline_API_SortObject:
-      description: Object indicating how rows are sorted in the Timeline's grid
-      example:
-        columnId: '@timestamp'
-        sortDirection: desc
-      type: object
-      properties:
-        columnId:
-          type:
-          - string
-          - 'null'
-        columnType:
-          type:
-          - string
-          - 'null'
-        sortDirection:
-          type:
-          - string
-          - 'null'
-    Security_Timeline_API_Sort:
-      oneOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_SortObject'
-      - items:
-          $ref: '#/components/schemas/Security_Timeline_API_SortObject'
-        type: array
-    Security_Timeline_API_QueryMatchResult:
-      type: object
-      properties:
-        displayField:
-          type:
-          - string
-          - 'null'
-        displayValue:
-          type:
-          - string
-          - 'null'
-        field:
-          type:
-          - string
-          - 'null'
-        operator:
-          type:
-          - string
-          - 'null'
-        value:
-          oneOf:
-          - type:
-            - string
-            - 'null'
-          - items:
-              type: string
-            type:
-            - array
-            - 'null'
-    Security_Timeline_API_GetNotesResult:
-      type: object
-      properties:
-        notes:
-          items:
-            $ref: '#/components/schemas/Security_Timeline_API_Note'
-          type: array
-        totalCount:
-          description: Number of notes returned (may be adjusted after the query when `associatedFilter` applies post-filtering).
-          type: number
-      required:
-      - totalCount
-      - notes
-    Security_Timeline_API_ImportTimelineResult:
-      type: object
-      properties:
-        errors:
-          description: The list of failed Timeline imports
-          items:
-            type: object
-            properties:
-              error:
-                description: The error containing the reason why the timeline could not be imported
-                type: object
-                properties:
-                  message:
-                    description: The reason why the timeline could not be imported
-                    example: Malformed JSON
-                    type: string
-                  status_code:
-                    description: The HTTP status code of the error
-                    example: 400
-                    type: number
-              id:
-                description: The ID of the timeline that failed to import
-                example: 6ce1b592-84e3-4b4a-9552-f189d4b82075
-                type: string
-          type: array
-        success:
-          description: Indicates whether any of the Timelines were successfully imports
-          type: boolean
-        success_count:
-          description: The amount of successfully imported/updated Timelines
-          example: 99
-          type: number
-        timelines_installed:
-          description: The amount of successfully installed Timelines
-          example: 80
-          type: number
-        timelines_updated:
-          description: The amount of successfully updated Timelines
-          example: 19
-          type: number
-    Security_Timeline_API_RowRendererId:
-      description: Identifies the available row renderers
-      enum:
-      - alert
-      - alerts
-      - auditd
-      - auditd_file
-      - library
-      - netflow
-      - plain
-      - registry
-      - suricata
-      - system
-      - system_dns
-      - system_endgame_process
-      - system_file
-      - system_fim
-      - system_security_event
-      - system_socket
-      - threat_match
-      - zeek
-      type: string
-    Security_Timeline_API_SavedObjectResolveAliasPurpose:
-      enum:
-      - savedObjectConversion
-      - savedObjectImport
-      type: string
-    Security_Timeline_API_Note:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_BareNote'
-      - type: object
-        properties:
-          noteId:
-            description: The `savedObjectId` of the note
-            example: 709f99c6-89b6-4953-9160-35945c8e174e
-            type: string
-          version:
-            description: The version of the note
-            example: WzQ2LDFd
-            type: string
-        required:
-        - noteId
-        - version
-    Security_Timeline_API_ResponseNote:
-      type: object
-      properties:
-        note:
-          $ref: '#/components/schemas/Security_Timeline_API_Note'
-      required:
-      - note
-    Security_Timeline_API_FilterTimelineResult:
-      example:
-        meta:
-          alias: Custom filter name
-          disabled: false
-          index: .alerts-security.alerts-default,logs-*
-          key: '@timestamp'
-          negate: false,
-          type: exists
-          value: exists
-        query: '{"exists":{"field":"@timestamp"}}'
-      type: object
-      properties:
-        exists:
-          type:
-          - string
-          - 'null'
-        match_all:
-          type:
-          - string
-          - 'null'
-        meta:
-          type:
-          - object
-          - 'null'
-          properties:
-            alias:
-              type:
-              - string
-              - 'null'
-            controlledBy:
-              type:
-              - string
-              - 'null'
-            disabled:
-              type:
-              - boolean
-              - 'null'
-            field:
-              type:
-              - string
-              - 'null'
-            formattedValue:
-              type:
-              - string
-              - 'null'
-            index:
-              type:
-              - string
-              - 'null'
-            key:
-              type:
-              - string
-              - 'null'
-            negate:
-              type:
-              - boolean
-              - 'null'
-            params:
-              type:
-              - string
-              - 'null'
-            type:
-              type:
-              - string
-              - 'null'
-            value:
-              type:
-              - string
-              - 'null'
-        missing:
-          type:
-          - string
-          - 'null'
-        query:
-          type:
-          - string
-          - 'null'
-        range:
-          type:
-          - string
-          - 'null'
-        script:
-          type:
-          - string
-          - 'null'
-    Security_Timeline_API_SortFieldTimeline:
-      description: The field to sort the timelines by.
-      enum:
-      - title
-      - description
-      - updated
-      - created
-      type: string
-    Security_Timeline_API_SerializedFilterQueryResult:
-      description: KQL bar query.
-      example:
-        filterQuery: null
-        kuery:
-          expression: '_id : *'
-          kind: kuery
-        serializedQuery: '{"bool":{"should":[{"exists":{"field":"_id"}}],"minimum_should_match":1}}'
-      type: object
-      properties:
-        filterQuery:
-          type:
-          - object
-          - 'null'
-          properties:
-            kuery:
-              type:
-              - object
-              - 'null'
-              properties:
-                expression:
-                  type:
-                  - string
-                  - 'null'
-                kind:
-                  type:
-                  - string
-                  - 'null'
-            serializedQuery:
-              type:
-              - string
-              - 'null'
-    Security_Timeline_API_SavedObjectResolveOutcome:
-      enum:
-      - exactMatch
-      - aliasMatch
-      - conflict
-      type: string
-    Security_Timeline_API_SavedTimelineWithSavedObjectId:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
-      - type: object
-        properties:
-          savedObjectId:
-            description: The `savedObjectId` of the Timeline or Timeline template
-            example: 15c1929b-0af7-42bd-85a8-56e234cc7c4e
-            type: string
-          version:
-            description: The version of the Timeline or Timeline template
-            example: WzE0LDFd
-            type: string
-        required:
-        - savedObjectId
-        - version
-    Security_Timeline_API_AssociatedFilterType:
-      description: 'How the note is associated with a Timeline saved object and/or an event (`eventId`). `all`: no association-based restriction from this parameter. `document_only`: document-linked notes (non-empty `eventId`) without timeline association in the API''s internal sense; post-filtering drops notes without a usable `eventId`. `saved_object_only`: timeline notes with no linked event (`eventId` empty or absent); post-filtering keeps timeline-only notes. `document_and_saved_object`: notes on a timeline and linked to an event; post-filtering enforces a real `eventId`. `orphan`: not on a timeline and `eventId` is empty (stricter than missing `eventId` in some cases).
-
-        '
-      enum:
-      - all
-      - document_only
-      - saved_object_only
-      - document_and_saved_object
-      - orphan
-      type: string
-    Security_Timeline_API_PinnedEvent:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_BarePinnedEvent'
-      - type: object
-        properties:
-          pinnedEventId:
-            description: The `savedObjectId` of this pinned event
-            example: 10r1929b-0af7-42bd-85a8-56e234f98h2f3
-            type: string
-          version:
-            description: The version of this pinned event
-            example: WzQ2LDFe
-            type: string
-        required:
-        - pinnedEventId
-        - version
-    Security_Timeline_API_SavedObjectIds:
-      description: One Timeline saved object ID or an array of IDs.
-      oneOf:
-      - items:
-          type: string
-        type: array
-      - type: string
-    Security_Timeline_API_NoteCreatedAndUpdatedMetadata:
-      type: object
-      properties:
-        created:
-          description: The time the note was created, using a 13-digit Epoch timestamp.
-          example: 1587468588922
-          type:
-          - number
-          - 'null'
-        createdBy:
-          description: The user who created the note.
-          example: casetester
-          type:
-          - string
-          - 'null'
-        updated:
-          description: The last time the note was updated, using a 13-digit Epoch timestamp
-          example: 1741344876825
-          type:
-          - number
-          - 'null'
-        updatedBy:
-          description: The user who last updated the note
-          example: casetester
-          type:
-          - string
-          - 'null'
-    Security_Timeline_API_ColumnHeaderResult:
-      type: object
-      properties:
-        aggregatable:
-          type:
-          - boolean
-          - 'null'
-        category:
-          type:
-          - string
-          - 'null'
-        columnHeaderType:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        example:
-          type:
-          - string
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-        indexes:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-        placeholder:
-          type:
-          - string
-          - 'null'
-        searchable:
-          type:
-          - boolean
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-    Security_Timeline_API_ImportTimelines:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
-      - type: object
-        properties:
-          eventNotes:
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_BareNote'
-            type:
-            - array
-            - 'null'
-          globalNotes:
-            items:
-              $ref: '#/components/schemas/Security_Timeline_API_BareNote'
-            type:
-            - array
-            - 'null'
-          pinnedEventIds:
-            items:
-              type: string
-            type:
-            - array
-            - 'null'
-          savedObjectId:
-            type:
-            - string
-            - 'null'
-          version:
-            type:
-            - string
-            - 'null'
-        required:
-        - savedObjectId
-        - version
-        - pinnedEventIds
-        - eventNotes
-        - globalNotes
-    Security_Timeline_API_DataProviderResult:
-      type: object
-      properties:
-        and:
-          items:
-            $ref: '#/components/schemas/Security_Timeline_API_DataProviderQueryMatch'
-          type:
-          - array
-          - 'null'
-        enabled:
-          type:
-          - boolean
-          - 'null'
-        excluded:
-          type:
-          - boolean
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-        kqlQuery:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-        queryMatch:
-          $ref: '#/components/schemas/Security_Timeline_API_QueryMatchResult'
-        type:
-          $ref: '#/components/schemas/Security_Timeline_API_DataProviderType'
-    Security_Timeline_API_PersistPinnedEventResponse:
-      oneOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_PinnedEvent'
-      - type: object
-        properties:
-          unpinned:
-            description: Indicates whether the event was successfully unpinned
-            type: boolean
-        required:
-        - unpinned
-    Security_Timeline_API_BarePinnedEvent:
-      allOf:
-      - $ref: '#/components/schemas/Security_Timeline_API_PinnedEventCreatedAndUpdatedMetadata'
-      - type: object
-        properties:
-          eventId:
-            description: The `_id` of the associated event for this pinned event.
-            example: d3a1d35a3e84a81b2f8f3859e064c224cdee1b4bc
-            type: string
-          timelineId:
-            description: The `savedObjectId` of the timeline that this pinned event is associated with
-            example: 15c1929b-0af7-42bd-85a8-56e234cc7c4e
-            type: string
-        required:
-        - eventId
-        - timelineId
-    Security_Timeline_API_TimelineStatus:
-      description: The status of the Timeline.
-      enum:
-      - active
-      - draft
-      - immutable
-      type: string
-    Security_Timeline_API_DataProviderQueryMatch:
-      type: object
-      properties:
-        enabled:
-          type:
-          - boolean
-          - 'null'
-        excluded:
-          type:
-          - boolean
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-        kqlQuery:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-        queryMatch:
-          $ref: '#/components/schemas/Security_Timeline_API_QueryMatchResult'
-        type:
-          $ref: '#/components/schemas/Security_Timeline_API_DataProviderType'
     Security_Timeline_API_SavedTimeline:
       type: object
       properties:
@@ -2537,6 +1714,766 @@ components:
           type:
           - string
           - 'null'
+    Security_Timeline_API_RowRendererId:
+      description: Identifies the available row renderers
+      enum:
+      - alert
+      - alerts
+      - auditd
+      - auditd_file
+      - library
+      - netflow
+      - plain
+      - registry
+      - suricata
+      - system
+      - system_dns
+      - system_endgame_process
+      - system_file
+      - system_fim
+      - system_security_event
+      - system_socket
+      - threat_match
+      - zeek
+      type: string
+    Security_Timeline_API_DataProviderType:
+      description: The type of data provider.
+      enum:
+      - default
+      - template
+      type: string
+    Security_Timeline_API_TimelineStatus:
+      description: The status of the Timeline.
+      enum:
+      - active
+      - draft
+      - immutable
+      type: string
+    Security_Timeline_API_QueryMatchResult:
+      type: object
+      properties:
+        displayField:
+          type:
+          - string
+          - 'null'
+        displayValue:
+          type:
+          - string
+          - 'null'
+        field:
+          type:
+          - string
+          - 'null'
+        operator:
+          type:
+          - string
+          - 'null'
+        value:
+          oneOf:
+          - type:
+            - string
+            - 'null'
+          - items:
+              type: string
+            type:
+            - array
+            - 'null'
+    Security_Timeline_API_DocumentIds:
+      description: One document ID or an array of IDs (Elasticsearch `_id` of the event).
+      oneOf:
+      - items:
+          type: string
+        type: array
+      - type: string
+    Security_Timeline_API_DataProviderResult:
+      type: object
+      properties:
+        and:
+          items:
+            $ref: '#/components/schemas/Security_Timeline_API_DataProviderQueryMatch'
+          type:
+          - array
+          - 'null'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+        excluded:
+          type:
+          - boolean
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        kqlQuery:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        queryMatch:
+          $ref: '#/components/schemas/Security_Timeline_API_QueryMatchResult'
+        type:
+          $ref: '#/components/schemas/Security_Timeline_API_DataProviderType'
+    Security_Timeline_API_SavedTimelineWithSavedObjectId:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
+      - type: object
+        properties:
+          savedObjectId:
+            description: The `savedObjectId` of the Timeline or Timeline template
+            example: 15c1929b-0af7-42bd-85a8-56e234cc7c4e
+            type: string
+          version:
+            description: The version of the Timeline or Timeline template
+            example: WzE0LDFd
+            type: string
+        required:
+        - savedObjectId
+        - version
+    Security_Timeline_API_ColumnHeaderResult:
+      type: object
+      properties:
+        aggregatable:
+          type:
+          - boolean
+          - 'null'
+        category:
+          type:
+          - string
+          - 'null'
+        columnHeaderType:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        example:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        indexes:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        placeholder:
+          type:
+          - string
+          - 'null'
+        searchable:
+          type:
+          - boolean
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+    Security_Timeline_API_PinnedEventCreatedAndUpdatedMetadata:
+      type: object
+      properties:
+        created:
+          description: The time the pinned event was created, using a 13-digit Epoch timestamp.
+          example: 1587468588922
+          type:
+          - number
+          - 'null'
+        createdBy:
+          description: The user who created the pinned event.
+          example: casetester
+          type:
+          - string
+          - 'null'
+        updated:
+          description: The last time the pinned event was updated, using a 13-digit Epoch timestamp
+          example: 1741344876825
+          type:
+          - number
+          - 'null'
+        updatedBy:
+          description: The user who last updated the pinned event
+          example: casetester
+          type:
+          - string
+          - 'null'
+    Security_Timeline_API_PinnedEvent:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_BarePinnedEvent'
+      - type: object
+        properties:
+          pinnedEventId:
+            description: The `savedObjectId` of this pinned event
+            example: 10r1929b-0af7-42bd-85a8-56e234f98h2f3
+            type: string
+          version:
+            description: The version of this pinned event
+            example: WzQ2LDFe
+            type: string
+        required:
+        - pinnedEventId
+        - version
+    Security_Timeline_API_DataProviderQueryMatch:
+      type: object
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+        excluded:
+          type:
+          - boolean
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        kqlQuery:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        queryMatch:
+          $ref: '#/components/schemas/Security_Timeline_API_QueryMatchResult'
+        type:
+          $ref: '#/components/schemas/Security_Timeline_API_DataProviderType'
+    Security_Timeline_API_FilterTimelineResult:
+      example:
+        meta:
+          alias: Custom filter name
+          disabled: false
+          index: .alerts-security.alerts-default,logs-*
+          key: '@timestamp'
+          negate: false,
+          type: exists
+          value: exists
+        query: '{"exists":{"field":"@timestamp"}}'
+      type: object
+      properties:
+        exists:
+          type:
+          - string
+          - 'null'
+        match_all:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          properties:
+            alias:
+              type:
+              - string
+              - 'null'
+            controlledBy:
+              type:
+              - string
+              - 'null'
+            disabled:
+              type:
+              - boolean
+              - 'null'
+            field:
+              type:
+              - string
+              - 'null'
+            formattedValue:
+              type:
+              - string
+              - 'null'
+            index:
+              type:
+              - string
+              - 'null'
+            key:
+              type:
+              - string
+              - 'null'
+            negate:
+              type:
+              - boolean
+              - 'null'
+            params:
+              type:
+              - string
+              - 'null'
+            type:
+              type:
+              - string
+              - 'null'
+            value:
+              type:
+              - string
+              - 'null'
+        missing:
+          type:
+          - string
+          - 'null'
+        query:
+          type:
+          - string
+          - 'null'
+        range:
+          type:
+          - string
+          - 'null'
+        script:
+          type:
+          - string
+          - 'null'
+    Security_Timeline_API_FavoriteTimelineResponse:
+      type: object
+      properties:
+        favorite:
+          items:
+            $ref: '#/components/schemas/Security_Timeline_API_FavoriteTimelineResult'
+          type: array
+        savedObjectId:
+          type: string
+        templateTimelineId:
+          type:
+          - string
+          - 'null'
+        templateTimelineVersion:
+          type:
+          - number
+          - 'null'
+        timelineType:
+          $ref: '#/components/schemas/Security_Timeline_API_TimelineType'
+        version:
+          type: string
+      required:
+      - savedObjectId
+      - version
+    Security_Timeline_API_SortObject:
+      description: Object indicating how rows are sorted in the Timeline's grid
+      example:
+        columnId: '@timestamp'
+        sortDirection: desc
+      type: object
+      properties:
+        columnId:
+          type:
+          - string
+          - 'null'
+        columnType:
+          type:
+          - string
+          - 'null'
+        sortDirection:
+          type:
+          - string
+          - 'null'
+    Security_Timeline_API_AssociatedFilterType:
+      description: 'How the note is associated with a Timeline saved object and/or an event (`eventId`). `all`: no association-based restriction from this parameter. `document_only`: document-linked notes (non-empty `eventId`) without timeline association in the API''s internal sense; post-filtering drops notes without a usable `eventId`. `saved_object_only`: timeline notes with no linked event (`eventId` empty or absent); post-filtering keeps timeline-only notes. `document_and_saved_object`: notes on a timeline and linked to an event; post-filtering enforces a real `eventId`. `orphan`: not on a timeline and `eventId` is empty (stricter than missing `eventId` in some cases).
+
+        '
+      enum:
+      - all
+      - document_only
+      - saved_object_only
+      - document_and_saved_object
+      - orphan
+      type: string
+    Security_Timeline_API_SavedObjectResolveAliasPurpose:
+      enum:
+      - savedObjectConversion
+      - savedObjectImport
+      type: string
+    Security_Timeline_API_SortFieldTimeline:
+      description: The field to sort the timelines by.
+      enum:
+      - title
+      - description
+      - updated
+      - created
+      type: string
+    Security_Timeline_API_Note:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_BareNote'
+      - type: object
+        properties:
+          noteId:
+            description: The `savedObjectId` of the note
+            example: 709f99c6-89b6-4953-9160-35945c8e174e
+            type: string
+          version:
+            description: The version of the note
+            example: WzQ2LDFd
+            type: string
+        required:
+        - noteId
+        - version
+    Security_Timeline_API_ImportTimelineResult:
+      type: object
+      properties:
+        errors:
+          description: The list of failed Timeline imports
+          items:
+            type: object
+            properties:
+              error:
+                description: The error containing the reason why the timeline could not be imported
+                type: object
+                properties:
+                  message:
+                    description: The reason why the timeline could not be imported
+                    example: Malformed JSON
+                    type: string
+                  status_code:
+                    description: The HTTP status code of the error
+                    example: 400
+                    type: number
+              id:
+                description: The ID of the timeline that failed to import
+                example: 6ce1b592-84e3-4b4a-9552-f189d4b82075
+                type: string
+          type: array
+        success:
+          description: Indicates whether any of the Timelines were successfully imports
+          type: boolean
+        success_count:
+          description: The amount of successfully imported/updated Timelines
+          example: 99
+          type: number
+        timelines_installed:
+          description: The amount of successfully installed Timelines
+          example: 80
+          type: number
+        timelines_updated:
+          description: The amount of successfully updated Timelines
+          example: 19
+          type: number
+    Security_Timeline_API_ResolvedTimeline:
+      type: object
+      properties:
+        alias_purpose:
+          $ref: '#/components/schemas/Security_Timeline_API_SavedObjectResolveAliasPurpose'
+        alias_target_id:
+          type: string
+        outcome:
+          $ref: '#/components/schemas/Security_Timeline_API_SavedObjectResolveOutcome'
+        timeline:
+          $ref: '#/components/schemas/Security_Timeline_API_TimelineSavedToReturnObject'
+      required:
+      - timeline
+      - outcome
+    Security_Timeline_API_BarePinnedEvent:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_PinnedEventCreatedAndUpdatedMetadata'
+      - type: object
+        properties:
+          eventId:
+            description: The `_id` of the associated event for this pinned event.
+            example: d3a1d35a3e84a81b2f8f3859e064c224cdee1b4bc
+            type: string
+          timelineId:
+            description: The `savedObjectId` of the timeline that this pinned event is associated with
+            example: 15c1929b-0af7-42bd-85a8-56e234cc7c4e
+            type: string
+        required:
+        - eventId
+        - timelineId
+    Security_Timeline_API_BareNote:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_NoteCreatedAndUpdatedMetadata'
+      - type: object
+        properties:
+          eventId:
+            description: 'Elasticsearch document `_id` for the event or alert this note refers to. Same value as the `documentIds` query parameter when fetching notes via GET /api/note.
+
+              '
+            example: d3a1d35a3e84a81b2f8f3859e064c224cdee1b4bc
+            type:
+            - string
+            - 'null'
+          note:
+            description: The text of the note
+            example: This is an example text
+            type:
+            - string
+            - 'null'
+          timelineId:
+            description: The `savedObjectId` of the Timeline this note belongs to (not the note's own ID).
+            example: 15c1929b-0af7-42bd-85a8-56e234cc7c4e
+            type: string
+        required:
+        - timelineId
+    Security_Timeline_API_TimelineSavedToReturnObject:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
+      - type: object
+        properties:
+          eventIdToNoteIds:
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_Note'
+            type:
+            - array
+            - 'null'
+          noteIds:
+            items:
+              type: string
+            type:
+            - array
+            - 'null'
+          notes:
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_Note'
+            type:
+            - array
+            - 'null'
+          pinnedEventIds:
+            items:
+              type: string
+            type:
+            - array
+            - 'null'
+          pinnedEventsSaveObject:
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_PinnedEvent'
+            type:
+            - array
+            - 'null'
+          savedObjectId:
+            type: string
+          version:
+            type: string
+        required:
+        - savedObjectId
+        - version
+    Security_Timeline_API_ImportTimelines:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
+      - type: object
+        properties:
+          eventNotes:
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_BareNote'
+            type:
+            - array
+            - 'null'
+          globalNotes:
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_BareNote'
+            type:
+            - array
+            - 'null'
+          pinnedEventIds:
+            items:
+              type: string
+            type:
+            - array
+            - 'null'
+          savedObjectId:
+            type:
+            - string
+            - 'null'
+          version:
+            type:
+            - string
+            - 'null'
+        required:
+        - savedObjectId
+        - version
+        - pinnedEventIds
+        - eventNotes
+        - globalNotes
+    Security_Timeline_API_ResponseNote:
+      type: object
+      properties:
+        note:
+          $ref: '#/components/schemas/Security_Timeline_API_Note'
+      required:
+      - note
+    Security_Timeline_API_SavedObjectResolveOutcome:
+      enum:
+      - exactMatch
+      - aliasMatch
+      - conflict
+      type: string
+    Security_Timeline_API_NoteCreatedAndUpdatedMetadata:
+      type: object
+      properties:
+        created:
+          description: The time the note was created, using a 13-digit Epoch timestamp.
+          example: 1587468588922
+          type:
+          - number
+          - 'null'
+        createdBy:
+          description: The user who created the note.
+          example: casetester
+          type:
+          - string
+          - 'null'
+        updated:
+          description: The last time the note was updated, using a 13-digit Epoch timestamp
+          example: 1741344876825
+          type:
+          - number
+          - 'null'
+        updatedBy:
+          description: The user who last updated the note
+          example: casetester
+          type:
+          - string
+          - 'null'
+    Security_Timeline_API_TimelineResponse:
+      allOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimeline'
+      - $ref: '#/components/schemas/Security_Timeline_API_SavedTimelineWithSavedObjectId'
+      - type: object
+        properties:
+          eventIdToNoteIds:
+            description: A list of all the notes that are associated to this Timeline.
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_Note'
+            type:
+            - array
+            - 'null'
+          noteIds:
+            description: A list of all the ids of notes that are associated to this Timeline.
+            example:
+            - 709f99c6-89b6-4953-9160-35945c8e174e
+            items:
+              type: string
+            type:
+            - array
+            - 'null'
+          notes:
+            description: A list of all the notes that are associated to this Timeline.
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_Note'
+            type:
+            - array
+            - 'null'
+          pinnedEventIds:
+            description: A list of all the ids of pinned events that are associated to this Timeline.
+            example:
+            - 983f99c6-89b6-4953-9160-35945c8a194f
+            items:
+              type: string
+            type:
+            - array
+            - 'null'
+          pinnedEventsSaveObject:
+            description: A list of all the pinned events that are associated to this Timeline.
+            items:
+              $ref: '#/components/schemas/Security_Timeline_API_PinnedEvent'
+            type:
+            - array
+            - 'null'
+    Security_Timeline_API_SavedObjectIds:
+      description: One Timeline saved object ID or an array of IDs.
+      oneOf:
+      - items:
+          type: string
+        type: array
+      - type: string
+    Security_Timeline_API_SerializedFilterQueryResult:
+      description: KQL bar query.
+      example:
+        filterQuery: null
+        kuery:
+          expression: '_id : *'
+          kind: kuery
+        serializedQuery: '{"bool":{"should":[{"exists":{"field":"_id"}}],"minimum_should_match":1}}'
+      type: object
+      properties:
+        filterQuery:
+          type:
+          - object
+          - 'null'
+          properties:
+            kuery:
+              type:
+              - object
+              - 'null'
+              properties:
+                expression:
+                  type:
+                  - string
+                  - 'null'
+                kind:
+                  type:
+                  - string
+                  - 'null'
+            serializedQuery:
+              type:
+              - string
+              - 'null'
+    Security_Timeline_API_PersistPinnedEventResponse:
+      oneOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_PinnedEvent'
+      - type: object
+        properties:
+          unpinned:
+            description: Indicates whether the event was successfully unpinned
+            type: boolean
+        required:
+        - unpinned
+    Security_Timeline_API_FavoriteTimelineResult:
+      description: Indicates when and who marked a Timeline as a favorite.
+      example:
+        favoriteDate: 1741337636741
+        userName: elastic
+      type: object
+      properties:
+        favoriteDate:
+          type:
+          - number
+          - 'null'
+        fullName:
+          type:
+          - string
+          - 'null'
+        userName:
+          type:
+          - string
+          - 'null'
+    Security_Timeline_API_Sort:
+      oneOf:
+      - $ref: '#/components/schemas/Security_Timeline_API_SortObject'
+      - items:
+          $ref: '#/components/schemas/Security_Timeline_API_SortObject'
+        type: array
+    Security_Timeline_API_TimelineType:
+      description: The type of Timeline.
+      enum:
+      - default
+      - template
+      type: string
+    Security_Timeline_API_GetNotesResult:
+      type: object
+      properties:
+        notes:
+          items:
+            $ref: '#/components/schemas/Security_Timeline_API_Note'
+          type: array
+        totalCount:
+          description: Number of notes returned (may be adjusted after the query when `associatedFilter` applies post-filtering).
+          type: number
+      required:
+      - totalCount
+      - notes
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

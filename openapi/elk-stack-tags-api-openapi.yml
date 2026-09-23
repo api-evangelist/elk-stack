@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Tags API
   version: ''
   x-doc-license:
@@ -80,10 +27,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/tags</span></div>
+        get /s/{space_id}/api/tags
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns a paginated list of tags matching the optional `query` text.'
@@ -207,10 +154,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/tags</span></div>
+        post /s/{space_id}/api/tags
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Creates a new tag and returns it.'
@@ -287,10 +234,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/tags/{id}</span></div>
+        delete /s/{space_id}/api/tags/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Permanently deletes a tag by ID.'
@@ -329,10 +276,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/tags/{id}</span></div>
+        get /s/{space_id}/api/tags/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns a tag by ID.'
@@ -395,10 +342,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/tags/{id}</span></div>
+        put /s/{space_id}/api/tags/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Updates a tag if it exists, or creates it at the provided ID.'
@@ -513,6 +460,31 @@ paths:
         name: product_name
 components:
   schemas:
+    Kibana_HTTP_APIs_kbn-as-code-meta:
+      additionalProperties: false
+      type: object
+      properties:
+        created_at:
+          description: Timestamp when the object was created (ISO 8601).
+          type: string
+        created_by:
+          description: User profile ID of the user who created the object.
+          type: string
+        managed:
+          description: When `true`, the object is managed by Kibana and cannot be edited by users.
+          type: boolean
+        owner:
+          description: Identifier of the plugin or team that owns this object.
+          type: string
+        updated_at:
+          description: Timestamp when the object was last updated (ISO 8601).
+          type: string
+        updated_by:
+          description: User profile ID of the user who last updated the object.
+          type: string
+        version:
+          description: Internal version identifier for optimistic concurrency control.
+          type: string
     Kibana_HTTP_APIs_kbn-tags-request-attributes:
       additionalProperties: false
       type: object
@@ -554,31 +526,6 @@ components:
       required:
       - name
       - color
-    Kibana_HTTP_APIs_kbn-as-code-meta:
-      additionalProperties: false
-      type: object
-      properties:
-        created_at:
-          description: Timestamp when the object was created (ISO 8601).
-          type: string
-        created_by:
-          description: User profile ID of the user who created the object.
-          type: string
-        managed:
-          description: When `true`, the object is managed by Kibana and cannot be edited by users.
-          type: boolean
-        owner:
-          description: Identifier of the plugin or team that owns this object.
-          type: string
-        updated_at:
-          description: Timestamp when the object was last updated (ISO 8601).
-          type: string
-        updated_by:
-          description: User profile ID of the user who last updated the object.
-          type: string
-        version:
-          description: Internal version identifier for optimistic concurrency control.
-          type: string
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

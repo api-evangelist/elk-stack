@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana data views API
   version: ''
   x-doc-license:
@@ -82,15 +29,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views</span></div>
+        get /s/{space_id}/api/data_views
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a list of all data views. Use this endpoint to identify available data views in the current Kibana space.
-
-        '
+        Retrieve a list of all data views. Use this endpoint to identify available data views in the current Kibana space.'
       operationId: getAllDataViewsDefault
       responses:
         '200':
@@ -147,15 +92,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view</span></div>
+        post /s/{space_id}/api/data_views/data_view
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a data view. Data views identify the Elasticsearch data you want to explore and visualize. They can point to one or more data streams, indices, or index aliases, and use optional runtime fields to compute values at query time. Note that data views are not required for ES|QL-based visualizations. To learn more, refer to the [data views documentation](https://www.elastic.co/docs/explore-analyze/find-and-organize/data-views).
-
-        '
+        Create a data view. Data views identify the Elasticsearch data you want to explore and visualize. They can point to one or more data streams, indices, or index aliases, and use optional runtime fields to compute values at query time. Note that data views are not required for ES|QL-based visualizations. To learn more, refer to the data views documentation.'
       operationId: createDataViewDefaultw
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -207,15 +150,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}</span></div>
+        delete /s/{space_id}/api/data_views/data_view/{viewId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete a data view by its identifier. WARNING: When you delete a data view, it cannot be recovered.
-
-        '
+        Delete a data view by its identifier. WARNING: When you delete a data view, it cannot be recovered.'
       operationId: deleteDataViewDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -249,15 +190,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}</span></div>
+        get /s/{space_id}/api/data_views/data_view/{viewId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a single data view by its identifier. Data views identify the Elasticsearch data you want to explore and visualize. They can point to one or more data streams, indices, or index aliases, and use optional runtime fields to compute values at query time. Note that data views are not required for ES|QL-based visualizations. To learn more, refer to the [data views documentation](https://www.elastic.co/docs/explore-analyze/find-and-organize/data-views).
-
-        '
+        Retrieve a single data view by its identifier. Data views identify the Elasticsearch data you want to explore and visualize. They can point to one or more data streams, indices, or index aliases, and use optional runtime fields to compute values at query time. Note that data views are not required for ES|QL-based visualizations. To learn more, refer to the data views documentation.'
       operationId: getDataViewDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_view_id'
@@ -297,15 +236,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}</span></div>
+        post /s/{space_id}/api/data_views/data_view/{viewId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update an existing data view. Only the fields provided in the request body are updated.
-
-        '
+        Update an existing data view. Only the fields provided in the request body are updated.'
       operationId: updateDataViewDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -358,15 +295,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/fields</span></div>
+        post /s/{space_id}/api/data_views/data_view/{viewId}/fields
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update field metadata for a data view. Use this endpoint to set custom labels, custom descriptions, and format overrides for individual fields.
-
-        '
+        Update field metadata for a data view. Use this endpoint to set custom labels, custom descriptions, and format overrides for individual fields.'
       operationId: updateFieldsMetadataDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -428,15 +363,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field</span></div>
+        post /s/{space_id}/api/data_views/data_view/{viewId}/runtime_field
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a runtime field for a data view. Runtime fields are computed at query time using a [Painless script](https://www.elastic.co/docs/explore-analyze/scripting/modules-scripting-painless) and do not require reindexing. If no `script` is provided, the runtime field returns the corresponding value from the document `_source`.
-
-        '
+        Create a runtime field for a data view. Runtime fields are computed at query time using a Painless script and do not require reindexing. If no `script` is provided, the runtime field returns the corresponding value from the document `_source`.'
       operationId: createRuntimeFieldDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -493,15 +426,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field</span></div>
+        put /s/{space_id}/api/data_views/data_view/{viewId}/runtime_field
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create or update a runtime field for a data view. If the runtime field already exists, it is replaced with the new definition.
-
-        '
+        Create or update a runtime field for a data view. If the runtime field already exists, it is replaced with the new definition.'
       operationId: createUpdateRuntimeFieldDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -582,15 +513,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}</span></div>
+        delete /s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete a runtime field from a data view.
-
-        '
+        Delete a runtime field from a data view.'
       operationId: deleteRuntimeFieldDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_field_name'
@@ -624,15 +553,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}</span></div>
+        get /s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a single runtime field by name from a data view.
-
-        '
+        Retrieve a single runtime field by name from a data view.'
       operationId: getRuntimeFieldDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_field_name'
@@ -680,15 +607,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}</span></div>
+        post /s/{space_id}/api/data_views/data_view/{viewId}/runtime_field/{fieldName}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update an existing runtime field in a data view. Only the fields provided in the request body are updated.
-
-        '
+        Update an existing runtime field in a data view. Only the fields provided in the request body are updated.'
       operationId: updateRuntimeFieldDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_field_name'
@@ -750,15 +675,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/default</span></div>
+        get /s/{space_id}/api/data_views/default
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve the identifier of the default data view for the current Kibana space.
-
-        '
+        Retrieve the identifier of the default data view for the current Kibana space.'
       operationId: getDefaultDataViewDefault
       responses:
         '200':
@@ -799,15 +722,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/default</span></div>
+        post /s/{space_id}/api/data_views/default
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Set the default data view for the current Kibana space. The default data view is used as a fallback when no specific data view is selected.
-
-        '
+        Set the default data view for the current Kibana space. The default data view is used as a fallback when no specific data view is selected.'
       operationId: setDefaultDatailViewDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -876,15 +797,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/swap_references</span></div>
+        post /s/{space_id}/api/data_views/swap_references
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Swap saved object references from one data view to another. Use this endpoint to update dashboards, visualizations, and other saved objects that reference a data view. WARNING: Misuse can break large numbers of saved objects! Use the [`_preview`](https://www.elastic.co/docs/api/doc/kibana/operation/operation-previewswapdataviewsdefault) endpoint to see which saved objects would be affected before making changes.
-
-        '
+        Swap saved object references from one data view to another. Use this endpoint to update dashboards, visualizations, and other saved objects that reference a data view. WARNING: Misuse can break large numbers of saved objects! Use the `_preview` endpoint to see which saved objects would be affected before making changes.'
       operationId: swapDataViewsDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -946,15 +865,13 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/data_views/swap_references/_preview</span></div>
+        post /s/{space_id}/api/data_views/swap_references/_preview
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Preview the effect of swapping saved object references from one data view to another. Returns the list of affected saved objects without making any changes.
-
-        '
+        Preview the effect of swapping saved object references from one data view to another. Returns the list of affected saved objects without making any changes.'
       operationId: previewSwapDataViewsDefault
       parameters:
       - $ref: '#/components/parameters/Data_views_kbn_xsrf'
@@ -1005,284 +922,46 @@ paths:
       - content: Kibana
         name: product_name
 components:
-  schemas:
-    Data_views_fieldformats:
-      description: A map of field formats by field name.
-      type: object
-    Data_views_update_data_view_request_object:
-      title: Update data view request
-      type: object
-      properties:
-        data_view:
-          description: 'The data view properties you want to update. Only the specified properties are updated in the data view. Unspecified fields stay as they are persisted.
-
-            '
-          type: object
-          properties:
-            allowNoIndex:
-              $ref: '#/components/schemas/Data_views_allownoindex'
-            fieldFormats:
-              $ref: '#/components/schemas/Data_views_fieldformats'
-            fields:
-              type: object
-            name:
-              type: string
-            runtimeFieldMap:
-              additionalProperties:
-                $ref: '#/components/schemas/Data_views_runtimefieldmap'
-              type: object
-            sourceFilters:
-              $ref: '#/components/schemas/Data_views_sourcefilters'
-            timeFieldName:
-              $ref: '#/components/schemas/Data_views_timefieldname'
-            title:
-              $ref: '#/components/schemas/Data_views_title'
-            type:
-              $ref: '#/components/schemas/Data_views_type'
-            typeMeta:
-              $ref: '#/components/schemas/Data_views_typemeta'
-        refresh_fields:
-          default: false
-          description: Reloads the data view fields after the data view is updated.
-          type: boolean
-      required:
-      - data_view
-    Data_views_namespaces:
-      description: An array of space identifiers for sharing the data view between multiple spaces.
-      items:
-        default: default
-        type: string
-      type: array
-    Data_views_type:
-      description: When set to `rollup`, identifies the rollup data views.
-      type: string
-    Data_views_404_response:
-      type: object
-      properties:
-        error:
-          enum:
-          - Not Found
-          example: Not Found
-          type: string
-        message:
-          example: Saved object [index-pattern/caaad6d0-920c-11ed-b36a-874bd1548a00] not found
-          type: string
-        statusCode:
-          enum:
-          - 404
-          example: 404
-          type: integer
-    Data_views_typemeta_response:
-      description: When you use rollup indices, contains the field list for the rollup data view API endpoints.
-      type:
-      - object
-      - 'null'
-      properties:
-        aggs:
-          description: A map of rollup restrictions by aggregation type and field name.
-          type: object
-        params:
-          description: Properties for retrieving rollup fields.
-          type: object
-    Data_views_swap_data_view_request_object:
-      title: Data view reference swap request
-      type: object
-      properties:
-        delete:
-          description: Deletes referenced saved object if all references are removed.
-          type: boolean
-        forId:
-          description: Limit the affected saved objects to one or more by identifier.
-          oneOf:
-          - type: string
-          - items:
-              type: string
-            type: array
-        forType:
-          description: Limit the affected saved objects by type.
-          type: string
-        fromId:
-          description: The saved object reference to change.
-          type: string
-        fromType:
-          description: 'Specify the type of the saved object reference to alter. The default value is `index-pattern` for data views.
-
-            '
-          type: string
-        toId:
-          description: New saved object reference value to replace the old value.
-          type: string
-      required:
-      - fromId
-      - toId
-    Data_views_sourcefilters:
-      description: The array of field names you want to filter out in Discover.
-      items:
-        type: object
-        properties:
-          value:
-            type: string
-        required:
-        - value
-      type: array
-    Data_views_400_response:
-      title: Bad request
-      type: object
-      properties:
-        error:
-          example: Bad Request
-          type: string
-        message:
-          type: string
-        statusCode:
-          example: 400
-          type: number
-      required:
-      - statusCode
-      - error
-      - message
-    Data_views_create_data_view_request_object:
-      title: Create data view request
-      type: object
-      properties:
-        data_view:
-          description: The data view object.
-          type: object
-          properties:
-            allowNoIndex:
-              $ref: '#/components/schemas/Data_views_allownoindex'
-            fieldAttrs:
-              additionalProperties:
-                $ref: '#/components/schemas/Data_views_fieldattrs'
-              type: object
-            fieldFormats:
-              $ref: '#/components/schemas/Data_views_fieldformats'
-            fields:
-              type: object
-            id:
-              type: string
-            name:
-              description: The data view name.
-              type: string
-            namespaces:
-              $ref: '#/components/schemas/Data_views_namespaces'
-            runtimeFieldMap:
-              additionalProperties:
-                $ref: '#/components/schemas/Data_views_runtimefieldmap'
-              type: object
-            sourceFilters:
-              $ref: '#/components/schemas/Data_views_sourcefilters'
-            timeFieldName:
-              $ref: '#/components/schemas/Data_views_timefieldname'
-            title:
-              $ref: '#/components/schemas/Data_views_title'
-            type:
-              $ref: '#/components/schemas/Data_views_type'
-            typeMeta:
-              $ref: '#/components/schemas/Data_views_typemeta'
-            version:
-              type: string
-          required:
-          - title
-        override:
-          default: false
-          description: Override an existing data view if a data view with the provided title already exists.
-          type: boolean
-      required:
-      - data_view
-    Data_views_fieldattrs:
-      description: A map of field attributes by field name.
-      type: object
-      properties:
-        count:
-          description: Popularity count for the field.
-          type: integer
-        customDescription:
-          description: Custom description for the field.
-          maxLength: 300
-          type: string
-        customLabel:
-          description: Custom label for the field.
-          type: string
-    Data_views_data_view_response_object:
-      title: Data view response properties
-      type: object
-      properties:
-        data_view:
-          type: object
-          properties:
-            allowNoIndex:
-              $ref: '#/components/schemas/Data_views_allownoindex'
-            fieldAttrs:
-              additionalProperties:
-                $ref: '#/components/schemas/Data_views_fieldattrs'
-              type: object
-            fieldFormats:
-              $ref: '#/components/schemas/Data_views_fieldformats'
-            fields:
-              type: object
-            id:
-              example: ff959d40-b880-11e8-a6d9-e546fe2bba5f
-              type: string
-            name:
-              description: The data view name.
-              type: string
-            namespaces:
-              $ref: '#/components/schemas/Data_views_namespaces'
-            runtimeFieldMap:
-              additionalProperties:
-                $ref: '#/components/schemas/Data_views_runtimefieldmap'
-              type: object
-            sourceFilters:
-              $ref: '#/components/schemas/Data_views_sourcefilters'
-            timeFieldName:
-              $ref: '#/components/schemas/Data_views_timefieldname'
-            title:
-              $ref: '#/components/schemas/Data_views_title'
-            typeMeta:
-              $ref: '#/components/schemas/Data_views_typemeta_response'
-            version:
-              example: WzQ2LDJd
-              type: string
-    Data_views_allownoindex:
-      description: Allows the data view saved object to exist before the data is available. Defaults to `false`.
-      type: boolean
-    Data_views_typemeta:
-      description: When you use rollup indices, contains the field list for the rollup data view API endpoints.
-      type: object
-      properties:
-        aggs:
-          description: A map of rollup restrictions by aggregation type and field name.
-          type: object
-        params:
-          description: Properties for retrieving rollup fields.
-          type: object
-      required:
-      - aggs
-      - params
-    Data_views_runtimefieldmap:
-      description: A map of runtime field definitions by field name.
-      type: object
-      properties:
-        script:
-          type: object
-          properties:
-            source:
-              description: Script for the runtime field.
-              type: string
-        type:
-          description: Mapping type of the runtime field.
-          type: string
-      required:
-      - script
-      - type
-    Data_views_timefieldname:
-      description: The timestamp field name, which you use for time-based data views.
-      type: string
-    Data_views_title:
-      description: Comma-separated list of data streams, indices, and aliases that you want to search. Supports wildcards (`*`).
-      type: string
   examples:
+    Data_views_create_data_view_response:
+      description: The response includes the full data view specification, including auto-generated fields such as the unique identifier and version.
+      summary: The create data view API returns a JSON object that contains details about the new data view.
+      value:
+        data_view:
+          allowNoIndex: false
+          fieldAttrs: {}
+          fieldFormats: {}
+          fields:
+            runtime_shape_name:
+              aggregatable: true
+              count: 0
+              esTypes:
+              - keyword
+              format:
+                id: string
+              name: runtime_shape_name
+              readFromDocValues: false
+              runtimeField:
+                script:
+                  source: emit(doc['shape_name'].value)
+                type: keyword
+              scripted: false
+              searchable: true
+              shortDotsEnable: false
+              type: string
+          id: b561acfb-0181-455e-84a3-ce8980b2272f
+          name: My Logstash data view
+          namespaces:
+          - default
+          runtimeFieldMap:
+            runtime_shape_name:
+              script:
+                source: emit(doc['shape_name'].value)
+              type: keyword
+          sourceFilters: []
+          title: logstash-*
+          typeMeta: {}
+          version: WzQ5LDJd
     Data_views_create_data_view_request:
       description: Create a data view for logstash indices that includes a runtime field which extracts the shape name from a source field.
       summary: Create a data view with runtime fields.
@@ -1295,90 +974,6 @@ components:
                 source: emit(doc['shape_name'].value)
               type: keyword
           title: logstash-*
-    Data_views_update_field_metadata_request:
-      description: Update the popularity count, custom label, and custom description for specific fields in a data view.
-      summary: Update metadata for multiple fields.
-      value:
-        fields:
-          field1:
-            count: 123
-            customLabel: Field 1 label
-          field2:
-            customDescription: Field 2 description
-            customLabel: Field 2 label
-    Data_views_update_runtime_field_request:
-      description: Update the script of an existing runtime field.
-      summary: Update an existing runtime field on a data view.
-      value:
-        runtimeField:
-          script:
-            source: emit(doc["bar"].value)
-    Data_views_get_default_data_view_response:
-      description: The identifier of the default data view for the current Kibana space.
-      summary: The get default data view API returns the default data view identifier.
-      value:
-        data_view_id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
-    Data_views_get_data_views_response:
-      description: A list of available data views including their identifiers, names, and index patterns.
-      summary: The get all data views API returns a list of data views.
-      value:
-        data_view:
-        - id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
-          name: Kibana Sample Data eCommerce
-          namespaces:
-          - default
-          title: kibana_sample_data_ecommerce
-          typeMeta: {}
-        - id: d3d7af60-4c81-11e8-b3d7-01146121b73d
-          name: Kibana Sample Data Flights
-          namespaces:
-          - default
-          title: kibana_sample_data_flights
-        - id: 90943e30-9a47-11e8-b64d-95841ca0b247
-          name: Kibana Sample Data Logs
-          namespaces:
-          - default
-          title: kibana_sample_data_logs
-    Data_views_set_default_data_view_response:
-      description: The acknowledged flag confirms that the default data view for the current Kibana space was updated.
-      summary: The default data view was set successfully.
-      value:
-        acknowledged: true
-    Data_views_set_default_data_view_request:
-      description: Set the default data view, using the force flag to overwrite an existing default.
-      summary: Set the default data view identifier.
-      value:
-        data_view_id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
-        force: true
-    Data_views_create_runtime_field_request:
-      description: Create a long-type runtime field that emits a value derived from the foo source field.
-      summary: Create a runtime field.
-      value:
-        name: runtimeFoo
-        runtimeField:
-          script:
-            source: emit(doc["foo"].value)
-          type: long
-    Data_views_swap_data_view_response:
-      description: The list of saved objects whose references were updated, along with the delete status of the source.
-      summary: The swap references API returns a list of the affected saved objects.
-      value:
-        deleteStatus:
-          deletePerformed: true
-          remainingRefs: 0
-        result:
-        - id: '123'
-          type: visualization
-    Data_views_update_data_view_request:
-      description: Update the title, time field, and other properties of an existing data view.
-      summary: Update some properties for a data view.
-      value:
-        data_view:
-          allowNoIndex: false
-          name: Kibana Sample Data eCommerce
-          timeFieldName: order_date
-          title: kibana_sample_data_ecommerce
-        refresh_fields: true
     Data_views_error_400_response:
       description: The request was rejected because the payload or query parameters are missing required fields or contain invalid values.
       summary: A bad request response.
@@ -1386,28 +981,19 @@ components:
         error: Bad Request
         message: '[request body.data_view.title]: expected value of type [string] but got [undefined]'
         statusCode: 400
-    Data_views_preview_swap_data_view_request:
-      description: Preview the saved objects that would be affected by swapping references from one data view to another.
-      summary: Preview swapping references from data view ID "abcd-efg" to "xyz-123".
+    Data_views_set_default_data_view_response:
+      description: The acknowledged flag confirms that the default data view for the current Kibana space was updated.
+      summary: The default data view was set successfully.
       value:
-        fromId: abcd-efg
-        toId: xyz-123
-    Data_views_swap_data_view_request:
-      description: Swap all saved object references from one data view to another and delete the source data view afterward.
-      summary: Swap references from data view ID "abcd-efg" to "xyz-123" and remove the data view that is no longer referenced.
+        acknowledged: true
+    Data_views_create_runtime_field_response:
+      description: The response includes the newly created runtime field as an array and the full updated data view object.
+      summary: The API returns created runtime field object array and updated data view object.
       value:
-        delete: true
-        fromId: abcd-efg
-        toId: xyz-123
-    Data_views_preview_swap_data_view_response:
-      description: The result array lists every saved object that references the source data view. No saved objects are modified by the preview endpoint.
-      summary: A preview of saved objects that would be affected by a data view swap.
-      value:
-        result:
-        - id: 8963ca30-bca7-11e8-aa00-0123456789ab
-          type: visualization
-        - id: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
-          type: dashboard
+        data_view:
+          '...': null
+        fields:
+        - '...'
     Data_views_get_data_view_response:
       description: A complete data view object including all fields, runtime fields, and metadata.
       summary: The get data view API returns a JSON object that contains information about the data view.
@@ -2336,6 +1922,80 @@ components:
           title: kibana_sample_data_ecommerce
           typeMeta: {}
           version: WzUsMV0=
+    Data_views_get_data_views_response:
+      description: A list of available data views including their identifiers, names, and index patterns.
+      summary: The get all data views API returns a list of data views.
+      value:
+        data_view:
+        - id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+          name: Kibana Sample Data eCommerce
+          namespaces:
+          - default
+          title: kibana_sample_data_ecommerce
+          typeMeta: {}
+        - id: d3d7af60-4c81-11e8-b3d7-01146121b73d
+          name: Kibana Sample Data Flights
+          namespaces:
+          - default
+          title: kibana_sample_data_flights
+        - id: 90943e30-9a47-11e8-b64d-95841ca0b247
+          name: Kibana Sample Data Logs
+          namespaces:
+          - default
+          title: kibana_sample_data_logs
+    Data_views_update_data_view_request:
+      description: Update the title, time field, and other properties of an existing data view.
+      summary: Update some properties for a data view.
+      value:
+        data_view:
+          allowNoIndex: false
+          name: Kibana Sample Data eCommerce
+          timeFieldName: order_date
+          title: kibana_sample_data_ecommerce
+        refresh_fields: true
+    Data_views_swap_data_view_request:
+      description: Swap all saved object references from one data view to another and delete the source data view afterward.
+      summary: Swap references from data view ID "abcd-efg" to "xyz-123" and remove the data view that is no longer referenced.
+      value:
+        delete: true
+        fromId: abcd-efg
+        toId: xyz-123
+    Data_views_update_field_metadata_request:
+      description: Update the popularity count, custom label, and custom description for specific fields in a data view.
+      summary: Update metadata for multiple fields.
+      value:
+        fields:
+          field1:
+            count: 123
+            customLabel: Field 1 label
+          field2:
+            customDescription: Field 2 description
+            customLabel: Field 2 label
+    Data_views_set_default_data_view_request:
+      description: Set the default data view, using the force flag to overwrite an existing default.
+      summary: Set the default data view identifier.
+      value:
+        data_view_id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+        force: true
+    Data_views_create_runtime_field_request:
+      description: Create a long-type runtime field that emits a value derived from the foo source field.
+      summary: Create a runtime field.
+      value:
+        name: runtimeFoo
+        runtimeField:
+          script:
+            source: emit(doc["foo"].value)
+          type: long
+    Data_views_swap_data_view_response:
+      description: The list of saved objects whose references were updated, along with the delete status of the source.
+      summary: The swap references API returns a list of the affected saved objects.
+      value:
+        deleteStatus:
+          deletePerformed: true
+          remainingRefs: 0
+        result:
+        - id: '123'
+          type: visualization
     Data_views_get_runtime_field_response:
       description: The runtime field definition along with the parent data view.
       summary: The get runtime field API returns a JSON object that contains information about the runtime field (`hour_of_day`) and the data view (`d3d7af60-4c81-11e8-b3d7-01146121b73d`).
@@ -2836,53 +2496,33 @@ components:
           searchable: true
           shortDotsEnable: false
           type: number
-    Data_views_create_data_view_response:
-      description: The response includes the full data view specification, including auto-generated fields such as the unique identifier and version.
-      summary: The create data view API returns a JSON object that contains details about the new data view.
+    Data_views_update_field_metadata_response:
+      description: The acknowledged flag confirms that the field metadata changes were applied to the data view.
+      summary: Field metadata was updated successfully.
       value:
-        data_view:
-          allowNoIndex: false
-          fieldAttrs: {}
-          fieldFormats: {}
-          fields:
-            runtime_shape_name:
-              aggregatable: true
-              count: 0
-              esTypes:
-              - keyword
-              format:
-                id: string
-              name: runtime_shape_name
-              readFromDocValues: false
-              runtimeField:
-                script:
-                  source: emit(doc['shape_name'].value)
-                type: keyword
-              scripted: false
-              searchable: true
-              shortDotsEnable: false
-              type: string
-          id: b561acfb-0181-455e-84a3-ce8980b2272f
-          name: My Logstash data view
-          namespaces:
-          - default
-          runtimeFieldMap:
-            runtime_shape_name:
-              script:
-                source: emit(doc['shape_name'].value)
-              type: keyword
-          sourceFilters: []
-          title: logstash-*
-          typeMeta: {}
-          version: WzQ5LDJd
-    Data_views_create_runtime_field_response:
-      description: The response includes the newly created runtime field as an array and the full updated data view object.
-      summary: The API returns created runtime field object array and updated data view object.
+        acknowledged: true
+    Data_views_update_runtime_field_request:
+      description: Update the script of an existing runtime field.
+      summary: Update an existing runtime field on a data view.
       value:
-        data_view:
-          '...': null
-        fields:
-        - '...'
+        runtimeField:
+          script:
+            source: emit(doc["bar"].value)
+    Data_views_preview_swap_data_view_request:
+      description: Preview the saved objects that would be affected by swapping references from one data view to another.
+      summary: Preview swapping references from data view ID "abcd-efg" to "xyz-123".
+      value:
+        fromId: abcd-efg
+        toId: xyz-123
+    Data_views_preview_swap_data_view_response:
+      description: The result array lists every saved object that references the source data view. No saved objects are modified by the preview endpoint.
+      summary: A preview of saved objects that would be affected by a data view swap.
+      value:
+        result:
+        - id: 8963ca30-bca7-11e8-aa00-0123456789ab
+          type: visualization
+        - id: edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+          type: dashboard
     Data_views_error_404_response:
       description: The requested data view or runtime field was not found in the current Kibana space.
       summary: A not found response.
@@ -2890,11 +2530,288 @@ components:
         error: Not Found
         message: Saved object [index-pattern/caaad6d0-920c-11ed-b36a-874bd1548a00] not found
         statusCode: 404
-    Data_views_update_field_metadata_response:
-      description: The acknowledged flag confirms that the field metadata changes were applied to the data view.
-      summary: Field metadata was updated successfully.
+    Data_views_get_default_data_view_response:
+      description: The identifier of the default data view for the current Kibana space.
+      summary: The get default data view API returns the default data view identifier.
       value:
-        acknowledged: true
+        data_view_id: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+  schemas:
+    Data_views_type:
+      description: When set to `rollup`, identifies the rollup data views.
+      type: string
+    Data_views_swap_data_view_request_object:
+      title: Data view reference swap request
+      type: object
+      properties:
+        delete:
+          description: Deletes referenced saved object if all references are removed.
+          type: boolean
+        forId:
+          description: Limit the affected saved objects to one or more by identifier.
+          oneOf:
+          - type: string
+          - items:
+              type: string
+            type: array
+        forType:
+          description: Limit the affected saved objects by type.
+          type: string
+        fromId:
+          description: The saved object reference to change.
+          type: string
+        fromType:
+          description: 'Specify the type of the saved object reference to alter. The default value is `index-pattern` for data views.
+
+            '
+          type: string
+        toId:
+          description: New saved object reference value to replace the old value.
+          type: string
+      required:
+      - fromId
+      - toId
+    Data_views_namespaces:
+      description: An array of space identifiers for sharing the data view between multiple spaces.
+      items:
+        default: default
+        type: string
+      type: array
+    Data_views_fieldattrs:
+      description: A map of field attributes by field name.
+      type: object
+      properties:
+        count:
+          description: Popularity count for the field.
+          type: integer
+        customDescription:
+          description: Custom description for the field.
+          maxLength: 300
+          type: string
+        customLabel:
+          description: Custom label for the field.
+          type: string
+    Data_views_typemeta:
+      description: When you use rollup indices, contains the field list for the rollup data view API endpoints.
+      type: object
+      properties:
+        aggs:
+          description: A map of rollup restrictions by aggregation type and field name.
+          type: object
+        params:
+          description: Properties for retrieving rollup fields.
+          type: object
+      required:
+      - aggs
+      - params
+    Data_views_create_data_view_request_object:
+      title: Create data view request
+      type: object
+      properties:
+        data_view:
+          description: The data view object.
+          type: object
+          properties:
+            allowNoIndex:
+              $ref: '#/components/schemas/Data_views_allownoindex'
+            fieldAttrs:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_fieldattrs'
+              type: object
+            fieldFormats:
+              $ref: '#/components/schemas/Data_views_fieldformats'
+            fields:
+              type: object
+            id:
+              type: string
+            name:
+              description: The data view name.
+              type: string
+            namespaces:
+              $ref: '#/components/schemas/Data_views_namespaces'
+            runtimeFieldMap:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_runtimefieldmap'
+              type: object
+            sourceFilters:
+              $ref: '#/components/schemas/Data_views_sourcefilters'
+            timeFieldName:
+              $ref: '#/components/schemas/Data_views_timefieldname'
+            title:
+              $ref: '#/components/schemas/Data_views_title'
+            type:
+              $ref: '#/components/schemas/Data_views_type'
+            typeMeta:
+              $ref: '#/components/schemas/Data_views_typemeta'
+            version:
+              type: string
+          required:
+          - title
+        override:
+          default: false
+          description: Override an existing data view if a data view with the provided title already exists.
+          type: boolean
+      required:
+      - data_view
+    Data_views_update_data_view_request_object:
+      title: Update data view request
+      type: object
+      properties:
+        data_view:
+          description: 'The data view properties you want to update. Only the specified properties are updated in the data view. Unspecified fields stay as they are persisted.
+
+            '
+          type: object
+          properties:
+            allowNoIndex:
+              $ref: '#/components/schemas/Data_views_allownoindex'
+            fieldFormats:
+              $ref: '#/components/schemas/Data_views_fieldformats'
+            fields:
+              type: object
+            name:
+              type: string
+            runtimeFieldMap:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_runtimefieldmap'
+              type: object
+            sourceFilters:
+              $ref: '#/components/schemas/Data_views_sourcefilters'
+            timeFieldName:
+              $ref: '#/components/schemas/Data_views_timefieldname'
+            title:
+              $ref: '#/components/schemas/Data_views_title'
+            type:
+              $ref: '#/components/schemas/Data_views_type'
+            typeMeta:
+              $ref: '#/components/schemas/Data_views_typemeta'
+        refresh_fields:
+          default: false
+          description: Reloads the data view fields after the data view is updated.
+          type: boolean
+      required:
+      - data_view
+    Data_views_allownoindex:
+      description: Allows the data view saved object to exist before the data is available. Defaults to `false`.
+      type: boolean
+    Data_views_400_response:
+      title: Bad request
+      type: object
+      properties:
+        error:
+          example: Bad Request
+          type: string
+        message:
+          type: string
+        statusCode:
+          example: 400
+          type: number
+      required:
+      - statusCode
+      - error
+      - message
+    Data_views_data_view_response_object:
+      title: Data view response properties
+      type: object
+      properties:
+        data_view:
+          type: object
+          properties:
+            allowNoIndex:
+              $ref: '#/components/schemas/Data_views_allownoindex'
+            fieldAttrs:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_fieldattrs'
+              type: object
+            fieldFormats:
+              $ref: '#/components/schemas/Data_views_fieldformats'
+            fields:
+              type: object
+            id:
+              example: ff959d40-b880-11e8-a6d9-e546fe2bba5f
+              type: string
+            name:
+              description: The data view name.
+              type: string
+            namespaces:
+              $ref: '#/components/schemas/Data_views_namespaces'
+            runtimeFieldMap:
+              additionalProperties:
+                $ref: '#/components/schemas/Data_views_runtimefieldmap'
+              type: object
+            sourceFilters:
+              $ref: '#/components/schemas/Data_views_sourcefilters'
+            timeFieldName:
+              $ref: '#/components/schemas/Data_views_timefieldname'
+            title:
+              $ref: '#/components/schemas/Data_views_title'
+            typeMeta:
+              $ref: '#/components/schemas/Data_views_typemeta_response'
+            version:
+              example: WzQ2LDJd
+              type: string
+    Data_views_typemeta_response:
+      description: When you use rollup indices, contains the field list for the rollup data view API endpoints.
+      type:
+      - object
+      - 'null'
+      properties:
+        aggs:
+          description: A map of rollup restrictions by aggregation type and field name.
+          type: object
+        params:
+          description: Properties for retrieving rollup fields.
+          type: object
+    Data_views_title:
+      description: Comma-separated list of data streams, indices, and aliases that you want to search. Supports wildcards (`*`).
+      type: string
+    Data_views_sourcefilters:
+      description: The array of field names you want to filter out in Discover.
+      items:
+        type: object
+        properties:
+          value:
+            type: string
+        required:
+        - value
+      type: array
+    Data_views_runtimefieldmap:
+      description: A map of runtime field definitions by field name.
+      type: object
+      properties:
+        script:
+          type: object
+          properties:
+            source:
+              description: Script for the runtime field.
+              type: string
+        type:
+          description: Mapping type of the runtime field.
+          type: string
+      required:
+      - script
+      - type
+    Data_views_timefieldname:
+      description: The timestamp field name, which you use for time-based data views.
+      type: string
+    Data_views_404_response:
+      type: object
+      properties:
+        error:
+          enum:
+          - Not Found
+          example: Not Found
+          type: string
+        message:
+          example: Saved object [index-pattern/caaad6d0-920c-11ed-b36a-874bd1548a00] not found
+          type: string
+        statusCode:
+          enum:
+          - 404
+          example: 404
+          type: integer
+    Data_views_fieldformats:
+      description: A map of field formats by field name.
+      type: object
   parameters:
     Data_views_kbn_xsrf:
       description: Cross-site request forgery protection

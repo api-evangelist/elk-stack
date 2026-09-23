@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Fleet internals API
   version: ''
   x-doc-license:
@@ -74,9 +21,7 @@ security:
 - basicAuth: []
 tags:
 - name: Fleet internals
-  description: 'Fleet internals APIs enable you to manage Fleet internal operations, including checking permissions, monitoring Fleet Server health, managing settings, and initiating Fleet setup.
-
-    '
+  description: Fleet internals APIs enable you to manage Fleet internal operations, including checking permissions, monitoring Fleet Server health, managing settings, and initiating Fleet setup.
   x-displayName: Fleet internals
 paths:
   /api/fleet/check-permissions:
@@ -84,10 +29,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/check-permissions</span></div>
+        get /s/{space_id}/api/fleet/check-permissions
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Check whether the current user has the required permissions to use Fleet. Optionally verifies Fleet Server setup privileges.'
@@ -167,13 +112,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/health_check</span></div>
+        post /s/{space_id}/api/fleet/health_check
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Check the health status of a Fleet Server instance by its host ID. Returns the server status and name if available.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+        Check the health status of a Fleet Server instance by its host ID. Returns the server status and name if available.
+
+
+        [Required authorization] Route required privileges: fleet-settings-all.'
       operationId: post-fleet-health-check
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -294,13 +242,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/settings</span></div>
+        get /s/{space_id}/api/fleet/settings
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the global Fleet settings.<br/><br/>[Required authorization] Route required privileges: fleet-settings-read.'
+        Get the global Fleet settings.
+
+
+        [Required authorization] Route required privileges: fleet-settings-read.'
       operationId: get-fleet-settings
       parameters: []
       responses:
@@ -462,13 +413,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/settings</span></div>
+        put /s/{space_id}/api/fleet/settings
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update the global Fleet settings.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+        Update the global Fleet settings.
+
+
+        [Required authorization] Route required privileges: fleet-settings-all.'
       operationId: put-fleet-settings
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -681,13 +635,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/setup</span></div>
+        post /s/{space_id}/api/fleet/setup
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Initialize Fleet and create the necessary Elasticsearch resources for Fleet to operate. Safe to call multiple times (idempotent). Returns the initialization status and any non-fatal errors encountered during setup.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read OR fleet-agent-policies-read OR fleet-settings-read OR fleet-setup.'
+        Initialize Fleet and create the necessary Elasticsearch resources for Fleet to operate. Safe to call multiple times (idempotent). Returns the initialization status and any non-fatal errors encountered during setup.
+
+
+        [Required authorization] Route required privileges: fleet-agents-read OR fleet-agent-policies-read OR fleet-settings-read OR fleet-setup.'
       operationId: post-fleet-setup
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -798,10 +755,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/space_settings</span></div>
+        get /s/{space_id}/api/fleet/space_settings
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get the Fleet settings for the current Kibana space.'
@@ -850,13 +807,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/space_settings</span></div>
+        put /s/{space_id}/api/fleet/space_settings
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create or update Fleet settings for the current Kibana space.<br/><br/>[Required authorization] Route required privileges: fleet-settings-all.'
+        Create or update Fleet settings for the current Kibana space.
+
+
+        [Required authorization] Route required privileges: fleet-settings-all.'
       operationId: put-fleet-space-settings
       parameters:
       - description: A required header to protect against CSRF attacks

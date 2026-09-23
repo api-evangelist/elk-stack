@@ -6,12 +6,12 @@ info:
     url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
   version: ''
 tags:
-- name: analytics
+- name: Analytics
 paths:
   /_application/analytics/{name}:
     get:
       tags:
-      - analytics
+      - Analytics
       summary: Get behavioral analytics collections
       operationId: search-application-get-behavioral-analytics-1
       parameters:
@@ -26,7 +26,7 @@ paths:
         name: product_name
     put:
       tags:
-      - analytics
+      - Analytics
       summary: Create a behavioral analytics collection
       operationId: search-application-put-behavioral-analytics
       parameters:
@@ -52,7 +52,7 @@ paths:
         name: product_name
     delete:
       tags:
-      - analytics
+      - Analytics
       summary: Delete a behavioral analytics collection
       description: The associated data stream is also deleted.
       operationId: search-application-delete-behavioral-analytics
@@ -80,7 +80,7 @@ paths:
   /_application/analytics:
     get:
       tags:
-      - analytics
+      - Analytics
       summary: Get behavioral analytics collections
       operationId: search-application-get-behavioral-analytics
       responses:
@@ -94,7 +94,7 @@ paths:
   /_application/analytics/{collection_name}/event/{event_type}:
     post:
       tags:
-      - analytics
+      - Analytics
       summary: Create a behavioral analytics collection event
       externalDocs:
         description: About behavioral analytics events
@@ -156,6 +156,8 @@ paths:
         name: product_name
 components:
   schemas:
+    _types.Name:
+      type: string
     search_application._types.AnalyticsCollection:
       type: object
       properties:
@@ -165,6 +167,14 @@ components:
           - $ref: '#/components/schemas/search_application._types.EventDataStream'
       required:
       - event_data_stream
+    _types.IndexName:
+      type: string
+    search_application._types.EventType:
+      type: string
+      enum:
+      - page_view
+      - search
+      - search_click
     search_application.put_behavioral_analytics.AnalyticsAcknowledgeResponseBase:
       allOf:
       - $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
@@ -176,18 +186,6 @@ components:
             - $ref: '#/components/schemas/_types.Name'
         required:
         - name
-    _types.AcknowledgedResponseBase:
-      type: object
-      properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
-      required:
-      - acknowledged
-    _types.IndexName:
-      type: string
-    _types.Name:
-      type: string
     search_application._types.EventDataStream:
       type: object
       properties:
@@ -196,12 +194,14 @@ components:
           - $ref: '#/components/schemas/_types.IndexName'
       required:
       - name
-    search_application._types.EventType:
-      type: string
-      enum:
-      - page_view
-      - search
-      - search_click
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
   responses:
     search_application.get_behavioral_analytics-200:
       description: ''

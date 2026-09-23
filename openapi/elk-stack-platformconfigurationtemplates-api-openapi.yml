@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   version: '1'
-  title: Elastic Cloud Enterprise Platform Configuration Templates API
+  title: Elastic Cloud Enterprise Platform Configuration Templates…
   termsOfService: ''
 servers:
 - url: https://{{hostname}}/api/v1
@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - PlatformConfigurationTemplates
-      summary: Get all templates cross region.
+      summary: Get all templates cross region
       description: Global deployment template endpoint which fetches the deployment templates across all region services.
       operationId: get-global-deployment-templates
       responses:
@@ -37,6 +37,32 @@ paths:
         tag: Templates - Deployments - Global
 components:
   schemas:
+    EmptyResponse:
+      type: object
+    GlobalDeploymentTemplateRegion:
+      type: object
+      required:
+      - deployment_template_id
+      - region_id
+      - versions
+      properties:
+        region_id:
+          type: string
+          description: The region identifier.
+        deployment_template_id:
+          type: string
+          description: The (region-specific) ID of the deployment template.
+        versions:
+          type: array
+          description: Versions supported in this region.
+          items:
+            type: string
+        kibana_deeplink:
+          type: array
+          description: The Kibana Deeplink for this type of deployment.
+          items:
+            $ref: '#/components/schemas/KibanaDeeplink'
+      description: Region-specific details about a template.
     KibanaDeeplink:
       type: object
       required:
@@ -63,32 +89,6 @@ components:
           type: string
           description: The metadata value
       description: The key-value pair.
-    GlobalDeploymentTemplateRegion:
-      type: object
-      required:
-      - deployment_template_id
-      - region_id
-      - versions
-      properties:
-        region_id:
-          type: string
-          description: The region identifier.
-        deployment_template_id:
-          type: string
-          description: The (region-specific) ID of the deployment template.
-        versions:
-          type: array
-          description: Versions supported in this region.
-          items:
-            type: string
-        kibana_deeplink:
-          type: array
-          description: The Kibana Deeplink for this type of deployment.
-          items:
-            $ref: '#/components/schemas/KibanaDeeplink'
-      description: Region-specific details about a template.
-    EmptyResponse:
-      type: object
     GlobalDeploymentTemplateInfo:
       type: object
       required:

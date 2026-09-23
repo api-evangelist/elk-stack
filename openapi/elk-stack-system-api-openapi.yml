@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana System API
   version: ''
   x-doc-license:
@@ -73,17 +20,13 @@ security:
 - apiKeyAuth: []
 - basicAuth: []
 tags:
-- name: system
+- name: System
   x-displayName: System
-  description: 'Get information about the system status, resource usage, features, and installed plugins.
-
-    '
+  description: Get information about the system status, resource usage, features, and installed plugins.
 paths:
   /api/features:
     get:
-      description: 'Get information about all Kibana features. Features are used by spaces and security to refine and secure access to Kibana.
-
-        '
+      description: Get information about all Kibana features. Features are used by spaces and security to refine and secure access to Kibana.
       operationId: get-features
       responses:
         '200':
@@ -97,7 +40,7 @@ paths:
           description: Indicates a successful call
       summary: Get features
       tags:
-      - system
+      - System
       x-state: Technical Preview
       x-metaTags:
       - content: Kibana
@@ -213,12 +156,40 @@ paths:
           description: Kibana or some of its essential services are unavailable. Kibana may be degraded or unavailable.
       summary: Get Kibana's current status
       tags:
-      - system
+      - System
       x-metaTags:
       - content: Kibana
         name: product_name
 components:
   schemas:
+    Kibana_HTTP_APIs_core_status_redactedResponse:
+      additionalProperties: false
+      description: A minimal representation of Kibana's operational status. Returned when the caller is unauthenticated or lacks the `monitor` cluster privilege.
+      properties:
+        status:
+          additionalProperties: false
+          type: object
+          properties:
+            overall:
+              additionalProperties: false
+              type: object
+              properties:
+                level:
+                  description: Service status levels as human and machine readable values.
+                  enum:
+                  - available
+                  - degraded
+                  - unavailable
+                  - critical
+                  type: string
+              required:
+              - level
+          required:
+          - overall
+      required:
+      - status
+      title: core_status_redactedResponse
+      type: object
     Kibana_HTTP_APIs_core_status_response:
       additionalProperties: false
       description: Kibana's operational status as well as a detailed breakdown of plugin statuses indication of various loads (like event loop utilization and network traffic) at time of request.
@@ -465,34 +436,6 @@ components:
       - status
       - metrics
       title: core_status_response
-      type: object
-    Kibana_HTTP_APIs_core_status_redactedResponse:
-      additionalProperties: false
-      description: A minimal representation of Kibana's operational status. Returned when the caller is unauthenticated or lacks the `monitor` cluster privilege.
-      properties:
-        status:
-          additionalProperties: false
-          type: object
-          properties:
-            overall:
-              additionalProperties: false
-              type: object
-              properties:
-                level:
-                  description: Service status levels as human and machine readable values.
-                  enum:
-                  - available
-                  - degraded
-                  - unavailable
-                  - critical
-                  type: string
-              required:
-              - level
-          required:
-          - overall
-      required:
-      - status
-      title: core_status_redactedResponse
       type: object
   securitySchemes:
     apiKeyAuth:

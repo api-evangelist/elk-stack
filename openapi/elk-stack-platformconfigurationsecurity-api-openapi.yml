@@ -307,7 +307,7 @@ paths:
       tags:
       - PlatformConfigurationSecurity
       summary: Create Active Directory configuration
-      description: 'Creates a new Active Directory configuration. '
+      description: Creates a new Active Directory configuration.
       operationId: create-active-directory-configuration
       responses:
         '201':
@@ -380,7 +380,7 @@ paths:
       tags:
       - PlatformConfigurationSecurity
       summary: Get Active Directory configuration
-      description: 'Retrieves a single Active Directory security realm configuration. '
+      description: Retrieves a single Active Directory security realm configuration.
       operationId: get-active-directory-configuration
       parameters:
       - name: realm_id
@@ -428,7 +428,7 @@ paths:
       tags:
       - PlatformConfigurationSecurity
       summary: Update Active Directory configuration
-      description: 'Updates an existing Active Directory configuration. '
+      description: Updates an existing Active Directory configuration.
       operationId: update-active-directory-configuration
       parameters:
       - name: realm_id
@@ -539,7 +539,7 @@ paths:
       tags:
       - PlatformConfigurationSecurity
       summary: Delete Active Directory configuration
-      description: 'Deletes a single Active Directory configuration. '
+      description: Deletes a single Active Directory configuration.
       operationId: delete-active-directory-configuration
       parameters:
       - name: realm_id
@@ -1221,66 +1221,104 @@ paths:
         required: true
 components:
   schemas:
-    LdapUserSearch:
-      type: object
-      properties:
-        base_dn:
-          type: string
-          description: Specifies a container DN to search for users
-        scope:
-          type: string
-          description: The scope of the user search. Valid values are sub_tree, one_level, or base. one_level only searches objects directly contained in the base_dn. sub_tree searches all objects contained in base_dn. base specifies that the base_dn is the user object, and that it is the only user considered. Defaults to sub_tree.
-          enum:
-          - sub_tree
-          - one_level
-          - base
-        filter:
-          type: string
-          description: Specifies the filter to search the directory and match an entry with the username provided by the user. Defaults to (uid={0}). {0} is substituted with the username provided when searching.
-      description: The user search configuration for the Elasticsearch security LDAP realm.
-    SecurityDeployment:
+    ListEnrollmentTokenElement:
       type: object
       required:
-      - cluster_id
-      - has_pending_plan
-      - is_enabled
-      - is_healthy
-      - name
-      - status
+      - roles
+      - token_id
       properties:
-        cluster_id:
+        token_id:
           type: string
-          description: The identifier for the security deployment cluster
-        deployment_id:
+          description: An identifier for the token
+        roles:
+          type: array
+          description: The services for which this enrollment token applies
+          items:
+            type: string
+      description: Information about an active enrollment token.
+    ChainStatus:
+      type: object
+      required:
+      - expiration_date
+      - first_certificate_to_expire
+      properties:
+        expiration_date:
           type: string
-          description: The identifier for the security deployment
-        name:
+          format: date-time
+          description: When this chain is going to expire due any of its certificates expiring (ISO format in UTC)
+        first_certificate_to_expire:
           type: string
-          description: The name of the security deployment cluster
-        version:
+          description: Information on the first certificate expiring in the chain
+      description: Chain expiration information
+    UpdatedTlsChain:
+      type: object
+      required:
+      - service
+      properties:
+        service:
           type: string
-          description: The version of the Elasticsearch cluster
-        status:
-          type: string
-          description: The current status of the cluster
+          description: The service certificate chain that has been updated
           enum:
-          - initializing
-          - stopping
-          - stopped
-          - rebooting
-          - restarting
-          - reconfiguring
-          - started
-        has_pending_plan:
+          - adminconsole
+          - proxy
+          - ui
+          - internalca
+      description: Details on the updated TLS chain
+    EmptyResponse:
+      type: object
+    ActiveDirectorySecurityRealmLoadBalance:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The behavior to use when there are multiple Active Directory URLs defined
+          enum:
+          - failover
+          - dns_failover
+          - round_robin
+          - dns_round_robin
+        cache_ttl:
+          type: string
+          description: When using dns_failover or dns_round_robin as the load balancing type, this setting controls the amount of time to cache DNS lookups. Defaults to 1h.
+      description: Elasticsearch Security Active Directory load balancing configuration
+    TlsPublicCertChain:
+      type: object
+      required:
+      - chain
+      - user_supplied
+      properties:
+        user_supplied:
           type: boolean
-          description: True if a pending plan is in progress
-        is_healthy:
+          description: Was this certificate chain user supplied or automatically generated?
+        chain:
+          type: array
+          description: The list of PEM encoded X509 certificates that make up the certificate chain
+          items:
+            type: string
+        chain_status:
+          description: Details on the validity and lifetime of the certification chain
+          $ref: '#/components/schemas/ChainStatus'
+        api_managed:
           type: boolean
-          description: True if the cluster is healthy
-        is_enabled:
-          type: boolean
-          description: True if the security cluster is currently enabled
-      description: The Elasticsearch security deployment.
+          description: Whether or not this certificate can be updated using the API
+      description: 'The public portion of the certificate chain that contains the PEM encoded server certificate, intermediate certificates, and the CA certificate. NOTE: The private key, normally included in certificate chains, is omitted.'
+    LdapSecurityRealmRoleMappingRules:
+      type: object
+      required:
+      - default_roles
+      - rules
+      properties:
+        default_roles:
+          type: array
+          description: The default roles applied to all users
+          items:
+            type: string
+        rules:
+          type: array
+          description: The role mapping rules to evaluate
+          items:
+            $ref: '#/components/schemas/LdapSecurityRealmRoleMappingRule'
+      description: The role mapping ruleset for the Elasticsearch security LDAP realm.
     ActiveDirectorySettings:
       type: object
       required:
@@ -1348,67 +1386,51 @@ components:
           type: string
           description: 'Advanced configuration options in YAML format. Any settings defined here will override any configuration set via the API. Note that all keys should omit the ''xpack.security.authc.realms.active_directory.{realm_id}'' prefix. For example, when the realm ID is set to ''ad1'', the advanced configuration ''xpack.security.authc.realms.active_directory.ad1.ssl.verification_mode: full'' should be added as ''ssl.verification_mode: full''.'
       description: Elasticsearch Security Active Directory realm configuration
-    SamlAttributeSettings:
+    SecurityDeploymentUpdateRequest:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version of Elasticsearch to upgrade to. When not included, no upgrade is performed.
+        topology:
+          description: The cluster topology changes to apply to the security deployment cluster. When not included, no topology changes are performed.
+          $ref: '#/components/schemas/SecurityDeploymentTopology'
+      description: The update request for the Elasticsearch security deployment.
+    SecurityRealmInfo:
       type: object
       required:
-      - groups
-      - principal
+      - id
+      - name
+      - type
+      - urls
       properties:
-        principal:
+        id:
           type: string
-          description: The name of the SAML attribute that contains the user's principal (username). This name should map to a value that does not contain commas or slashes.
-        groups:
-          type: string
-          description: The name of the SAML attribute that contains the user's groups
+          description: The identifier for the security realm
         name:
           type: string
-          description: The name of the SAML attribute that contains the user's full name
-        mail:
-          type: string
-          description: The name of the SAML attribute that contains the user's email address
-        dn:
-          type: string
-          description: The name of the SAML attribute that contains the user's X.50 Distinguished Name
-      description: The mapping configuration for the Elasticsearch security SAML attribute.
-    SamlSpSettings:
-      type: object
-      required:
-      - acs
-      - entity_id
-      - logout
-      properties:
-        entity_id:
-          type: string
-          description: The Entity ID to use for this SAML Service Provider. This should be entered as a URI.
-        acs:
-          type: string
-          description: The URL of the Assertion Consumer service
-        logout:
-          type: string
-          description: The URL of the Single Logout service
-      description: The configuration for the Elasticsearch security SAML Service Provider.
-    ActiveDirectorySecurityRealmRoleMappingRule:
-      type: object
-      required:
-      - roles
-      - type
-      - value
-      properties:
+          description: The friendly name of the security realm
         type:
           type: string
-          description: The type of role mapping rule
+          description: The type of the security realm
           enum:
-          - user_dn
-          - group_dn
-        roles:
+          - native
+          - ldap
+          - saml
+          - active_directory
+        enabled:
+          type: boolean
+          description: True if the security realm is enabled
+        order:
+          type: integer
+          format: int32
+          description: The order the security realm should be evaluated
+        urls:
           type: array
-          description: The roles that are applied when the mapping rule is successfully evaluated
+          description: The URLs associated with the security realm
           items:
             type: string
-        value:
-          type: string
-          description: The value to match when evaluating this rule
-      description: Elasticsearch Security Active Directory role mapping rule
+      description: The overview for the Elasticsearch security realm.
     SecurityDeploymentCreateRequest:
       type: object
       properties:
@@ -1422,17 +1444,14 @@ components:
           description: The cluster topology used to create the security deployment cluster
           $ref: '#/components/schemas/SecurityDeploymentTopology'
       description: The creation request for the Elasticsearch security deployment.
-    SecurityDeploymentTopology:
+    IdResponse:
       type: object
+      required:
+      - id
       properties:
-        size:
-          description: The security deployment topology size
-          $ref: '#/components/schemas/TopologySize'
-        zone_count:
-          type: integer
-          format: int32
-          description: The number of zones in which data nodes will be placed
-      description: The cluster topology for the Elasticsearch security deployment.
+        id:
+          type: string
+          description: The ID
     LdapSettings:
       type: object
       required:
@@ -1511,88 +1530,6 @@ components:
           type: string
           description: 'Advanced configuration options in YAML format. Any settings defined here will override any configuration set via the API. Note that all keys should omit the ''xpack.security.authc.realms.ldap.{realm_id}'' prefix. For example, when the realm ID is set to ''ldap1'', the advanced configuration ''xpack.security.authc.realms.ldap.ldap1.ssl.verification_mode: full'' should be added as ''ssl.verification_mode: full''.'
       description: The configuration for the Elasticsearch security LDAP realm.
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    UpdatedTlsChain:
-      type: object
-      required:
-      - service
-      properties:
-        service:
-          type: string
-          description: The service certificate chain that has been updated
-          enum:
-          - adminconsole
-          - proxy
-          - ui
-          - internalca
-      description: Details on the updated TLS chain
-    TlsPublicCertChain:
-      type: object
-      required:
-      - chain
-      - user_supplied
-      properties:
-        user_supplied:
-          type: boolean
-          description: Was this certificate chain user supplied or automatically generated?
-        chain:
-          type: array
-          description: The list of PEM encoded X509 certificates that make up the certificate chain
-          items:
-            type: string
-        chain_status:
-          description: Details on the validity and lifetime of the certification chain
-          $ref: '#/components/schemas/ChainStatus'
-        api_managed:
-          type: boolean
-          description: Whether or not this certificate can be updated using the API
-      description: 'The public portion of the certificate chain that contains the PEM encoded server certificate, intermediate certificates, and the CA certificate. NOTE: The private key, normally included in certificate chains, is omitted.'
-    RequestEnrollmentTokenReply:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: The requested token
-        token_id:
-          type: string
-          description: An identifier for the requested token (if persistent) that can be used in listing and deletion
-      description: Returns the enrollment token that is used to securely start a new server with designated roles.
-    EnrollmentTokenRequest:
-      type: object
-      required:
-      - persistent
-      properties:
-        roles:
-          type: array
-          description: The additional services for which this enrollment token applies (empty if not specified, ie system services only)
-          items:
-            type: string
-        persistent:
-          type: boolean
-          description: Whether this token can subsequently to its grant be revoked from the UI
-        validity_in_seconds:
-          type: integer
-          format: int32
-          description: 'The time in seconds for which this token is valid (defaults to 1 hour). Currently this can only be set for ephemeral (persistent: false) tokens.'
-      description: An enrollment token request for one or more services.
     SecurityRealmsReorderRequest:
       type: object
       required:
@@ -1604,6 +1541,23 @@ components:
           items:
             type: string
       description: A reorder request for Elasticsearch security realms.
+    SamlSpSettings:
+      type: object
+      required:
+      - acs
+      - entity_id
+      - logout
+      properties:
+        entity_id:
+          type: string
+          description: The Entity ID to use for this SAML Service Provider. This should be entered as a URI.
+        acs:
+          type: string
+          description: The URL of the Assertion Consumer service
+        logout:
+          type: string
+          description: The URL of the Single Logout service
+      description: The configuration for the Elasticsearch security SAML Service Provider.
     ActiveDirectoryUserSearch:
       type: object
       properties:
@@ -1621,6 +1575,49 @@ components:
           type: string
           description: Specifies the filter to search the directory and match an entry with the username provided by the user. Defaults to (uid={0}). {0} is substituted with the username provided when searching.
       description: Elasticsearch Security Active Directory realm user search configuration
+    ListEnrollmentTokenReply:
+      type: object
+      required:
+      - tokens
+      properties:
+        tokens:
+          type: array
+          description: The list of currently active enrollment tokens
+          items:
+            $ref: '#/components/schemas/ListEnrollmentTokenElement'
+      description: Information about active enrollment tokens.
+    ActiveDirectorySecurityRealmRoleMappingRules:
+      type: object
+      required:
+      - default_roles
+      - rules
+      properties:
+        default_roles:
+          type: array
+          description: The default roles applied to all users
+          items:
+            type: string
+        rules:
+          type: array
+          description: The role mapping rules to evaluate
+          items:
+            $ref: '#/components/schemas/ActiveDirectorySecurityRealmRoleMappingRule'
+      description: Elasticsearch Security Active Directory role mapping rule set
+    LdapSecurityRealmLoadBalance:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The behavior to use when there are multiple LDAP URLs defined
+          enum:
+          - failover
+          - dns_failover
+          - round_robin
+          - dns_round_robin
+        cache_ttl:
+          type: string
+          description: When using dns_failover or dns_round_robin as the load balancing type, this setting controls the amount of time to cache DNS lookups. Defaults to 1h.
+      description: The load balancing configuration for the Elasticsearch security LDAP realm.
     SamlSettings:
       type: object
       required:
@@ -1694,110 +1691,112 @@ components:
           type: string
           description: Advanced configuration options in YAML format. Any settings defined here will override any configuration set via the API. Note that all keys should omit 'xpack.security.authc.realms.{realm_type}.{realm_id}'.
       description: The configuration for the Elasticsearch security SAML realm.
-    LdapSecurityRealmLoadBalance:
+    LdapUserSearch:
       type: object
       properties:
-        type:
+        base_dn:
           type: string
-          description: The behavior to use when there are multiple LDAP URLs defined
+          description: Specifies a container DN to search for users
+        scope:
+          type: string
+          description: The scope of the user search. Valid values are sub_tree, one_level, or base. one_level only searches objects directly contained in the base_dn. sub_tree searches all objects contained in base_dn. base specifies that the base_dn is the user object, and that it is the only user considered. Defaults to sub_tree.
           enum:
-          - failover
-          - dns_failover
-          - round_robin
-          - dns_round_robin
-        cache_ttl:
+          - sub_tree
+          - one_level
+          - base
+        filter:
           type: string
-          description: When using dns_failover or dns_round_robin as the load balancing type, this setting controls the amount of time to cache DNS lookups. Defaults to 1h.
-      description: The load balancing configuration for the Elasticsearch security LDAP realm.
-    ActiveDirectorySecurityRealmLoadBalance:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The behavior to use when there are multiple Active Directory URLs defined
-          enum:
-          - failover
-          - dns_failover
-          - round_robin
-          - dns_round_robin
-        cache_ttl:
-          type: string
-          description: When using dns_failover or dns_round_robin as the load balancing type, this setting controls the amount of time to cache DNS lookups. Defaults to 1h.
-      description: Elasticsearch Security Active Directory load balancing configuration
-    SamlIdpSettings:
+          description: Specifies the filter to search the directory and match an entry with the username provided by the user. Defaults to (uid={0}). {0} is substituted with the username provided when searching.
+      description: The user search configuration for the Elasticsearch security LDAP realm.
+    SamlAttributeSettings:
       type: object
       required:
-      - entity_id
-      - metadata_path
+      - groups
+      - principal
       properties:
-        entity_id:
+        principal:
           type: string
-          description: The Entity ID of the SAML Identity Provider. An Entity ID is a URI with a maximum length of 1024 characters. It can be a URL or a URN and can be found in the configuration or the SAML metadata of the Identity Provider.
-        metadata_path:
+          description: The name of the SAML attribute that contains the user's principal (username). This name should map to a value that does not contain commas or slashes.
+        groups:
           type: string
-          description: The URL to a SAML 2.0 metadata file describing the capabilities and configuration of the Identity Provider
-        use_single_logout:
-          type: boolean
-          description: Indicates whether to utilise the Identity Provider's Single Logout service
-      description: The configuration for the Elasticsearch security SAML Identity Provider.
-    ListEnrollmentTokenReply:
-      type: object
-      required:
-      - tokens
-      properties:
-        tokens:
-          type: array
-          description: The list of currently active enrollment tokens
-          items:
-            $ref: '#/components/schemas/ListEnrollmentTokenElement'
-      description: Information about active enrollment tokens.
-    EmptyResponse:
-      type: object
-    SecurityDeploymentUpdateRequest:
-      type: object
-      properties:
-        version:
-          type: string
-          description: The version of Elasticsearch to upgrade to. When not included, no upgrade is performed.
-        topology:
-          description: The cluster topology changes to apply to the security deployment cluster. When not included, no topology changes are performed.
-          $ref: '#/components/schemas/SecurityDeploymentTopology'
-      description: The update request for the Elasticsearch security deployment.
-    SecurityRealmInfo:
-      type: object
-      required:
-      - id
-      - name
-      - type
-      - urls
-      properties:
-        id:
-          type: string
-          description: The identifier for the security realm
+          description: The name of the SAML attribute that contains the user's groups
         name:
           type: string
-          description: The friendly name of the security realm
-        type:
+          description: The name of the SAML attribute that contains the user's full name
+        mail:
           type: string
-          description: The type of the security realm
-          enum:
-          - native
-          - ldap
-          - saml
-          - active_directory
-        enabled:
-          type: boolean
-          description: True if the security realm is enabled
-        order:
-          type: integer
-          format: int32
-          description: The order the security realm should be evaluated
-        urls:
+          description: The name of the SAML attribute that contains the user's email address
+        dn:
+          type: string
+          description: The name of the SAML attribute that contains the user's X.50 Distinguished Name
+      description: The mapping configuration for the Elasticsearch security SAML attribute.
+    SamlSecurityRealmRoleMappingRules:
+      type: object
+      required:
+      - default_roles
+      - rules
+      properties:
+        default_roles:
           type: array
-          description: The URLs associated with the security realm
+          description: The default roles applied to all users
           items:
             type: string
-      description: The overview for the Elasticsearch security realm.
+        rules:
+          type: array
+          description: The role mapping rules to evaluate
+          items:
+            $ref: '#/components/schemas/SamlSecurityRealmRoleMappingRule'
+      description: The mapping ruleset for the Elasticsearch security SAML role.
+    LdapSecurityRealmRoleMappingRule:
+      type: object
+      required:
+      - roles
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The type of role mapping rule
+          enum:
+          - user_dn
+          - group_dn
+        roles:
+          type: array
+          description: The roles that are applied when the mapping rule is successfully evaluated
+          items:
+            type: string
+        value:
+          type: string
+          description: The value to match when evaluating this rule
+      description: The role mapping rule for the Elasticsearch security LDAP realm.
+    SecurityDeploymentTopology:
+      type: object
+      properties:
+        size:
+          description: The security deployment topology size
+          $ref: '#/components/schemas/TopologySize'
+        zone_count:
+          type: integer
+          format: int32
+          description: The number of zones in which data nodes will be placed
+      description: The cluster topology for the Elasticsearch security deployment.
+    TopologySize:
+      type: object
+      required:
+      - resource
+      - value
+      properties:
+        value:
+          type: integer
+          format: int32
+          description: Amount of resource
+        resource:
+          type: string
+          description: Type of resource. In ESS the resource used should always be `memory`.
+          enum:
+          - memory
+          - storage
+      description: Measured by the amount of a resource. The final cluster size is calculated using multipliers from the topology instance configuration.
     SamlSecurityRealmRoleMappingRule:
       type: object
       required:
@@ -1821,45 +1820,48 @@ components:
           type: string
           description: The value to match when evaluating this rule
       description: The mapping rule for the Elasticsearch security SAML role.
-    LdapSecurityRealmRoleMappingRule:
+    BasicFailedReply:
       type: object
       required:
-      - roles
-      - type
-      - value
+      - errors
       properties:
-        type:
-          type: string
-          description: The type of role mapping rule
-          enum:
-          - user_dn
-          - group_dn
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EnrollmentTokenRequest:
+      type: object
+      required:
+      - persistent
+      properties:
         roles:
           type: array
-          description: The roles that are applied when the mapping rule is successfully evaluated
+          description: The additional services for which this enrollment token applies (empty if not specified, ie system services only)
           items:
             type: string
-        value:
-          type: string
-          description: The value to match when evaluating this rule
-      description: The role mapping rule for the Elasticsearch security LDAP realm.
-    LdapSecurityRealmRoleMappingRules:
+        persistent:
+          type: boolean
+          description: Whether this token can subsequently to its grant be revoked from the UI
+        validity_in_seconds:
+          type: integer
+          format: int32
+          description: 'The time in seconds for which this token is valid (defaults to 1 hour). Currently this can only be set for ephemeral (persistent: false) tokens.'
+      description: An enrollment token request for one or more services.
+    ActiveDirectoryGroupSearch:
       type: object
-      required:
-      - default_roles
-      - rules
       properties:
-        default_roles:
-          type: array
-          description: The default roles applied to all users
-          items:
-            type: string
-        rules:
-          type: array
-          description: The role mapping rules to evaluate
-          items:
-            $ref: '#/components/schemas/LdapSecurityRealmRoleMappingRule'
-      description: The role mapping ruleset for the Elasticsearch security LDAP realm.
+        base_dn:
+          type: string
+          description: Specifies a container DN to search for groups in which the user has membership
+        scope:
+          type: string
+          description: Specifies whether the group search should be sub_tree, one_level or base. one_level only searches objects directly contained within the base_dn. The default sub_tree searches all objects contained under base_dn. base specifies that the base_dn is a group object, and that it is the only group considered.
+          enum:
+          - sub_tree
+          - one_level
+          - base
+      description: Elasticsearch Security Active Directory realm group search configuration
     LdapGroupSearch:
       type: object
       properties:
@@ -1880,101 +1882,116 @@ components:
           type: string
           description: Specifies the user attribute that is fetched and provided as a parameter to the filter. When unspecified, the user DN is passed to the filter.
       description: The group search configuration for the Elasticsearch security LDAP realm.
-    ChainStatus:
+    BasicFailedReplyElement:
       type: object
       required:
-      - expiration_date
-      - first_certificate_to_expire
+      - code
+      - message
       properties:
-        expiration_date:
+        code:
           type: string
-          format: date-time
-          description: When this chain is going to expire due any of its certificates expiring (ISO format in UTC)
-        first_certificate_to_expire:
+          description: A structured code representing the error type that occurred
+        message:
           type: string
-          description: Information on the first certificate expiring in the chain
-      description: Chain expiration information
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: A list of errors that occurred in the failing request
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    TopologySize:
+            type: string
+    SamlIdpSettings:
       type: object
       required:
-      - resource
-      - value
+      - entity_id
+      - metadata_path
       properties:
-        value:
-          type: integer
-          format: int32
-          description: Amount of resource
-        resource:
+        entity_id:
           type: string
-          description: Type of resource. In ESS the resource used should always be `memory`.
-          enum:
-          - memory
-          - storage
-      description: Measured by the amount of a resource. The final cluster size is calculated using multipliers from the topology instance configuration.
-    ListEnrollmentTokenElement:
+          description: The Entity ID of the SAML Identity Provider. An Entity ID is a URI with a maximum length of 1024 characters. It can be a URL or a URN and can be found in the configuration or the SAML metadata of the Identity Provider.
+        metadata_path:
+          type: string
+          description: The URL to a SAML 2.0 metadata file describing the capabilities and configuration of the Identity Provider
+        use_single_logout:
+          type: boolean
+          description: Indicates whether to utilise the Identity Provider's Single Logout service
+      description: The configuration for the Elasticsearch security SAML Identity Provider.
+    RequestEnrollmentTokenReply:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: The requested token
+        token_id:
+          type: string
+          description: An identifier for the requested token (if persistent) that can be used in listing and deletion
+      description: Returns the enrollment token that is used to securely start a new server with designated roles.
+    ActiveDirectorySecurityRealmRoleMappingRule:
       type: object
       required:
       - roles
-      - token_id
+      - type
+      - value
       properties:
-        token_id:
+        type:
           type: string
-          description: An identifier for the token
+          description: The type of role mapping rule
+          enum:
+          - user_dn
+          - group_dn
         roles:
           type: array
-          description: The services for which this enrollment token applies
+          description: The roles that are applied when the mapping rule is successfully evaluated
           items:
             type: string
-      description: Information about an active enrollment token.
-    ActiveDirectorySecurityRealmRoleMappingRules:
+        value:
+          type: string
+          description: The value to match when evaluating this rule
+      description: Elasticsearch Security Active Directory role mapping rule
+    SecurityDeployment:
       type: object
       required:
-      - default_roles
-      - rules
+      - cluster_id
+      - has_pending_plan
+      - is_enabled
+      - is_healthy
+      - name
+      - status
       properties:
-        default_roles:
-          type: array
-          description: The default roles applied to all users
-          items:
-            type: string
-        rules:
-          type: array
-          description: The role mapping rules to evaluate
-          items:
-            $ref: '#/components/schemas/ActiveDirectorySecurityRealmRoleMappingRule'
-      description: Elasticsearch Security Active Directory role mapping rule set
-    IdResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
+        cluster_id:
           type: string
-          description: The ID
-    ActiveDirectoryGroupSearch:
-      type: object
-      properties:
-        base_dn:
+          description: The identifier for the security deployment cluster
+        deployment_id:
           type: string
-          description: Specifies a container DN to search for groups in which the user has membership
-        scope:
+          description: The identifier for the security deployment
+        name:
           type: string
-          description: Specifies whether the group search should be sub_tree, one_level or base. one_level only searches objects directly contained within the base_dn. The default sub_tree searches all objects contained under base_dn. base specifies that the base_dn is a group object, and that it is the only group considered.
+          description: The name of the security deployment cluster
+        version:
+          type: string
+          description: The version of the Elasticsearch cluster
+        status:
+          type: string
+          description: The current status of the cluster
           enum:
-          - sub_tree
-          - one_level
-          - base
-      description: Elasticsearch Security Active Directory realm group search configuration
+          - initializing
+          - stopping
+          - stopped
+          - rebooting
+          - restarting
+          - reconfiguring
+          - started
+        has_pending_plan:
+          type: boolean
+          description: True if a pending plan is in progress
+        is_healthy:
+          type: boolean
+          description: True if the cluster is healthy
+        is_enabled:
+          type: boolean
+          description: True if the security cluster is currently enabled
+      description: The Elasticsearch security deployment.
     SecurityRealmInfoList:
       type: object
       required:
@@ -1986,23 +2003,6 @@ components:
           items:
             $ref: '#/components/schemas/SecurityRealmInfo'
       description: A list of Elasticsearch security realms.
-    SamlSecurityRealmRoleMappingRules:
-      type: object
-      required:
-      - default_roles
-      - rules
-      properties:
-        default_roles:
-          type: array
-          description: The default roles applied to all users
-          items:
-            type: string
-        rules:
-          type: array
-          description: The role mapping rules to evaluate
-          items:
-            $ref: '#/components/schemas/SamlSecurityRealmRoleMappingRule'
-      description: The mapping ruleset for the Elasticsearch security SAML role.
   securitySchemes:
     apiKey:
       type: apiKey

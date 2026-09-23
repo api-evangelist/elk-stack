@@ -6,22 +6,17 @@ info:
     url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
   version: ''
 tags:
-- name: synonyms
+- name: Synonyms
 paths:
   /_synonyms/{id}:
     get:
       tags:
-      - synonyms
+      - Synonyms
       summary: Get a synonym set
-      description: '
+      description: '## Required authorization
 
 
-        ## Required authorization
-
-
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       operationId: synonyms-get-synonym
       parameters:
       - in: path
@@ -89,7 +84,7 @@ paths:
         name: product_name
     put:
       tags:
-      - synonyms
+      - Synonyms
       summary: Create or update a synonym set
       description: 'Synonym sets are limited to a maximum of 100,000 synonym rules per set by default.
 
@@ -107,9 +102,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       externalDocs:
         description: About synonym API examples
         url: https://www.elastic.co/docs/solutions/search/full-text/create-update-synonyms-api-example
@@ -192,7 +185,7 @@ paths:
         name: product_name
     delete:
       tags:
-      - synonyms
+      - Synonyms
       summary: Delete a synonym set
       description: 'You can only delete a synonyms set that is not in use by any index analyzer.
 
@@ -226,9 +219,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       operationId: synonyms-delete-synonym
       parameters:
       - in: path
@@ -253,7 +244,7 @@ paths:
   /_synonyms/{set_id}/{rule_id}:
     get:
       tags:
-      - synonyms
+      - Synonyms
       summary: Get a synonym rule
       description: 'Get a synonym rule from a synonym set.
 
@@ -261,9 +252,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       operationId: synonyms-get-synonym-rule
       parameters:
       - in: path
@@ -299,7 +288,7 @@ paths:
         name: product_name
     put:
       tags:
-      - synonyms
+      - Synonyms
       summary: Create or update a synonym rule
       description: 'Create or update a synonym rule in a synonym set.
 
@@ -313,9 +302,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       operationId: synonyms-put-synonym-rule
       parameters:
       - in: path
@@ -384,7 +371,7 @@ paths:
         name: product_name
     delete:
       tags:
-      - synonyms
+      - Synonyms
       summary: Delete a synonym rule
       description: 'Delete a synonym rule from a synonym set.
 
@@ -392,9 +379,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       operationId: synonyms-delete-synonym-rule
       parameters:
       - in: path
@@ -444,7 +429,7 @@ paths:
   /_synonyms:
     get:
       tags:
-      - synonyms
+      - Synonyms
       summary: Get all synonym sets
       description: 'Get a summary of all defined synonym sets.
 
@@ -452,9 +437,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_search_synonyms`
-
-        '
+        * Cluster privileges: `manage_search_synonyms`'
       operationId: synonyms-get-synonyms-sets
       parameters:
       - in: query
@@ -502,32 +485,42 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.ShardStatistics:
+    _types.IndexName:
+      type: string
+    _types.ShardFailure:
       type: object
       properties:
-        failed:
-          description: The number of shards the operation or search attempted to run on but failed.
+        index:
           allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        successful:
-          description: The number of shards the operation or search succeeded on.
+          - $ref: '#/components/schemas/_types.IndexName'
+        node:
+          type: string
+        reason:
           allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        total:
-          description: The number of shards the operation or search will run on overall.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        failures:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        shard:
+          type: number
+        status:
+          type: string
+        primary:
+          type: boolean
+      required:
+      - reason
+    synonyms._types.SynonymString:
+      type: string
+    indices.reload_search_analyzers.ReloadResult:
+      type: object
+      properties:
+        reload_details:
           type: array
           items:
-            $ref: '#/components/schemas/_types.ShardFailure'
-        skipped:
+            $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadDetails'
+        _shards:
           allOf:
-          - $ref: '#/components/schemas/_types.uint'
+          - $ref: '#/components/schemas/_types.ShardStatistics'
       required:
-      - failed
-      - successful
-      - total
+      - reload_details
+      - _shards
     _types.Result:
       type: string
       enum:
@@ -536,6 +529,23 @@ components:
       - deleted
       - not_found
       - noop
+    indices.reload_search_analyzers.ReloadDetails:
+      type: object
+      properties:
+        index:
+          type: string
+        reloaded_analyzers:
+          type: array
+          items:
+            type: string
+        reloaded_node_ids:
+          type: array
+          items:
+            type: string
+      required:
+      - index
+      - reloaded_analyzers
+      - reloaded_node_ids
     synonyms._types.SynonymRule:
       type: object
       properties:
@@ -553,6 +563,64 @@ components:
           - $ref: '#/components/schemas/synonyms._types.SynonymString'
       required:
       - synonyms
+    synonyms.get_synonyms_sets.SynonymsSetItem:
+      type: object
+      properties:
+        synonyms_set:
+          description: Synonyms set identifier
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        count:
+          description: Number of synonym rules that the synonym set contains
+          type: number
+      required:
+      - synonyms_set
+      - count
+    _types.uint:
+      type: number
+    synonyms._types.SynonymsUpdateResult:
+      type: object
+      properties:
+        result:
+          description: The update operation result.
+          allOf:
+          - $ref: '#/components/schemas/_types.Result'
+        reload_analyzers_details:
+          description: 'Updating synonyms in a synonym set can reload the associated analyzers in case refresh is set to true.
+
+            This information is the analyzers reloading result.'
+          allOf:
+          - $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadResult'
+      required:
+      - result
+    synonyms._types.SynonymRuleRead:
+      type: object
+      properties:
+        id:
+          description: 'The identifier for the synonym rule.
+
+            If you do not specify a synonym rule ID when you create a rule, an identifier is created automatically by Elasticsearch.'
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        synonyms:
+          externalDocs:
+            url: https://www.elastic.co/docs/reference/text-analysis/analysis-synonym-graph-tokenfilter#analysis-synonym-graph-define-synonyms
+          description: The synonyms that conform the synonym rule in Solr format.
+          allOf:
+          - $ref: '#/components/schemas/synonyms._types.SynonymString'
+      required:
+      - id
+      - synonyms
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    _types.Id:
+      type: string
     _types.ErrorCause:
       description: 'Cause and details about a request failure. This class defines the properties common to all error types.
 
@@ -585,114 +653,29 @@ components:
             $ref: '#/components/schemas/_types.ErrorCause'
       required:
       - type
-    _types.IndexName:
-      type: string
-    synonyms.get_synonyms_sets.SynonymsSetItem:
+    _types.ShardStatistics:
       type: object
       properties:
-        synonyms_set:
-          description: Synonyms set identifier
+        failed:
+          description: The number of shards the operation or search attempted to run on but failed.
           allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        count:
-          description: Number of synonym rules that the synonym set contains
-          type: number
-      required:
-      - synonyms_set
-      - count
-    _types.Id:
-      type: string
-    _types.uint:
-      type: number
-    _types.AcknowledgedResponseBase:
-      type: object
-      properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
-      required:
-      - acknowledged
-    synonyms._types.SynonymString:
-      type: string
-    synonyms._types.SynonymsUpdateResult:
-      type: object
-      properties:
-        result:
-          description: The update operation result.
+          - $ref: '#/components/schemas/_types.uint'
+        successful:
+          description: The number of shards the operation or search succeeded on.
           allOf:
-          - $ref: '#/components/schemas/_types.Result'
-        reload_analyzers_details:
-          description: 'Updating synonyms in a synonym set can reload the associated analyzers in case refresh is set to true.
-
-            This information is the analyzers reloading result.'
+          - $ref: '#/components/schemas/_types.uint'
+        total:
+          description: The number of shards the operation or search will run on overall.
           allOf:
-          - $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadResult'
-      required:
-      - result
-    _types.ShardFailure:
-      type: object
-      properties:
-        index:
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-        node:
-          type: string
-        reason:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        shard:
-          type: number
-        status:
-          type: string
-        primary:
-          type: boolean
-      required:
-      - reason
-    indices.reload_search_analyzers.ReloadDetails:
-      type: object
-      properties:
-        index:
-          type: string
-        reloaded_analyzers:
+          - $ref: '#/components/schemas/_types.uint'
+        failures:
           type: array
           items:
-            type: string
-        reloaded_node_ids:
-          type: array
-          items:
-            type: string
-      required:
-      - index
-      - reloaded_analyzers
-      - reloaded_node_ids
-    indices.reload_search_analyzers.ReloadResult:
-      type: object
-      properties:
-        reload_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadDetails'
-        _shards:
+            $ref: '#/components/schemas/_types.ShardFailure'
+        skipped:
           allOf:
-          - $ref: '#/components/schemas/_types.ShardStatistics'
+          - $ref: '#/components/schemas/_types.uint'
       required:
-      - reload_details
-      - _shards
-    synonyms._types.SynonymRuleRead:
-      type: object
-      properties:
-        id:
-          description: 'The identifier for the synonym rule.
-
-            If you do not specify a synonym rule ID when you create a rule, an identifier is created automatically by Elasticsearch.'
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        synonyms:
-          externalDocs:
-            url: https://www.elastic.co/docs/reference/text-analysis/analysis-synonym-graph-tokenfilter#analysis-synonym-graph-define-synonyms
-          description: The synonyms that conform the synonym rule in Solr format.
-          allOf:
-          - $ref: '#/components/schemas/synonyms._types.SynonymString'
-      required:
-      - id
-      - synonyms
+      - failed
+      - successful
+      - total

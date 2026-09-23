@@ -25,9 +25,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_logstash_pipelines`
-
-        '
+        * Cluster privileges: `manage_logstash_pipelines`'
       externalDocs:
         description: Centralized pipeline management
         url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
@@ -54,9 +52,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_logstash_pipelines`
-
-        '
+        * Cluster privileges: `manage_logstash_pipelines`'
       externalDocs:
         description: Centralized pipeline management
         url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
@@ -105,9 +101,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_logstash_pipelines`
-
-        '
+        * Cluster privileges: `manage_logstash_pipelines`'
       externalDocs:
         description: Centralized pipeline management
         url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
@@ -142,9 +136,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_logstash_pipelines`
-
-        '
+        * Cluster privileges: `manage_logstash_pipelines`'
       externalDocs:
         description: Centralized pipeline management
         url: https://www.elastic.co/docs/reference/logstash/logstash-centralized-pipeline-management
@@ -161,9 +153,7 @@ paths:
     delete:
       description: 'Delete a centrally-managed Logstash pipeline.
 
-        If your Elasticsearch cluster is protected with basic authentication, you must have either the `logstash_admin` built-in role or a customized Logstash writer role.
-
-        '
+        If your Elasticsearch cluster is protected with basic authentication, you must have either the `logstash_admin` built-in role or a customized Logstash writer role.'
       externalDocs:
         description: Secure your connection
         url: https://www.elastic.co/docs/reference/logstash/secure-connection
@@ -191,9 +181,7 @@ paths:
     get:
       description: 'Get information for a centrally-managed Logstash pipeline.
 
-        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash reader role.
-
-        '
+        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash reader role.'
       externalDocs:
         description: Secure your connection
         url: https://www.elastic.co/docs/reference/logstash/secure-connection
@@ -228,9 +216,7 @@ paths:
     put:
       description: 'Create a centrally-managed Logstash pipeline or update a pipeline.
 
-        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash writer role.
-
-        '
+        To use this API, you must have either the `logstash_admin` built-in role or a customized Logstash writer role.'
       externalDocs:
         description: Secure your connection
         url: https://www.elastic.co/docs/reference/logstash/secure-connection
@@ -314,9 +300,7 @@ paths:
         > Limit the number of pipelines to 10,000 or fewer. As the number of pipelines nears and surpasses 10,000, you may see performance issues on Kibana.
 
 
-        The `username` property appears in the response when security is enabled and depends on when the pipeline was created or last updated.
-
-        '
+        The `username` property appears in the response when security is enabled and depends on when the pipeline was created or last updated.'
       externalDocs:
         description: Secure your connection
         url: https://www.elastic.co/docs/reference/logstash/secure-connection
@@ -362,16 +346,6 @@ components:
 
                 '
               value: "{\n  \"my_pipeline\": {\n    \"description\": \"Sample pipeline for illustration purposes\",\n    \"last_modified\": \"2021-01-02T02:50:51.250Z\",\n    \"pipeline_metadata\": {\n      \"type\": \"logstash_pipeline\",\n      \"version\": \"1\"\n    },\n    \"username\": \"elastic\",\n    \"pipeline\": \"input {}\\\\n filter { grok {} }\\\\n output {}\",\n    \"pipeline_settings\": {\n      \"pipeline.workers\": 1,\n      \"pipeline.batch.size\": 125,\n      \"pipeline.batch.delay\": 50,\n      \"queue.type\": \"memory\",\n      \"queue.max_bytes\": \"1gb\",\n      \"queue.checkpoint.writes\": 1024\n    }\n  }\n}"
-  parameters:
-    logstash.get_pipeline-id:
-      in: path
-      name: id
-      description: A comma-separated list of pipeline identifiers.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Ids'
-      style: simple
   schemas:
     _types.DateTime:
       description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
@@ -382,49 +356,12 @@ components:
       oneOf:
       - type: string
       - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-    logstash._types.PipelineSettings:
-      type: object
-      properties:
-        pipeline.workers:
-          description: The number of workers that will, in parallel, execute the filter and output stages of the pipeline.
-          type: number
-        pipeline.batch.size:
-          description: The maximum number of events an individual worker thread will collect from inputs before attempting to execute its filters and outputs.
-          type: number
-        pipeline.batch.delay:
-          description: When creating pipeline event batches, how long in milliseconds to wait for each event before dispatching an undersized batch to pipeline workers.
-          type: number
-        queue.type:
-          description: The internal queuing model to use for event buffering.
-          type: string
-        queue.max_bytes:
-          description: 'The total capacity of the queue (`queue.type: persisted`) in number of bytes.'
-          type: string
-        queue.checkpoint.writes:
-          description: 'The maximum number of written events before forcing a checkpoint when persistent queues are enabled (`queue.type: persisted`).'
-          type: number
-      required:
-      - pipeline.workers
-      - pipeline.batch.size
-      - pipeline.batch.delay
-      - queue.type
-      - queue.max_bytes
-      - queue.checkpoint.writes
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    logstash._types.PipelineMetadata:
-      type: object
-      properties:
-        type:
-          type: string
-        version:
-          type: string
-      required:
-      - type
-      - version
-    _types.Id:
-      type: string
+    _types.Ids:
+      oneOf:
+      - $ref: '#/components/schemas/_types.Id'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.Id'
     logstash._types.Pipeline:
       type: object
       properties:
@@ -468,15 +405,62 @@ components:
       - pipeline_metadata
       - pipeline_settings
       - username
-    _types.Ids:
-      oneOf:
-      - $ref: '#/components/schemas/_types.Id'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.Id'
+    logstash._types.PipelineSettings:
+      type: object
+      properties:
+        pipeline.workers:
+          description: The number of workers that will, in parallel, execute the filter and output stages of the pipeline.
+          type: number
+        pipeline.batch.size:
+          description: The maximum number of events an individual worker thread will collect from inputs before attempting to execute its filters and outputs.
+          type: number
+        pipeline.batch.delay:
+          description: When creating pipeline event batches, how long in milliseconds to wait for each event before dispatching an undersized batch to pipeline workers.
+          type: number
+        queue.type:
+          description: The internal queuing model to use for event buffering.
+          type: string
+        queue.max_bytes:
+          description: 'The total capacity of the queue (`queue.type: persisted`) in number of bytes.'
+          type: string
+        queue.checkpoint.writes:
+          description: 'The maximum number of written events before forcing a checkpoint when persistent queues are enabled (`queue.type: persisted`).'
+          type: number
+      required:
+      - pipeline.workers
+      - pipeline.batch.size
+      - pipeline.batch.delay
+      - queue.type
+      - queue.max_bytes
+      - queue.checkpoint.writes
+    logstash._types.PipelineMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        version:
+          type: string
+      required:
+      - type
+      - version
+    _types.Id:
+      type: string
     _types.UnitMillis:
       description: Time unit for milliseconds
       type: number
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+  parameters:
+    logstash.get_pipeline-id:
+      in: path
+      name: id
+      description: A comma-separated list of pipeline identifiers.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Ids'
+      style: simple
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

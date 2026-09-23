@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Security Lists API
   version: ''
   x-doc-license:
@@ -73,7 +20,7 @@ security:
 - apiKeyAuth: []
 - basicAuth: []
 tags:
-- description: "Lists can be used with detection rule exceptions to define values that prevent a rule from generating alerts.\n\nLists are made up of:\n\n* **List containers**: A container for values of the same Elasticsearch data type. The following data types can be used:\n    * `boolean`\n    * `byte`\n    * `date`\n    * `date_nanos`\n    * `date_range`\n    * `double`\n    * `double_range`\n    * `float`\n    * `float_range`\n    * `half_float`\n    * `integer`\n    * `integer_range`\n    * `ip`\n    * `ip_range`\n    * `keyword`\n    * `long`\n    * `long_range`\n    * `short`\n    * `text`\n* **List items**: The values used to determine whether the exception prevents an alert from being generated.\n\nAll list items in the same list container must be of the same data type, and each item defines a single value. For example, an IP list container named `internal-ip-addresses-southport` contains five items, where each item defines one internal IP address:\n1. `192.168.1.1`\n2. `192.168.1.3`\n3. `192.168.1.18`\n4. `192.168.1.12`\n5. `192.168.1.7`\n\nTo use these IP addresses as values for defining rule exceptions, use the Security exceptions API to [create an exception list item](../operation/operation-createexceptionlistitem) that references the `internal-ip-addresses-southport` list.\n> info\n> Lists cannot be added directly to rules, nor do they define the operators used to determine when exceptions are applied (`is in list`, `is not in list`). Use an exception item to define the operator and associate it with an [exception container](../operation/operation-createexceptionlist). You can then add the exception container to a rule's `exceptions_list` object.\n\n## Lists requirements\n\nBefore you can start using lists, you must create the `.lists` and `.items` data streams for the relevant Kibana space. To do this, use the [Create list data streams](../operation/operation-createlistindex) endpoint. Once these data streams are created, your role needs privileges to manage rules. Refer to [Enable and access detections](https://www.elastic.co/guide/en/security/current/detections-permissions-section.html#enable-detections-ui) for a complete list of requirements.\n"
+- description: Lists can be used with detection rule exceptions to define values that prevent a rule from generating alerts.
   name: Security Lists API
   x-displayName: Security lists
 paths:
@@ -82,19 +29,17 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists</span></div>
+        delete /s/{space_id}/api/lists
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Delete a value list using the list ID.
 
         > info
 
-        > When you delete a list, all of its list items are also deleted.
-
-        '
+        > When you delete a list, all of its list items are also deleted.'
       operationId: DeleteList
       parameters:
       - description: Value list identifier to delete, including all of its list items.
@@ -212,10 +157,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists</span></div>
+        get /s/{space_id}/api/lists
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get the details of a value list using the list ID.'
@@ -320,10 +265,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists</span></div>
+        patch /s/{space_id}/api/lists
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Update specific fields of an existing list using the list `id`.'
@@ -451,10 +396,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists</span></div>
+        post /s/{space_id}/api/lists
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Create a new value list.'
@@ -647,19 +592,17 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists</span></div>
+        put /s/{space_id}/api/lists
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Update a value list using the list `id`. The original list is replaced, and all unspecified fields are deleted.
 
         > info
 
-        > You cannot modify the `id` value.
-
-        '
+        > You cannot modify the `id` value.'
       operationId: UpdateList
       requestBody:
         content:
@@ -789,10 +732,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/_find</span></div>
+        get /s/{space_id}/api/lists/_find
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get a paginated subset of value lists. By default, the first page is returned, with 20 results per page.'
@@ -963,10 +906,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/index</span></div>
+        delete /s/{space_id}/api/lists/index
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Delete the `.lists` and `.items` data streams.'
@@ -1056,10 +999,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/index</span></div>
+        get /s/{space_id}/api/lists/index
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Verify that `.lists` and `.items` data streams exist.'
@@ -1154,10 +1097,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/index</span></div>
+        post /s/{space_id}/api/lists/index
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **DEPRECATED.** `deprecated: true` is set on this operation. Value list backing data streams for the space
@@ -1169,9 +1112,7 @@ paths:
         indices exist with `GET /api/lists/index`.
 
 
-        Creates the `.lists` and `.items` data streams in the current Kibana space.
-
-        '
+        Creates the `.lists` and `.items` data streams in the current Kibana space.'
       operationId: CreateListIndex
       responses:
         '200':
@@ -1261,10 +1202,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items</span></div>
+        delete /s/{space_id}/api/lists/items
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Delete a value list item using its `id`, or its `list_id` and `value` fields.'
@@ -1395,10 +1336,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items</span></div>
+        get /s/{space_id}/api/lists/items
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get the details of a value list item.'
@@ -1517,10 +1458,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items</span></div>
+        patch /s/{space_id}/api/lists/items
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Update specific fields of an existing value list item using the item `id`.'
@@ -1645,10 +1586,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items</span></div>
+        post /s/{space_id}/api/lists/items
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Create a value list item and associate it with the specified value list.
@@ -1658,9 +1599,7 @@ paths:
 
         > info
 
-        > Before creating a list item, you must create a list.
-
-        '
+        > Before creating a list item, you must create a list.'
       operationId: CreateListItem
       requestBody:
         content:
@@ -1830,19 +1769,17 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items</span></div>
+        put /s/{space_id}/api/lists/items
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Update a value list item using the list item ID. The original list item is replaced, and all unspecified fields are deleted.
 
         > info
 
-        > You cannot modify the `id` value.
-
-        '
+        > You cannot modify the `id` value.'
       operationId: UpdateListItem
       requestBody:
         content:
@@ -1963,10 +1900,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items/_export</span></div>
+        post /s/{space_id}/api/lists/items/_export
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Export list item values from the specified value list.'
@@ -2085,10 +2022,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items/_find</span></div>
+        get /s/{space_id}/api/lists/items/_find
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get all value list items in the specified list.'
@@ -2259,18 +2196,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/items/_import</span></div>
+        post /s/{space_id}/api/lists/items/_import
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Import value list items from a TXT or CSV file. The maximum file size is 9 million bytes.
 
 
-        You can import items to a new or existing list.
-
-        '
+        You can import items to a new or existing list.'
       operationId: ImportListItems
       parameters:
       - description: 'List''s id.
@@ -2436,19 +2371,17 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/lists/privileges</span></div>
+        get /s/{space_id}/api/lists/privileges
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns the caller''s authentication state and the Elasticsearch `cluster`, `index`, and `application`
 
         privileges for `.lists` and `.items` data streams in the current Kibana space. Use this to decide which list
 
-        APIs (`read` vs `all` operations) are available before you create or import lists.
-
-        '
+        APIs (`read` vs `all` operations) are available before you create or import lists.'
       operationId: ReadListPrivileges
       responses:
         '200':
@@ -2593,211 +2526,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Lists_API_ListName:
-      description: Value list's name.
-      example: List of bad IPs
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListDescription:
-      description: Describes the value list.
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListVersion:
-      description: The document version number.
-      example: 1
-      minimum: 1
-      type: integer
-    Security_Lists_API_ListId:
-      description: Value list's identifier.
-      example: 21b01cfb-058d-44b9-838c-282be16c91cd
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListItemValue:
-      description: The value used to evaluate exceptions.
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListItemPrivileges:
-      type: object
-      properties:
-        application:
-          additionalProperties:
-            type: boolean
-          type: object
-        cluster:
-          additionalProperties:
-            type: boolean
-          type: object
-        has_all_requested:
-          type: boolean
-        index:
-          additionalProperties:
-            additionalProperties:
-              type: boolean
-            type: object
-          type: object
-        username:
-          type: string
-      required:
-      - username
-      - has_all_requested
-      - cluster
-      - index
-      - application
-    Security_Lists_API_ListPrivileges:
-      type: object
-      properties:
-        application:
-          additionalProperties:
-            type: boolean
-          type: object
-        cluster:
-          additionalProperties:
-            type: boolean
-          type: object
-        has_all_requested:
-          type: boolean
-        index:
-          additionalProperties:
-            additionalProperties:
-              type: boolean
-            type: object
-          type: object
-        username:
-          type: string
-      required:
-      - username
-      - has_all_requested
-      - cluster
-      - index
-      - application
-    Security_Lists_API_ListItemMetadata:
-      additionalProperties: true
-      description: Placeholder for metadata about the value list item.
-      type: object
-    Security_Lists_API_FindListItemsFilter:
-      example: value:127.0.0.1
-      type: string
-    Security_Lists_API_ListMetadata:
-      additionalProperties: true
-      description: Placeholder for metadata about the value list.
-      type: object
-    Security_Lists_API_FindListsCursor:
-      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_FindListItemsCursor:
-      description: Returns the items that come after the last item returned in the previous call (use the `cursor` value returned in the previous call). This parameter uses the `tie_breaker_id` field to ensure all items are sorted and returned correctly.
-      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListItemId:
-      description: Value list item's identifier.
-      example: 54b01cfb-058d-44b9-838c-282be16c91cd
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_FindListsFilter:
-      example: value:127.0.0.1
-      type: string
-    Security_Lists_API_ListItem:
-      type: object
-      properties:
-        _version:
-          $ref: '#/components/schemas/Security_Lists_API_ListVersionId'
-        '@timestamp':
-          example: '2025-01-08T04:47:34.273Z'
-          format: date-time
-          type: string
-        created_at:
-          description: Autogenerated date of object creation.
-          example: '2025-01-08T04:47:34.273Z'
-          format: date-time
-          type: string
-        created_by:
-          description: Autogenerated value - user that created object.
-          example: elastic
-          type: string
-        id:
-          $ref: '#/components/schemas/Security_Lists_API_ListItemId'
-        list_id:
-          $ref: '#/components/schemas/Security_Lists_API_ListId'
-        meta:
-          $ref: '#/components/schemas/Security_Lists_API_ListItemMetadata'
-        tie_breaker_id:
-          description: Field used in search to ensure all containers are sorted and returned correctly.
-          example: f5508188-b1e9-4e6e-9662-d039a7d89899
-          type: string
-        type:
-          $ref: '#/components/schemas/Security_Lists_API_ListType'
-        updated_at:
-          description: Autogenerated date of last object update.
-          example: '2025-01-08T04:47:34.273Z'
-          format: date-time
-          type: string
-        updated_by:
-          description: Autogenerated value - user that last updated object.
-          example: elastic
-          type: string
-        value:
-          $ref: '#/components/schemas/Security_Lists_API_ListItemValue'
-      required:
-      - id
-      - type
-      - list_id
-      - value
-      - tie_breaker_id
-      - created_at
-      - created_by
-      - updated_at
-      - updated_by
-    Security_Lists_API_ListType:
-      description: 'Specifies the Elasticsearch data type of excludes the list container holds. Some common examples:
-
-
-        - `keyword`: Many ECS fields are Elasticsearch keywords
-
-        - `ip`: IP addresses
-
-        - `ip_range`: Range of IP addresses (supports IPv4, IPv6, and CIDR notation)
-
-        '
-      enum:
-      - binary
-      - boolean
-      - byte
-      - date
-      - date_nanos
-      - date_range
-      - double
-      - double_range
-      - float
-      - float_range
-      - geo_point
-      - geo_shape
-      - half_float
-      - integer
-      - integer_range
-      - ip
-      - ip_range
-      - keyword
-      - long
-      - long_range
-      - shape
-      - short
-      - text
-      type: string
-    Security_Lists_API_ListVersionId:
-      description: 'The version id, normally returned by the API when the document is retrieved. Use it ensure updates are done against the latest version.
-
-        '
-      example: WzIsMV0=
-      type: string
     Security_Lists_API_List:
       type: object
       properties:
@@ -2855,6 +2583,77 @@ components:
       - created_by
       - updated_at
       - updated_by
+    Security_Lists_API_ListMetadata:
+      additionalProperties: true
+      description: Placeholder for metadata about the value list.
+      type: object
+    Security_Lists_API_FindListsCursor:
+      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListDescription:
+      description: Describes the value list.
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListName:
+      description: Value list's name.
+      example: List of bad IPs
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListId:
+      description: Value list's identifier.
+      example: 21b01cfb-058d-44b9-838c-282be16c91cd
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListItemPrivileges:
+      type: object
+      properties:
+        application:
+          additionalProperties:
+            type: boolean
+          type: object
+        cluster:
+          additionalProperties:
+            type: boolean
+          type: object
+        has_all_requested:
+          type: boolean
+        index:
+          additionalProperties:
+            additionalProperties:
+              type: boolean
+            type: object
+          type: object
+        username:
+          type: string
+      required:
+      - username
+      - has_all_requested
+      - cluster
+      - index
+      - application
+    Security_Lists_API_FindListItemsCursor:
+      description: Returns the items that come after the last item returned in the previous call (use the `cursor` value returned in the previous call). This parameter uses the `tie_breaker_id` field to ensure all items are sorted and returned correctly.
+      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListItemId:
+      description: Value list item's identifier.
+      example: 54b01cfb-058d-44b9-838c-282be16c91cd
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListVersionId:
+      description: 'The version id, normally returned by the API when the document is retrieved. Use it ensure updates are done against the latest version.
+
+        '
+      example: WzIsMV0=
+      type: string
     Security_Lists_API_PlatformErrorResponse:
       type: object
       properties:
@@ -2868,6 +2667,33 @@ components:
       - statusCode
       - error
       - message
+    Security_Lists_API_ListPrivileges:
+      type: object
+      properties:
+        application:
+          additionalProperties:
+            type: boolean
+          type: object
+        cluster:
+          additionalProperties:
+            type: boolean
+          type: object
+        has_all_requested:
+          type: boolean
+        index:
+          additionalProperties:
+            additionalProperties:
+              type: boolean
+            type: object
+          type: object
+        username:
+          type: string
+      required:
+      - username
+      - has_all_requested
+      - cluster
+      - index
+      - application
     Security_Lists_API_SiemErrorResponse:
       type: object
       properties:
@@ -2878,6 +2704,113 @@ components:
       required:
       - status_code
       - message
+    Security_Lists_API_FindListsFilter:
+      example: value:127.0.0.1
+      type: string
+    Security_Lists_API_ListType:
+      description: 'Specifies the Elasticsearch data type of excludes the list container holds. Some common examples:
+
+
+        - `keyword`: Many ECS fields are Elasticsearch keywords
+
+        - `ip`: IP addresses
+
+        - `ip_range`: Range of IP addresses (supports IPv4, IPv6, and CIDR notation)
+
+        '
+      enum:
+      - binary
+      - boolean
+      - byte
+      - date
+      - date_nanos
+      - date_range
+      - double
+      - double_range
+      - float
+      - float_range
+      - geo_point
+      - geo_shape
+      - half_float
+      - integer
+      - integer_range
+      - ip
+      - ip_range
+      - keyword
+      - long
+      - long_range
+      - shape
+      - short
+      - text
+      type: string
+    Security_Lists_API_ListItemMetadata:
+      additionalProperties: true
+      description: Placeholder for metadata about the value list item.
+      type: object
+    Security_Lists_API_ListVersion:
+      description: The document version number.
+      example: 1
+      minimum: 1
+      type: integer
+    Security_Lists_API_FindListItemsFilter:
+      example: value:127.0.0.1
+      type: string
+    Security_Lists_API_ListItem:
+      type: object
+      properties:
+        _version:
+          $ref: '#/components/schemas/Security_Lists_API_ListVersionId'
+        '@timestamp':
+          example: '2025-01-08T04:47:34.273Z'
+          format: date-time
+          type: string
+        created_at:
+          description: Autogenerated date of object creation.
+          example: '2025-01-08T04:47:34.273Z'
+          format: date-time
+          type: string
+        created_by:
+          description: Autogenerated value - user that created object.
+          example: elastic
+          type: string
+        id:
+          $ref: '#/components/schemas/Security_Lists_API_ListItemId'
+        list_id:
+          $ref: '#/components/schemas/Security_Lists_API_ListId'
+        meta:
+          $ref: '#/components/schemas/Security_Lists_API_ListItemMetadata'
+        tie_breaker_id:
+          description: Field used in search to ensure all containers are sorted and returned correctly.
+          example: f5508188-b1e9-4e6e-9662-d039a7d89899
+          type: string
+        type:
+          $ref: '#/components/schemas/Security_Lists_API_ListType'
+        updated_at:
+          description: Autogenerated date of last object update.
+          example: '2025-01-08T04:47:34.273Z'
+          format: date-time
+          type: string
+        updated_by:
+          description: Autogenerated value - user that last updated object.
+          example: elastic
+          type: string
+        value:
+          $ref: '#/components/schemas/Security_Lists_API_ListItemValue'
+      required:
+      - id
+      - type
+      - list_id
+      - value
+      - tie_breaker_id
+      - created_at
+      - created_by
+      - updated_at
+      - updated_by
+    Security_Lists_API_ListItemValue:
+      description: The value used to evaluate exceptions.
+      format: nonempty
+      minLength: 1
+      type: string
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

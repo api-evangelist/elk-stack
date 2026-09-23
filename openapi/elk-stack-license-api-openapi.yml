@@ -6,12 +6,12 @@ info:
     url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
   version: ''
 tags:
-- name: license
+- name: License
 paths:
   /_license:
     get:
       tags:
-      - license
+      - License
       summary: Get license information
       description: 'Get information about your Elastic license including its type, its status, when it was issued, and when it expires.
 
@@ -68,7 +68,7 @@ paths:
         name: product_name
     put:
       tags:
-      - license
+      - License
       summary: Update the license
       description: 'You can update your license at runtime without shutting down your nodes.
 
@@ -87,9 +87,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       operationId: license-post
       parameters:
       - $ref: '#/components/parameters/license.post-acknowledge'
@@ -106,7 +104,7 @@ paths:
         name: product_name
     post:
       tags:
-      - license
+      - License
       summary: Update the license
       description: 'You can update your license at runtime without shutting down your nodes.
 
@@ -125,9 +123,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       operationId: license-post-1
       parameters:
       - $ref: '#/components/parameters/license.post-acknowledge'
@@ -144,7 +140,7 @@ paths:
         name: product_name
     delete:
       tags:
-      - license
+      - License
       summary: Delete the license
       description: 'When the license expires, your subscription level reverts to Basic.
 
@@ -155,9 +151,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       externalDocs:
         description: About managing your license
         url: https://www.elastic.co/docs/deploy-manage/license/manage-your-license-in-self-managed-cluster
@@ -196,17 +190,12 @@ paths:
   /_license/basic_status:
     get:
       tags:
-      - license
+      - License
       summary: Get the basic license status
-      description: '
+      description: '## Required authorization
 
 
-        ## Required authorization
-
-
-        * Cluster privileges: `monitor`
-
-        '
+        * Cluster privileges: `monitor`'
       operationId: license-get-basic-status
       responses:
         '200':
@@ -231,17 +220,12 @@ paths:
   /_license/trial_status:
     get:
       tags:
-      - license
+      - License
       summary: Get the trial status
-      description: '
+      description: '## Required authorization
 
 
-        ## Required authorization
-
-
-        * Cluster privileges: `monitor`
-
-        '
+        * Cluster privileges: `monitor`'
       operationId: license-get-trial-status
       responses:
         '200':
@@ -266,7 +250,7 @@ paths:
   /_license/start_basic:
     post:
       tags:
-      - license
+      - License
       summary: Start a basic license
       description: 'Start an indefinite basic license, which gives access to all the basic features.
 
@@ -285,9 +269,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       operationId: license-post-start-basic
       parameters:
       - in: query
@@ -355,7 +337,7 @@ paths:
   /_license/start_trial:
     post:
       tags:
-      - license
+      - License
       summary: Start a trial
       description: 'Start a 30-day trial, which gives access to all subscription features.
 
@@ -371,9 +353,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       operationId: license-post-start-trial
       parameters:
       - in: query
@@ -431,6 +411,15 @@ paths:
         name: product_name
 components:
   schemas:
+    license._types.LicenseStatus:
+      type: string
+      enum:
+      - active
+      - valid
+      - invalid
+      - expired
+    _types.Uuid:
+      type: string
     _types.DateTime:
       description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
 
@@ -440,6 +429,18 @@ components:
       oneOf:
       - type: string
       - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    license._types.LicenseType:
+      type: string
+      enum:
+      - missing
+      - trial
+      - basic
+      - standard
+      - dev
+      - silver
+      - gold
+      - platinum
+      - enterprise
     license.post.Acknowledgement:
       type: object
       properties:
@@ -452,45 +453,6 @@ components:
       required:
       - license
       - message
-    license._types.License:
-      type: object
-      properties:
-        expiry_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        issue_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        start_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        issued_to:
-          type: string
-        issuer:
-          type: string
-        max_nodes:
-          oneOf:
-          - type: number
-          - type:
-            - string
-            - 'null'
-        max_resource_units:
-          type: number
-        signature:
-          type: string
-        type:
-          allOf:
-          - $ref: '#/components/schemas/license._types.LicenseType'
-        uid:
-          type: string
-      required:
-      - expiry_date_in_millis
-      - issue_date_in_millis
-      - issued_to
-      - issuer
-      - signature
-      - type
-      - uid
     _types.AcknowledgedResponseBase:
       type: object
       properties:
@@ -499,9 +461,20 @@ components:
           type: boolean
       required:
       - acknowledged
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
     license.get.LicenseInformation:
       type: object
       properties:
@@ -567,97 +540,51 @@ components:
       - type
       - uid
       - start_date_in_millis
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    license._types.LicenseType:
-      type: string
-      enum:
-      - missing
-      - trial
-      - basic
-      - standard
-      - dev
-      - silver
-      - gold
-      - platinum
-      - enterprise
+    license._types.License:
+      type: object
+      properties:
+        expiry_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issue_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        start_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issued_to:
+          type: string
+        issuer:
+          type: string
+        max_nodes:
+          oneOf:
+          - type: number
+          - type:
+            - string
+            - 'null'
+        max_resource_units:
+          type: number
+        signature:
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseType'
+        uid:
+          type: string
+      required:
+      - expiry_date_in_millis
+      - issue_date_in_millis
+      - issued_to
+      - issuer
+      - signature
+      - type
+      - uid
     _types.UnitMillis:
       description: Time unit for milliseconds
       type: number
-    license._types.LicenseStatus:
-      type: string
-      enum:
-      - active
-      - valid
-      - invalid
-      - expired
-    _types.Uuid:
-      type: string
-  requestBodies:
-    license.post:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              license:
-                allOf:
-                - $ref: '#/components/schemas/license._types.License'
-              licenses:
-                description: A sequence of one or more JSON documents containing the license information.
-                type: array
-                items:
-                  $ref: '#/components/schemas/license._types.License'
-          examples:
-            PostLicenseRequestExample1:
-              description: 'Run `PUT _license` to update to a basic license. NOTE: These values are invalid; you must substitute the appropriate contents from your license file.
-
-                '
-              value: "{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
-  parameters:
-    license.post-timeout:
-      in: query
-      name: timeout
-      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
-    license.post-acknowledge:
-      in: query
-      name: acknowledge
-      description: 'To update a license, you must accept the acknowledge messages and set this parameter to `true`.
-
-        In particular, if you are upgrading or downgrading a license, you must acknowlege the feature changes.'
-      deprecated: false
-      schema:
-        default: false
-        type: boolean
-      style: form
-    license.post-master_timeout:
-      in: query
-      name: master_timeout
-      description: The period to wait for a connection to the master node.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
   responses:
     license.post-200:
       description: ''
@@ -681,3 +608,56 @@ components:
             PostLicenseResponseExample1:
               description: If you update to a basic license and you previously had a license with more features, you receive this type of response. You must re-submit the API request and set the `acknowledge` parameter to `true`.
               value: "{\n  \"acknowledged\": false,\n  \"license_status\": \"valid\",\n  \"acknowledge\": {\n    \"message\": \"\\\"\\\"\\\"This license update requires acknowledgement. To acknowledge the license, please read the following messages and update the license again, this time with the \\\"acknowledge=true\\\" parameter:\\\"\\\"\\\"\",\n    \"watcher\": [\n      \"Watcher will be disabled\"\n    ],\n    \"logstash\": [\n      \"Logstash will no longer poll for centrally-managed pipelines\"\n    ],\n    \"security\": [\n      \"The following X-Pack security functionality will be disabled ...\"\n    ]\n  }\n}"
+  requestBodies:
+    license.post:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              license:
+                allOf:
+                - $ref: '#/components/schemas/license._types.License'
+              licenses:
+                description: A sequence of one or more JSON documents containing the license information.
+                type: array
+                items:
+                  $ref: '#/components/schemas/license._types.License'
+          examples:
+            PostLicenseRequestExample1:
+              description: 'Run `PUT _license` to update to a basic license. NOTE: These values are invalid; you must substitute the appropriate contents from your license file.
+
+                '
+              value: "{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
+  parameters:
+    license.post-master_timeout:
+      in: query
+      name: master_timeout
+      description: The period to wait for a connection to the master node.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    license.post-acknowledge:
+      in: query
+      name: acknowledge
+      description: 'To update a license, you must accept the acknowledge messages and set this parameter to `true`.
+
+        In particular, if you are upgrading or downgrading a license, you must acknowlege the feature changes.'
+      deprecated: false
+      schema:
+        default: false
+        type: boolean
+      style: form
+    license.post-timeout:
+      in: query
+      name: timeout
+      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form

@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Elastic Agent policies API
   version: ''
   x-doc-license:
@@ -74,9 +21,7 @@ security:
 - basicAuth: []
 tags:
 - name: Elastic Agent policies
-  description: 'Elastic Agent policies APIs enable you to manage agent policies, including creating, updating, and deleting policies, as well as to retrieve agent policy outputs, manifests, and auto-upgrade status information.
-
-    '
+  description: Elastic Agent policies APIs enable you to manage agent policies, including creating, updating, and deleting policies, as well as to retrieve agent policy outputs, manifests, and auto-upgrade status information.
   x-displayName: Elastic Agent policies
 paths:
   /api/fleet/agent_policies:
@@ -84,13 +29,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies</span></div>
+        get /s/{space_id}/api/fleet/agent_policies
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        List all agent policies.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-agents-read OR fleet-setup.'
+        List all agent policies.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-agents-read OR fleet-setup.'
       operationId: get-fleet-agent-policies
       parameters:
       - description: Page number
@@ -241,13 +189,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies</span></div>
+        post /s/{space_id}/api/fleet/agent_policies
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a new agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all.'
+        Create a new agent policy.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all.'
       operationId: post-fleet-agent-policies
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -339,13 +290,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/_bulk_get</span></div>
+        post /s/{space_id}/api/fleet/agent_policies/_bulk_get
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get multiple agent policies by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-agents-read OR fleet-setup.'
+        Get multiple agent policies by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-agents-read OR fleet-setup.'
       operationId: post-fleet-agent-policies-bulk-get
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -462,13 +416,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}</span></div>
+        get /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get an agent policy by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-agents-read OR fleet-setup.'
+        Get an agent policy by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-agents-read OR fleet-setup.'
       operationId: get-fleet-agent-policies-agentpolicyid
       parameters:
       - description: The ID of the agent policy
@@ -557,13 +514,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}</span></div>
+        put /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update an agent policy by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all.'
+        Update an agent policy by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all.'
       operationId: put-fleet-agent-policies-agentpolicyid
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -663,13 +623,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/auto_upgrade_agents_status</span></div>
+        get /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/auto_upgrade_agents_status
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the auto-upgrade status for agents assigned to an agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+        Get the auto-upgrade status for agents assigned to an agent policy.
+
+
+        [Required authorization] Route required privileges: fleet-agents-read.'
       operationId: get-fleet-agent-policies-agentpolicyid-auto-upgrade-agents-status
       parameters:
       - description: The ID of the agent policy
@@ -776,13 +739,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/copy</span></div>
+        post /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/copy
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Copy an agent policy by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all.'
+        Copy an agent policy by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all.'
       operationId: post-fleet-agent-policies-agentpolicyid-copy
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -879,13 +845,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/download</span></div>
+        get /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/download
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Download an agent policy by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-setup.'
+        Download an agent policy by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-setup.'
       operationId: get-fleet-agent-policies-agentpolicyid-download
       parameters:
       - description: The ID of the agent policy
@@ -997,13 +966,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/full</span></div>
+        get /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/full
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a full agent policy by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read.'
+        Get a full agent policy by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read.'
       operationId: get-fleet-agent-policies-agentpolicyid-full
       parameters:
       - description: The ID of the agent policy
@@ -1110,13 +1082,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/outputs</span></div>
+        get /s/{space_id}/api/fleet/agent_policies/{agentPolicyId}/outputs
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a list of outputs associated with agent policy by policy id.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read AND fleet-settings-read.'
+        Get a list of outputs associated with agent policy by policy id.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read AND fleet-settings-read.'
       operationId: get-fleet-agent-policies-agentpolicyid-outputs
       parameters:
       - description: The ID of the agent policy
@@ -1195,13 +1170,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/delete</span></div>
+        post /s/{space_id}/api/fleet/agent_policies/delete
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete an agent policy by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all.'
+        Delete an agent policy by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all.'
       operationId: post-fleet-agent-policies-delete
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1273,13 +1251,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agent_policies/outputs</span></div>
+        post /s/{space_id}/api/fleet/agent_policies/outputs
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a list of outputs associated with agent policies.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read AND fleet-settings-read.'
+        Get a list of outputs associated with agent policies.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read AND fleet-settings-read.'
       operationId: post-fleet-agent-policies-outputs
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1361,13 +1342,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/kubernetes</span></div>
+        get /s/{space_id}/api/fleet/kubernetes
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the Kubernetes manifest for deploying Elastic Agent.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-setup.'
+        Get the Kubernetes manifest for deploying Elastic Agent.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-setup.'
       operationId: get-fleet-kubernetes
       parameters:
       - description: If true, returns the manifest as a downloadable file
@@ -1439,13 +1423,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/kubernetes/download</span></div>
+        get /s/{space_id}/api/fleet/kubernetes/download
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Download the Kubernetes manifest for deploying Elastic Agent.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-setup.'
+        Download the Kubernetes manifest for deploying Elastic Agent.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR fleet-setup.'
       operationId: get-fleet-kubernetes-download
       parameters:
       - description: If true, returns the manifest as a downloadable file
@@ -1558,482 +1545,6 @@ components:
       required:
       - description
       title: package_policy_input_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_get_k8s_manifest_response:
-      additionalProperties: false
-      properties:
-        item:
-          type: string
-      required:
-      - item
-      title: get_k8s_manifest_response
-      type: object
-    Kibana_HTTP_APIs_package_policy_stream_deprecation_info:
-      additionalProperties: false
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: package_policy_stream_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info:
-      additionalProperties: false
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: simplified_package_policy_stream_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_get_agent_policy_response:
-      additionalProperties: false
-      properties:
-        item:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_agent_policy_response'
-      required:
-      - item
-      title: get_agent_policy_response
-      type: object
-    Kibana_HTTP_APIs_get_agent_policy_outputs_response:
-      additionalProperties: false
-      properties:
-        item:
-          additionalProperties: false
-          type: object
-          properties:
-            agentPolicyId:
-              type: string
-            data:
-              additionalProperties: false
-              type: object
-              properties:
-                integrations:
-                  items:
-                    additionalProperties: false
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      integrationPolicyName:
-                        type: string
-                      name:
-                        type: string
-                      pkgName:
-                        type: string
-                  maxItems: 1000
-                  type: array
-                output:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    name:
-                      type: string
-                  required:
-                  - id
-                  - name
-              required:
-              - output
-            monitoring:
-              additionalProperties: false
-              type: object
-              properties:
-                output:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    name:
-                      type: string
-                  required:
-                  - id
-                  - name
-              required:
-              - output
-          required:
-          - monitoring
-          - data
-      required:
-      - item
-      title: get_agent_policy_outputs_response
-      type: object
-    Kibana_HTTP_APIs_delete_agent_policy_response:
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
-      title: delete_agent_policy_response
-      type: object
-    Kibana_HTTP_APIs_new_agent_policy:
-      additionalProperties: false
-      properties:
-        advanced_settings:
-          additionalProperties: false
-          type: object
-          properties:
-            agent_download_target_directory: {}
-            agent_download_timeout: {}
-            agent_features_disable_policy_change_acks_enabled: {}
-            agent_features_include_tags_in_events_enabled: {}
-            agent_internal: {}
-            agent_limits_go_max_procs: {}
-            agent_logging_files_interval: {}
-            agent_logging_files_keepfiles: {}
-            agent_logging_files_rotateeverybytes: {}
-            agent_logging_level: {}
-            agent_logging_metrics_period: {}
-            agent_logging_to_files: {}
-            agent_monitoring_runtime_experimental: {}
-        agent_features:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              enabled:
-                type: boolean
-              name:
-                type: string
-            required:
-            - name
-            - enabled
-          maxItems: 100
-          type: array
-        agentless:
-          additionalProperties: false
-          type: object
-          properties:
-            cloud_connectors:
-              additionalProperties: false
-              type: object
-              properties:
-                enabled:
-                  type: boolean
-                target_csp:
-                  enum:
-                  - aws
-                  - azure
-                  - gcp
-                  type: string
-              required:
-              - enabled
-            cluster_id:
-              type: string
-            resources:
-              additionalProperties: false
-              type: object
-              properties:
-                requests:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    cpu:
-                      type: string
-                    memory:
-                      type: string
-        data_output_id:
-          type:
-          - string
-          - 'null'
-        description:
-          type: string
-        download_source_id:
-          type:
-          - string
-          - 'null'
-        fleet_server_host_id:
-          type:
-          - string
-          - 'null'
-        force:
-          type: boolean
-        global_data_tags:
-          description: User defined data tags that are added to all of the inputs. The values can be strings or numbers.
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              value:
-                anyOf:
-                - type: string
-                - type: number
-            required:
-            - name
-            - value
-          maxItems: 100
-          type: array
-        has_agent_version_conditions:
-          type: boolean
-        has_fleet_server:
-          type: boolean
-        id:
-          type: string
-        inactivity_timeout:
-          default: 1209600
-          minimum: 0
-          type: number
-        is_default:
-          type: boolean
-        is_default_fleet_server:
-          type: boolean
-        is_managed:
-          type: boolean
-        is_protected:
-          type: boolean
-        is_verifier:
-          type: boolean
-        keep_monitoring_alive:
-          description: When set to true, monitoring will be enabled but logs/metrics collection will be disabled
-          type:
-          - boolean
-          - 'null'
-        min_agent_version:
-          type:
-          - string
-          - 'null'
-        monitoring_diagnostics:
-          additionalProperties: false
-          type: object
-          properties:
-            limit:
-              additionalProperties: false
-              type: object
-              properties:
-                burst:
-                  type: number
-                interval:
-                  type: string
-            uploader:
-              additionalProperties: false
-              type: object
-              properties:
-                init_dur:
-                  type: string
-                max_dur:
-                  type: string
-                max_retries:
-                  type: number
-        monitoring_enabled:
-          items:
-            enum:
-            - logs
-            - metrics
-            - traces
-            type: string
-          maxItems: 3
-          type: array
-        monitoring_http:
-          additionalProperties: false
-          type: object
-          properties:
-            buffer:
-              additionalProperties: false
-              type: object
-              properties:
-                enabled:
-                  default: false
-                  type: boolean
-            enabled:
-              type: boolean
-            host:
-              type: string
-            port:
-              maximum: 65353
-              minimum: 0
-              type: number
-        monitoring_output_id:
-          type:
-          - string
-          - 'null'
-        monitoring_pprof_enabled:
-          type: boolean
-        name:
-          minLength: 1
-          type: string
-        namespace:
-          minLength: 1
-          type: string
-        overrides:
-          additionalProperties: {}
-          description: Override settings that are defined in the agent policy. Input settings cannot be overridden. The override option should be used only in unusual circumstances and not as a routine procedure.
-          type:
-          - object
-          - 'null'
-        package_agent_version_conditions:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              title:
-                type: string
-              version_condition:
-                type: string
-            required:
-            - name
-            - title
-            - version_condition
-          maxItems: 1000
-          type:
-          - array
-          - 'null'
-        required_versions:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              percentage:
-                description: Target percentage of agents to auto upgrade
-                maximum: 100
-                minimum: 0
-                type: number
-              version:
-                description: Target version for automatic agent upgrade
-                type: string
-            required:
-            - version
-            - percentage
-          maxItems: 100
-          type:
-          - array
-          - 'null'
-        space_ids:
-          items:
-            type: string
-          maxItems: 100
-          type: array
-        supports_agentless:
-          deprecated: true
-          description: Indicates whether the agent policy supports agentless integrations. Deprecated in favor of the Fleet managed integrations API.
-          type:
-          - boolean
-          - 'null'
-        unenroll_timeout:
-          minimum: 0
-          type: number
-      required:
-      - name
-      - namespace
-      title: new_agent_policy
-      type: object
-    Kibana_HTTP_APIs_copy_agent_policy_request:
-      additionalProperties: false
-      properties:
-        description:
-          type: string
-        name:
-          minLength: 1
-          type: string
-      required:
-      - name
-      title: copy_agent_policy_request
-      type: object
-    Kibana_HTTP_APIs_package_policy_package:
-      additionalProperties: false
-      properties:
-        experimental_data_stream_features:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              data_stream:
-                maxLength: 1024
-                type: string
-              features:
-                additionalProperties: false
-                type: object
-                properties:
-                  doc_value_only_numeric:
-                    type: boolean
-                  doc_value_only_other:
-                    type: boolean
-                  synthetic_source:
-                    type: boolean
-                  tsdb:
-                    type: boolean
-            required:
-            - data_stream
-            - features
-          maxItems: 100
-          type: array
-        fips_compatible:
-          type: boolean
-        name:
-          description: Package name
-          maxLength: 255
-          type: string
-        requires_root:
-          type: boolean
-        title:
-          maxLength: 255
-          type: string
-        version:
-          description: Package version
-          maxLength: 50
-          type: string
-      required:
-      - name
-      - version
-      title: package_policy_package
-      type: object
-    Kibana_HTTP_APIs_delete_agent_policy_request:
-      additionalProperties: false
-      properties:
-        agentPolicyId:
-          description: The ID of the agent policy
-          type: string
-        force:
-          description: bypass validation checks that can prevent agent policy deletion
-          type: boolean
-      required:
-      - agentPolicyId
-      title: delete_agent_policy_request
-      type: object
-    Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info:
-      additionalProperties: false
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: simplified_package_policy_input_deprecation_info
       type: object
     Kibana_HTTP_APIs_agent_policy_response:
       additionalProperties: false
@@ -2343,30 +1854,6 @@ components:
       - revision
       title: agent_policy_response
       type: object
-    Kibana_HTTP_APIs_get_full_agent_policy_response:
-      additionalProperties: false
-      properties:
-        item:
-          anyOf:
-          - type: string
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_full_agent_policy'
-      required:
-      - item
-      title: get_full_agent_policy_response
-      type: object
-    Kibana_HTTP_APIs_get_list_agent_policy_outputs_request:
-      additionalProperties: false
-      properties:
-        ids:
-          description: list of package policy ids
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-      required:
-      - ids
-      title: get_list_agent_policy_outputs_request
-      type: object
     Kibana_HTTP_APIs_bulk_get_agent_policies_response:
       additionalProperties: false
       properties:
@@ -2378,262 +1865,6 @@ components:
       required:
       - items
       title: bulk_get_agent_policies_response
-      type: object
-    Kibana_HTTP_APIs_update_agent_policy_request_body:
-      additionalProperties: false
-      properties:
-        advanced_settings:
-          additionalProperties: false
-          type: object
-          properties:
-            agent_download_target_directory: {}
-            agent_download_timeout: {}
-            agent_features_disable_policy_change_acks_enabled: {}
-            agent_features_include_tags_in_events_enabled: {}
-            agent_internal: {}
-            agent_limits_go_max_procs: {}
-            agent_logging_files_interval: {}
-            agent_logging_files_keepfiles: {}
-            agent_logging_files_rotateeverybytes: {}
-            agent_logging_level: {}
-            agent_logging_metrics_period: {}
-            agent_logging_to_files: {}
-            agent_monitoring_runtime_experimental: {}
-        agent_features:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              enabled:
-                type: boolean
-              name:
-                type: string
-            required:
-            - name
-            - enabled
-          maxItems: 100
-          type: array
-        agentless:
-          additionalProperties: false
-          type: object
-          properties:
-            cloud_connectors:
-              additionalProperties: false
-              type: object
-              properties:
-                enabled:
-                  type: boolean
-                target_csp:
-                  enum:
-                  - aws
-                  - azure
-                  - gcp
-                  type: string
-              required:
-              - enabled
-            cluster_id:
-              type: string
-            resources:
-              additionalProperties: false
-              type: object
-              properties:
-                requests:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    cpu:
-                      type: string
-                    memory:
-                      type: string
-        bumpRevision:
-          type: boolean
-        data_output_id:
-          type:
-          - string
-          - 'null'
-        description:
-          type: string
-        download_source_id:
-          type:
-          - string
-          - 'null'
-        fleet_server_host_id:
-          type:
-          - string
-          - 'null'
-        force:
-          type: boolean
-        global_data_tags:
-          description: User defined data tags that are added to all of the inputs. The values can be strings or numbers.
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              value:
-                anyOf:
-                - type: string
-                - type: number
-            required:
-            - name
-            - value
-          maxItems: 100
-          type: array
-        has_agent_version_conditions:
-          type: boolean
-        has_fleet_server:
-          type: boolean
-        id:
-          type: string
-        inactivity_timeout:
-          default: 1209600
-          minimum: 0
-          type: number
-        is_default:
-          type: boolean
-        is_default_fleet_server:
-          type: boolean
-        is_managed:
-          type: boolean
-        is_protected:
-          type: boolean
-        is_verifier:
-          type: boolean
-        keep_monitoring_alive:
-          description: When set to true, monitoring will be enabled but logs/metrics collection will be disabled
-          type:
-          - boolean
-          - 'null'
-        min_agent_version:
-          type:
-          - string
-          - 'null'
-        monitoring_diagnostics:
-          additionalProperties: false
-          type: object
-          properties:
-            limit:
-              additionalProperties: false
-              type: object
-              properties:
-                burst:
-                  type: number
-                interval:
-                  type: string
-            uploader:
-              additionalProperties: false
-              type: object
-              properties:
-                init_dur:
-                  type: string
-                max_dur:
-                  type: string
-                max_retries:
-                  type: number
-        monitoring_enabled:
-          items:
-            enum:
-            - logs
-            - metrics
-            - traces
-            type: string
-          maxItems: 3
-          type: array
-        monitoring_http:
-          additionalProperties: false
-          type: object
-          properties:
-            buffer:
-              additionalProperties: false
-              type: object
-              properties:
-                enabled:
-                  default: false
-                  type: boolean
-            enabled:
-              type: boolean
-            host:
-              type: string
-            port:
-              maximum: 65353
-              minimum: 0
-              type: number
-        monitoring_output_id:
-          type:
-          - string
-          - 'null'
-        monitoring_pprof_enabled:
-          type: boolean
-        name:
-          minLength: 1
-          type: string
-        namespace:
-          minLength: 1
-          type: string
-        overrides:
-          additionalProperties: {}
-          description: Override settings that are defined in the agent policy. Input settings cannot be overridden. The override option should be used only in unusual circumstances and not as a routine procedure.
-          type:
-          - object
-          - 'null'
-        package_agent_version_conditions:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              title:
-                type: string
-              version_condition:
-                type: string
-            required:
-            - name
-            - title
-            - version_condition
-          maxItems: 1000
-          type:
-          - array
-          - 'null'
-        required_versions:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              percentage:
-                description: Target percentage of agents to auto upgrade
-                maximum: 100
-                minimum: 0
-                type: number
-              version:
-                description: Target version for automatic agent upgrade
-                type: string
-            required:
-            - version
-            - percentage
-          maxItems: 100
-          type:
-          - array
-          - 'null'
-        space_ids:
-          items:
-            type: string
-          maxItems: 100
-          type: array
-        supports_agentless:
-          deprecated: true
-          description: Indicates whether the agent policy supports agentless integrations. Deprecated in favor of the Fleet managed integrations API.
-          type:
-          - boolean
-          - 'null'
-        unenroll_timeout:
-          minimum: 0
-          type: number
-      required:
-      - name
-      - namespace
-      title: update_agent_policy_request_body
       type: object
     Kibana_HTTP_APIs_package_policy_response:
       additionalProperties: false
@@ -3115,6 +2346,762 @@ components:
       - created_at
       - created_by
       title: package_policy_response
+      type: object
+    Kibana_HTTP_APIs_delete_agent_policy_request:
+      additionalProperties: false
+      properties:
+        agentPolicyId:
+          description: The ID of the agent policy
+          type: string
+        force:
+          description: bypass validation checks that can prevent agent policy deletion
+          type: boolean
+      required:
+      - agentPolicyId
+      title: delete_agent_policy_request
+      type: object
+    Kibana_HTTP_APIs_package_policy_package:
+      additionalProperties: false
+      properties:
+        experimental_data_stream_features:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              data_stream:
+                maxLength: 1024
+                type: string
+              features:
+                additionalProperties: false
+                type: object
+                properties:
+                  doc_value_only_numeric:
+                    type: boolean
+                  doc_value_only_other:
+                    type: boolean
+                  synthetic_source:
+                    type: boolean
+                  tsdb:
+                    type: boolean
+            required:
+            - data_stream
+            - features
+          maxItems: 100
+          type: array
+        fips_compatible:
+          type: boolean
+        name:
+          description: Package name
+          maxLength: 255
+          type: string
+        requires_root:
+          type: boolean
+        title:
+          maxLength: 255
+          type: string
+        version:
+          description: Package version
+          maxLength: 50
+          type: string
+      required:
+      - name
+      - version
+      title: package_policy_package
+      type: object
+    Kibana_HTTP_APIs_delete_agent_policy_response:
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      title: delete_agent_policy_response
+      type: object
+    Kibana_HTTP_APIs_get_full_agent_policy_response:
+      additionalProperties: false
+      properties:
+        item:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_full_agent_policy'
+      required:
+      - item
+      title: get_full_agent_policy_response
+      type: object
+    Kibana_HTTP_APIs_get_agent_policy_response:
+      additionalProperties: false
+      properties:
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_agent_policy_response'
+      required:
+      - item
+      title: get_agent_policy_response
+      type: object
+    Kibana_HTTP_APIs_get_list_agent_policy_outputs_request:
+      additionalProperties: false
+      properties:
+        ids:
+          description: list of package policy ids
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+      required:
+      - ids
+      title: get_list_agent_policy_outputs_request
+      type: object
+    Kibana_HTTP_APIs_get_k8s_manifest_response:
+      additionalProperties: false
+      properties:
+        item:
+          type: string
+      required:
+      - item
+      title: get_k8s_manifest_response
+      type: object
+    Kibana_HTTP_APIs_package_policy_stream_deprecation_info:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: package_policy_stream_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: simplified_package_policy_stream_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_get_agent_policy_outputs_response:
+      additionalProperties: false
+      properties:
+        item:
+          additionalProperties: false
+          type: object
+          properties:
+            agentPolicyId:
+              type: string
+            data:
+              additionalProperties: false
+              type: object
+              properties:
+                integrations:
+                  items:
+                    additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      integrationPolicyName:
+                        type: string
+                      name:
+                        type: string
+                      pkgName:
+                        type: string
+                  maxItems: 1000
+                  type: array
+                output:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                  required:
+                  - id
+                  - name
+              required:
+              - output
+            monitoring:
+              additionalProperties: false
+              type: object
+              properties:
+                output:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                  required:
+                  - id
+                  - name
+              required:
+              - output
+          required:
+          - monitoring
+          - data
+      required:
+      - item
+      title: get_agent_policy_outputs_response
+      type: object
+    Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: simplified_package_policy_input_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_update_agent_policy_request_body:
+      additionalProperties: false
+      properties:
+        advanced_settings:
+          additionalProperties: false
+          type: object
+          properties:
+            agent_download_target_directory: {}
+            agent_download_timeout: {}
+            agent_features_disable_policy_change_acks_enabled: {}
+            agent_features_include_tags_in_events_enabled: {}
+            agent_internal: {}
+            agent_limits_go_max_procs: {}
+            agent_logging_files_interval: {}
+            agent_logging_files_keepfiles: {}
+            agent_logging_files_rotateeverybytes: {}
+            agent_logging_level: {}
+            agent_logging_metrics_period: {}
+            agent_logging_to_files: {}
+            agent_monitoring_runtime_experimental: {}
+        agent_features:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              enabled:
+                type: boolean
+              name:
+                type: string
+            required:
+            - name
+            - enabled
+          maxItems: 100
+          type: array
+        agentless:
+          additionalProperties: false
+          type: object
+          properties:
+            cloud_connectors:
+              additionalProperties: false
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                target_csp:
+                  enum:
+                  - aws
+                  - azure
+                  - gcp
+                  type: string
+              required:
+              - enabled
+            cluster_id:
+              type: string
+            resources:
+              additionalProperties: false
+              type: object
+              properties:
+                requests:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    cpu:
+                      type: string
+                    memory:
+                      type: string
+        bumpRevision:
+          type: boolean
+        data_output_id:
+          type:
+          - string
+          - 'null'
+        description:
+          type: string
+        download_source_id:
+          type:
+          - string
+          - 'null'
+        fleet_server_host_id:
+          type:
+          - string
+          - 'null'
+        force:
+          type: boolean
+        global_data_tags:
+          description: User defined data tags that are added to all of the inputs. The values can be strings or numbers.
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                anyOf:
+                - type: string
+                - type: number
+            required:
+            - name
+            - value
+          maxItems: 100
+          type: array
+        has_agent_version_conditions:
+          type: boolean
+        has_fleet_server:
+          type: boolean
+        id:
+          type: string
+        inactivity_timeout:
+          default: 1209600
+          minimum: 0
+          type: number
+        is_default:
+          type: boolean
+        is_default_fleet_server:
+          type: boolean
+        is_managed:
+          type: boolean
+        is_protected:
+          type: boolean
+        is_verifier:
+          type: boolean
+        keep_monitoring_alive:
+          description: When set to true, monitoring will be enabled but logs/metrics collection will be disabled
+          type:
+          - boolean
+          - 'null'
+        min_agent_version:
+          type:
+          - string
+          - 'null'
+        monitoring_diagnostics:
+          additionalProperties: false
+          type: object
+          properties:
+            limit:
+              additionalProperties: false
+              type: object
+              properties:
+                burst:
+                  type: number
+                interval:
+                  type: string
+            uploader:
+              additionalProperties: false
+              type: object
+              properties:
+                init_dur:
+                  type: string
+                max_dur:
+                  type: string
+                max_retries:
+                  type: number
+        monitoring_enabled:
+          items:
+            enum:
+            - logs
+            - metrics
+            - traces
+            type: string
+          maxItems: 3
+          type: array
+        monitoring_http:
+          additionalProperties: false
+          type: object
+          properties:
+            buffer:
+              additionalProperties: false
+              type: object
+              properties:
+                enabled:
+                  default: false
+                  type: boolean
+            enabled:
+              type: boolean
+            host:
+              type: string
+            port:
+              maximum: 65353
+              minimum: 0
+              type: number
+        monitoring_output_id:
+          type:
+          - string
+          - 'null'
+        monitoring_pprof_enabled:
+          type: boolean
+        name:
+          minLength: 1
+          type: string
+        namespace:
+          minLength: 1
+          type: string
+        overrides:
+          additionalProperties: {}
+          description: Override settings that are defined in the agent policy. Input settings cannot be overridden. The override option should be used only in unusual circumstances and not as a routine procedure.
+          type:
+          - object
+          - 'null'
+        package_agent_version_conditions:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              title:
+                type: string
+              version_condition:
+                type: string
+            required:
+            - name
+            - title
+            - version_condition
+          maxItems: 1000
+          type:
+          - array
+          - 'null'
+        required_versions:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              percentage:
+                description: Target percentage of agents to auto upgrade
+                maximum: 100
+                minimum: 0
+                type: number
+              version:
+                description: Target version for automatic agent upgrade
+                type: string
+            required:
+            - version
+            - percentage
+          maxItems: 100
+          type:
+          - array
+          - 'null'
+        space_ids:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        supports_agentless:
+          deprecated: true
+          description: Indicates whether the agent policy supports agentless integrations. Deprecated in favor of the Fleet managed integrations API.
+          type:
+          - boolean
+          - 'null'
+        unenroll_timeout:
+          minimum: 0
+          type: number
+      required:
+      - name
+      - namespace
+      title: update_agent_policy_request_body
+      type: object
+    Kibana_HTTP_APIs_new_agent_policy:
+      additionalProperties: false
+      properties:
+        advanced_settings:
+          additionalProperties: false
+          type: object
+          properties:
+            agent_download_target_directory: {}
+            agent_download_timeout: {}
+            agent_features_disable_policy_change_acks_enabled: {}
+            agent_features_include_tags_in_events_enabled: {}
+            agent_internal: {}
+            agent_limits_go_max_procs: {}
+            agent_logging_files_interval: {}
+            agent_logging_files_keepfiles: {}
+            agent_logging_files_rotateeverybytes: {}
+            agent_logging_level: {}
+            agent_logging_metrics_period: {}
+            agent_logging_to_files: {}
+            agent_monitoring_runtime_experimental: {}
+        agent_features:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              enabled:
+                type: boolean
+              name:
+                type: string
+            required:
+            - name
+            - enabled
+          maxItems: 100
+          type: array
+        agentless:
+          additionalProperties: false
+          type: object
+          properties:
+            cloud_connectors:
+              additionalProperties: false
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                target_csp:
+                  enum:
+                  - aws
+                  - azure
+                  - gcp
+                  type: string
+              required:
+              - enabled
+            cluster_id:
+              type: string
+            resources:
+              additionalProperties: false
+              type: object
+              properties:
+                requests:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    cpu:
+                      type: string
+                    memory:
+                      type: string
+        data_output_id:
+          type:
+          - string
+          - 'null'
+        description:
+          type: string
+        download_source_id:
+          type:
+          - string
+          - 'null'
+        fleet_server_host_id:
+          type:
+          - string
+          - 'null'
+        force:
+          type: boolean
+        global_data_tags:
+          description: User defined data tags that are added to all of the inputs. The values can be strings or numbers.
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                anyOf:
+                - type: string
+                - type: number
+            required:
+            - name
+            - value
+          maxItems: 100
+          type: array
+        has_agent_version_conditions:
+          type: boolean
+        has_fleet_server:
+          type: boolean
+        id:
+          type: string
+        inactivity_timeout:
+          default: 1209600
+          minimum: 0
+          type: number
+        is_default:
+          type: boolean
+        is_default_fleet_server:
+          type: boolean
+        is_managed:
+          type: boolean
+        is_protected:
+          type: boolean
+        is_verifier:
+          type: boolean
+        keep_monitoring_alive:
+          description: When set to true, monitoring will be enabled but logs/metrics collection will be disabled
+          type:
+          - boolean
+          - 'null'
+        min_agent_version:
+          type:
+          - string
+          - 'null'
+        monitoring_diagnostics:
+          additionalProperties: false
+          type: object
+          properties:
+            limit:
+              additionalProperties: false
+              type: object
+              properties:
+                burst:
+                  type: number
+                interval:
+                  type: string
+            uploader:
+              additionalProperties: false
+              type: object
+              properties:
+                init_dur:
+                  type: string
+                max_dur:
+                  type: string
+                max_retries:
+                  type: number
+        monitoring_enabled:
+          items:
+            enum:
+            - logs
+            - metrics
+            - traces
+            type: string
+          maxItems: 3
+          type: array
+        monitoring_http:
+          additionalProperties: false
+          type: object
+          properties:
+            buffer:
+              additionalProperties: false
+              type: object
+              properties:
+                enabled:
+                  default: false
+                  type: boolean
+            enabled:
+              type: boolean
+            host:
+              type: string
+            port:
+              maximum: 65353
+              minimum: 0
+              type: number
+        monitoring_output_id:
+          type:
+          - string
+          - 'null'
+        monitoring_pprof_enabled:
+          type: boolean
+        name:
+          minLength: 1
+          type: string
+        namespace:
+          minLength: 1
+          type: string
+        overrides:
+          additionalProperties: {}
+          description: Override settings that are defined in the agent policy. Input settings cannot be overridden. The override option should be used only in unusual circumstances and not as a routine procedure.
+          type:
+          - object
+          - 'null'
+        package_agent_version_conditions:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              title:
+                type: string
+              version_condition:
+                type: string
+            required:
+            - name
+            - title
+            - version_condition
+          maxItems: 1000
+          type:
+          - array
+          - 'null'
+        required_versions:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              percentage:
+                description: Target percentage of agents to auto upgrade
+                maximum: 100
+                minimum: 0
+                type: number
+              version:
+                description: Target version for automatic agent upgrade
+                type: string
+            required:
+            - version
+            - percentage
+          maxItems: 100
+          type:
+          - array
+          - 'null'
+        space_ids:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        supports_agentless:
+          deprecated: true
+          description: Indicates whether the agent policy supports agentless integrations. Deprecated in favor of the Fleet managed integrations API.
+          type:
+          - boolean
+          - 'null'
+        unenroll_timeout:
+          minimum: 0
+          type: number
+      required:
+      - name
+      - namespace
+      title: new_agent_policy
+      type: object
+    Kibana_HTTP_APIs_copy_agent_policy_request:
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        name:
+          minLength: 1
+          type: string
+      required:
+      - name
+      title: copy_agent_policy_request
       type: object
     Kibana_HTTP_APIs_full_agent_policy:
       additionalProperties: false

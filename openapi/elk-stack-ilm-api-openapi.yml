@@ -13,15 +13,10 @@ paths:
       tags:
       - ilm
       summary: Get lifecycle policies
-      description: '
+      description: '## Required authorization
 
 
-        ## Required authorization
-
-
-        * Cluster privileges: `manage_ilm`,`read_ilm`
-
-        '
+        * Cluster privileges: `manage_ilm`,`read_ilm`'
       operationId: ilm-get-lifecycle
       parameters:
       - $ref: '#/components/parameters/ilm.get_lifecycle-policy'
@@ -49,9 +44,7 @@ paths:
 
         * Index privileges: `manage`
 
-        * Cluster privileges: `manage_ilm`
-
-        '
+        * Cluster privileges: `manage_ilm`'
       externalDocs:
         description: About index lifecycle management
         url: https://www.elastic.co/docs/manage-data/lifecycle/index-lifecycle-management/index-lifecycle
@@ -125,9 +118,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_ilm`
-
-        '
+        * Cluster privileges: `manage_ilm`'
       operationId: ilm-delete-lifecycle
       parameters:
       - in: path
@@ -187,9 +178,7 @@ paths:
         ## Required authorization
 
 
-        * Index privileges: `view_index_metadata`,`manage_ilm`
-
-        '
+        * Index privileges: `view_index_metadata`,`manage_ilm`'
       externalDocs:
         description: About explaining lifecycle state
         url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/explain-lifecycle
@@ -256,15 +245,10 @@ paths:
       tags:
       - ilm
       summary: Get lifecycle policies
-      description: '
+      description: '## Required authorization
 
 
-        ## Required authorization
-
-
-        * Cluster privileges: `manage_ilm`,`read_ilm`
-
-        '
+        * Cluster privileges: `manage_ilm`,`read_ilm`'
       operationId: ilm-get-lifecycle-1
       parameters:
       - $ref: '#/components/parameters/ilm.get_lifecycle-master_timeout'
@@ -287,9 +271,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `read_ilm`
-
-        '
+        * Cluster privileges: `read_ilm`'
       operationId: ilm-get-status
       responses:
         '200':
@@ -473,9 +455,7 @@ paths:
         ## Required authorization
 
 
-        * Index privileges: `manage_ilm`
-
-        '
+        * Index privileges: `manage_ilm`'
       operationId: ilm-move-to-step
       parameters:
       - in: path
@@ -547,9 +527,7 @@ paths:
         ## Required authorization
 
 
-        * Index privileges: `manage_ilm`
-
-        '
+        * Index privileges: `manage_ilm`'
       operationId: ilm-remove-policy
       parameters:
       - in: path
@@ -600,9 +578,7 @@ paths:
         ## Required authorization
 
 
-        * Index privileges: `manage_ilm`
-
-        '
+        * Index privileges: `manage_ilm`'
       operationId: ilm-retry
       parameters:
       - in: path
@@ -639,9 +615,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_ilm`
-
-        '
+        * Cluster privileges: `manage_ilm`'
       operationId: ilm-start
       parameters:
       - in: query
@@ -695,9 +669,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage_ilm`
-
-        '
+        * Cluster privileges: `manage_ilm`'
       operationId: ilm-stop
       parameters:
       - in: query
@@ -734,7 +706,233 @@ paths:
       - content: Elasticsearch
         name: product_name
 components:
+  parameters:
+    ilm.get_lifecycle-master_timeout:
+      in: query
+      name: master_timeout
+      description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    ilm.get_lifecycle-timeout:
+      in: query
+      name: timeout
+      description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    ilm.get_lifecycle-policy:
+      in: path
+      name: policy
+      description: Identifier for the policy.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Name'
+      style: simple
   schemas:
+    _types.IndexName:
+      type: string
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    ilm._types.ShrinkAction:
+      type: object
+      properties:
+        number_of_shards:
+          type: number
+        max_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        allow_write_after_shrink:
+          type: boolean
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    ilm._types.Policy:
+      type: object
+      properties:
+        phases:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phases'
+        _meta:
+          description: Arbitrary metadata that is not automatically generated or used by Elasticsearch.
+          allOf:
+          - $ref: '#/components/schemas/_types.Metadata'
+      required:
+      - phases
+    ilm.explain_lifecycle.LifecycleExplain:
+      discriminator:
+        propertyName: managed
+        mapping:
+          'false': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
+          'true': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
+      oneOf:
+      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
+      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
+    ilm._types.ForceMergeAction:
+      type: object
+      properties:
+        max_num_segments:
+          type: number
+        index_codec:
+          type: string
+      required:
+      - max_num_segments
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    ilm.get_lifecycle.Lifecycle:
+      type: object
+      properties:
+        modified_date:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Policy'
+        version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+      required:
+      - modified_date
+      - policy
+      - version
+    ilm._types.MigrateAction:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+    _types.Name:
+      type: string
+    ilm._types.SetPriorityAction:
+      type: object
+      properties:
+        priority:
+          type: number
+    _types.DurationLarge:
+      description: 'A date histogram interval. Similar to `Duration` with additional units: `w` (week), `M` (month), `q` (quarter) and
+
+        `y` (year)'
+      type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    ilm._types.WaitForSnapshotAction:
+      type: object
+      properties:
+        policy:
+          type: string
+      required:
+      - policy
+    ilm._types.AllocateAction:
+      type: object
+      properties:
+        number_of_replicas:
+          type: number
+        total_shards_per_node:
+          type: number
+        include:
+          type: object
+          additionalProperties:
+            type: string
+        exclude:
+          type: object
+          additionalProperties:
+            type: string
+        require:
+          type: object
+          additionalProperties:
+            type: string
+    ilm._types.DownsampleAction:
+      type: object
+      properties:
+        fixed_interval:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationLarge'
+        wait_timeout:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+      required:
+      - fixed_interval
+    _types.ByteSize:
+      oneOf:
+      - type: number
+      - type: string
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    ilm._types.DeleteAction:
+      type: object
+      properties:
+        delete_searchable_snapshot:
+          type: boolean
+    ilm._types.RolloverAction:
+      type: object
+      properties:
+        max_size:
+          deprecated: true
+          description: The `max_size` condition has been deprecated in 9.3.0 and `max_primary_shard_size` should be used instead
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        max_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        max_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        max_docs:
+          type: number
+        max_primary_shard_docs:
+          type: number
+        min_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        min_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        min_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        min_docs:
+          type: number
+        min_primary_shard_docs:
+          type: number
     ilm.explain_lifecycle.LifecycleExplainPhaseExecution:
       type: object
       properties:
@@ -754,16 +952,122 @@ components:
       - policy
       - version
       - modified_date_in_millis
-    _types.AcknowledgedResponseBase:
+    ilm._types.Phase:
       type: object
       properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+        actions:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Actions'
+        min_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+    _types.LifecycleOperationMode:
+      type: string
+      enum:
+      - RUNNING
+      - STOPPING
+      - STOPPED
+    ilm.explain_lifecycle.LifecycleExplainUnmanaged:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        managed:
+          type: string
+          enum:
+          - 'false'
+      required:
+      - index
+      - managed
+    ilm._types.SearchableSnapshotAction:
+      type: object
+      properties:
+        snapshot_repository:
+          type: string
+        force_merge_index:
           type: boolean
       required:
-      - acknowledged
-    _types.IndexName:
-      type: string
+      - snapshot_repository
+    ilm._types.Phases:
+      type: object
+      properties:
+        cold:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        delete:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        frozen:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        hot:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        warm:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    ilm._types.Actions:
+      type: object
+      properties:
+        allocate:
+          description: 'Phases allowed: warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.AllocateAction'
+        delete:
+          description: 'Phases allowed: delete.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.DeleteAction'
+        downsample:
+          description: 'Phases allowed: hot, warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.DownsampleAction'
+        freeze:
+          deprecated: true
+          description: The freeze action is a noop in 8.x
+          allOf:
+          - $ref: '#/components/schemas/_types.EmptyObject'
+        forcemerge:
+          description: 'Phases allowed: hot, warm.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.ForceMergeAction'
+        migrate:
+          description: 'Phases allowed: warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.MigrateAction'
+        readonly:
+          description: 'Phases allowed: hot, warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/_types.EmptyObject'
+        rollover:
+          description: 'Phases allowed: hot.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.RolloverAction'
+        set_priority:
+          description: 'Phases allowed: hot, warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.SetPriorityAction'
+        searchable_snapshot:
+          description: 'Phases allowed: hot, cold, frozen.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.SearchableSnapshotAction'
+        shrink:
+          description: 'Phases allowed: hot, warm.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.ShrinkAction'
+        unfollow:
+          description: 'Phases allowed: hot, warm, cold, frozen.'
+          allOf:
+          - $ref: '#/components/schemas/_types.EmptyObject'
+        wait_for_snapshot:
+          description: 'Phases allowed: delete.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.WaitForSnapshotAction'
+    _types.VersionNumber:
+      type: number
     ilm.explain_lifecycle.LifecycleExplainManaged:
       type: object
       properties:
@@ -856,252 +1160,6 @@ components:
       - index
       - managed
       - skip
-    ilm._types.DeleteAction:
-      type: object
-      properties:
-        delete_searchable_snapshot:
-          type: boolean
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    ilm._types.Phases:
-      type: object
-      properties:
-        cold:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        delete:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        frozen:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        hot:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        warm:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-    ilm._types.SearchableSnapshotAction:
-      type: object
-      properties:
-        snapshot_repository:
-          type: string
-        force_merge_index:
-          type: boolean
-      required:
-      - snapshot_repository
-    ilm._types.Actions:
-      type: object
-      properties:
-        allocate:
-          description: 'Phases allowed: warm, cold.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.AllocateAction'
-        delete:
-          description: 'Phases allowed: delete.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.DeleteAction'
-        downsample:
-          description: 'Phases allowed: hot, warm, cold.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.DownsampleAction'
-        freeze:
-          deprecated: true
-          description: The freeze action is a noop in 8.x
-          allOf:
-          - $ref: '#/components/schemas/_types.EmptyObject'
-        forcemerge:
-          description: 'Phases allowed: hot, warm.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.ForceMergeAction'
-        migrate:
-          description: 'Phases allowed: warm, cold.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.MigrateAction'
-        readonly:
-          description: 'Phases allowed: hot, warm, cold.'
-          allOf:
-          - $ref: '#/components/schemas/_types.EmptyObject'
-        rollover:
-          description: 'Phases allowed: hot.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.RolloverAction'
-        set_priority:
-          description: 'Phases allowed: hot, warm, cold.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.SetPriorityAction'
-        searchable_snapshot:
-          description: 'Phases allowed: hot, cold, frozen.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.SearchableSnapshotAction'
-        shrink:
-          description: 'Phases allowed: hot, warm.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.ShrinkAction'
-        unfollow:
-          description: 'Phases allowed: hot, warm, cold, frozen.'
-          allOf:
-          - $ref: '#/components/schemas/_types.EmptyObject'
-        wait_for_snapshot:
-          description: 'Phases allowed: delete.'
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.WaitForSnapshotAction'
-    ilm.get_lifecycle.Lifecycle:
-      type: object
-      properties:
-        modified_date:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        policy:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Policy'
-        version:
-          allOf:
-          - $ref: '#/components/schemas/_types.VersionNumber'
-      required:
-      - modified_date
-      - policy
-      - version
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    ilm._types.MigrateAction:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-    ilm._types.Policy:
-      type: object
-      properties:
-        phases:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phases'
-        _meta:
-          description: Arbitrary metadata that is not automatically generated or used by Elasticsearch.
-          allOf:
-          - $ref: '#/components/schemas/_types.Metadata'
-      required:
-      - phases
-    _types.LifecycleOperationMode:
-      type: string
-      enum:
-      - RUNNING
-      - STOPPING
-      - STOPPED
-    _types.DurationValueUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    ilm._types.ForceMergeAction:
-      type: object
-      properties:
-        max_num_segments:
-          type: number
-        index_codec:
-          type: string
-      required:
-      - max_num_segments
-    ilm._types.SetPriorityAction:
-      type: object
-      properties:
-        priority:
-          type: number
-    _types.ByteSize:
-      oneOf:
-      - type: number
-      - type: string
-    ilm._types.RolloverAction:
-      type: object
-      properties:
-        max_size:
-          deprecated: true
-          description: The `max_size` condition has been deprecated in 9.3.0 and `max_primary_shard_size` should be used instead
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        max_primary_shard_size:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        max_age:
-          allOf:
-          - $ref: '#/components/schemas/_types.Duration'
-        max_docs:
-          type: number
-        max_primary_shard_docs:
-          type: number
-        min_size:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        min_primary_shard_size:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        min_age:
-          allOf:
-          - $ref: '#/components/schemas/_types.Duration'
-        min_docs:
-          type: number
-        min_primary_shard_docs:
-          type: number
-    ilm._types.DownsampleAction:
-      type: object
-      properties:
-        fixed_interval:
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationLarge'
-        wait_timeout:
-          allOf:
-          - $ref: '#/components/schemas/_types.Duration'
-      required:
-      - fixed_interval
-    ilm.explain_lifecycle.LifecycleExplainUnmanaged:
-      type: object
-      properties:
-        index:
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-        managed:
-          type: string
-          enum:
-          - 'false'
-      required:
-      - index
-      - managed
-    _types.Indices:
-      oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.IndexName'
-    _types.EmptyObject:
-      description: For empty Class assignments
-      type: object
-    _types.DurationLarge:
-      description: 'A date histogram interval. Similar to `Duration` with additional units: `w` (week), `M` (month), `q` (quarter) and
-
-        `y` (year)'
-      type: string
-    ilm._types.Phase:
-      type: object
-      properties:
-        actions:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Actions'
-        min_age:
-          allOf:
-          - $ref: '#/components/schemas/_types.Duration'
     ilm.move_to_step.StepKey:
       type: object
       properties:
@@ -1115,68 +1173,12 @@ components:
           type: string
       required:
       - phase
-    _types.Metadata:
-      type: object
-      additionalProperties:
-        type: object
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-    _types.VersionNumber:
+    _types.UnitMillis:
+      description: Time unit for milliseconds
       type: number
-    _types.Name:
-      type: string
-    ilm._types.WaitForSnapshotAction:
+    _types.EmptyObject:
+      description: For empty Class assignments
       type: object
-      properties:
-        policy:
-          type: string
-      required:
-      - policy
-    ilm.explain_lifecycle.LifecycleExplain:
-      discriminator:
-        propertyName: managed
-        mapping:
-          'false': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
-          'true': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
-      oneOf:
-      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
-      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
-    ilm._types.AllocateAction:
-      type: object
-      properties:
-        number_of_replicas:
-          type: number
-        total_shards_per_node:
-          type: number
-        include:
-          type: object
-          additionalProperties:
-            type: string
-        exclude:
-          type: object
-          additionalProperties:
-            type: string
-        require:
-          type: object
-          additionalProperties:
-            type: string
-    ilm._types.ShrinkAction:
-      type: object
-      properties:
-        number_of_shards:
-          type: number
-        max_primary_shard_size:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        allow_write_after_shrink:
-          type: boolean
   responses:
     ilm.get_lifecycle-200:
       description: ''
@@ -1190,33 +1192,3 @@ components:
             GetLifecycleResponseExample1:
               description: A successful response when retrieving a lifecycle policy.
               value: "{\n  \"my_policy\": {\n    \"version\": 1,\n    \"modified_date\": 82392349,\n    \"policy\": {\n      \"phases\": {\n        \"warm\": {\n          \"min_age\": \"10d\",\n          \"actions\": {\n            \"forcemerge\": {\n              \"max_num_segments\": 1\n            }\n          }\n        },\n        \"delete\": {\n          \"min_age\": \"30d\",\n          \"actions\": {\n            \"delete\": {\n              \"delete_searchable_snapshot\": true\n            }\n          }\n        }\n      }\n    },\n    \"in_use_by\" : {\n      \"indices\" : [],\n      \"data_streams\" : [],\n      \"composable_templates\" : []\n    }\n  }\n}"
-  parameters:
-    ilm.get_lifecycle-master_timeout:
-      in: query
-      name: master_timeout
-      description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
-    ilm.get_lifecycle-timeout:
-      in: query
-      name: timeout
-      description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
-    ilm.get_lifecycle-policy:
-      in: path
-      name: policy
-      description: Identifier for the policy.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Name'
-      style: simple

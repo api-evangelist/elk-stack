@@ -31,7 +31,13 @@ paths:
       tags:
       - Extensions
       summary: Create an extension
-      description: "Creates the extension.\n The extensions API supports two types of usage patterns.\n A). Specify a `download_url`, http or https URL,  where the extension is currently hosted. This will result in extension being copied to elastic repository.\n B). Create only the extension metadata using the `POST` endpoint and then use `PUT` to upload the extension file. Leave the `download_url` unspecified in this case.\n"
+      description: 'Creates the extension.
+
+        The extensions API supports two types of usage patterns.
+
+        A). Specify a `download_url`, http or https URL, where the extension is currently hosted. This will result in extension being copied to elastic repository.
+
+        B). Create only the extension metadata using the `POST` endpoint and then use `PUT` to upload the extension file. Leave the `download_url` unspecified in this case.'
       operationId: create-extension
       responses:
         '201':
@@ -422,6 +428,34 @@ paths:
         tag: Deployments - Extensions
 components:
   schemas:
+    ExtensionFileMetadata:
+      type: object
+      properties:
+        last_modified_date:
+          type: string
+          format: date-time
+          description: The date and time the extension was last modified.
+        size:
+          type: integer
+          format: int64
+          description: The extension file size in bytes.
+        url:
+          type: string
+          format: uri
+          description: The temporary URL to download the extension file. Usable for verification.
+    EmptyResponse:
+      type: object
+    Extensions:
+      type: object
+      required:
+      - extensions
+      properties:
+        extensions:
+          type: array
+          description: The list of extensions.
+          items:
+            $ref: '#/components/schemas/Extension'
+      description: A collection of extensions
     BasicFailedReplyElement:
       type: object
       required:
@@ -439,71 +473,6 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    Extensions:
-      type: object
-      required:
-      - extensions
-      properties:
-        extensions:
-          type: array
-          description: The list of extensions.
-          items:
-            $ref: '#/components/schemas/Extension'
-      description: A collection of extensions
-    EmptyResponse:
-      type: object
-    Extension:
-      type: object
-      required:
-      - extension_type
-      - id
-      - name
-      - url
-      - version
-      properties:
-        id:
-          type: string
-          description: The extension ID
-        name:
-          type: string
-          description: The extension name.
-        description:
-          type: string
-          description: The extension description.
-        url:
-          type: string
-          description: The extension URL to be used in the plan.
-        download_url:
-          type: string
-          description: The download URL specified during extension creation.
-        extension_type:
-          type: string
-          description: The extension type.
-          enum:
-          - plugin
-          - bundle
-        version:
-          type: string
-          description: The Elasticsearch version.
-        deployments:
-          type: array
-          description: List of deployments using this extension. Up to only 10000 deployments will be included in the list.
-          items:
-            type: string
-        file_metadata:
-          description: The extension file metadata.
-          $ref: '#/components/schemas/ExtensionFileMetadata'
-      description: An API extension. It represents clusters' plugins and bundles
     UpdateExtensionRequest:
       type: object
       required:
@@ -556,21 +525,58 @@ components:
           type: string
           description: The Elasticsearch version.
       description: The body of a request to create a new extension
-    ExtensionFileMetadata:
+    Extension:
       type: object
+      required:
+      - extension_type
+      - id
+      - name
+      - url
+      - version
       properties:
-        last_modified_date:
+        id:
           type: string
-          format: date-time
-          description: The date and time the extension was last modified.
-        size:
-          type: integer
-          format: int64
-          description: The extension file size in bytes.
+          description: The extension ID
+        name:
+          type: string
+          description: The extension name.
+        description:
+          type: string
+          description: The extension description.
         url:
           type: string
-          format: uri
-          description: The temporary URL to download the extension file. Usable for verification.
+          description: The extension URL to be used in the plan.
+        download_url:
+          type: string
+          description: The download URL specified during extension creation.
+        extension_type:
+          type: string
+          description: The extension type.
+          enum:
+          - plugin
+          - bundle
+        version:
+          type: string
+          description: The Elasticsearch version.
+        deployments:
+          type: array
+          description: List of deployments using this extension. Up to only 10000 deployments will be included in the list.
+          items:
+            type: string
+        file_metadata:
+          description: The extension file metadata.
+          $ref: '#/components/schemas/ExtensionFileMetadata'
+      description: An API extension. It represents clusters' plugins and bundles
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

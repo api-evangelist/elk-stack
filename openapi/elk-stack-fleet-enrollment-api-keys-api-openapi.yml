@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Fleet enrollment API keys API
   version: ''
   x-doc-license:
@@ -74,9 +21,7 @@ security:
 - basicAuth: []
 tags:
 - name: Fleet enrollment API keys
-  description: 'Fleet enrollment API keys APIs enable you to manage enrollment API keys for Fleet, including creating, retrieving, and revoking API keys used for agent enrollment.
-
-    '
+  description: Fleet enrollment API keys APIs enable you to manage enrollment API keys for Fleet, including creating, retrieving, and revoking API keys used for agent enrollment.
   x-displayName: Fleet enrollment API keys
 paths:
   /api/fleet/enrollment_api_keys:
@@ -84,13 +29,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/enrollment_api_keys</span></div>
+        get /s/{space_id}/api/fleet/enrollment_api_keys
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        List all enrollment API keys.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all OR fleet-setup.'
+        List all enrollment API keys.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all OR fleet-setup.'
       operationId: get-fleet-enrollment-api-keys
       parameters:
       - description: Page number
@@ -181,13 +129,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/enrollment_api_keys</span></div>
+        post /s/{space_id}/api/fleet/enrollment_api_keys
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an enrollment API key for a given agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Create an enrollment API key for a given agent policy.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-enrollment-api-keys
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -268,13 +219,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/enrollment_api_keys/_bulk_delete</span></div>
+        post /s/{space_id}/api/fleet/enrollment_api_keys/_bulk_delete
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Revoke or delete multiple enrollment API keys.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Revoke or delete multiple enrollment API keys.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-enrollment-api-keys-bulk-delete
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -357,13 +311,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/enrollment_api_keys/{keyId}</span></div>
+        delete /s/{space_id}/api/fleet/enrollment_api_keys/{keyId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Revoke or delete an enrollment API key by ID. Use `forceDelete=true` to remove the document.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Revoke or delete an enrollment API key by ID. Use `forceDelete=true` to remove the document.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: delete-fleet-enrollment-api-keys-keyid
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -454,13 +411,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/enrollment_api_keys/{keyId}</span></div>
+        get /s/{space_id}/api/fleet/enrollment_api_keys/{keyId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get an enrollment API key by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all OR fleet-setup.'
+        Get an enrollment API key by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all OR fleet-setup.'
       operationId: get-fleet-enrollment-api-keys-keyid
       parameters:
       - description: The ID of the enrollment API key
@@ -535,21 +495,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_new_enrollment_api_key:
-      additionalProperties: false
-      properties:
-        expiration:
-          description: The expiration time for the enrollment token, expressed as a duration (for example, 30d, 24h, 90m). By default, enrollment tokens never expire.
-          maxLength: 20
-          type: string
-        name:
-          type: string
-        policy_id:
-          type: string
-      required:
-      - policy_id
-      title: new_enrollment_api_key
-      type: object
     Kibana_HTTP_APIs_get_enrollment_api_keys_response:
       additionalProperties: false
       properties:
@@ -578,6 +523,21 @@ components:
       - list
       title: get_enrollment_api_keys_response
       type: object
+    Kibana_HTTP_APIs_new_enrollment_api_key:
+      additionalProperties: false
+      properties:
+        expiration:
+          description: The expiration time for the enrollment token, expressed as a duration (for example, 30d, 24h, 90m). By default, enrollment tokens never expire.
+          maxLength: 20
+          type: string
+        name:
+          type: string
+        policy_id:
+          type: string
+      required:
+      - policy_id
+      title: new_enrollment_api_key
+      type: object
     Kibana_HTTP_APIs_create_enrollment_api_key_response:
       additionalProperties: false
       properties:
@@ -591,6 +551,17 @@ components:
       - item
       - action
       title: create_enrollment_api_key_response
+      type: object
+    Kibana_HTTP_APIs_delete_enrollment_api_key_response:
+      additionalProperties: false
+      properties:
+        action:
+          enum:
+          - deleted
+          type: string
+      required:
+      - action
+      title: delete_enrollment_api_key_response
       type: object
     Kibana_HTTP_APIs_enrollment_api_key:
       additionalProperties: false
@@ -627,16 +598,27 @@ components:
       - created_at
       title: enrollment_api_key
       type: object
-    Kibana_HTTP_APIs_delete_enrollment_api_key_response:
+    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_request:
       additionalProperties: false
       properties:
-        action:
-          enum:
-          - deleted
+        forceDelete:
+          default: false
+          description: When false (default), invalidate the API key and mark the token as inactive. When true, also delete the token document.
+          type: boolean
+        includeHidden:
+          default: false
+          description: When true, allow deletion of hidden enrollment tokens (managed/agentless policies). Defaults to false.
+          type: boolean
+        kuery:
+          description: KQL query to select enrollment tokens to delete.
           type: string
-      required:
-      - action
-      title: delete_enrollment_api_key_response
+        tokenIds:
+          description: List of enrollment token IDs to delete.
+          items:
+            type: string
+          maxItems: 10000
+          type: array
+      title: bulk_delete_enrollment_api_keys_request
       type: object
     Kibana_HTTP_APIs_enrollment_api_key_response:
       additionalProperties: false
@@ -664,28 +646,6 @@ components:
       - successCount
       - errorCount
       title: bulk_delete_enrollment_api_keys_response
-      type: object
-    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_request:
-      additionalProperties: false
-      properties:
-        forceDelete:
-          default: false
-          description: When false (default), invalidate the API key and mark the token as inactive. When true, also delete the token document.
-          type: boolean
-        includeHidden:
-          default: false
-          description: When true, allow deletion of hidden enrollment tokens (managed/agentless policies). Defaults to false.
-          type: boolean
-        kuery:
-          description: KQL query to select enrollment tokens to delete.
-          type: string
-        tokenIds:
-          description: List of enrollment token IDs to delete.
-          items:
-            type: string
-          maxItems: 10000
-          type: array
-      title: bulk_delete_enrollment_api_keys_request
       type: object
   securitySchemes:
     apiKeyAuth:

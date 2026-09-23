@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Elasticsearch Request & Response Specification Health Report API
+  title: Elasticsearch Request & Response Specification Health…
   license:
     name: Apache 2.0
     url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
@@ -101,15 +101,6 @@ paths:
         name: product_name
 components:
   schemas:
-    _global.health_report.ShardsAvailabilityIndicator:
-      description: SHARDS_AVAILABILITY
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.ShardsAvailabilityIndicatorDetails'
     _global.health_report.Impact:
       type: object
       properties:
@@ -128,6 +119,8 @@ components:
       - id
       - impact_areas
       - severity
+    _types.IndexName:
+      type: string
     _global.health_report.ProjectEncryptionKeyDetails:
       type: object
       properties:
@@ -150,16 +143,24 @@ components:
       - active_password_id
       - encryption_required
       - state
-    _global.health_report.FileSettingsIndicatorDetails:
-      type: object
-      properties:
-        failure_streak:
-          type: number
-        most_recent_failure:
-          type: string
-      required:
-      - failure_streak
-      - most_recent_failure
+    _global.health_report.IlmIndicator:
+      description: ILM
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.IlmIndicatorDetails'
+    _global.health_report.DataStreamLifecycleIndicator:
+      description: DATA_STREAM_LIFECYCLE
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.DataStreamLifecycleDetails'
     _global.health_report.DiskIndicatorDetails:
       type: object
       properties:
@@ -179,74 +180,34 @@ components:
       - nodes_over_high_watermark
       - nodes_over_flood_stage_watermark
       - nodes_with_unknown_disk_status
-    _types.IndexName:
-      type: string
-    _global.health_report.SlmIndicatorUnhealthyPolicies:
+    _global.health_report.MasterIsStableIndicatorExceptionFetchingHistory:
       type: object
       properties:
-        count:
-          type: number
-        invocations_since_last_success:
-          type: object
-          additionalProperties:
-            type: number
+        message:
+          type: string
+        stack_trace:
+          type: string
       required:
-      - count
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    _global.health_report.DiskIndicator:
-      description: DISK
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.DiskIndicatorDetails'
-    _global.health_report.FileSettingsIndicator:
-      description: FILE_SETTINGS
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.FileSettingsIndicatorDetails'
-    _global.health_report.DataStreamLifecycleIndicator:
-      description: DATA_STREAM_LIFECYCLE
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.DataStreamLifecycleDetails'
-    _global.health_report.DataStreamLifecycleDetails:
+      - message
+      - stack_trace
+    _global.health_report.IndicatorNode:
       type: object
       properties:
-        stagnating_backing_indices_count:
-          type: number
-        total_backing_indices_in_error:
-          type: number
-        stagnating_backing_indices:
-          type: array
-          items:
-            $ref: '#/components/schemas/_global.health_report.StagnatingBackingIndices'
+        name:
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        node_id:
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
       required:
-      - stagnating_backing_indices_count
-      - total_backing_indices_in_error
+      - name
+      - node_id
     _global.health_report.StagnatingBackingIndices:
       type: object
       properties:
@@ -261,17 +222,78 @@ components:
       - index_name
       - first_occurrence_timestamp
       - retry_count
-    _global.health_report.RepositoryIntegrityIndicatorDetails:
+    _global.health_report.MasterIsStableIndicator:
+      description: MASTER_IS_STABLE
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.MasterIsStableIndicatorDetails'
+    _global.health_report.ShardsAvailabilityIndicator:
+      description: SHARDS_AVAILABILITY
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.ShardsAvailabilityIndicatorDetails'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    _global.health_report.ProjectEncryptionKeyIndicator:
+      description: PROJECT_ENCRYPTION_KEY
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.ProjectEncryptionKeyDetails'
+    _global.health_report.DiagnosisAffectedResources:
       type: object
       properties:
-        total_repositories:
-          type: number
-        corrupted_repositories:
-          type: number
-        corrupted:
+        indices:
+          allOf:
+          - $ref: '#/components/schemas/_types.Indices'
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/_global.health_report.IndicatorNode'
+        slm_policies:
           type: array
           items:
             type: string
+        feature_states:
+          type: array
+          items:
+            type: string
+        snapshot_repositories:
+          type: array
+          items:
+            type: string
+    _global.health_report.ShardsCapacityIndicatorTierDetail:
+      type: object
+      properties:
+        max_shards_in_cluster:
+          type: number
+        current_used_shards:
+          type: number
+      required:
+      - max_shards_in_cluster
     _global.health_report.MasterIsStableIndicatorClusterFormationNode:
       type: object
       properties:
@@ -284,6 +306,15 @@ components:
       required:
       - node_id
       - cluster_formation_message
+    _global.health_report.DiskIndicator:
+      description: DISK
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.DiskIndicatorDetails'
     _global.health_report.RepositoryIntegrityIndicator:
       description: REPOSITORY_INTEGRITY
       allOf:
@@ -293,12 +324,26 @@ components:
           details:
             allOf:
             - $ref: '#/components/schemas/_global.health_report.RepositoryIntegrityIndicatorDetails'
-    _types.LifecycleOperationMode:
-      type: string
-      enum:
-      - RUNNING
-      - STOPPING
-      - STOPPED
+    _global.health_report.Diagnosis:
+      type: object
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+        affected_resources:
+          allOf:
+          - $ref: '#/components/schemas/_global.health_report.DiagnosisAffectedResources'
+        cause:
+          type: string
+        help_url:
+          type: string
+      required:
+      - id
+      - action
+      - affected_resources
+      - cause
+      - help_url
     _global.health_report.Indicators:
       type: object
       properties:
@@ -332,68 +377,34 @@ components:
         project_encryption_key:
           allOf:
           - $ref: '#/components/schemas/_global.health_report.ProjectEncryptionKeyIndicator'
-    _global.health_report.MasterIsStableIndicatorDetails:
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    _global.health_report.IndicatorHealthStatus:
+      type: string
+      enum:
+      - green
+      - yellow
+      - red
+      - unknown
+      - unavailable
+    _types.LifecycleOperationMode:
+      type: string
+      enum:
+      - RUNNING
+      - STOPPING
+      - STOPPED
+    _global.health_report.RepositoryIntegrityIndicatorDetails:
       type: object
       properties:
-        current_master:
-          allOf:
-          - $ref: '#/components/schemas/_global.health_report.IndicatorNode'
-        recent_masters:
-          type: array
-          items:
-            $ref: '#/components/schemas/_global.health_report.IndicatorNode'
-        exception_fetching_history:
-          allOf:
-          - $ref: '#/components/schemas/_global.health_report.MasterIsStableIndicatorExceptionFetchingHistory'
-        cluster_formation:
-          type: array
-          items:
-            $ref: '#/components/schemas/_global.health_report.MasterIsStableIndicatorClusterFormationNode'
-      required:
-      - current_master
-      - recent_masters
-    _global.health_report.IlmIndicatorDetails:
-      type: object
-      properties:
-        ilm_status:
-          allOf:
-          - $ref: '#/components/schemas/_types.LifecycleOperationMode'
-        policies:
+        total_repositories:
           type: number
-        stagnating_indices:
+        corrupted_repositories:
           type: number
-      required:
-      - ilm_status
-      - policies
-      - stagnating_indices
-    _global.health_report.IlmIndicator:
-      description: ILM
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.IlmIndicatorDetails'
-    _global.health_report.DiagnosisAffectedResources:
-      type: object
-      properties:
-        indices:
-          allOf:
-          - $ref: '#/components/schemas/_types.Indices'
-        nodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/_global.health_report.IndicatorNode'
-        slm_policies:
-          type: array
-          items:
-            type: string
-        feature_states:
-          type: array
-          items:
-            type: string
-        snapshot_repositories:
+        corrupted:
           type: array
           items:
             type: string
@@ -406,12 +417,51 @@ components:
           details:
             allOf:
             - $ref: '#/components/schemas/_global.health_report.ShardsCapacityIndicatorDetails'
-    _types.Indices:
-      oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.IndexName'
+    _global.health_report.ShardsCapacityIndicatorDetails:
+      type: object
+      properties:
+        data:
+          allOf:
+          - $ref: '#/components/schemas/_global.health_report.ShardsCapacityIndicatorTierDetail'
+        frozen:
+          allOf:
+          - $ref: '#/components/schemas/_global.health_report.ShardsCapacityIndicatorTierDetail'
+      required:
+      - data
+      - frozen
+    _global.health_report.SlmIndicatorDetails:
+      type: object
+      properties:
+        slm_status:
+          allOf:
+          - $ref: '#/components/schemas/_types.LifecycleOperationMode'
+        policies:
+          type: number
+        unhealthy_policies:
+          allOf:
+          - $ref: '#/components/schemas/_global.health_report.SlmIndicatorUnhealthyPolicies'
+      required:
+      - slm_status
+      - policies
+    _global.health_report.SlmIndicator:
+      description: SLM
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.SlmIndicatorDetails'
+    _global.health_report.FileSettingsIndicatorDetails:
+      type: object
+      properties:
+        failure_streak:
+          type: number
+        most_recent_failure:
+          type: string
+      required:
+      - failure_streak
+      - most_recent_failure
     _global.health_report.ShardsAvailabilityIndicatorDetails:
       type: object
       properties:
@@ -446,36 +496,6 @@ components:
       - started_replicas
       - unassigned_primaries
       - unassigned_replicas
-    _global.health_report.MasterIsStableIndicator:
-      description: MASTER_IS_STABLE
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.MasterIsStableIndicatorDetails'
-    _global.health_report.ShardsCapacityIndicatorDetails:
-      type: object
-      properties:
-        data:
-          allOf:
-          - $ref: '#/components/schemas/_global.health_report.ShardsCapacityIndicatorTierDetail'
-        frozen:
-          allOf:
-          - $ref: '#/components/schemas/_global.health_report.ShardsCapacityIndicatorTierDetail'
-      required:
-      - data
-      - frozen
-    _global.health_report.SlmIndicator:
-      description: SLM
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.SlmIndicatorDetails'
     _global.health_report.ImpactArea:
       type: string
       enum:
@@ -483,65 +503,74 @@ components:
       - ingest
       - backup
       - deployment_management
-    _global.health_report.IndicatorHealthStatus:
-      type: string
-      enum:
-      - green
-      - yellow
-      - red
-      - unknown
-      - unavailable
-    _global.health_report.MasterIsStableIndicatorExceptionFetchingHistory:
+    _global.health_report.DataStreamLifecycleDetails:
       type: object
       properties:
-        message:
-          type: string
-        stack_trace:
-          type: string
+        stagnating_backing_indices_count:
+          type: number
+        total_backing_indices_in_error:
+          type: number
+        stagnating_backing_indices:
+          type: array
+          items:
+            $ref: '#/components/schemas/_global.health_report.StagnatingBackingIndices'
       required:
-      - message
-      - stack_trace
-    _global.health_report.SlmIndicatorDetails:
+      - stagnating_backing_indices_count
+      - total_backing_indices_in_error
+    _global.health_report.IlmIndicatorDetails:
       type: object
       properties:
-        slm_status:
+        ilm_status:
           allOf:
           - $ref: '#/components/schemas/_types.LifecycleOperationMode'
         policies:
           type: number
-        unhealthy_policies:
-          allOf:
-          - $ref: '#/components/schemas/_global.health_report.SlmIndicatorUnhealthyPolicies'
+        stagnating_indices:
+          type: number
       required:
-      - slm_status
+      - ilm_status
       - policies
-    _global.health_report.IndicatorNode:
+      - stagnating_indices
+    _global.health_report.FileSettingsIndicator:
+      description: FILE_SETTINGS
+      allOf:
+      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
+      - type: object
+        properties:
+          details:
+            allOf:
+            - $ref: '#/components/schemas/_global.health_report.FileSettingsIndicatorDetails'
+    _global.health_report.MasterIsStableIndicatorDetails:
       type: object
       properties:
-        name:
-          oneOf:
-          - type: string
-          - type:
-            - string
-            - 'null'
-        node_id:
-          oneOf:
-          - type: string
-          - type:
-            - string
-            - 'null'
+        current_master:
+          allOf:
+          - $ref: '#/components/schemas/_global.health_report.IndicatorNode'
+        recent_masters:
+          type: array
+          items:
+            $ref: '#/components/schemas/_global.health_report.IndicatorNode'
+        exception_fetching_history:
+          allOf:
+          - $ref: '#/components/schemas/_global.health_report.MasterIsStableIndicatorExceptionFetchingHistory'
+        cluster_formation:
+          type: array
+          items:
+            $ref: '#/components/schemas/_global.health_report.MasterIsStableIndicatorClusterFormationNode'
       required:
-      - name
-      - node_id
-    _global.health_report.ShardsCapacityIndicatorTierDetail:
+      - current_master
+      - recent_masters
+    _global.health_report.SlmIndicatorUnhealthyPolicies:
       type: object
       properties:
-        max_shards_in_cluster:
+        count:
           type: number
-        current_used_shards:
-          type: number
+        invocations_since_last_success:
+          type: object
+          additionalProperties:
+            type: number
       required:
-      - max_shards_in_cluster
+      - count
     _global.health_report.BaseIndicator:
       type: object
       properties:
@@ -561,44 +590,7 @@ components:
       required:
       - status
       - symptom
-    _global.health_report.Diagnosis:
-      type: object
-      properties:
-        id:
-          type: string
-        action:
-          type: string
-        affected_resources:
-          allOf:
-          - $ref: '#/components/schemas/_global.health_report.DiagnosisAffectedResources'
-        cause:
-          type: string
-        help_url:
-          type: string
-      required:
-      - id
-      - action
-      - affected_resources
-      - cause
-      - help_url
-    _global.health_report.ProjectEncryptionKeyIndicator:
-      description: PROJECT_ENCRYPTION_KEY
-      allOf:
-      - $ref: '#/components/schemas/_global.health_report.BaseIndicator'
-      - type: object
-        properties:
-          details:
-            allOf:
-            - $ref: '#/components/schemas/_global.health_report.ProjectEncryptionKeyDetails'
   parameters:
-    health_report-timeout:
-      in: query
-      name: timeout
-      description: Explicit operation timeout.
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Duration'
-      style: form
     health_report-size:
       in: query
       name: size
@@ -607,6 +599,23 @@ components:
       schema:
         default: 1000.0
         type: number
+      style: form
+    health_report-verbose:
+      in: query
+      name: verbose
+      description: Opt-in for more information about the health of the system.
+      deprecated: false
+      schema:
+        default: true
+        type: boolean
+      style: form
+    health_report-timeout:
+      in: query
+      name: timeout
+      description: Explicit operation timeout.
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Duration'
       style: form
     health_report-feature:
       in: path
@@ -621,15 +630,6 @@ components:
           items:
             type: string
       style: simple
-    health_report-verbose:
-      in: query
-      name: verbose
-      description: Opt-in for more information about the health of the system.
-      deprecated: false
-      schema:
-        default: true
-        type: boolean
-      style: form
   responses:
     health_report-200:
       description: ''

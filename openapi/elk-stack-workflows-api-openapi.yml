@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Workflows API
   version: ''
   x-doc-license:
@@ -73,13 +20,11 @@ security:
 - apiKeyAuth: []
 - basicAuth: []
 tags:
-- name: workflows
+- name: Workflows
   description: 'Workflows enable you to automate multi-step processes directly in Kibana. Define sequences of steps in YAML to transform data insights into automated actions and outcomes, without needing external automation tools.
 
 
-    Use the workflows APIs to create, manage, and run workflows programmatically. You can also search, export, import, and monitor workflow executions.
-
-    '
+    Use the workflows APIs to create, manage, and run workflows programmatically. You can also search, export, import, and monitor workflow executions.'
   externalDocs:
     description: Workflows documentation
     url: https://www.elastic.co/docs/explore-analyze/workflows
@@ -90,13 +35,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows</span></div>
+        delete /s/{space_id}/api/workflows
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete multiple workflows by their IDs.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:delete.'
+        Delete multiple workflows by their IDs.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:delete.'
       operationId: delete-workflows
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -150,7 +98,7 @@ paths:
           description: Indicates a successful response
       summary: Bulk delete workflows
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - label: Soft delete (default)
         lang: curl
@@ -168,13 +116,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows</span></div>
+        get /s/{space_id}/api/workflows
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a paginated list of workflows with optional filtering.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:read, workflowsManagement:readExecution, workflowsManagement:managed:readExecution.'
+        Retrieve a paginated list of workflows with optional filtering.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:read, workflowsManagement:readExecution, workflowsManagement:managed:readExecution.'
       operationId: get-workflows
       parameters:
       - description: Free-text search query.
@@ -308,7 +259,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflows
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows?size=20&page=1&sortField=name&sortOrder=asc\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -324,13 +275,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows</span></div>
+        post /s/{space_id}/api/workflows
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create multiple workflows in a single request. Optionally overwrite existing workflows.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:create AND workflowsManagement:update.'
+        Create multiple workflows in a single request. Optionally overwrite existing workflows.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:create AND workflowsManagement:update.'
       operationId: post-workflows
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -405,7 +359,7 @@ paths:
           description: Indicates a successful response
       summary: Bulk create workflows
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows?overwrite=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"workflows\": [\n      { \"yaml\": \"name: Example definition\\nenabled: true\\ndescription: This is a workflow example\\ntriggers:\\n  - type: manual\\ninputs:\\n  - name: message\\n    type: string\\n    default: \\\"hello world\\\"\\nsteps:\\n  - name: hello_world_step\\n    type: console\\n    with:\\n      message: \\\"{{ inputs.message }}\\\"\\n\" },\n      { \"id\": \"workflow-b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"yaml\": \"name: Second workflow\\nenabled: false\\ndescription: Another workflow\\ntriggers:\\n  - type: manual\\nsteps:\\n  - name: log_step\\n    type: console\\n    with:\\n      message: \\\"Hello from second workflow\\\"\\n\" }\n    ]\n  }'\n"
@@ -420,13 +374,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/aggs</span></div>
+        get /s/{space_id}/api/workflows/aggs
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve distinct values and their counts for the specified workflow fields. Useful for building filters such as lists of tags or creators.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
+        Retrieve distinct values and their counts for the specified workflow fields. Useful for building filters such as lists of tags or creators.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
       operationId: get-workflows-aggs
       parameters:
       - description: Field or fields to aggregate on.
@@ -472,7 +429,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflow aggregations
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/aggs?fields=tags&fields=createdBy\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -489,13 +446,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/connectors</span></div>
+        get /s/{space_id}/api/workflows/connectors
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve the Kibana action connectors that can be used in workflow steps, grouped by connector type. Each type includes its configured instances and availability status.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read.'
+        Retrieve the Kibana action connectors that can be used in workflow steps, grouped by connector type. Each type includes its configured instances and availability status.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read.'
       operationId: get-workflows-connectors
       parameters: []
       responses:
@@ -537,7 +497,7 @@ paths:
           description: Indicates a successful response
       summary: Get available connectors
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/connectors\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -554,13 +514,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}</span></div>
+        get /s/{space_id}/api/workflows/executions/{executionId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve details of a single workflow execution by its ID.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Retrieve details of a single workflow execution by its ID.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-executions-executionid
       parameters:
       - description: Workflow execution ID
@@ -639,7 +602,7 @@ paths:
           description: Indicates a successful response
       summary: Get a workflow execution
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/executions/{executionId}?includeInput=true&includeOutput=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -656,13 +619,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/cancel</span></div>
+        post /s/{space_id}/api/workflows/executions/{executionId}/cancel
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Cancel a running workflow execution by its ID.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:cancelExecution.'
+        Cancel a running workflow execution by its ID.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:cancelExecution.'
       operationId: post-workflows-executions-executionid-cancel
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -683,7 +649,7 @@ paths:
           description: Indicates a successful response
       summary: Cancel a workflow execution
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/executions/{executionId}/cancel\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
@@ -700,13 +666,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/children</span></div>
+        get /s/{space_id}/api/workflows/executions/{executionId}/children
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve child workflow executions spawned by sub-workflow steps within a parent execution.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Retrieve child workflow executions spawned by sub-workflow steps within a parent execution.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-executions-executionid-children
       parameters:
       - description: Workflow execution ID
@@ -746,7 +715,7 @@ paths:
           description: Indicates a successful response
       summary: Get child executions
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/executions/{executionId}/children\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -763,13 +732,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/logs</span></div>
+        get /s/{space_id}/api/workflows/executions/{executionId}/logs
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve paginated logs for a workflow execution. Optionally filter by a specific step execution.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Retrieve paginated logs for a workflow execution. Optionally filter by a specific step execution.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-executions-executionid-logs
       parameters:
       - description: Workflow execution ID
@@ -853,7 +825,7 @@ paths:
           description: Indicates a successful response
       summary: Get execution logs
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/executions/{executionId}/logs?size=100&page=1\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -870,13 +842,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/resume</span></div>
+        post /s/{space_id}/api/workflows/executions/{executionId}/resume
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Resume a paused workflow execution with the provided input.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:execute.'
+        Resume a paused workflow execution with the provided input.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:execute.'
       operationId: post-workflows-executions-executionid-resume
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -926,7 +901,7 @@ paths:
           description: Indicates a successful response
       summary: Resume a workflow execution
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/executions/{executionId}/resume\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"input\": {\n      \"approved\": true,\n      \"comment\": \"Approved by analyst\"\n    }\n  }'\n"
@@ -941,13 +916,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/step/{stepExecutionId}</span></div>
+        get /s/{space_id}/api/workflows/executions/{executionId}/step/{stepExecutionId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve details of a single step execution within a workflow execution.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Retrieve details of a single step execution within a workflow execution.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-executions-executionid-step-stepexecutionid
       parameters:
       - description: Workflow execution ID.
@@ -1024,7 +1002,7 @@ paths:
           description: Indicates a successful response
       summary: Get a step execution
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/executions/{executionId}/step/{stepExecutionId}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -1041,10 +1019,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external</span></div>
+        get /s/{space_id}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Resume a paused `waitForApproval` step (pauses the workflow and waits for a human to approve/decline before execution continues) or `waitForInput` step (passes the expected input values as query parameters in the URL). Returns an HTML confirmation page.'
@@ -1097,7 +1075,7 @@ paths:
           description: An HTML confirmation page confirming that the response was received and the workflow execution was resumed.
       summary: Resume a workflow execution from an external link
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external?token=${RESUME_TOKEN}&approved=true\"\n"
@@ -1113,10 +1091,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external</span></div>
+        post /s/{space_id}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Resume a workflow execution that is paused and waiting for external input. Submit input values as a JSON request body, authenticated with a token query parameter. Returns an HTML confirmation page.'
@@ -1166,7 +1144,7 @@ paths:
           description: An HTML confirmation page confirming that the input was received and the workflow execution was resumed.
       summary: Submit external input for a paused workflow execution
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external?token=${RESUME_TOKEN}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"severity\":\"high\"}'\n"
@@ -1188,10 +1166,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external/form</span></div>
+        get /s/{space_id}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external/form
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns an HTML form for submitting external input to a paused waitForInput step. Does not resume the execution.'
@@ -1231,7 +1209,7 @@ paths:
           description: HTML form page for submitting external input to a paused waitForInput step
       summary: Get the external input form for a paused workflow execution
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/executions/{executionId}/steps/{stepId}/resume/external/form?token=${RESUME_TOKEN}\"\n"
@@ -1248,13 +1226,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/export</span></div>
+        post /s/{space_id}/api/workflows/export
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Export one or more workflows as JSON with YAML content and metadata.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
+        Export one or more workflows as JSON with YAML content and metadata.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
       operationId: post-workflows-export
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1309,7 +1290,7 @@ paths:
           description: JSON containing exported workflow YAML entries and manifest metadata
       summary: Export workflows
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/export\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"ids\": [\"workflow-a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"workflow-b2c3d4e5-f6a7-8901-bcde-f12345678901\"]\n  }'\n"
@@ -1324,13 +1305,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/managed/workflow/{id}</span></div>
+        put /s/{space_id}/api/workflows/managed/workflow/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Partially update an existing managed workflow. This elevated route can update fields beyond the enabled state.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:update AND workflowsManagement:managed:update.'
+        Partially update an existing managed workflow. This elevated route can update fields beyond the enabled state.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:update AND workflowsManagement:managed:update.'
       operationId: put-workflows-managed-workflow-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1393,7 +1377,7 @@ paths:
           description: Indicates a successful response
       summary: Update a managed workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X PUT \"${KIBANA_URL}/api/workflows/managed/workflow/{id}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Updated managed workflow\",\n    \"enabled\": true,\n    \"tags\": [\"managed\", \"updated\"]\n  }'\n"
@@ -1408,13 +1392,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/mget</span></div>
+        post /s/{space_id}/api/workflows/mget
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve multiple workflows by their IDs in a single request. Optionally use the `source` parameter to return only specific fields from each workflow document.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
+        Retrieve multiple workflows by their IDs in a single request. Optionally use the `source` parameter to return only specific fields from each workflow document.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
       operationId: post-workflows-mget
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1478,7 +1465,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflows by IDs
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/mget\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"ids\": [\"workflow-a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"workflow-b2c3d4e5-f6a7-8901-bcde-f12345678901\"],\n    \"source\": [\"name\", \"enabled\"]\n  }'\n"
@@ -1493,13 +1480,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/schema</span></div>
+        get /s/{space_id}/api/workflows/schema
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve the JSON schema used to validate workflow YAML definitions. The schema includes available step types based on the configured connectors in the current space.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read.'
+        Retrieve the JSON schema used to validate workflow YAML definitions. The schema includes available step types based on the configured connectors in the current space.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read.'
       operationId: get-workflows-schema
       parameters:
       - description: When true, returns a permissive schema that allows additional properties. When false, returns a strict schema for full validation.
@@ -1543,7 +1533,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflow JSON schema
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/schema?loose=false\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -1560,13 +1550,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/stats</span></div>
+        get /s/{space_id}/api/workflows/stats
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve summary statistics about workflows, including total, enabled, and disabled counts; execution history metrics for the last 30 days are included only when the caller has execution read privilege.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:read, workflowsManagement:readExecution, workflowsManagement:managed:readExecution.'
+        Retrieve summary statistics about workflows, including total, enabled, and disabled counts; execution history metrics for the last 30 days are included only when the caller has execution read privilege.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:read, workflowsManagement:readExecution, workflowsManagement:managed:readExecution.'
       operationId: get-workflows-stats
       parameters: []
       responses:
@@ -1594,7 +1587,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflow statistics
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/stats\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -1611,13 +1604,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/step/test</span></div>
+        post /s/{space_id}/api/workflows/step/test
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Execute a single step from a workflow definition in test mode.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:execute.'
+        Execute a single step from a workflow definition in test mode.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:execute.'
       operationId: post-workflows-step-test
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1677,7 +1673,7 @@ paths:
           description: Indicates a successful response
       summary: Test a workflow step
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/step/test\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"stepId\": \"hello_world_step\",\n    \"workflowId\": \"workflow-a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"workflowYaml\": \"name: Example definition\\nenabled: true\\ntriggers:\\n  - type: manual\\ninputs:\\n  - name: message\\n    type: string\\n    default: \\\"hello world\\\"\\nsteps:\\n  - name: hello_world_step\\n    type: console\\n    with:\\n      message: \\\"{{ inputs.message }}\\\"\",\n    \"contextOverride\": { \"inputs\": { \"message\": \"override message\" } }\n  }'\n"
@@ -1692,13 +1688,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/test</span></div>
+        post /s/{space_id}/api/workflows/test
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Execute a workflow in test mode without requiring it to be saved or enabled. Provide either a workflow ID to test a saved workflow, a YAML definition to test an unsaved draft, or both to test a modified version of an existing workflow.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:execute.'
+        Execute a workflow in test mode without requiring it to be saved or enabled. Provide either a workflow ID to test a saved workflow, a YAML definition to test an unsaved draft, or both to test a modified version of an existing workflow.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:execute.'
       operationId: post-workflows-test
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1752,7 +1751,7 @@ paths:
           description: Indicates a successful response
       summary: Test a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/test\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"workflowId\": \"workflow-a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"inputs\": { \"message\": \"test message\" }\n  }'\n"
@@ -1767,13 +1766,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow</span></div>
+        post /s/{space_id}/api/workflows/workflow
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a new workflow from a YAML definition. The YAML is validated and parsed before the workflow is saved. An optional custom ID can be provided.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:create.'
+        Create a new workflow from a YAML definition. The YAML is validated and parsed before the workflow is saved. An optional custom ID can be provided.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:create.'
       operationId: post-workflows-workflow
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1846,7 +1848,7 @@ paths:
           description: Indicates a successful response
       summary: Create a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/workflow\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"yaml\": \"name: Example definition\\nenabled: true\\ndescription: This is a workflow example\\ntriggers:\\n  - type: manual\\ninputs:\\n  - name: message\\n    type: string\\n    default: \\\"hello world\\\"\\nsteps:\\n  - name: hello_world_step\\n    type: console\\n    with:\\n      message: \\\"{{ inputs.message }}\\\"\\n\"\n  }'\n"
@@ -1861,13 +1863,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{id}</span></div>
+        delete /s/{space_id}/api/workflows/workflow/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete a single workflow by its ID.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:delete.'
+        Delete a single workflow by its ID.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:delete.'
       operationId: delete-workflows-workflow-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1895,7 +1900,7 @@ paths:
           description: Indicates a successful response
       summary: Delete a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - label: Soft delete (default)
         lang: curl
@@ -1915,13 +1920,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{id}</span></div>
+        get /s/{space_id}/api/workflows/workflow/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a single workflow by its ID.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
+        Retrieve a single workflow by its ID.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read OR workflowsManagement:managed:read.'
       operationId: get-workflows-workflow-id
       parameters:
       - description: Workflow ID
@@ -1966,7 +1974,7 @@ paths:
           description: Indicates a successful response
       summary: Get a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/workflow/{id}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -1982,13 +1990,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{id}</span></div>
+        put /s/{space_id}/api/workflows/workflow/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Partially update an existing workflow. You can update individual fields such as name, description, enabled state, tags, or the YAML definition without providing all fields.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:update.'
+        Partially update an existing workflow. You can update individual fields such as name, description, enabled state, tags, or the YAML definition without providing all fields.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:update.'
       operationId: put-workflows-workflow-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2057,7 +2068,7 @@ paths:
           description: Indicates a successful response
       summary: Update a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X PUT \"${KIBANA_URL}/api/workflows/workflow/{id}\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"enabled\": true,\n    \"tags\": [\"production\"]\n  }'\n"
@@ -2072,13 +2083,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{id}/clone</span></div>
+        post /s/{space_id}/api/workflows/workflow/{id}/clone
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a copy of an existing workflow.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:create AND workflowsManagement:read.'
+        Create a copy of an existing workflow.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:create AND workflowsManagement:read.'
       operationId: post-workflows-workflow-id-clone
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2130,7 +2144,7 @@ paths:
           description: Indicates a successful response
       summary: Clone a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/workflow/{id}/clone\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
@@ -2147,13 +2161,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{id}/run</span></div>
+        post /s/{space_id}/api/workflows/workflow/{id}/run
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Execute a workflow by its ID with the provided inputs. The workflow must be enabled and have a valid definition. Returns an execution ID that can be used to monitor progress.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:execute.'
+        Execute a workflow by its ID with the provided inputs. The workflow must be enabled and have a valid definition. Returns an execution ID that can be used to monitor progress.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:execute.'
       operationId: post-workflows-workflow-id-run
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2204,7 +2221,7 @@ paths:
           description: Indicates a successful response
       summary: Run a workflow
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/workflow/{id}/run\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"inputs\": {\n      \"message\": \"hello from the API\"\n    }\n  }'\n"
@@ -2219,13 +2236,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{workflowId}/executions</span></div>
+        get /s/{space_id}/api/workflows/workflow/{workflowId}/executions
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a paginated list of executions for a specific workflow.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Retrieve a paginated list of executions for a specific workflow.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-workflow-workflowid-executions
       parameters:
       - description: Workflow ID
@@ -2402,7 +2422,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflow executions
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/workflow/{workflowId}/executions?page=1&size=20\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -2419,13 +2439,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{workflowId}/executions/cancel</span></div>
+        post /s/{space_id}/api/workflows/workflow/{workflowId}/executions/cancel
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Request cancellation for all non-terminal executions of the given workflow in the current space.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:cancelExecution.'
+        Request cancellation for all non-terminal executions of the given workflow in the current space.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:cancelExecution.'
       operationId: post-workflows-workflow-workflowid-executions-cancel
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2446,7 +2469,7 @@ paths:
           description: Indicates a successful response
       summary: Cancel all active workflow executions
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X POST \"${KIBANA_URL}/api/workflows/workflow/{workflowId}/executions/cancel\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\" \\\n  -H \"kbn-xsrf: true\"\n"
@@ -2463,13 +2486,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/{workflowId}/executions/steps</span></div>
+        get /s/{space_id}/api/workflows/workflow/{workflowId}/executions/steps
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Retrieve a paginated list of step-level execution records for a specific workflow. Optionally filter by step ID and include input or output data.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Retrieve a paginated list of step-level execution records for a specific workflow. Optionally filter by step ID and include input or output data.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-workflow-workflowid-executions-steps
       parameters:
       - description: Workflow ID
@@ -2578,7 +2604,7 @@ paths:
           description: Indicates a successful response
       summary: Get workflow step executions
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/workflow/{workflowId}/executions/steps?includeInput=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"
@@ -2595,13 +2621,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/workflows/workflow/executions</span></div>
+        get /s/{space_id}/api/workflows/workflow/executions
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Search across all workflow executions.<br/><br/>[Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
+        Search across all workflow executions.
+
+
+        [Required authorization] Route required privileges: workflowsManagement:read AND workflowsManagement:readExecution. Extended privileges (optional, expand functionality when granted): workflowsManagement:managed:readExecution.'
       operationId: get-workflows-workflow-executions
       parameters:
       - description: KQL query string to filter executions.
@@ -2774,7 +2803,7 @@ paths:
           description: Indicates a bad request, such as invalid KQL syntax
       summary: Search workflow executions
       tags:
-      - workflows
+      - Workflows
       x-codeSamples:
       - lang: curl
         source: "curl \\\n  -X GET \"${KIBANA_URL}/api/workflows/workflow/executions?page=1&size=25&trackTotalHits=true&kql=startedAt%20%3E%3D%20%22now-15m%22&sortField=startedAt&sortOrder=desc\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n"

@@ -281,7 +281,7 @@ paths:
     get:
       tags:
       - DeploymentsTrafficFilter
-      summary: Retrieves the ruleset by ID.
+      summary: Retrieves the ruleset by ID
       description: Retrieves a list of resources that are associated to the specified ruleset.
       operationId: get-traffic-filter-ruleset
       parameters:
@@ -603,107 +603,49 @@ paths:
         tag: Deployments - Traffic Filter - Associations
 components:
   schemas:
-    TrafficFilterEgressRule:
+    TrafficFilterRulesetRequest:
       type: object
       required:
-      - protocol
-      - target
+      - include_by_default
+      - name
+      - region
+      - rules
+      - type
       properties:
-        target:
+        name:
           type: string
-          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
-        ports:
-          type: array
-          description: A list of target ports for an egress rule
-          items:
-            type: integer
-            format: int32
-        protocol:
-          type: string
-          description: The target protocol for an egress rule
-          enum:
-          - all
-          - tcp
-          - udp
-      description: The rule detail for a traffic filter egress rule.
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    TrafficFilterRule:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The rule ID
-        remote_cluster_org_id:
-          type: string
-          description: The remote cluster organization ID
-        remote_cluster_id:
-          type: string
-          description: The remote cluster ID
+          description: Name of the ruleset
         description:
           type: string
-          description: Description of the rule
-        source:
+          description: Description of the ruleset
+        type:
           type: string
-          description: 'Allowed traffic filter source: IP address, CIDR mask, or VPC endpoint ID'
-        azure_endpoint_name:
-          type: string
-          description: Name of the Azure Private Endpoint to allow connections from
-        azure_endpoint_guid:
-          type: string
-          description: Resource GUID of the Azure Private Endpoint to allow connections from
-        egress_rule:
-          description: An egress traffic filter rule
-          $ref: '#/components/schemas/TrafficFilterEgressRule'
-      description: The container for a traffic filter rule.
-    TrafficFilterClaimedLinkIdInfo:
-      type: object
-      required:
-      - region
-      properties:
-        link_id:
-          type: string
-          description: Link id. A GCP private service connect ID or AWS VPC endpoint ID
-        azure_endpoint_name:
-          type: string
-          description: Name of the Azure Private Endpoint to allow connections from
-        azure_endpoint_guid:
-          type: string
-          description: Resource GUID of the Azure Private Endpoint to allow connections from
+          description: Type of the ruleset
+        include_by_default:
+          type: boolean
+          description: Should the ruleset be automatically included in the new deployments
         region:
           type: string
-          description: The claimed link id can be used only for traffic filter in the specific region
-    RulesetAssociations:
+          description: The ruleset can be attached only to deployments in the specific region
+        rules:
+          type: array
+          description: List of rules
+          items:
+            $ref: '#/components/schemas/TrafficFilterRule'
+      description: The specification for traffic filter ruleset.
+    TrafficFilterRulesets:
       type: object
       required:
-      - associations
-      - total_associations
+      - rulesets
       properties:
-        associations:
+        rulesets:
           type: array
-          description: List of associations
+          description: List of traffic filter rules
           items:
-            $ref: '#/components/schemas/FilterAssociation'
-        total_associations:
-          type: integer
-          format: int32
-          description: Total number of associations. This includes associations the user does not have permission to view.
-      description: The configuration settings for the traffic filter.
+            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
+      description: The container for a set of traffic filter rulesets.
+    EmptyResponse:
+      type: object
     TrafficFilterRulesetInfo:
       type: object
       required:
@@ -754,57 +696,99 @@ components:
           format: int32
           description: Total number of associations. This includes associations the user does not have permission to view.Returned only when include_associations query parameter is true
       description: The container for a set of traffic filter rules.
-    TrafficFilterSettings:
+    BasicFailedReplyElement:
       type: object
       required:
-      - rulesets
+      - code
+      - message
       properties:
-        rulesets:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: IDs of the traffic filter rulesets
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-      description: The configuration settings for the traffic filter.
-    TrafficFilterRulesetRequest:
+    TrafficFilterEgressRule:
       type: object
       required:
-      - include_by_default
-      - name
-      - region
-      - rules
-      - type
+      - protocol
+      - target
       properties:
-        name:
+        target:
           type: string
-          description: Name of the ruleset
+          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
+        ports:
+          type: array
+          description: A list of target ports for an egress rule
+          items:
+            type: integer
+            format: int32
+        protocol:
+          type: string
+          description: The target protocol for an egress rule
+          enum:
+          - all
+          - tcp
+          - udp
+      description: The rule detail for a traffic filter egress rule.
+    TrafficFilterRule:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The rule ID
+        remote_cluster_org_id:
+          type: string
+          description: The remote cluster organization ID
+        remote_cluster_id:
+          type: string
+          description: The remote cluster ID
         description:
           type: string
-          description: Description of the ruleset
-        type:
+          description: Description of the rule
+        source:
           type: string
-          description: Type of the ruleset
-        include_by_default:
-          type: boolean
-          description: Should the ruleset be automatically included in the new deployments
-        region:
+          description: 'Allowed traffic filter source: IP address, CIDR mask, or VPC endpoint ID'
+        azure_endpoint_name:
           type: string
-          description: The ruleset can be attached only to deployments in the specific region
-        rules:
-          type: array
-          description: List of rules
-          items:
-            $ref: '#/components/schemas/TrafficFilterRule'
-      description: The specification for traffic filter ruleset.
-    BasicFailedReply:
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        egress_rule:
+          description: An egress traffic filter rule
+          $ref: '#/components/schemas/TrafficFilterEgressRule'
+      description: The container for a traffic filter rule.
+    TrafficFilterRulesetResponse:
       type: object
       required:
-      - errors
+      - id
       properties:
-        errors:
+        id:
+          type: string
+          description: The new ruleset ID
+      description: The response after you create a new ruleset.
+    RulesetAssociations:
+      type: object
+      required:
+      - associations
+      - total_associations
+      properties:
+        associations:
           type: array
-          description: A list of errors that occurred in the failing request
+          description: List of associations
           items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
+            $ref: '#/components/schemas/FilterAssociation'
+        total_associations:
+          type: integer
+          format: int32
+          description: Total number of associations. This includes associations the user does not have permission to view.
+      description: The configuration settings for the traffic filter.
     TrafficFilterClaimedLinkIds:
       type: object
       required:
@@ -816,19 +800,6 @@ components:
           items:
             $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
       description: The container for a set of traffic filter claimed link id.
-    TrafficFilterRulesets:
-      type: object
-      required:
-      - rulesets
-      properties:
-        rulesets:
-          type: array
-          description: List of traffic filter rules
-          items:
-            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
-      description: The container for a set of traffic filter rulesets.
-    EmptyResponse:
-      type: object
     FilterAssociation:
       type: object
       required:
@@ -842,15 +813,44 @@ components:
           type: string
           description: ID of the entity, such as the deployment ID or Elasticsearch cluster ID.
       description: The association with a ruleset or user auth token for a deployment, template, or product.
-    TrafficFilterRulesetResponse:
+    TrafficFilterClaimedLinkIdInfo:
       type: object
       required:
-      - id
+      - region
       properties:
-        id:
+        link_id:
           type: string
-          description: The new ruleset ID
-      description: The response after you create a new ruleset.
+          description: Link id. A GCP private service connect ID or AWS VPC endpoint ID
+        azure_endpoint_name:
+          type: string
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        region:
+          type: string
+          description: The claimed link id can be used only for traffic filter in the specific region
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    TrafficFilterSettings:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: IDs of the traffic filter rulesets
+          items:
+            type: string
+      description: The configuration settings for the traffic filter.
     TrafficFilterClaimedLinkIdRequest:
       type: object
       required:

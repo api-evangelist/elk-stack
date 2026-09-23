@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   version: '1'
-  title: Elastic Cloud Enterprise Platform Configuration Trust Relationships API
+  title: Elastic Cloud Enterprise Platform Configuration Trust…
   termsOfService: ''
 servers:
 - url: https://{{hostname}}/api/v1
@@ -277,46 +277,6 @@ paths:
         tag: Platform - Configuration - Trust relationships
 components:
   schemas:
-    TrustRelationshipsListResponse:
-      type: object
-      required:
-      - trust_relationships
-      properties:
-        trust_relationships:
-          type: array
-          description: The trust relationships
-          items:
-            $ref: '#/components/schemas/TrustRelationshipGetResponse'
-      description: Contains a list of trust relationships
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    EmptyResponse:
-      type: object
     TrustRelationshipUpdateResponse:
       type: object
       required:
@@ -346,6 +306,96 @@ components:
           type: string
           description: The installation ID of the environment to trust
       description: A response returned from the trust relationship update endpoint
+    EmptyResponse:
+      type: object
+    TrustRelationshipCreateRequest:
+      type: object
+      required:
+      - name
+      - public_ca_cert
+      properties:
+        name:
+          type: string
+          description: A name for the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts to trust by this relationship.
+          items:
+            type: string
+        public_ca_cert:
+          type: string
+          description: The public CA certificate of the environment to trust
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+      description: A request for creating a trust relationship with another environment
+    TrustRelationshipsListResponse:
+      type: object
+      required:
+      - trust_relationships
+      properties:
+        trust_relationships:
+          type: array
+          description: The trust relationships
+          items:
+            $ref: '#/components/schemas/TrustRelationshipGetResponse'
+      description: Contains a list of trust relationships
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    TrustRelationshipGetResponse:
+      type: object
+      required:
+      - id
+      - last_modified
+      - local
+      - name
+      - trust_by_default
+      properties:
+        id:
+          type: string
+          description: The id of the trust relationship
+        name:
+          type: string
+          description: The name of the trust relationship
+        trust_by_default:
+          type: boolean
+          description: If this relationship is trusted by default by all deployments in the current environment.
+        account_ids:
+          type: array
+          description: The ID of the accounts trusted by this relationship.
+          items:
+            type: string
+        public_ca_cert:
+          type: string
+          description: The public CA certificate of the environment to trust
+        local:
+          type: boolean
+          description: If this is the trust relationship for the local environment
+        installation_id:
+          type: string
+          description: The installation ID of the environment to trust
+        last_modified:
+          type: string
+          format: date-time
+          description: The most recent time the trust relationship was changed (ISO format in UTC)
     TrustRelationshipUpdateRequest:
       type: object
       properties:
@@ -396,66 +446,16 @@ components:
           type: string
           description: The installation ID of the environment to trust
       description: A response returned from the trust relationship create endpoint
-    TrustRelationshipGetResponse:
+    BasicFailedReply:
       type: object
       required:
-      - id
-      - last_modified
-      - local
-      - name
-      - trust_by_default
+      - errors
       properties:
-        id:
-          type: string
-          description: The id of the trust relationship
-        name:
-          type: string
-          description: The name of the trust relationship
-        trust_by_default:
-          type: boolean
-          description: If this relationship is trusted by default by all deployments in the current environment.
-        account_ids:
+        errors:
           type: array
-          description: The ID of the accounts trusted by this relationship.
+          description: A list of errors that occurred in the failing request
           items:
-            type: string
-        public_ca_cert:
-          type: string
-          description: The public CA certificate of the environment to trust
-        local:
-          type: boolean
-          description: If this is the trust relationship for the local environment
-        installation_id:
-          type: string
-          description: The installation ID of the environment to trust
-        last_modified:
-          type: string
-          format: date-time
-          description: The most recent time the trust relationship was changed (ISO format in UTC)
-    TrustRelationshipCreateRequest:
-      type: object
-      required:
-      - name
-      - public_ca_cert
-      properties:
-        name:
-          type: string
-          description: A name for the trust relationship
-        trust_by_default:
-          type: boolean
-          description: If this relationship is trusted by default by all deployments in the current environment.
-        account_ids:
-          type: array
-          description: The ID of the accounts to trust by this relationship.
-          items:
-            type: string
-        public_ca_cert:
-          type: string
-          description: The public CA certificate of the environment to trust
-        installation_id:
-          type: string
-          description: The installation ID of the environment to trust
-      description: A request for creating a trust relationship with another environment
+            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Elastic Agent actions API
   version: ''
   x-doc-license:
@@ -74,9 +21,7 @@ security:
 - basicAuth: []
 tags:
 - name: Elastic Agent actions
-  description: 'Elastic Agent actions APIs enable you to manage actions performed on Elastic Agents, including agent reassignment, diagnostics collection, enrollment management, upgrades, and bulk operations for agent lifecycle management.
-
-    '
+  description: Elastic Agent actions APIs enable you to manage actions performed on Elastic Agents, including agent reassignment, diagnostics collection, enrollment management, upgrades, and bulk operations for agent lifecycle management.
   x-displayName: Elastic Agent actions
 paths:
   /api/fleet/agents/{agentId}/actions:
@@ -84,13 +29,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/actions</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/actions
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a new action for a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Create a new action for a specific agent.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-agentid-actions
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -265,13 +213,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/reassign</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/reassign
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Reassign an agent to a different agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Reassign an agent to a different agent policy.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-agentid-reassign
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -355,13 +306,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/remove_collector</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/remove_collector
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Remove a specific OpAMP collector from the Fleet agents list. Marks the collector as unenrolled. This action does not invalidate API keys, so the collector can reconnect on its own.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Remove a specific OpAMP collector from the Fleet agents list. Marks the collector as unenrolled. This action does not invalidate API keys, so the collector can reconnect on its own.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-agentid-remove-collector
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -409,13 +363,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/request_diagnostics</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/request_diagnostics
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Request a diagnostics bundle from a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+        Request a diagnostics bundle from a specific agent.
+
+
+        [Required authorization] Route required privileges: fleet-agents-read.'
       operationId: post-fleet-agents-agentid-request-diagnostics
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -519,13 +476,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/rollback</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/rollback
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Rollback an agent to the previous version.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Rollback an agent to the previous version.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-agentid-rollback
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -591,13 +551,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/unenroll</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/unenroll
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Unenroll a specific agent, optionally revoking its enrollment API key.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Unenroll a specific agent, optionally revoking its enrollment API key.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-agentid-unenroll
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -663,13 +626,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/{agentId}/upgrade</span></div>
+        post /s/{space_id}/api/fleet/agents/{agentId}/upgrade
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Upgrade a specific agent to a newer version.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Upgrade a specific agent to a newer version.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-agentid-upgrade
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -759,13 +725,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/action_status</span></div>
+        get /s/{space_id}/api/fleet/agents/action_status
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the current status of recent agent actions.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+        Get the current status of recent agent actions.
+
+
+        [Required authorization] Route required privileges: fleet-agents-read.'
       operationId: get-fleet-agents-action-status
       parameters:
       - description: Page number
@@ -974,13 +943,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/actions/{actionId}/cancel</span></div>
+        post /s/{space_id}/api/fleet/agents/actions/{actionId}/cancel
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Cancel a pending action for a specific agent.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Cancel a pending action for a specific agent.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-actions-actionid-cancel
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1105,13 +1077,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_reassign</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_reassign
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Reassign multiple agents to a different agent policy.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Reassign multiple agents to a different agent policy.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-bulk-reassign
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1220,13 +1195,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_remove_collectors</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_remove_collectors
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Remove multiple OpAMP collectors from the Fleet agents list. Marks the collectors as unenrolled. This action does not invalidate API keys, so collectors can reconnect on their own.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Remove multiple OpAMP collectors from the Fleet agents list. Marks the collectors as unenrolled. This action does not invalidate API keys, so collectors can reconnect on their own.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-bulk-remove-collectors
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1332,13 +1310,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_request_diagnostics</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_request_diagnostics
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Request diagnostics bundles from multiple agents.<br/><br/>[Required authorization] Route required privileges: fleet-agents-read.'
+        Request diagnostics bundles from multiple agents.
+
+
+        [Required authorization] Route required privileges: fleet-agents-read.'
       operationId: post-fleet-agents-bulk-request-diagnostics
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1449,13 +1430,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_rollback</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_rollback
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Rollback multiple agents to the previous version.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Rollback multiple agents to the previous version.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-bulk-rollback
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1564,13 +1548,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_unenroll</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_unenroll
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Unenroll multiple agents, optionally revoking their enrollment API keys.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Unenroll multiple agents, optionally revoking their enrollment API keys.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-bulk-unenroll
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1684,13 +1671,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_update_agent_tags</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_update_agent_tags
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Add or remove tags across multiple agents.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Add or remove tags across multiple agents.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-bulk-update-agent-tags
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1809,13 +1799,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/agents/bulk_upgrade</span></div>
+        post /s/{space_id}/api/fleet/agents/bulk_upgrade
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Upgrade multiple agents to a newer version, with optional rollout controls.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all.'
+        Upgrade multiple agents to a newer version, with optional rollout controls.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all.'
       operationId: post-fleet-agents-bulk-upgrade
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1933,15 +1926,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_action_id_response:
-      additionalProperties: false
-      properties:
-        actionId:
-          type: string
-      required:
-      - actionId
-      title: action_id_response
-      type: object
     Kibana_HTTP_APIs_action_message_response:
       additionalProperties: false
       properties:
@@ -1950,6 +1934,15 @@ components:
       required:
       - message
       title: action_message_response
+      type: object
+    Kibana_HTTP_APIs_action_id_response:
+      additionalProperties: false
+      properties:
+        actionId:
+          type: string
+      required:
+      - actionId
+      title: action_id_response
       type: object
   securitySchemes:
     apiKeyAuth:

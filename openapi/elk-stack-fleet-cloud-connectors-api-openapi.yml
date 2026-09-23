@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Fleet cloud connectors API
   version: ''
   x-doc-license:
@@ -74,9 +21,7 @@ security:
 - basicAuth: []
 tags:
 - name: Fleet cloud connectors
-  description: 'Fleet cloud connectors APIs enable you to manage Fleet cloud connectors, including creating, updating, and deleting cloud connector configurations for Fleet integrations.
-
-    '
+  description: Fleet cloud connectors APIs enable you to manage Fleet cloud connectors, including creating, updating, and deleting cloud connector configurations for Fleet integrations.
   x-displayName: Fleet cloud connectors
 paths:
   /api/fleet/cloud_connectors:
@@ -84,13 +29,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors</span></div>
+        get /s/{space_id}/api/fleet/cloud_connectors
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        List all Fleet cloud connectors.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
+        List all Fleet cloud connectors.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
       operationId: get-fleet-cloud-connectors
       parameters:
       - description: The page number for pagination.
@@ -214,13 +162,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors</span></div>
+        post /s/{space_id}/api/fleet/cloud_connectors
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a new Fleet cloud connector.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
+        Create a new Fleet cloud connector.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
       operationId: post-fleet-cloud-connectors
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -402,13 +353,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}</span></div>
+        delete /s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete a cloud connector by ID. Use the `force` query parameter to delete even if package policies are still using it.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
+        Delete a cloud connector by ID. Use the `force` query parameter to delete even if package policies are still using it.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
       operationId: delete-fleet-cloud-connectors-cloudconnectorid
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -487,13 +441,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}</span></div>
+        get /s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a cloud connector by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
+        Get a cloud connector by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
       operationId: get-fleet-cloud-connectors-cloudconnectorid
       parameters:
       - description: The unique identifier of the cloud connector.
@@ -602,13 +559,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}</span></div>
+        put /s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update a cloud connector by ID.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
+        Update a cloud connector by ID.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-all OR integrations-all.'
       operationId: put-fleet-cloud-connectors-cloudconnectorid
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -783,13 +743,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}/usage</span></div>
+        get /s/{space_id}/api/fleet/cloud_connectors/{cloudConnectorId}/usage
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a list of package policies that are using a given cloud connector.<br/><br/>[Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
+        Get a list of package policies that are using a given cloud connector.
+
+
+        [Required authorization] Route required privileges: fleet-agent-policies-read OR integrations-read.'
       operationId: get-fleet-cloud-connectors-cloudconnectorid-usage
       parameters:
       - description: The unique identifier of the cloud connector.

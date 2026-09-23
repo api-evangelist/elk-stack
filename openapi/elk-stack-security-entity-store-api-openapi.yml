@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Security entity store API
   version: ''
   x-doc-license:
@@ -80,13 +27,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store</span></div>
+        put /s/{space_id}/api/security/entity_store
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update the Entity Store log extraction configuration.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Update the Entity Store log extraction configuration.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: put-security-entity-store
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -229,13 +179,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/entities</span></div>
+        get /s/{space_id}/api/security/entity_store/entities
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        List entity records from the Entity Store with paging, sorting, and filtering. Supports two modes: page-based pagination (page/per_page) and cursor-based pagination (searchAfter). The two modes cannot be combined.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        List entity records from the Entity Store with paging, sorting, and filtering. Supports two modes: page-based pagination (page/per_page) and cursor-based pagination (searchAfter). The two modes cannot be combined.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: get-security-entity-store-entities
       parameters:
       - description: A Kibana Query Language (KQL) filter for the search-after mode.
@@ -442,13 +395,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/entities/</span></div>
+        delete /s/{space_id}/api/security/entity_store/entities/
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete a single entity record from the Entity Store. The entity is immediately removed from the latest index.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Delete a single entity record from the Entity Store. The entity is immediately removed from the latest index.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: delete-security-entity-store-entities
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -515,13 +471,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/entities/{entityType}</span></div>
+        post /s/{space_id}/api/security/entity_store/entities/{entityType}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create a new entity record in the Entity Store for the specified entity type.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Create a new entity record in the Entity Store for the specified entity type.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: post-security-entity-store-entities-entitytype
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2881,13 +2840,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/entities/{entityType}</span></div>
+        put /s/{space_id}/api/security/entity_store/entities/{entityType}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update an existing entity record in the Entity Store. By default only certain fields can be updated. Set the `force` query parameter to `true` to update protected fields.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Update an existing entity record in the Entity Store. By default only certain fields can be updated. Set the `force` query parameter to `true` to update protected fields.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: put-security-entity-store-entities-entitytype
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -5257,13 +5219,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/entities/bulk</span></div>
+        put /s/{space_id}/api/security/entity_store/entities/bulk
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Update multiple entity records in the Entity Store in a single request.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Update multiple entity records in the Entity Store in a single request.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: put-security-entity-store-entities-bulk
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -7648,13 +7613,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/install</span></div>
+        post /s/{space_id}/api/security/entity_store/install
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Install the Entity Store and create engines for the specified entity types. A single `logExtraction` configuration is shared across all entity types. Supply it once at install to customize settings; omit it (or send an empty object) to use defaults on first install or preserve the existing configuration on re-install. To change settings after install, use the update endpoint.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Install the Entity Store and create engines for the specified entity types. A single `logExtraction` configuration is shared across all entity types. Supply it once at install to customize settings; omit it (or send an empty object) to use defaults on first install or preserve the existing configuration on re-install. To change settings after install, use the update endpoint.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: post-security-entity-store-install
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -7829,13 +7797,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/resolution/group</span></div>
+        get /s/{space_id}/api/security/entity_store/resolution/group
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the resolution group for a given entity, returning all linked entities.<br/><br/>[Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
+        Get the resolution group for a given entity, returning all linked entities.
+
+
+        [Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
       operationId: get-security-entity-store-resolution-group
       parameters:
       - description: The entity identifier to look up the resolution group for.
@@ -7920,13 +7891,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/resolution/link</span></div>
+        post /s/{space_id}/api/security/entity_store/resolution/link
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Link one or more entities to a target entity, creating a resolution group. Changes become visible on subsequent reads after the next index refresh (typically <1s).<br/><br/>[Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
+        Link one or more entities to a target entity, creating a resolution group. Changes become visible on subsequent reads after the next index refresh (typically <1s).
+
+
+        [Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
       operationId: post-security-entity-store-resolution-link
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -8024,13 +7998,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/resolution/rules</span></div>
+        get /s/{space_id}/api/security/entity_store/resolution/rules
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        List managed entity resolution rules and their effective enabled state for this space.<br/><br/>[Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
+        List managed entity resolution rules and their effective enabled state for this space.
+
+
+        [Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
       operationId: get-security-entity-store-resolution-rules
       parameters: []
       responses:
@@ -8064,13 +8041,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/resolution/rules/{id}/disable</span></div>
+        put /s/{space_id}/api/security/entity_store/resolution/rules/{id}/disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Disable a managed entity resolution rule in this space.<br/><br/>[Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
+        Disable a managed entity resolution rule in this space.
+
+
+        [Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
       operationId: put-security-entity-store-resolution-rules-id-disable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -8125,13 +8105,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/resolution/rules/{id}/enable</span></div>
+        put /s/{space_id}/api/security/entity_store/resolution/rules/{id}/enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Enable a managed entity resolution rule in this space.<br/><br/>[Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
+        Enable a managed entity resolution rule in this space.
+
+
+        [Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
       operationId: put-security-entity-store-resolution-rules-id-enable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -8186,13 +8169,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/resolution/unlink</span></div>
+        post /s/{space_id}/api/security/entity_store/resolution/unlink
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Remove one or more entities from their resolution group. Changes become visible on subsequent reads after the next index refresh (typically <1s).<br/><br/>[Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
+        Remove one or more entities from their resolution group. Changes become visible on subsequent reads after the next index refresh (typically <1s).
+
+
+        [Required authorization] Route required privileges: securitySolution AND securitySolution-entity-analytics.'
       operationId: post-security-entity-store-resolution-unlink
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -8277,13 +8263,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/start</span></div>
+        put /s/{space_id}/api/security/entity_store/start
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Start previously stopped entity engines, resuming data processing for the specified entity types.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Start previously stopped entity engines, resuming data processing for the specified entity types.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: put-security-entity-store-start
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -8358,13 +8347,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/status</span></div>
+        get /s/{space_id}/api/security/entity_store/status
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the overall Entity Store status and per-engine statuses, optionally including component-level health details.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Get the overall Entity Store status and per-engine statuses, optionally including component-level health details.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: get-security-entity-store-status
       parameters:
       - description: If true, returns a detailed status of each engine including all its components.
@@ -8451,13 +8443,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/stop</span></div>
+        put /s/{space_id}/api/security/entity_store/stop
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Stop running entity engines, pausing data processing for the specified entity types.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Stop running entity engines, pausing data processing for the specified entity types.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: put-security-entity-store-stop
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -8526,13 +8521,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security/entity_store/uninstall</span></div>
+        post /s/{space_id}/api/security/entity_store/uninstall
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Uninstall the Entity Store, removing engines and associated resources for the specified entity types.<br/><br/>[Required authorization] Route required privileges: securitySolution.'
+        Uninstall the Entity Store, removing engines and associated resources for the specified entity types.
+
+
+        [Required authorization] Route required privileges: securitySolution.'
       operationId: post-security-entity-store-uninstall
       parameters:
       - description: A required header to protect against CSRF attacks

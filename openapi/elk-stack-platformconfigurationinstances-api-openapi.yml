@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   version: '1'
-  title: Elastic Cloud Enterprise Platform Configuration Instances API
+  title: Elastic Cloud Enterprise Platform Configuration Instances…
   termsOfService: ''
 servers:
 - url: https://{{hostname}}/api/v1
@@ -263,40 +263,110 @@ paths:
         tag: Platform - Configuration - Instances - CRUD
 components:
   schemas:
-    QueryContainer:
+    NestedQuery:
+      type: object
+      required:
+      - path
+      - query
+      properties:
+        query:
+          description: The actual query to execute on the nested objects.
+          $ref: '#/components/schemas/QueryContainer'
+        path:
+          type: string
+          description: The path to the nested object.
+        score_mode:
+          type: string
+          description: Allows to specify how inner children matching affects score of the parent. Refer to the Elasticsearch documentation for details.
+          enum:
+          - avg
+          - sum
+          - min
+          - max
+          - none
+      description: A query that matches nested objects.
+    RangeQuery:
       type: object
       properties:
-        match:
+        gt:
           type: object
-          additionalProperties:
-            $ref: '#/components/schemas/MatchQuery'
-        match_all:
-          $ref: '#/components/schemas/MatchAllQuery'
-        match_none:
-          $ref: '#/components/schemas/MatchNoneQuery'
-        term:
+          description: Greater-than
+          properties: {}
+        gte:
           type: object
-          additionalProperties:
-            $ref: '#/components/schemas/TermQuery'
-        bool:
-          $ref: '#/components/schemas/BoolQuery'
-        query_string:
-          $ref: '#/components/schemas/QueryStringQuery'
-        nested:
-          $ref: '#/components/schemas/NestedQuery'
-        prefix:
+          description: Greater-than or equal to
+          properties: {}
+        lt:
           type: object
-          additionalProperties:
-            $ref: '#/components/schemas/PrefixQuery'
-        exists:
-          $ref: '#/components/schemas/ExistsQuery'
-        range:
+          description: Less-than
+          properties: {}
+        lte:
           type: object
-          additionalProperties:
-            $ref: '#/components/schemas/RangeQuery'
-        simple_query_string:
-          $ref: '#/components/schemas/SimpleQueryStringQuery'
-      description: The container for all of the allowed Elasticsearch queries. Specify only one property each time.
+          description: Less-than or equal to.
+          properties: {}
+        boost:
+          type: number
+          format: float
+          description: An optional boost value to apply to the query.
+        format:
+          type: string
+          description: Formatted dates will be parsed using the format specified on the date field by default, but it can be overridden by passing the format parameter.
+        time_zone:
+          type: string
+          description: Dates can be converted from another timezone to UTC either by specifying the time zone in the date value itself (if the format accepts it), or it can be specified as the time_zone parameter.
+      description: The query that matches documents with fields that contain terms within a specified range.
+    EmptyResponse:
+      type: object
+    ExistsQuery:
+      type: object
+      required:
+      - field
+      properties:
+        field:
+          type: string
+          description: The field to check for non-null values in.
+      description: Matches documents that have at least one non-`null` value in the original field.
+    DiscreteSizes:
+      type: object
+      required:
+      - sizes
+      properties:
+        sizes:
+          type: array
+          description: List of supported sizes
+          items:
+            type: integer
+            format: int32
+        default_size:
+          type: integer
+          format: int32
+          description: The default size
+        resource:
+          type: string
+          description: The unit that each size represents. If not specified, it will default to 'memory'.
+          enum:
+          - memory
+          - storage
+      description: Instance sizes that are supported by the Elasticsearch instance, Kibana instance, or APM Server configuration.
+    MatchAllQuery:
+      type: object
+      description: A query that matches all documents.
+    VersionedIdResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The ID
+        config_version:
+          type: object
+          description: The version, if the entity is configuration controlled
+          properties: {}
+        config_version_updated:
+          type: object
+          description: Returns true if the update resulted in a new version of the configuration controlled entity
+          properties: {}
     BasicFailedReplyElement:
       type: object
       required:
@@ -314,135 +384,6 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    SimpleQueryStringQuery:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: The query expressed in simple query string syntax.
-        fields:
-          type: array
-          description: Array of fields to search
-          items:
-            type: string
-        default_operator:
-          type: string
-          description: The boolean operator used to combine the terms of the query. Valid values are `OR` (default) and `AND`.
-        analyze_wildcard:
-          type: boolean
-          description: If `true`, the query attempts to analyze wildcard terms. Defaults to `false`.
-        analyzer:
-          type: string
-          description: The name of the analyzer to use to convert the query text into tokens.
-        auto_generate_synonyms_phrase_query:
-          type: boolean
-          description: If `true`, the parse creates a `match_phrase` uery for each multi-position token. Defaults to `true`.
-        flags:
-          type: string
-          description: List of enabled operators for the simple query string syntax. Defaults to `ALL`.
-        fuzzy_max_expansions:
-          type: integer
-          format: int32
-          description: Maximum number of terms to which the query expands for fuzzy matching. Defaults to 50.
-        fuzzy_prefix_length:
-          type: integer
-          format: int32
-          description: Number of beginning characters left unchanged for fuzzy matching. Defaults to 0.
-        fuzzy_transpositions:
-          type: boolean
-          description: If `true`, edits for fuzzy matching include transpositions of two adjacent characters. Defaults to `false`.
-        lenient:
-          type: boolean
-          description: If `true`, format-based errors, such as providing a text value for a numeric field are ignored. Defaults to `false`.
-        minimum_should_match:
-          type: string
-          description: Minimum number of clauses that must match for a document to be returned.
-        quote_field_suffix:
-          type: string
-          description: Suffix appended to quoted text in the query string.
-      description: A query that uses simple query string syntax. Will ignore invalid syntax.
-    MatchAllQuery:
-      type: object
-      description: A query that matches all documents.
-    MatchQuery:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: The text/numeric/date to query for.
-        operator:
-          type: string
-          description: The operator flag can be set to or or and to control the boolean clauses (defaults to or).
-        minimum_should_match:
-          type: integer
-          format: int32
-          description: The minimum number of optional should clauses to match.
-        analyzer:
-          type: string
-          description: The analyzer that will be used to perform the analysis process on the text. Defaults to the analyzer that was used to index the field.
-      description: Consumes and analyzes text, numbers, and dates, then constructs a query.
-    QueryStringQuery:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: The actual query to be parsed.
-        default_field:
-          type: string
-          description: The default field for query terms if no prefix field is specified.
-        analyzer:
-          type: string
-          description: The analyzer used to analyze each term of the query when creating composite queries.
-        default_operator:
-          type: string
-          description: The default operator used if no explicit operator is specified.
-        allow_leading_wildcard:
-          type: boolean
-          description: When set, * or ? are allowed as the first character. Defaults to false.
-      description: A query that uses the strict query string syntax for parsing. Will return an error for invalid syntax.
-    EmptyResponse:
-      type: object
-    ExistsQuery:
-      type: object
-      required:
-      - field
-      properties:
-        field:
-          type: string
-          description: The field to check for non-null values in.
-      description: Matches documents that have at least one non-`null` value in the original field.
-    MatchNoneQuery:
-      type: object
-      description: A query that doesn't match any documents.
-    PrefixQuery:
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-          description: The prefix to search for.
-        boost:
-          type: number
-          format: float
-          description: An optional boost value to apply to the query.
-      description: The query that matches documents with fields that contain terms with a specified, not analyzed, prefix.
     InstanceConfiguration:
       type: object
       required:
@@ -513,50 +454,6 @@ components:
           description: The maximum number of availability zones in which this instance configuration has allocators. This field will be missing unless explicitly requested with the show_max_zones parameter.
           readOnly: true
       description: The configuration template for Elasticsearch instances, Kibana instances, and APM Servers.
-    DiscreteSizes:
-      type: object
-      required:
-      - sizes
-      properties:
-        sizes:
-          type: array
-          description: List of supported sizes
-          items:
-            type: integer
-            format: int32
-        default_size:
-          type: integer
-          format: int32
-          description: The default size
-        resource:
-          type: string
-          description: The unit that each size represents. If not specified, it will default to 'memory'.
-          enum:
-          - memory
-          - storage
-      description: Instance sizes that are supported by the Elasticsearch instance, Kibana instance, or APM Server configuration.
-    NestedQuery:
-      type: object
-      required:
-      - path
-      - query
-      properties:
-        query:
-          description: The actual query to execute on the nested objects.
-          $ref: '#/components/schemas/QueryContainer'
-        path:
-          type: string
-          description: The path to the nested object.
-        score_mode:
-          type: string
-          description: Allows to specify how inner children matching affects score of the parent. Refer to the Elasticsearch documentation for details.
-          enum:
-          - avg
-          - sum
-          - min
-          - max
-          - none
-      description: A query that matches nested objects.
     BoolQuery:
       type: object
       properties:
@@ -581,22 +478,83 @@ components:
           format: int32
           description: The minimum number of optional should clauses to match.
       description: A query for documents that match boolean combinations of other queries.
-    VersionedIdResponse:
+    MatchQuery:
       type: object
       required:
-      - id
+      - query
       properties:
-        id:
+        query:
           type: string
-          description: The ID
-        config_version:
+          description: The text/numeric/date to query for.
+        operator:
+          type: string
+          description: The operator flag can be set to or or and to control the boolean clauses (defaults to or).
+        minimum_should_match:
+          type: integer
+          format: int32
+          description: The minimum number of optional should clauses to match.
+        analyzer:
+          type: string
+          description: The analyzer that will be used to perform the analysis process on the text. Defaults to the analyzer that was used to index the field.
+      description: Consumes and analyzes text, numbers, and dates, then constructs a query.
+    QueryContainer:
+      type: object
+      properties:
+        match:
           type: object
-          description: The version, if the entity is configuration controlled
-          properties: {}
-        config_version_updated:
+          additionalProperties:
+            $ref: '#/components/schemas/MatchQuery'
+        match_all:
+          $ref: '#/components/schemas/MatchAllQuery'
+        match_none:
+          $ref: '#/components/schemas/MatchNoneQuery'
+        term:
           type: object
-          description: Returns true if the update resulted in a new version of the configuration controlled entity
-          properties: {}
+          additionalProperties:
+            $ref: '#/components/schemas/TermQuery'
+        bool:
+          $ref: '#/components/schemas/BoolQuery'
+        query_string:
+          $ref: '#/components/schemas/QueryStringQuery'
+        nested:
+          $ref: '#/components/schemas/NestedQuery'
+        prefix:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/PrefixQuery'
+        exists:
+          $ref: '#/components/schemas/ExistsQuery'
+        range:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RangeQuery'
+        simple_query_string:
+          $ref: '#/components/schemas/SimpleQueryStringQuery'
+      description: The container for all of the allowed Elasticsearch queries. Specify only one property each time.
+    MatchNoneQuery:
+      type: object
+      description: A query that doesn't match any documents.
+    QueryStringQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The actual query to be parsed.
+        default_field:
+          type: string
+          description: The default field for query terms if no prefix field is specified.
+        analyzer:
+          type: string
+          description: The analyzer used to analyze each term of the query when creating composite queries.
+        default_operator:
+          type: string
+          description: The default operator used if no explicit operator is specified.
+        allow_leading_wildcard:
+          type: boolean
+          description: When set, * or ? are allowed as the first character. Defaults to false.
+      description: A query that uses the strict query string syntax for parsing. Will return an error for invalid syntax.
     TermQuery:
       type: object
       required:
@@ -606,36 +564,78 @@ components:
           type: string
           description: The exact value to query for.
       description: A query for documents that contain the specified term in the inverted index.
-    RangeQuery:
+    PrefixQuery:
       type: object
+      required:
+      - value
       properties:
-        gt:
-          type: object
-          description: Greater-than
-          properties: {}
-        gte:
-          type: object
-          description: Greater-than or equal to
-          properties: {}
-        lt:
-          type: object
-          description: Less-than
-          properties: {}
-        lte:
-          type: object
-          description: Less-than or equal to.
-          properties: {}
+        value:
+          type: string
+          description: The prefix to search for.
         boost:
           type: number
           format: float
           description: An optional boost value to apply to the query.
-        format:
+      description: The query that matches documents with fields that contain terms with a specified, not analyzed, prefix.
+    SimpleQueryStringQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
           type: string
-          description: Formatted dates will be parsed using the format specified on the date field by default, but it can be overridden by passing the format parameter.
-        time_zone:
+          description: The query expressed in simple query string syntax.
+        fields:
+          type: array
+          description: Array of fields to search
+          items:
+            type: string
+        default_operator:
           type: string
-          description: Dates can be converted from another timezone to UTC either by specifying the time zone in the date value itself (if the format accepts it), or it can be specified as the time_zone parameter.
-      description: The query that matches documents with fields that contain terms within a specified range.
+          description: The boolean operator used to combine the terms of the query. Valid values are `OR` (default) and `AND`.
+        analyze_wildcard:
+          type: boolean
+          description: If `true`, the query attempts to analyze wildcard terms. Defaults to `false`.
+        analyzer:
+          type: string
+          description: The name of the analyzer to use to convert the query text into tokens.
+        auto_generate_synonyms_phrase_query:
+          type: boolean
+          description: If `true`, the parse creates a `match_phrase` uery for each multi-position token. Defaults to `true`.
+        flags:
+          type: string
+          description: List of enabled operators for the simple query string syntax. Defaults to `ALL`.
+        fuzzy_max_expansions:
+          type: integer
+          format: int32
+          description: Maximum number of terms to which the query expands for fuzzy matching. Defaults to 50.
+        fuzzy_prefix_length:
+          type: integer
+          format: int32
+          description: Number of beginning characters left unchanged for fuzzy matching. Defaults to 0.
+        fuzzy_transpositions:
+          type: boolean
+          description: If `true`, edits for fuzzy matching include transpositions of two adjacent characters. Defaults to `false`.
+        lenient:
+          type: boolean
+          description: If `true`, format-based errors, such as providing a text value for a numeric field are ignored. Defaults to `false`.
+        minimum_should_match:
+          type: string
+          description: Minimum number of clauses that must match for a document to be returned.
+        quote_field_suffix:
+          type: string
+          description: Suffix appended to quoted text in the query string.
+      description: A query that uses simple query string syntax. Will ignore invalid syntax.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

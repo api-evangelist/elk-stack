@@ -129,23 +129,6 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    AccountUpdateRequest:
-      type: object
-      properties:
-        trust:
-          description: Settings related to the level of trust of the clusters in this account
-          $ref: '#/components/schemas/AccountTrustSettings'
-      description: A request to update an account
     AccountResponse:
       type: object
       required:
@@ -167,6 +150,23 @@ components:
           type: boolean
           description: If true, all clusters in this account will by default trust all other clusters in the same account
       description: Settings related to the level of trust of the clusters in this account
+    AccountUpdateRequest:
+      type: object
+      properties:
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: A request to update an account
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

@@ -6,12 +6,12 @@ info:
     url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
   version: ''
 tags:
-- name: connector
+- name: Connector
 paths:
   /_connector/{connector_id}/_check_in:
     put:
       tags:
-      - connector
+      - Connector
       summary: Check in a connector
       description: Update the `last_seen` field in the connector and set it to the current timestamp.
       operationId: connector-check-in
@@ -47,7 +47,7 @@ paths:
   /_connector/{connector_id}:
     get:
       tags:
-      - connector
+      - Connector
       summary: Get a connector
       description: Get the details about a connector.
       operationId: connector-get
@@ -81,7 +81,7 @@ paths:
         name: product_name
     put:
       tags:
-      - connector
+      - Connector
       summary: Create or update a connector
       operationId: connector-put
       parameters:
@@ -97,7 +97,7 @@ paths:
         name: product_name
     delete:
       tags:
-      - connector
+      - Connector
       summary: Delete a connector
       description: 'Removes a connector and associated sync jobs.
 
@@ -149,7 +149,7 @@ paths:
   /_connector:
     get:
       tags:
-      - connector
+      - Connector
       summary: Get all connectors
       description: Get information about all connectors.
       operationId: connector-list
@@ -229,7 +229,7 @@ paths:
         name: product_name
     put:
       tags:
-      - connector
+      - Connector
       summary: Create or update a connector
       operationId: connector-put-1
       requestBody:
@@ -243,7 +243,7 @@ paths:
         name: product_name
     post:
       tags:
-      - connector
+      - Connector
       summary: Create a connector
       description: 'Connectors are Elasticsearch integrations that bring content from third-party data sources, which can be deployed on Elastic Cloud or hosted on your own infrastructure.
 
@@ -294,7 +294,7 @@ paths:
   /_connector/_sync_job/{connector_sync_job_id}/_cancel:
     put:
       tags:
-      - connector
+      - Connector
       summary: Cancel a connector sync job
       description: 'Cancel a connector sync job, which sets the status to cancelling and updates `cancellation_requested_at` to the current time.
 
@@ -329,7 +329,7 @@ paths:
   /_connector/_sync_job/{connector_sync_job_id}/_check_in:
     put:
       tags:
-      - connector
+      - Connector
       summary: Check in a connector sync job
       description: 'Check in a connector sync job and set the `last_seen` field to the current time before updating it in the internal index.
 
@@ -361,7 +361,7 @@ paths:
   /_connector/_sync_job/{connector_sync_job_id}/_claim:
     put:
       tags:
-      - connector
+      - Connector
       summary: Claim a connector sync job
       description: 'This action updates the job status to `in_progress` and sets the `last_seen` and `started_at` timestamps to the current time.
 
@@ -421,7 +421,7 @@ paths:
   /_connector/_sync_job/{connector_sync_job_id}:
     get:
       tags:
-      - connector
+      - Connector
       summary: Get a connector sync job
       operationId: connector-sync-job-get
       parameters:
@@ -446,7 +446,7 @@ paths:
         name: product_name
     delete:
       tags:
-      - connector
+      - Connector
       summary: Delete a connector sync job
       description: 'Remove a connector sync job and its associated data.
 
@@ -478,7 +478,7 @@ paths:
   /_connector/_sync_job/{connector_sync_job_id}/_error:
     put:
       tags:
-      - connector
+      - Connector
       summary: Set a connector sync job error
       description: 'Set the `error` field for a connector sync job and set its `status` to `error`.
 
@@ -525,7 +525,7 @@ paths:
   /_connector/_sync_job:
     get:
       tags:
-      - connector
+      - Connector
       summary: Get all connector sync jobs
       description: Get information about all stored connector sync jobs listed by their creation date in ascending order.
       operationId: connector-sync-job-list
@@ -594,7 +594,7 @@ paths:
         name: product_name
     post:
       tags:
-      - connector
+      - Connector
       summary: Create a connector sync job
       description: Create a connector sync job document in the internal index and initialize its counters and timestamps with default values.
       operationId: connector-sync-job-post
@@ -640,7 +640,7 @@ paths:
   /_connector/_sync_job/{connector_sync_job_id}/_stats:
     put:
       tags:
-      - connector
+      - Connector
       summary: Set the connector sync job stats
       description: 'Stats include: `deleted_document_count`, `indexed_document_count`, `indexed_document_volume`, and `total_document_count`.
 
@@ -711,7 +711,7 @@ paths:
   /_connector/{connector_id}/_filtering/_activate:
     put:
       tags:
-      - connector
+      - Connector
       summary: Activate the connector draft filter
       description: Activates the valid draft filtering for a connector.
       operationId: connector-update-active-filtering
@@ -744,7 +744,7 @@ paths:
   /_connector/{connector_id}/_api_key_id:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector API key ID
       description: 'Update the `api_key_id` and `api_key_secret_id` fields of a connector.
 
@@ -800,7 +800,7 @@ paths:
   /_connector/{connector_id}/_configuration:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector configuration
       description: Update the configuration field in the connector document.
       operationId: connector-update-configuration
@@ -855,7 +855,7 @@ paths:
   /_connector/{connector_id}/_error:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector error field
       description: 'Set the error field for the connector.
 
@@ -911,7 +911,7 @@ paths:
   /_connector/{connector_id}/_features:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector features
       description: 'Update the connector features in the connector document.
 
@@ -985,7 +985,7 @@ paths:
   /_connector/{connector_id}/_filtering:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector filtering
       description: 'Update the draft filtering configuration of a connector and marks the draft validation state as edited.
 
@@ -1048,7 +1048,7 @@ paths:
   /_connector/{connector_id}/_filtering/_validation:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector draft filtering validation
       description: Update the draft filtering validation info for a connector.
       operationId: connector-update-filtering-validation
@@ -1093,7 +1093,7 @@ paths:
   /_connector/{connector_id}/_index_name:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector index name
       description: Update the `index_name` field of a connector, specifying the index where the data ingested by the connector is stored.
       operationId: connector-update-index-name
@@ -1145,7 +1145,7 @@ paths:
   /_connector/{connector_id}/_name:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector name and description
       operationId: connector-update-name
       parameters:
@@ -1194,7 +1194,7 @@ paths:
   /_connector/{connector_id}/_native:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector is_native flag
       operationId: connector-update-native
       parameters:
@@ -1237,7 +1237,7 @@ paths:
   /_connector/{connector_id}/_pipeline:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector pipeline
       description: When you create a new connector, the configuration of an ingest pipeline is populated with default settings.
       operationId: connector-update-pipeline
@@ -1288,7 +1288,7 @@ paths:
   /_connector/{connector_id}/_scheduling:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector scheduling
       operationId: connector-update-scheduling
       parameters:
@@ -1340,7 +1340,7 @@ paths:
   /_connector/{connector_id}/_service_type:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector service type
       operationId: connector-update-service-type
       parameters:
@@ -1389,7 +1389,7 @@ paths:
   /_connector/{connector_id}/_status:
     put:
       tags:
-      - connector
+      - Connector
       summary: Update the connector status
       operationId: connector-update-status
       parameters:
@@ -1438,18 +1438,198 @@ paths:
         name: product_name
 components:
   schemas:
-    connector._types.RegexValidation:
+    _types.IndexName:
+      type: string
+    _types.ScalarValue:
+      description: A scalar value.
+      oneOf:
+      - type: number
+      - type: number
+      - type: string
+      - type: boolean
+      - type:
+        - string
+        - 'null'
+    connector._types.GreaterThanValidation:
       type: object
       properties:
         type:
           type: string
           enum:
-          - regex
+          - greater_than
+        constraint:
+          type: number
+      required:
+      - type
+      - constraint
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    connector._types.CustomScheduling:
+      type: object
+      properties:
+        configuration_overrides:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.CustomSchedulingConfigurationOverrides'
+        enabled:
+          type: boolean
+        interval:
+          type: string
+        last_synced:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        name:
+          type: string
+      required:
+      - configuration_overrides
+      - enabled
+      - interval
+      - name
+    _types.Id:
+      type: string
+    connector._types.FilteringAdvancedSnippet:
+      type: object
+      properties:
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        updated_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        value:
+          type: object
+      required:
+      - value
+    connector._types.Dependency:
+      type: object
+      properties:
+        field:
+          type: string
+        value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - field
+      - value
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    connector._types.IngestPipelineParams:
+      type: object
+      properties:
+        extract_binary_content:
+          type: boolean
+        name:
+          type: string
+        reduce_whitespace:
+          type: boolean
+        run_ml_inference:
+          type: boolean
+      required:
+      - extract_binary_content
+      - name
+      - reduce_whitespace
+      - run_ml_inference
+    connector._types.SyncJobTriggerMethod:
+      type: string
+      enum:
+      - on_demand
+      - scheduled
+    connector._types.FilteringRulesValidation:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.FilteringValidation'
+        state:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringValidationState'
+      required:
+      - errors
+      - state
+    _types.Name:
+      type: string
+    _types.Field:
+      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
+      type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    connector._types.SchedulingConfiguration:
+      type: object
+      properties:
+        access_control:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
+        full:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
+        incremental:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
+    connector._types.ListTypeValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - list_type
         constraint:
           type: string
       required:
       - type
       - constraint
+    connector._types.FilteringValidation:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.Id'
+        messages:
+          type: array
+          items:
+            type: string
+      required:
+      - ids
+      - messages
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    connector._types.FilteringPolicy:
+      type: string
+      enum:
+      - exclude
+      - include
+    connector._types.ConnectorStatus:
+      type: string
+      enum:
+      - created
+      - needs_configuration
+      - configured
+      - connected
+      - error
     connector._types.ConnectorSyncJob:
       type: object
       properties:
@@ -1514,11 +1694,42 @@ components:
       - status
       - total_document_count
       - trigger_method
-    connector._types.SyncJobTriggerMethod:
-      type: string
-      enum:
-      - on_demand
-      - scheduled
+    connector._types.FilteringRule:
+      type: object
+      properties:
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        field:
+          allOf:
+          - $ref: '#/components/schemas/_types.Field'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        order:
+          type: number
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringPolicy'
+        rule:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRuleRule'
+        updated_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        value:
+          type: string
+      required:
+      - field
+      - id
+      - order
+      - policy
+      - rule
+      - value
+    connector._types.ConnectorConfiguration:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/connector._types.ConnectorConfigProperties'
     connector._types.ConnectorFieldType:
       type: string
       enum:
@@ -1526,6 +1737,68 @@ components:
       - int
       - list
       - bool
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    connector._types.SelectOption:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - label
+      - value
+    connector._types.FilteringValidationState:
+      type: string
+      enum:
+      - edited
+      - invalid
+      - valid
+    connector._types.Validation:
+      discriminator:
+        propertyName: type
+        mapping:
+          greater_than: '#/components/schemas/connector._types.GreaterThanValidation'
+          included_in: '#/components/schemas/connector._types.IncludedInValidation'
+          less_than: '#/components/schemas/connector._types.LessThanValidation'
+          list_type: '#/components/schemas/connector._types.ListTypeValidation'
+          regex: '#/components/schemas/connector._types.RegexValidation'
+      oneOf:
+      - $ref: '#/components/schemas/connector._types.LessThanValidation'
+      - $ref: '#/components/schemas/connector._types.GreaterThanValidation'
+      - $ref: '#/components/schemas/connector._types.ListTypeValidation'
+      - $ref: '#/components/schemas/connector._types.IncludedInValidation'
+      - $ref: '#/components/schemas/connector._types.RegexValidation'
+    connector._types.FeatureEnabled:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
+    _spec_utils.NullValue:
+      description: 'A `null` value that is to be interpreted as an actual value, unless other uses of `null` that are equivalent
+
+        to a missing value. It is used for exemple in settings, where using the `NullValue` for a setting will reset
+
+        it to its default value.'
+      type:
+      - string
+      - 'null'
     connector._types.SyncRulesFeature:
       type: object
       properties:
@@ -1537,44 +1810,114 @@ components:
           description: Indicates whether basic sync rules are enabled.
           allOf:
           - $ref: '#/components/schemas/connector._types.FeatureEnabled'
-    _types.ScalarValue:
-      description: A scalar value.
+    _types.Indices:
       oneOf:
-      - type: number
-      - type: number
-      - type: string
-      - type: boolean
-      - type:
-        - string
-        - 'null'
-    connector._types.IngestPipelineParams:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    connector._types.RegexValidation:
       type: object
       properties:
-        extract_binary_content:
-          type: boolean
-        name:
+        type:
           type: string
-        reduce_whitespace:
-          type: boolean
-        run_ml_inference:
-          type: boolean
+          enum:
+          - regex
+        constraint:
+          type: string
       required:
-      - extract_binary_content
-      - name
-      - reduce_whitespace
-      - run_ml_inference
-    _types.AcknowledgedResponseBase:
+      - type
+      - constraint
+    connector._types.ConnectorFeatures:
       type: object
       properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
+        document_level_security:
+          description: Indicates whether document-level security is enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        incremental_sync:
+          description: Indicates whether incremental syncs are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        native_connector_api_keys:
+          description: Indicates whether managed connector API keys are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        sync_rules:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncRulesFeature'
+    connector._types.LessThanValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - less_than
+        constraint:
+          type: number
       required:
-      - acknowledged
-    _types.IndexName:
+      - type
+      - constraint
+    connector._types.SyncStatus:
       type: string
-    _types.Id:
+      enum:
+      - canceling
+      - canceled
+      - completed
+      - error
+      - in_progress
+      - pending
+      - suspended
+    connector._types.FilteringConfig:
+      type: object
+      properties:
+        active:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+        domain:
+          type: string
+        draft:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+      required:
+      - active
+      - draft
+    connector._types.DisplayType:
       type: string
+      enum:
+      - textbox
+      - textarea
+      - numeric
+      - toggle
+      - dropdown
+    connector._types.ConnectorCustomScheduling:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/connector._types.CustomScheduling'
+    connector._types.FilteringRuleRule:
+      type: string
+      enum:
+      - contains
+      - ends_with
+      - equals
+      - regex
+      - starts_with
+      - '>'
+      - <
+    connector._types.IncludedInValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - included_in
+        constraint:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - type
+      - constraint
     connector._types.Connector:
       type: object
       properties:
@@ -1673,82 +2016,25 @@ components:
       - scheduling
       - status
       - sync_now
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    connector._types.Validation:
-      discriminator:
-        propertyName: type
-        mapping:
-          greater_than: '#/components/schemas/connector._types.GreaterThanValidation'
-          included_in: '#/components/schemas/connector._types.IncludedInValidation'
-          less_than: '#/components/schemas/connector._types.LessThanValidation'
-          list_type: '#/components/schemas/connector._types.ListTypeValidation'
-          regex: '#/components/schemas/connector._types.RegexValidation'
-      oneOf:
-      - $ref: '#/components/schemas/connector._types.LessThanValidation'
-      - $ref: '#/components/schemas/connector._types.GreaterThanValidation'
-      - $ref: '#/components/schemas/connector._types.ListTypeValidation'
-      - $ref: '#/components/schemas/connector._types.IncludedInValidation'
-      - $ref: '#/components/schemas/connector._types.RegexValidation'
-    connector._types.FilteringRulesValidation:
+    connector._types.CustomSchedulingConfigurationOverrides:
       type: object
       properties:
-        errors:
+        max_crawl_depth:
+          type: number
+        sitemap_discovery_disabled:
+          type: boolean
+        domain_allowlist:
           type: array
           items:
-            $ref: '#/components/schemas/connector._types.FilteringValidation'
-        state:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringValidationState'
-      required:
-      - errors
-      - state
-    _types.Result:
-      type: string
-      enum:
-      - created
-      - updated
-      - deleted
-      - not_found
-      - noop
-    connector._types.SyncJobType:
-      type: string
-      enum:
-      - full
-      - incremental
-      - access_control
-    _types.Names:
-      oneOf:
-      - $ref: '#/components/schemas/_types.Name'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.Name'
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    connector._types.ConnectorScheduling:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-        interval:
-          description: The interval is expressed using the crontab syntax
-          type: string
-      required:
-      - enabled
-      - interval
+            type: string
+        sitemap_urls:
+          type: array
+          items:
+            type: string
+        seed_urls:
+          type: array
+          items:
+            type: string
     connector._types.SyncJobConnectorReference:
       type: object
       properties:
@@ -1778,176 +2064,18 @@ components:
       - id
       - index_name
       - service_type
-    connector._types.CustomScheduling:
-      type: object
-      properties:
-        configuration_overrides:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.CustomSchedulingConfigurationOverrides'
-        enabled:
-          type: boolean
-        interval:
-          type: string
-        last_synced:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        name:
-          type: string
-      required:
-      - configuration_overrides
-      - enabled
-      - interval
-      - name
-    connector._types.SchedulingConfiguration:
-      type: object
-      properties:
-        access_control:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
-        full:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
-        incremental:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
-    connector._types.ConnectorCustomScheduling:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/connector._types.CustomScheduling'
-    connector._types.FilteringValidation:
-      type: object
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.Id'
-        messages:
-          type: array
-          items:
-            type: string
-      required:
-      - ids
-      - messages
-    connector._types.CustomSchedulingConfigurationOverrides:
-      type: object
-      properties:
-        max_crawl_depth:
-          type: number
-        sitemap_discovery_disabled:
-          type: boolean
-        domain_allowlist:
-          type: array
-          items:
-            type: string
-        sitemap_urls:
-          type: array
-          items:
-            type: string
-        seed_urls:
-          type: array
-          items:
-            type: string
-    connector._types.FeatureEnabled:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-      required:
-      - enabled
-    connector._types.IncludedInValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - included_in
-        constraint:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ScalarValue'
-      required:
-      - type
-      - constraint
-    connector._types.DisplayType:
+    connector._types.SyncJobType:
       type: string
       enum:
-      - textbox
-      - textarea
-      - numeric
-      - toggle
-      - dropdown
-    connector._types.FilteringConfig:
-      type: object
-      properties:
-        active:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRules'
-        domain:
-          type: string
-        draft:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRules'
-      required:
-      - active
-      - draft
-    connector._types.FilteringPolicy:
-      type: string
-      enum:
-      - exclude
-      - include
-    connector._types.LessThanValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - less_than
-        constraint:
-          type: number
-      required:
-      - type
-      - constraint
-    connector._types.ListTypeValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - list_type
-        constraint:
-          type: string
-      required:
-      - type
-      - constraint
-    _types.Indices:
+      - full
+      - incremental
+      - access_control
+    _types.Names:
       oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
+      - $ref: '#/components/schemas/_types.Name'
       - type: array
         items:
-          $ref: '#/components/schemas/_types.IndexName'
-    connector._types.FilteringRuleRule:
-      type: string
-      enum:
-      - contains
-      - ends_with
-      - equals
-      - regex
-      - starts_with
-      - '>'
-      - <
-    connector._types.ConnectorConfiguration:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/connector._types.ConnectorConfigProperties'
-    _spec_utils.NullValue:
-      description: 'A `null` value that is to be interpreted as an actual value, unless other uses of `null` that are equivalent
-
-        to a missing value. It is used for exemple in settings, where using the `NullValue` for a setting will reset
-
-        it to its default value.'
-      type:
-      - string
-      - 'null'
+          $ref: '#/components/schemas/_types.Name'
     connector._types.ConnectorConfigProperties:
       type: object
       properties:
@@ -2005,62 +2133,20 @@ components:
       - required
       - sensitive
       - value
-    connector._types.ConnectorStatus:
-      type: string
-      enum:
-      - created
-      - needs_configuration
-      - configured
-      - connected
-      - error
-    _types.Metadata:
-      type: object
-      additionalProperties:
-        type: object
-    connector._types.ConnectorFeatures:
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    connector._types.ConnectorScheduling:
       type: object
       properties:
-        document_level_security:
-          description: Indicates whether document-level security is enabled.
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
-        incremental_sync:
-          description: Indicates whether incremental syncs are enabled.
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
-        native_connector_api_keys:
-          description: Indicates whether managed connector API keys are enabled.
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
-        sync_rules:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.SyncRulesFeature'
-    connector._types.Dependency:
-      type: object
-      properties:
-        field:
+        enabled:
+          type: boolean
+        interval:
+          description: The interval is expressed using the crontab syntax
           type: string
-        value:
-          allOf:
-          - $ref: '#/components/schemas/_types.ScalarValue'
       required:
-      - field
-      - value
-    connector._types.FilteringValidationState:
-      type: string
-      enum:
-      - edited
-      - invalid
-      - valid
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+      - enabled
+      - interval
     connector._types.FilteringRules:
       type: object
       properties:
@@ -2078,92 +2164,6 @@ components:
       - advanced_snippet
       - rules
       - validation
-    connector._types.GreaterThanValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - greater_than
-        constraint:
-          type: number
-      required:
-      - type
-      - constraint
-    _types.Field:
-      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
-      type: string
-    connector._types.FilteringRule:
-      type: object
-      properties:
-        created_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        field:
-          allOf:
-          - $ref: '#/components/schemas/_types.Field'
-        id:
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        order:
-          type: number
-        policy:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringPolicy'
-        rule:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRuleRule'
-        updated_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        value:
-          type: string
-      required:
-      - field
-      - id
-      - order
-      - policy
-      - rule
-      - value
-    connector._types.SelectOption:
-      type: object
-      properties:
-        label:
-          type: string
-        value:
-          allOf:
-          - $ref: '#/components/schemas/_types.ScalarValue'
-      required:
-      - label
-      - value
-    _types.Name:
-      type: string
-    connector._types.FilteringAdvancedSnippet:
-      type: object
-      properties:
-        created_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        updated_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        value:
-          type: object
-      required:
-      - value
-    connector._types.SyncStatus:
-      type: string
-      enum:
-      - canceling
-      - canceled
-      - completed
-      - error
-      - in_progress
-      - pending
-      - suspended
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
   responses:
     connector.put-200:
       description: ''
@@ -2184,6 +2184,16 @@ components:
           examples:
             ConnectorPutResponseExample1:
               value: "{\n  \"result\": \"created\",\n  \"id\": \"my-connector\"\n}"
+  parameters:
+    connector.put-connector_id:
+      in: path
+      name: connector_id
+      description: The unique identifier of the connector to be created or updated. ID is auto-generated if not provided.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Id'
+      style: simple
   requestBodies:
     connector.put:
       content:
@@ -2209,13 +2219,3 @@ components:
               value: "{\n  \"index_name\": \"search-google-drive\",\n  \"name\": \"My Connector\",\n  \"service_type\": \"google_drive\"\n}"
             ConnectorPutRequestExample2:
               value: "{\n  \"index_name\": \"search-google-drive\",\n  \"name\": \"My Connector\",\n  \"description\": \"My Connector to sync data to Elastic index from Google Drive\",\n  \"service_type\": \"google_drive\",\n  \"language\": \"english\"\n}"
-  parameters:
-    connector.put-connector_id:
-      in: path
-      name: connector_id
-      description: The unique identifier of the connector to be created or updated. ID is auto-generated if not provided.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Id'
-      style: simple

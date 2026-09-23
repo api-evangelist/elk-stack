@@ -103,15 +103,15 @@ paths:
         required: true
 components:
   schemas:
-    TelemetryConfigRequest:
+    TelemetryConfig:
       type: object
       required:
       - enabled
       properties:
         enabled:
           type: boolean
-          description: Whether to enable ECE telemetry
-      description: The desired ECE telemetry configuration
+          description: Whether ECE telemetry is enabled
+      description: The current ECE telemetry configuration
     BasicFailedReplyElement:
       type: object
       required:
@@ -139,15 +139,15 @@ components:
           description: A list of errors that occurred in the failing request
           items:
             $ref: '#/components/schemas/BasicFailedReplyElement'
-    TelemetryConfig:
+    TelemetryConfigRequest:
       type: object
       required:
       - enabled
       properties:
         enabled:
           type: boolean
-          description: Whether ECE telemetry is enabled
-      description: The current ECE telemetry configuration
+          description: Whether to enable ECE telemetry
+      description: The desired ECE telemetry configuration
   securitySchemes:
     apiKey:
       type: apiKey

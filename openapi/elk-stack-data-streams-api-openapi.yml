@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Data streams API
   version: ''
   x-doc-license:
@@ -73,10 +20,8 @@ security:
 - apiKeyAuth: []
 - basicAuth: []
 tags:
-- name: Data streams
-  description: 'Data stream APIs enable you to manage data streams, which are collections of indices that share the same index template and are managed as a single unit for time-series data.
-
-    '
+- name: Data Streams
+  description: Data stream APIs enable you to manage data streams, which are collections of indices that share the same index template and are managed as a single unit for time-series data.
   x-displayName: Data streams
 paths:
   /api/fleet/data_streams:
@@ -84,13 +29,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/data_streams</span></div>
+        get /s/{space_id}/api/fleet/data_streams
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        List all Fleet-managed data streams with metadata including package, namespace, size, and last activity.<br/><br/>[Required authorization] Route required privileges: fleet-agents-all AND fleet-agent-policies-all AND fleet-settings-all.'
+        List all Fleet-managed data streams with metadata including package, namespace, size, and last activity.
+
+
+        [Required authorization] Route required privileges: fleet-agents-all AND fleet-agent-policies-all AND fleet-settings-all.'
       operationId: get-fleet-data-streams
       parameters: []
       responses:
@@ -229,7 +177,7 @@ paths:
           description: Bad Request
       summary: Get data streams
       tags:
-      - Data streams
+      - Data Streams
       x-metaTags:
       - content: Kibana
         name: product_name
@@ -238,13 +186,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/fleet/epm/data_streams</span></div>
+        get /s/{space_id}/api/fleet/epm/data_streams
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a list of data streams created by installed integration packages.<br/><br/>[Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
+        Get a list of data streams created by installed integration packages.
+
+
+        [Required authorization] Route required privileges: integrations-read OR fleet-setup OR fleet-all.'
       operationId: get-fleet-epm-data-streams
       parameters:
       - description: Filter by data stream type
@@ -330,7 +281,7 @@ paths:
           description: Bad Request
       summary: Get data streams
       tags:
-      - Data streams
+      - Data Streams
       x-metaTags:
       - content: Kibana
         name: product_name

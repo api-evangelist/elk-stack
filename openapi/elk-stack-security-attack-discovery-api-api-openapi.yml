@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Security Attack discovery API
   version: ''
   x-doc-license:
@@ -82,10 +29,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/_bulk</span></div>
+        post /s/{space_id}/api/attack_discovery/_bulk
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Performs bulk updates on multiple Attack discoveries, including workflow status changes and visibility settings. This endpoint allows efficient batch processing of alert modifications without requiring individual API calls for each alert.'
@@ -226,10 +173,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/_find</span></div>
+        get /s/{space_id}/api/attack_discovery/_find
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Find Attack discoveries that match the search criteria. Supports free text search, filtering, pagination, and sorting.'
@@ -467,10 +414,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/_generate</span></div>
+        post /s/{space_id}/api/attack_discovery/_generate
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Initiates the generation of attack discoveries by analyzing security alerts using AI. Returns an execution UUID that can be used to track the generation progress and retrieve results. Results may also be retrieved via the find endpoint.'
@@ -569,10 +516,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/generations</span></div>
+        get /s/{space_id}/api/attack_discovery/generations
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Get the latest Attack Discovery generations metadata (that are not dismissed) for the current user. This endpoint retrieves generation metadata including execution status and statistics for Attack Discovery generations.'
@@ -676,10 +623,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/generations/{execution_uuid}</span></div>
+        get /s/{space_id}/api/attack_discovery/generations/{execution_uuid}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns a specific Attack Discovery generation, including all generated Attack discoveries and associated metadata, including execution status and statistics.'
@@ -770,7 +717,7 @@ paths:
                 - error
                 - message
           description: Bad Request response.
-      summary: Get a single Attack Discovery generation, including its discoveries and (optional) generation metadata
+      summary: Get a single Attack Discovery generation, including its discoveries and…
       tags:
       - Security Attack discovery API
       x-codeSamples:
@@ -785,10 +732,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/generations/{execution_uuid}/_dismiss</span></div>
+        post /s/{space_id}/api/attack_discovery/generations/{execution_uuid}/_dismiss
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Dismisses an Attack Discovery generation for the current user, indicating that its status should not be reported in the UI. This sets the generation''s status to "dismissed" and affects how the generation appears in subsequent queries.'
@@ -926,10 +873,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules</span></div>
+        post /s/{space_id}/api/attack_discovery/schedules
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Creates a new Attack Discovery schedule that analyzes security alerts at specified intervals. The schedule defines when and how Attack Discovery analysis should run, including which alerts to analyze, which AI connector to use, and what actions to take when discoveries are found.'
@@ -1017,10 +964,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/_bulk_delete</span></div>
+        post /s/{space_id}/api/attack_discovery/schedules/_bulk_delete
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Deletes multiple Attack Discovery schedules by ID.'
@@ -1078,10 +1025,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/_bulk_disable</span></div>
+        post /s/{space_id}/api/attack_discovery/schedules/_bulk_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Disables multiple Attack Discovery schedules by ID.'
@@ -1139,10 +1086,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/_bulk_enable</span></div>
+        post /s/{space_id}/api/attack_discovery/schedules/_bulk_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Enables multiple Attack Discovery schedules by ID.'
@@ -1200,10 +1147,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/_find</span></div>
+        get /s/{space_id}/api/attack_discovery/schedules/_find
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Find Attack Discovery schedules that match the search criteria. Supports pagination and sorting by various fields.'
@@ -1335,10 +1282,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/{id}</span></div>
+        delete /s/{space_id}/api/attack_discovery/schedules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Permanently deletes an Attack Discovery schedule and all associated configuration.'
@@ -1396,10 +1343,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/{id}</span></div>
+        get /s/{space_id}/api/attack_discovery/schedules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Retrieves a specific Attack Discovery schedule by its unique identifier. Returns complete schedule configuration including parameters, interval settings, associated actions, and execution history.'
@@ -1473,10 +1420,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/{id}</span></div>
+        put /s/{space_id}/api/attack_discovery/schedules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Updates an existing Attack Discovery schedule with new configuration. All schedule properties can be modified including name, parameters, interval, and actions. The update operation replaces the entire schedule configuration with the provided values.'
@@ -1571,10 +1518,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/{id}/_disable</span></div>
+        post /s/{space_id}/api/attack_discovery/schedules/{id}/_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Disables an Attack Discovery schedule, preventing it from running according to its configured interval. The schedule configuration is preserved and can be re-enabled later. Any currently running executions will complete, but no new executions will be started.'
@@ -1633,10 +1580,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/attack_discovery/schedules/{id}/_enable</span></div>
+        post /s/{space_id}/api/attack_discovery/schedules/{id}/_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Enables a previously disabled Attack Discovery schedule, allowing it to run according to its configured interval. Once enabled, the schedule will begin executing at the next scheduled time based on its interval configuration.'
@@ -1692,77 +1639,37 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Attack_discovery_API_WorkflowExecutionsTracking:
-      description: Workflow execution tracking for manual orchestration
-      type: object
-      properties:
-        alertRetrieval:
-          description: Alert retrieval workflow executions (one per workflow invoked)
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
-          type:
-          - array
-          - 'null'
-        gate:
-          description: Generation-phase gate (skill) executions, including any net-new alert re-fetch the skill triggers
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
-          type:
-          - array
-          - 'null'
-        generation:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
-        validation:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionGroup:
-      description: Groups actions by use cases. Use `default` for alert notifications.
-      type: string
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleParams:
-      description: An Attack Discovery schedule params
-      type: object
-      properties:
-        alerts_index_pattern:
-          description: The index pattern to get alerts from
-          type: string
-        api_config:
-          allOf:
-          - $ref: '#/components/schemas/Security_Attack_discovery_API_ApiConfig'
-          - type: object
-            properties:
-              name:
-                description: The name of the connector
-                type: string
-            required:
-            - name
-          description: LLM API configuration.
-        combined_filter:
-          additionalProperties: true
-          type: object
-        end:
-          type: string
-        filters:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_Filters'
-        query:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_Query'
-        size:
-          type: number
-        start:
-          type: string
-      required:
-      - alerts_index_pattern
-      - api_config
-      - size
-    Security_Attack_discovery_API_Provider:
-      description: Provider
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecutionStatus:
+      description: An Attack Discovery schedule execution status
       enum:
-      - OpenAI
-      - Azure OpenAI
-      - Other
-      example: OpenAI
+      - ok
+      - active
+      - error
+      - unknown
+      - warning
       type: string
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionAlertsFilter:
-      additionalProperties: true
+    Security_Attack_discovery_API_NonEmptyTimestamp:
+      description: A string that represents a timestamp in ISO 8601 format and does not contain only whitespace characters.
+      example: '2023-10-31T12:00:00Z'
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Attack_discovery_API_AttackDiscoveryGenericError:
+      description: Error response for Attack discovery schedule operations when the request is rejected. Uses `status_code` (snake_case), `error`, and `message` to match the implementation.
       type: object
+      properties:
+        error:
+          description: Error type
+          example: Bad Request
+          type: string
+        message:
+          description: Human-readable error message describing what went wrong
+          example: Invalid request parameters.
+          type: string
+        status_code:
+          description: HTTP status code
+          example: 400
+          type: number
     Security_Attack_discovery_API_SortOrder:
       description: The order in which results are sorted.
       enum:
@@ -1775,133 +1682,10 @@ components:
       example: 1h
       pattern: ^[1-9]\d*[smhd]$
       type: string
-    Security_Attack_discovery_API_Replacements:
-      additionalProperties:
-        type: string
-      description: Replacements object used to anonymize/deanonymize messages
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionParams:
+      additionalProperties: true
+      description: Object containing the allowed connector fields, which varies according to the connector type.
       type: object
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleGeneralAction:
-      type: object
-      properties:
-        action_type_id:
-          description: The action type used for sending notifications.
-          type: string
-        alerts_filter:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionAlertsFilter'
-        frequency:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionFrequency'
-        group:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionGroup'
-        id:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionId'
-        params:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionParams'
-        uuid:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
-      required:
-      - action_type_id
-      - group
-      - id
-      - params
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionFrequency:
-      description: The action frequency defines when the action runs (for example, only on schedule execution or at specific time intervals).
-      type: object
-      properties:
-        notify_when:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionNotifyWhen'
-        summary:
-          description: Action summary indicates whether we will send a summary notification about all the generate alerts or notification per individual alert
-          type: boolean
-        throttle:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionThrottle'
-      required:
-      - summary
-      - notify_when
-      - throttle
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionId:
-      description: The connector ID.
-      type: string
-    Security_Attack_discovery_API_NonEmptyTimestamp:
-      description: A string that represents a timestamp in ISO 8601 format and does not contain only whitespace characters.
-      example: '2023-10-31T12:00:00Z'
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Attack_discovery_API_AttackDiscoveryFindSortField:
-      description: Allowed field names to sort Attack Discovery results by. Clients should only pass one of the listed values.
-      enum:
-      - '@timestamp'
-      type: string
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionNotifyWhen:
-      description: 'The condition for throttling the notification: `onActionGroupChange`, `onActiveAlert`,  or `onThrottleInterval`'
-      enum:
-      - onActiveAlert
-      - onThrottleInterval
-      - onActionGroupChange
-      type: string
-    Security_Attack_discovery_API_IntervalApiSchedule:
-      type: object
-      properties:
-        interval:
-          description: The schedule interval
-          type: string
-      required:
-      - interval
-    Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesRequestBody:
-      type: object
-      properties:
-        ids:
-          description: The unique identifiers of the Attack Discovery schedules to update.
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
-          minItems: 1
-          type: array
-      required:
-      - ids
-    Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesResponse:
-      type: object
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesError'
-          type: array
-        ids:
-          description: The unique identifiers of the schedules successfully affected by the bulk action.
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
-          type: array
-        total:
-          description: The total number of schedules matched by the bulk action.
-          type: number
-      required:
-      - ids
-      - errors
-      - total
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleCreateProps:
-      description: An Attack Discovery schedule create properties
-      type: object
-      properties:
-        actions:
-          description: The Attack Discovery schedule actions
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleAction'
-          type: array
-        enabled:
-          description: Indicates whether the schedule is enabled
-          type: boolean
-        name:
-          description: The name of the schedule
-          type: string
-        params:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleParams'
-          description: The Attack Discovery schedule configuration parameters
-        schedule:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_IntervalApiSchedule'
-          description: The Attack Discovery schedule interval
-      required:
-      - name
-      - params
-      - schedule
     Security_Attack_discovery_API_AnonymizationFieldResponse:
       type: object
       properties:
@@ -1946,256 +1730,14 @@ components:
       required:
       - id
       - field
-    Security_Attack_discovery_API_NonEmptyString:
-      description: A string that does not contain only whitespace characters.
-      example: I am a string
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Attack_discovery_API_AttackDiscoveryGeneration:
-      type: object
-      properties:
-        alerts_context_count:
-          description: The number of alerts sent as context (max kibana.alert.rule.execution.metrics.alert_counts.active) to the LLM for the generation
-          type: number
-        connector_id:
-          description: The connector id (event.dataset) for this generation
-          type: string
-        connector_stats:
-          description: Stats applicable to the connector for this generation
-          type: object
-          properties:
-            average_successful_duration_nanoseconds:
-              description: The average duration (avg event.duration) in nanoseconds of successful generations for the same connector id, for the current user
-              type: number
-            successful_generations:
-              description: The number of successful generations for the same connector id, for the current user
-              type: number
-        conversation_id:
-          description: Identifier of the persisted Agent Builder conversation for skill-based alert retrieval (optional; present only when the skill retrieval mode ran)
-          type: string
-        discoveries:
-          description: The number of new Attack discovery alerts (max kibana.alert.rule.execution.metrics.alert_counts.new) for this generation
-          type: number
-        duplicates_dropped_count:
-          description: The number of attack discoveries dropped as duplicates during the persist step
-          type: integer
-        end:
-          description: When generation ended (max event.end)
-          type: string
-        error_category:
-          description: Structured error category from server classification (optional; absent for successful generations)
-          type: string
-        execution_uuid:
-          description: The unique identifier (kibana.alert.rule.execution.uuid) for the generation
-          type: string
-        failed_workflow_id:
-          description: Workflow ID that caused the failure (optional; absent for successful generations)
-          type: string
-        generated_count:
-          description: The number of attack discoveries generated before deduplication and hallucination filtering
-          type: integer
-        hallucinations_filtered_count:
-          description: The number of attack discoveries filtered as hallucinations during the validation step
-          type: integer
-        loading_message:
-          description: Generation loading message (kibana.alert.rule.execution.status)
-          type: string
-        persisted_count:
-          description: The number of attack discoveries successfully persisted after deduplication and hallucination filtering
-          type: integer
-        reason:
-          description: Reason for failed generations (event.reason)
-          type: string
-        source_metadata:
-          description: Source metadata for scheduled generations (rule_id, rule_name, action_execution_uuid)
-          type:
-          - object
-          - 'null'
-          properties:
-            action_execution_uuid:
-              description: The action execution UUID from the alerting framework
-              type: string
-            rule_id:
-              description: The ID of the alerting rule that triggered this generation
-              type: string
-            rule_name:
-              description: The name of the alerting rule that triggered this generation
-              type: string
-        start:
-          description: When generation started (min event.start)
-          type: string
-        status:
-          description: The status of the attack discovery generation
-          enum:
-          - canceled
-          - dismissed
-          - failed
-          - started
-          - succeeded
-          type: string
-        step_event_actions:
-          description: Synthesized per-step lifecycle markers (e.g. step-start, step-complete, step-fail) derived from raw event.action values. The array is ordered by step sequence (alert retrieval, generation, validation), with each step contributing 0-2 tokens that indicate its execution status.
-          items:
-            type: string
-          type: array
-        workflow_executions:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionsTracking'
-          description: Workflow execution tracking for alert retrieval, generation, and validation workflows
-        workflow_id:
-          description: The workflow definition ID for deep linking
-          type: string
-        workflow_run_id:
-          description: The workflow execution ID for monitoring
-          type: string
-      required:
-      - connector_id
-      - discoveries
-      - execution_uuid
-      - start
-      - status
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecution:
-      description: An Attack Discovery schedule execution information
-      type: object
-      properties:
-        date:
-          description: Date of the execution
-          format: date-time
-          type: string
-        duration:
-          description: Duration of the execution
-          type: number
-        message:
-          type: string
-        status:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecutionStatus'
-          description: Status of the execution
-      required:
-      - date
-      - status
-      - last_duration
-    Security_Attack_discovery_API_ApiConfig:
-      type: object
-      properties:
-        actionTypeId:
-          description: Action type ID
-          example: actionType456
-          type: string
-        connectorId:
-          description: Connector ID
-          example: connector123
-          type: string
-        defaultSystemPromptId:
-          description: Default system prompt ID
-          example: systemPrompt001
-          type: string
-        model:
-          description: Model
-          example: gpt-4
-          type: string
-        provider:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_Provider'
-          description: Provider
-          example: OpenAI
-      required:
-      - connectorId
-      - actionTypeId
-    Security_Attack_discovery_API_AttackDiscoveryGenerationConfig:
-      type: object
-      properties:
-        alertsIndexPattern:
-          description: 'The (space specific) index pattern that contains the alerts to use as
-
-            context for the attack discovery.
-
-            Example: .alerts-security.alerts-default
-
-            '
-          type: string
-        anonymizationFields:
-          description: The list of fields, and whether or not they are anonymized, allowed to be sent to LLMs. Consider using the output of the `/api/security_ai_assistant/anonymization_fields/_find` API (for a specific Kibana space) to provide this value.
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_AnonymizationFieldResponse'
-          type: array
-        apiConfig:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_ApiConfig'
-          description: LLM API configuration.
-        connectorName:
-          type: string
-        end:
-          type: string
-        filter:
-          additionalProperties: true
-          description: "An Elasticsearch-style query DSL object used to filter alerts. For example:\n```json {\n  \"filter\": {\n    \"bool\": {\n      \"must\": [],\n      \"filter\": [\n        {\n          \"bool\": {\n            \"should\": [\n              {\n                \"term\": {\n                  \"user.name\": { \"value\": \"james\" }\n                }\n              }\n            ],\n            \"minimum_should_match\": 1\n          }\n        }\n      ],\n      \"should\": [],\n      \"must_not\": []\n    }\n  }\n} ```"
-          type: object
-        model:
-          type: string
-        replacements:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_Replacements'
-        size:
-          type: number
-        start:
-          type: string
-        subAction:
-          enum:
-          - invokeAI
-          - invokeStream
-          type: string
-      required:
-      - apiConfig
-      - alertsIndexPattern
-      - anonymizationFields
-      - size
-      - subAction
-    Security_Attack_discovery_API_User:
-      description: Could be any string, not necessarily a UUID.
-      type: object
-      properties:
-        id:
-          description: User id.
-          example: user123
-          type: string
-        name:
-          description: User name.
-          example: John Doe
-          type: string
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecutionStatus:
-      description: An Attack Discovery schedule execution status
+    Security_Attack_discovery_API_Provider:
+      description: Provider
       enum:
-      - ok
-      - active
-      - error
-      - unknown
-      - warning
+      - OpenAI
+      - Azure OpenAI
+      - Other
+      example: OpenAI
       type: string
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleAction:
-      oneOf:
-      - $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleGeneralAction'
-      - $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleSystemAction'
-    Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesError:
-      type: object
-      properties:
-        message:
-          description: The error message returned for the failed schedule.
-          type: string
-        rule:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
-              description: The unique identifier of the failed schedule.
-            name:
-              description: The name of the failed schedule.
-              type: string
-          required:
-          - id
-          - name
-        status:
-          description: Optional HTTP status associated with the failed schedule operation.
-          type: number
-      required:
-      - message
-      - rule
     Security_Attack_discovery_API_Query:
       description: An query condition to filter alerts
       type: object
@@ -2210,22 +1752,6 @@ components:
       required:
       - query
       - language
-    Security_Attack_discovery_API_AttackDiscoveryGenericError:
-      description: Error response for Attack discovery schedule operations when the request is rejected. Uses `status_code` (snake_case), `error`, and `message` to match the implementation.
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Bad Request
-          type: string
-        message:
-          description: Human-readable error message describing what went wrong
-          example: Invalid request parameters.
-          type: string
-        status_code:
-          description: HTTP status code
-          example: 400
-          type: number
     Security_Attack_discovery_API_AttackDiscoveryApiScheduleSystemAction:
       type: object
       properties:
@@ -2242,62 +1768,6 @@ components:
       - action_type_id
       - id
       - params
-    Security_Attack_discovery_API_Filters:
-      description: The filter array used to define the conditions for when alerts are selected as an Attack Discovery context. Defaults to an empty array.
-      items: {}
-      type: array
-    Security_Attack_discovery_API_AttackDiscoveryApiSchedule:
-      description: An Attack Discovery schedule
-      type: object
-      properties:
-        actions:
-          description: The Attack Discovery schedule actions
-          items:
-            $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleAction'
-          type: array
-        created_at:
-          description: The date the schedule was created
-          format: date-time
-          type: string
-        created_by:
-          description: The name of the user that created the schedule
-          type: string
-        enabled:
-          description: Indicates whether the schedule is enabled
-          type: boolean
-        id:
-          description: UUID of Attack Discovery schedule
-          type: string
-        last_execution:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecution'
-          description: The Attack Discovery schedule last execution summary
-        name:
-          description: The name of the schedule
-          type: string
-        params:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleParams'
-          description: The Attack Discovery schedule configuration parameters
-        schedule:
-          $ref: '#/components/schemas/Security_Attack_discovery_API_IntervalApiSchedule'
-          description: The Attack Discovery schedule interval
-        updated_at:
-          description: The date the schedule was updated
-          format: date-time
-          type: string
-        updated_by:
-          description: The name of the user that updated the schedule
-          type: string
-      required:
-      - id
-      - name
-      - created_by
-      - updated_by
-      - created_at
-      - updated_at
-      - enabled
-      - params
-      - schedule
-      - actions
     Security_Attack_discovery_API_AttackDiscoveryApiAlert:
       description: An attack discovery that's also an alert (Public API with snake_case)
       type: object
@@ -2400,10 +1870,77 @@ components:
       - summary_markdown
       - timestamp
       - title
-    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionParams:
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionAlertsFilter:
       additionalProperties: true
-      description: Object containing the allowed connector fields, which varies according to the connector type.
       type: object
+    Security_Attack_discovery_API_Replacements:
+      additionalProperties:
+        type: string
+      description: Replacements object used to anonymize/deanonymize messages
+      type: object
+    Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesRequestBody:
+      type: object
+      properties:
+        ids:
+          description: The unique identifiers of the Attack Discovery schedules to update.
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
+          minItems: 1
+          type: array
+      required:
+      - ids
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionGroup:
+      description: Groups actions by use cases. Use `default` for alert notifications.
+      type: string
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionFrequency:
+      description: The action frequency defines when the action runs (for example, only on schedule execution or at specific time intervals).
+      type: object
+      properties:
+        notify_when:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionNotifyWhen'
+        summary:
+          description: Action summary indicates whether we will send a summary notification about all the generate alerts or notification per individual alert
+          type: boolean
+        throttle:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionThrottle'
+      required:
+      - summary
+      - notify_when
+      - throttle
+    Security_Attack_discovery_API_IntervalApiSchedule:
+      type: object
+      properties:
+        interval:
+          description: The schedule interval
+          type: string
+      required:
+      - interval
+    Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesResponse:
+      type: object
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesError'
+          type: array
+        ids:
+          description: The unique identifiers of the schedules successfully affected by the bulk action.
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
+          type: array
+        total:
+          description: The total number of schedules matched by the bulk action.
+          type: number
+      required:
+      - ids
+      - errors
+      - total
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionNotifyWhen:
+      description: 'The condition for throttling the notification: `onActionGroupChange`, `onActiveAlert`,  or `onThrottleInterval`'
+      enum:
+      - onActiveAlert
+      - onThrottleInterval
+      - onActionGroupChange
+      type: string
     Security_Attack_discovery_API_AttackDiscoveryApiScheduleUpdateProps:
       description: An Attack Discovery schedule update properties
       type: object
@@ -2427,6 +1964,199 @@ components:
       - params
       - schedule
       - actions
+    Security_Attack_discovery_API_AttackDiscoveryApiSchedule:
+      description: An Attack Discovery schedule
+      type: object
+      properties:
+        actions:
+          description: The Attack Discovery schedule actions
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleAction'
+          type: array
+        created_at:
+          description: The date the schedule was created
+          format: date-time
+          type: string
+        created_by:
+          description: The name of the user that created the schedule
+          type: string
+        enabled:
+          description: Indicates whether the schedule is enabled
+          type: boolean
+        id:
+          description: UUID of Attack Discovery schedule
+          type: string
+        last_execution:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecution'
+          description: The Attack Discovery schedule last execution summary
+        name:
+          description: The name of the schedule
+          type: string
+        params:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleParams'
+          description: The Attack Discovery schedule configuration parameters
+        schedule:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_IntervalApiSchedule'
+          description: The Attack Discovery schedule interval
+        updated_at:
+          description: The date the schedule was updated
+          format: date-time
+          type: string
+        updated_by:
+          description: The name of the user that updated the schedule
+          type: string
+      required:
+      - id
+      - name
+      - created_by
+      - updated_by
+      - created_at
+      - updated_at
+      - enabled
+      - params
+      - schedule
+      - actions
+    Security_Attack_discovery_API_ApiConfig:
+      type: object
+      properties:
+        actionTypeId:
+          description: Action type ID
+          example: actionType456
+          type: string
+        connectorId:
+          description: Connector ID
+          example: connector123
+          type: string
+        defaultSystemPromptId:
+          description: Default system prompt ID
+          example: systemPrompt001
+          type: string
+        model:
+          description: Model
+          example: gpt-4
+          type: string
+        provider:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_Provider'
+          description: Provider
+          example: OpenAI
+      required:
+      - connectorId
+      - actionTypeId
+    Security_Attack_discovery_API_WorkflowExecutionsTracking:
+      description: Workflow execution tracking for manual orchestration
+      type: object
+      properties:
+        alertRetrieval:
+          description: Alert retrieval workflow executions (one per workflow invoked)
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
+          type:
+          - array
+          - 'null'
+        gate:
+          description: Generation-phase gate (skill) executions, including any net-new alert re-fetch the skill triggers
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
+          type:
+          - array
+          - 'null'
+        generation:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
+        validation:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionReference'
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionId:
+      description: The connector ID.
+      type: string
+    Security_Attack_discovery_API_User:
+      description: Could be any string, not necessarily a UUID.
+      type: object
+      properties:
+        id:
+          description: User id.
+          example: user123
+          type: string
+        name:
+          description: User name.
+          example: John Doe
+          type: string
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleParams:
+      description: An Attack Discovery schedule params
+      type: object
+      properties:
+        alerts_index_pattern:
+          description: The index pattern to get alerts from
+          type: string
+        api_config:
+          allOf:
+          - $ref: '#/components/schemas/Security_Attack_discovery_API_ApiConfig'
+          - type: object
+            properties:
+              name:
+                description: The name of the connector
+                type: string
+            required:
+            - name
+          description: LLM API configuration.
+        combined_filter:
+          additionalProperties: true
+          type: object
+        end:
+          type: string
+        filters:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_Filters'
+        query:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_Query'
+        size:
+          type: number
+        start:
+          type: string
+      required:
+      - alerts_index_pattern
+      - api_config
+      - size
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleGeneralAction:
+      type: object
+      properties:
+        action_type_id:
+          description: The action type used for sending notifications.
+          type: string
+        alerts_filter:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionAlertsFilter'
+        frequency:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionFrequency'
+        group:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionGroup'
+        id:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionId'
+        params:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleActionParams'
+        uuid:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
+      required:
+      - action_type_id
+      - group
+      - id
+      - params
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecution:
+      description: An Attack Discovery schedule execution information
+      type: object
+      properties:
+        date:
+          description: Date of the execution
+          format: date-time
+          type: string
+        duration:
+          description: Duration of the execution
+          type: number
+        message:
+          type: string
+        status:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleExecutionStatus'
+          description: Status of the execution
+      required:
+      - date
+      - status
+      - last_duration
     Security_Attack_discovery_API_WorkflowExecutionReference:
       type: object
       properties:
@@ -2442,6 +2172,223 @@ components:
       required:
       - workflowId
       - workflowRunId
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleCreateProps:
+      description: An Attack Discovery schedule create properties
+      type: object
+      properties:
+        actions:
+          description: The Attack Discovery schedule actions
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleAction'
+          type: array
+        enabled:
+          description: Indicates whether the schedule is enabled
+          type: boolean
+        name:
+          description: The name of the schedule
+          type: string
+        params:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleParams'
+          description: The Attack Discovery schedule configuration parameters
+        schedule:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_IntervalApiSchedule'
+          description: The Attack Discovery schedule interval
+      required:
+      - name
+      - params
+      - schedule
+    Security_Attack_discovery_API_AttackDiscoveryGenerationConfig:
+      type: object
+      properties:
+        alertsIndexPattern:
+          description: 'The (space specific) index pattern that contains the alerts to use as
+
+            context for the attack discovery.
+
+            Example: .alerts-security.alerts-default
+
+            '
+          type: string
+        anonymizationFields:
+          description: The list of fields, and whether or not they are anonymized, allowed to be sent to LLMs. Consider using the output of the `/api/security_ai_assistant/anonymization_fields/_find` API (for a specific Kibana space) to provide this value.
+          items:
+            $ref: '#/components/schemas/Security_Attack_discovery_API_AnonymizationFieldResponse'
+          type: array
+        apiConfig:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_ApiConfig'
+          description: LLM API configuration.
+        connectorName:
+          type: string
+        end:
+          type: string
+        filter:
+          additionalProperties: true
+          description: "An Elasticsearch-style query DSL object used to filter alerts. For example:\n```json {\n  \"filter\": {\n    \"bool\": {\n      \"must\": [],\n      \"filter\": [\n        {\n          \"bool\": {\n            \"should\": [\n              {\n                \"term\": {\n                  \"user.name\": { \"value\": \"james\" }\n                }\n              }\n            ],\n            \"minimum_should_match\": 1\n          }\n        }\n      ],\n      \"should\": [],\n      \"must_not\": []\n    }\n  }\n} ```"
+          type: object
+        model:
+          type: string
+        replacements:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_Replacements'
+        size:
+          type: number
+        start:
+          type: string
+        subAction:
+          enum:
+          - invokeAI
+          - invokeStream
+          type: string
+      required:
+      - apiConfig
+      - alertsIndexPattern
+      - anonymizationFields
+      - size
+      - subAction
+    Security_Attack_discovery_API_AttackDiscoveryGeneration:
+      type: object
+      properties:
+        alerts_context_count:
+          description: The number of alerts sent as context (max kibana.alert.rule.execution.metrics.alert_counts.active) to the LLM for the generation
+          type: number
+        connector_id:
+          description: The connector id (event.dataset) for this generation
+          type: string
+        connector_stats:
+          description: Stats applicable to the connector for this generation
+          type: object
+          properties:
+            average_successful_duration_nanoseconds:
+              description: The average duration (avg event.duration) in nanoseconds of successful generations for the same connector id, for the current user
+              type: number
+            successful_generations:
+              description: The number of successful generations for the same connector id, for the current user
+              type: number
+        conversation_id:
+          description: Identifier of the persisted Agent Builder conversation for skill-based alert retrieval (optional; present only when the skill retrieval mode ran)
+          type: string
+        discoveries:
+          description: The number of new Attack discovery alerts (max kibana.alert.rule.execution.metrics.alert_counts.new) for this generation
+          type: number
+        duplicates_dropped_count:
+          description: The number of attack discoveries dropped as duplicates during the persist step
+          type: integer
+        end:
+          description: When generation ended (max event.end)
+          type: string
+        error_category:
+          description: Structured error category from server classification (optional; absent for successful generations)
+          type: string
+        execution_uuid:
+          description: The unique identifier (kibana.alert.rule.execution.uuid) for the generation
+          type: string
+        failed_workflow_id:
+          description: Workflow ID that caused the failure (optional; absent for successful generations)
+          type: string
+        generated_count:
+          description: The number of attack discoveries generated before deduplication and hallucination filtering
+          type: integer
+        hallucinations_filtered_count:
+          description: The number of attack discoveries filtered as hallucinations during the validation step
+          type: integer
+        loading_message:
+          description: Generation loading message (kibana.alert.rule.execution.status)
+          type: string
+        persisted_count:
+          description: The number of attack discoveries successfully persisted after deduplication and hallucination filtering
+          type: integer
+        reason:
+          description: Reason for failed generations (event.reason)
+          type: string
+        source_metadata:
+          description: Source metadata for scheduled generations (rule_id, rule_name, action_execution_uuid)
+          type:
+          - object
+          - 'null'
+          properties:
+            action_execution_uuid:
+              description: The action execution UUID from the alerting framework
+              type: string
+            rule_id:
+              description: The ID of the alerting rule that triggered this generation
+              type: string
+            rule_name:
+              description: The name of the alerting rule that triggered this generation
+              type: string
+        start:
+          description: When generation started (min event.start)
+          type: string
+        status:
+          description: The status of the attack discovery generation
+          enum:
+          - canceled
+          - dismissed
+          - failed
+          - started
+          - succeeded
+          type: string
+        step_event_actions:
+          description: Synthesized per-step lifecycle markers (e.g. step-start, step-complete, step-fail) derived from raw event.action values. The array is ordered by step sequence (alert retrieval, generation, validation), with each step contributing 0-2 tokens that indicate its execution status.
+          items:
+            type: string
+          type: array
+        workflow_executions:
+          $ref: '#/components/schemas/Security_Attack_discovery_API_WorkflowExecutionsTracking'
+          description: Workflow execution tracking for alert retrieval, generation, and validation workflows
+        workflow_id:
+          description: The workflow definition ID for deep linking
+          type: string
+        workflow_run_id:
+          description: The workflow execution ID for monitoring
+          type: string
+      required:
+      - connector_id
+      - discoveries
+      - execution_uuid
+      - start
+      - status
+    Security_Attack_discovery_API_Filters:
+      description: The filter array used to define the conditions for when alerts are selected as an Attack Discovery context. Defaults to an empty array.
+      items: {}
+      type: array
+    Security_Attack_discovery_API_AttackDiscoveryFindSortField:
+      description: Allowed field names to sort Attack Discovery results by. Clients should only pass one of the listed values.
+      enum:
+      - '@timestamp'
+      type: string
+    Security_Attack_discovery_API_AttackDiscoveryApiScheduleAction:
+      oneOf:
+      - $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleGeneralAction'
+      - $ref: '#/components/schemas/Security_Attack_discovery_API_AttackDiscoveryApiScheduleSystemAction'
+    Security_Attack_discovery_API_NonEmptyString:
+      description: A string that does not contain only whitespace characters.
+      example: I am a string
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Attack_discovery_API_BulkActionAttackDiscoverySchedulesError:
+      type: object
+      properties:
+        message:
+          description: The error message returned for the failed schedule.
+          type: string
+        rule:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/Security_Attack_discovery_API_NonEmptyString'
+              description: The unique identifier of the failed schedule.
+            name:
+              description: The name of the failed schedule.
+              type: string
+          required:
+          - id
+          - name
+        status:
+          description: Optional HTTP status associated with the failed schedule operation.
+          type: number
+      required:
+      - message
+      - rule
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

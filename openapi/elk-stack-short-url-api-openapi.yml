@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana short url API
   version: ''
   x-doc-license:
@@ -74,16 +21,14 @@ security:
 - basicAuth: []
 tags:
 - description: Manage Kibana short URLs.
-  name: short url
+  name: Short Url
   x-displayName: Short URLs
 paths:
   /api/short_url:
     post:
       description: 'Kibana URLs may be long and cumbersome, short URLs are much easier to remember and share.
 
-        Short URLs are created by specifying the locator ID and locator parameters. When a short URL is resolved, the locator ID and locator parameters are used to redirect user to the right Kibana page.
-
-        '
+        Short URLs are created by specifying the locator ID and locator parameters. When a short URL is resolved, the locator ID and locator parameters are used to redirect user to the right Kibana page.'
       operationId: post-url
       requestBody:
         content:
@@ -156,16 +101,14 @@ paths:
           description: Indicates a successful call.
       summary: Create a short URL
       tags:
-      - short url
+      - Short Url
       x-state: Technical Preview
       x-metaTags:
       - content: Kibana
         name: product_name
   /api/short_url/_slug/{slug}:
     get:
-      description: 'Resolve a Kibana short URL by its slug.
-
-        '
+      description: Resolve a Kibana short URL by its slug.
       operationId: resolve-url
       parameters:
       - description: The slug of the short URL.
@@ -201,16 +144,14 @@ paths:
           description: Indicates a successful call.
       summary: Resolve a short URL
       tags:
-      - short url
+      - Short Url
       x-state: Technical Preview
       x-metaTags:
       - content: Kibana
         name: product_name
   /api/short_url/{id}:
     delete:
-      description: 'Delete a Kibana short URL.
-
-        '
+      description: Delete a Kibana short URL.
       operationId: delete-url
       parameters:
       - $ref: '#/components/parameters/Short_URL_APIs_idParam'
@@ -219,15 +160,13 @@ paths:
           description: Indicates a successful call.
       summary: Delete a short URL
       tags:
-      - short url
+      - Short Url
       x-state: Technical Preview
       x-metaTags:
       - content: Kibana
         name: product_name
     get:
-      description: 'Get a single Kibana short URL.
-
-        '
+      description: Get a single Kibana short URL.
       operationId: get-url
       parameters:
       - $ref: '#/components/parameters/Short_URL_APIs_idParam'
@@ -258,12 +197,20 @@ paths:
           description: Indicates a successful call.
       summary: Get a short URL
       tags:
-      - short url
+      - Short Url
       x-state: Technical Preview
       x-metaTags:
       - content: Kibana
         name: product_name
 components:
+  parameters:
+    Short_URL_APIs_idParam:
+      description: The identifier for the short URL.
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
   schemas:
     Short_URL_APIs_urlResponse:
       type: object
@@ -299,14 +246,6 @@ components:
 
             '
           type: string
-  parameters:
-    Short_URL_APIs_idParam:
-      description: The identifier for the short URL.
-      in: path
-      name: id
-      required: true
-      schema:
-        type: string
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

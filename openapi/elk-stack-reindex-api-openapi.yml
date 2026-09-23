@@ -13,7 +13,62 @@ paths:
       tags:
       - reindex
       summary: Cancel an ongoing reindex task
-      description: "If `wait_for_completion` is `true` (the default), the response contains the final task state after cancellation.\nIf `wait_for_completion` is `false`, the response contains only `acknowledged: true`.\n\nThis API follows reindex tasks across node-shutdown relocations, so callers can\nkeep using the original task ID throughout the lifetime of the operation.\nReturned task IDs and timings reflect the original task, not its relocated successor.\nRelocated task IDs are also supported. They are followed transparently and return the task ID and timings of the original task.\n\nWhen the task ID cannot be cancelled (unknown ID, non-reindex task, sliced child, finished task, or node left with no stored result), the API returns the following response with a 404 status code:\n```\n{\n  \"error\": {\n    \"type\": \"resource_not_found_exception\",\n    \"reason\": \"reindex task [r1A2WoRbTwKZ516z6NEs5A:36619] either not found or completed\"\n  },\n  \"status\": 404\n}\n```\n\nDuring a brief handoff window of a node-shutdown relocation, you may receive the response below with a 503 status code.\nRetry with the same task ID; the retry follows the relocated task transparently.\n```\n{\n  \"error\": {\n    \"type\": \"status_exception\",\n    \"reason\": \"cannot cancel task [36619] because it is being relocated\"\n  },\n  \"status\": 503\n}\n```"
+      description: 'If `wait_for_completion` is `true` (the default), the response contains the final task state after cancellation.
+
+        If `wait_for_completion` is `false`, the response contains only `acknowledged: true`.
+
+
+        This API follows reindex tasks across node-shutdown relocations, so callers can
+
+        keep using the original task ID throughout the lifetime of the operation.
+
+        Returned task IDs and timings reflect the original task, not its relocated successor.
+
+        Relocated task IDs are also supported. They are followed transparently and return the task ID and timings of the original task.
+
+
+        When the task ID cannot be cancelled (unknown ID, non-reindex task, sliced child, finished task, or node left with no stored result), the API returns the following response with a 404 status code:
+
+        ```
+
+        {
+
+        "error": {
+
+        "type": "resource_not_found_exception",
+
+        "reason": "reindex task [r1A2WoRbTwKZ516z6NEs5A:36619] either not found or completed"
+
+        },
+
+        "status": 404
+
+        }
+
+        ```
+
+
+        During a brief handoff window of a node-shutdown relocation, you may receive the response below with a 503 status code.
+
+        Retry with the same task ID; the retry follows the relocated task transparently.
+
+        ```
+
+        {
+
+        "error": {
+
+        "type": "status_exception",
+
+        "reason": "cannot cancel task [36619] because it is being relocated"
+
+        },
+
+        "status": 503
+
+        }
+
+        ```'
       operationId: cancel-reindex
       parameters:
       - in: path
@@ -109,7 +164,36 @@ paths:
       tags:
       - reindex
       summary: Get the status and progress of a specific reindex task
-      description: "This API follows reindex tasks across node-shutdown relocations, so callers can\nkeep using the original task ID throughout the lifetime of the operation.\nReturned task IDs and timings reflect the original task, not its relocated successor.\nRelocated task IDs are also supported. They are followed transparently and return the task ID and timings of the original task.\n\nWhen the task ID cannot be resolved, the API returns the response below with a 404 status code.\nThis response is used whether the ID is unknown, refers to a non-reindex task, refers to a sliced child subtask, or refers to a task whose node left the cluster with no stored result (e.g. a non-graceful shutdown).\n```\n{\n  \"error\": {\n    \"type\": \"resource_not_found_exception\",\n    \"reason\": \"Reindex operation [r1A2WoRbTwKZ516z6NEs5A:36619] not found\"\n  },\n  \"status\": 404\n}\n```"
+      description: 'This API follows reindex tasks across node-shutdown relocations, so callers can
+
+        keep using the original task ID throughout the lifetime of the operation.
+
+        Returned task IDs and timings reflect the original task, not its relocated successor.
+
+        Relocated task IDs are also supported. They are followed transparently and return the task ID and timings of the original task.
+
+
+        When the task ID cannot be resolved, the API returns the response below with a 404 status code.
+
+        This response is used whether the ID is unknown, refers to a non-reindex task, refers to a sliced child subtask, or refers to a task whose node left the cluster with no stored result (e.g. a non-graceful shutdown).
+
+        ```
+
+        {
+
+        "error": {
+
+        "type": "resource_not_found_exception",
+
+        "reason": "Reindex operation [r1A2WoRbTwKZ516z6NEs5A:36619] not found"
+
+        },
+
+        "status": 404
+
+        }
+
+        ```'
       operationId: get-reindex
       parameters:
       - in: path
@@ -285,184 +369,12 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.NodeId:
-      type: string
-    _types.TaskId:
-      type: string
     _types.DurationValueUnitMillis:
       allOf:
       - $ref: '#/components/schemas/_types.UnitMillis'
-    _types.ErrorCause:
-      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
-
-        Additional details are also provided, that depend on the error type.'
-      type: object
-      properties:
-        type:
-          description: The type of error
-          type: string
-        reason:
-          description: A human-readable explanation of the error, in English.
-          oneOf:
-          - type: string
-          - type:
-            - string
-            - 'null'
-        stack_trace:
-          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
-          type: string
-        caused_by:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        root_cause:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-        suppressed:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-      required:
-      - type
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    _types.ReindexTaskResult:
-      description: 'The final result of a completed reindex operation, as stored in the task result.
-
-        This is the serialized form of `BulkByScrollResponse`.'
-      type: object
-      properties:
-        batches:
-          description: The number of scroll responses pulled back by the reindex.
-          type: number
-        created:
-          description: The number of documents that were successfully created.
-          type: number
-        deleted:
-          description: The number of documents that were successfully deleted.
-          type: number
-        failures:
-          description: Any failures encountered during the reindex. If non-empty, the reindex ended because of these failures.
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.BulkIndexByScrollFailure'
-        noops:
-          description: The number of documents that were ignored because the script returned a `noop` value for `ctx.op`.
-          type: number
-        requests_per_second:
-          description: The number of requests per second effectively executed during the reindex.
-          type: number
-        retries:
-          description: The number of retries attempted by reindex.
-          allOf:
-          - $ref: '#/components/schemas/_types.Retries'
-        throttled_millis:
-          description: Number of milliseconds the request slept to conform to `requests_per_second`.
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-        throttled_until_millis:
-          description: This field should always be equal to zero in a completed reindex result.
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-        timed_out:
-          description: Whether any of the requests executed during the reindex timed out.
-          type: boolean
-        took:
-          description: The total milliseconds the entire operation took.
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-        total:
-          description: The number of documents that were successfully processed.
-          type: number
-        updated:
-          description: The number of documents that were successfully updated.
-          type: number
-        version_conflicts:
-          description: The number of version conflicts that occurred.
-          type: number
-    _types.BulkIndexByScrollFailure:
-      type: object
-      properties:
-        cause:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        id:
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        index:
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-        status:
-          type: number
-      required:
-      - cause
-      - id
-      - index
-      - status
-    _types.Id:
-      type: string
-    _types.IndexName:
-      type: string
     _types.UnitNanos:
       description: Time unit for nanoseconds
       type: number
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    _types.ReindexTaskInfo:
-      description: Information about a single parent reindex task, as returned by the reindex management APIs.
-      type: object
-      properties:
-        id:
-          description: The ID of the reindex task. The ID is assigned when the task was first created and remains the same across graceful shutdown relocations.
-          allOf:
-          - $ref: '#/components/schemas/_types.TaskId'
-        description:
-          description: A sanitized description of the reindex operation (source and destination indices, and optionally remote host info).
-          type: string
-        start_time_in_millis:
-          description: The time at which the reindex task started, in milliseconds since the Unix epoch. Remains the same across graceful shutdown relocations.
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        start_time:
-          description: 'The time at which the reindex task started, as an ISO-8601 formatted string. Remains the same across graceful shutdown relocations.
-
-            Only present when the request includes the `?human=true` query parameter.'
-          type: string
-        running_time:
-          description: 'The elapsed running time of the reindex task, including relocations, in a human-readable format.
-
-            Only present when the request includes the `?human=true` query parameter.'
-          allOf:
-          - $ref: '#/components/schemas/_types.Duration'
-        running_time_in_nanos:
-          description: The elapsed running time of the reindex task, including relocations, in nanoseconds.
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitNanos'
-        cancelled:
-          description: Whether the reindex task has been cancelled.
-          type: boolean
-        status:
-          description: The current progress of the reindex operation.
-          allOf:
-          - $ref: '#/components/schemas/_types.ReindexStatus'
-      required:
-      - id
-      - start_time_in_millis
-      - running_time_in_nanos
-      - cancelled
     _types.ReindexStatus:
       type: object
       properties:
@@ -526,6 +438,8 @@ components:
       - throttled_until_millis
       - total
       - version_conflicts
+    _types.IndexName:
+      type: string
     _types.Retries:
       type: object
       properties:
@@ -538,9 +452,11 @@ components:
       required:
       - bulk
       - search
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
+    _types.DurationValueUnitNanos:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitNanos'
+    _types.NodeId:
+      type: string
     _types.TaskFailure:
       type: object
       properties:
@@ -559,6 +475,174 @@ components:
       - node_id
       - status
       - reason
-    _types.DurationValueUnitNanos:
+    _types.BulkIndexByScrollFailure:
+      type: object
+      properties:
+        cause:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        status:
+          type: number
+      required:
+      - cause
+      - id
+      - index
+      - status
+    _types.ReindexTaskInfo:
+      description: Information about a single parent reindex task, as returned by the reindex management APIs.
+      type: object
+      properties:
+        id:
+          description: The ID of the reindex task. The ID is assigned when the task was first created and remains the same across graceful shutdown relocations.
+          allOf:
+          - $ref: '#/components/schemas/_types.TaskId'
+        description:
+          description: A sanitized description of the reindex operation (source and destination indices, and optionally remote host info).
+          type: string
+        start_time_in_millis:
+          description: The time at which the reindex task started, in milliseconds since the Unix epoch. Remains the same across graceful shutdown relocations.
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        start_time:
+          description: 'The time at which the reindex task started, as an ISO-8601 formatted string. Remains the same across graceful shutdown relocations.
+
+            Only present when the request includes the `?human=true` query parameter.'
+          type: string
+        running_time:
+          description: 'The elapsed running time of the reindex task, including relocations, in a human-readable format.
+
+            Only present when the request includes the `?human=true` query parameter.'
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        running_time_in_nanos:
+          description: The elapsed running time of the reindex task, including relocations, in nanoseconds.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitNanos'
+        cancelled:
+          description: Whether the reindex task has been cancelled.
+          type: boolean
+        status:
+          description: The current progress of the reindex operation.
+          allOf:
+          - $ref: '#/components/schemas/_types.ReindexStatus'
+      required:
+      - id
+      - start_time_in_millis
+      - running_time_in_nanos
+      - cancelled
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    _types.ReindexTaskResult:
+      description: 'The final result of a completed reindex operation, as stored in the task result.
+
+        This is the serialized form of `BulkByScrollResponse`.'
+      type: object
+      properties:
+        batches:
+          description: The number of scroll responses pulled back by the reindex.
+          type: number
+        created:
+          description: The number of documents that were successfully created.
+          type: number
+        deleted:
+          description: The number of documents that were successfully deleted.
+          type: number
+        failures:
+          description: Any failures encountered during the reindex. If non-empty, the reindex ended because of these failures.
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.BulkIndexByScrollFailure'
+        noops:
+          description: The number of documents that were ignored because the script returned a `noop` value for `ctx.op`.
+          type: number
+        requests_per_second:
+          description: The number of requests per second effectively executed during the reindex.
+          type: number
+        retries:
+          description: The number of retries attempted by reindex.
+          allOf:
+          - $ref: '#/components/schemas/_types.Retries'
+        throttled_millis:
+          description: Number of milliseconds the request slept to conform to `requests_per_second`.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        throttled_until_millis:
+          description: This field should always be equal to zero in a completed reindex result.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        timed_out:
+          description: Whether any of the requests executed during the reindex timed out.
+          type: boolean
+        took:
+          description: The total milliseconds the entire operation took.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        total:
+          description: The number of documents that were successfully processed.
+          type: number
+        updated:
+          description: The number of documents that were successfully updated.
+          type: number
+        version_conflicts:
+          description: The number of version conflicts that occurred.
+          type: number
+    _types.Id:
+      type: string
+    _types.EpochTimeUnitMillis:
       allOf:
-      - $ref: '#/components/schemas/_types.UnitNanos'
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.TaskId:
+      type: string
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.ErrorCause:
+      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
+
+        Additional details are also provided, that depend on the error type.'
+      type: object
+      properties:
+        type:
+          description: The type of error
+          type: string
+        reason:
+          description: A human-readable explanation of the error, in English.
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        stack_trace:
+          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
+          type: string
+        caused_by:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        root_cause:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        suppressed:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - type

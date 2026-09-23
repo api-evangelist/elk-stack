@@ -559,7 +559,7 @@ paths:
     get:
       tags:
       - IamService
-      summary: Get organization service provider SAML2 metadata.xml for configuring the identity provider
+      summary: Get organization service provider SAML2 metadata.xml for configuring the…
       description: Gets the oranization's IdP metadata.xml. Currently unavailable in self-hosted ECE.
       operationId: get-organization-idp-metadata
       parameters:
@@ -877,7 +877,7 @@ paths:
       tags:
       - IamService
       summary: Get role mappings
-      description: Gets the organization role  mappings. Currently unavailable in self-hosted ECE.
+      description: Gets the organization role mappings. Currently unavailable in self-hosted ECE.
       operationId: get-role-mappings
       parameters:
       - name: organization_id
@@ -1046,7 +1046,7 @@ paths:
       tags:
       - IamService
       summary: Delete role mappings
-      description: Deletes the organization role  mappings. Currently unavailable in self-hosted ECE.
+      description: Deletes the organization role mappings. Currently unavailable in self-hosted ECE.
       operationId: delete-role-mappings
       parameters:
       - name: organization_id
@@ -1082,7 +1082,7 @@ paths:
       tags:
       - IamService
       summary: Delete role mapping
-      description: Deletes the organization role  mapping. Currently unavailable in self-hosted ECE.
+      description: Deletes the organization role mapping. Currently unavailable in self-hosted ECE.
       operationId: delete-role-mappings-individually
       parameters:
       - name: organization_id
@@ -2347,148 +2347,19 @@ paths:
         required: true
 components:
   schemas:
-    RoleMapping:
+    UserApiKey:
       type: object
       required:
-      - enabled
-      - name
-      - role_assignments
-      - rule
+      - api_key_id
+      - user_id
       properties:
-        enabled:
-          type: boolean
-          description: Whether or not the role mapping is enabled
-        name:
+        user_id:
           type: string
-          description: The name of the role mapping
-        rule:
-          description: The rule to match
-          $ref: '#/components/schemas/RoleMappingRule'
-        role_assignments:
-          description: The role assignments to apply if the rule matches
-          $ref: '#/components/schemas/RoleAssignments'
-    DeleteDomainClaimRequest:
-      type: object
-      required:
-      - domain_claim_request
-      properties:
-        domain_claim_request:
+          description: The user ID.
+        api_key_id:
           type: string
-          description: The request to remove a domain claim
-    OrganizationInvitation:
-      type: object
-      required:
-      - created_at
-      - email
-      - expired
-      - expires_at
-      - organization
-      - token
-      properties:
-        token:
-          type: string
-          description: The token used to accept the invitation
-        email:
-          type: string
-          description: The email address to invite to the organization
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the invitation was created
-        expires_at:
-          type: string
-          format: date-time
-          description: The date and time when the invitation expires
-        expired:
-          type: boolean
-          description: True if the invitation is expired
-        accepted_at:
-          type: string
-          format: date-time
-          description: The date and time when the invitation was accepted
-        organization:
-          description: The organization associated with this invitation
-          $ref: '#/components/schemas/Organization'
-        role_assignments:
-          description: The roles that will be assigned to users once they accept the invitation. Currently unavailable in self-hosted ECE.
-          $ref: '#/components/schemas/RoleAssignments'
-      description: An invitation to an organization
-    OrganizationInvitationRequest:
-      type: object
-      required:
-      - emails
-      properties:
-        emails:
-          type: array
-          description: The email addresses to invite to the organization
-          items:
-            type: string
-        expires_in:
-          type: string
-          description: The date and time when the invitation expires. Defaults to three days from now.
-        role_assignments:
-          description: The roles that will be assigned to users once they accept the invitation. Currently unavailable in self-hosted ECE.
-          $ref: '#/components/schemas/RoleAssignments'
-      description: A request to create one or more invitations to an organization
-    VerificationCodeRequest:
-      type: object
-      required:
-      - domain_claim_request
-      properties:
-        domain_claim_request:
-          type: string
-          description: The domain claim request
-    OrganizationRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The organization's friendly name
-        default_disk_usage_alerts_enabled:
-          type: boolean
-          description: Whether the default disk alerts are enabled
-        notifications_allowed_email_domains:
-          type: array
-          description: The list of allowed domains for notification-email recipients
-          items:
-            type: string
-        billing_contacts:
-          type: array
-          description: The list of contacts for billing notifications
-          items:
-            type: string
-        operational_contacts:
-          type: array
-          description: The list of contacts for operational notifications
-          items:
-            type: string
-      description: A request to create or update an organization
-    ProjectRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        all:
-          type: boolean
-          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
-        project_ids:
-          type: array
-          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
-          items:
-            type: string
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
-          items:
-            type: string
-      description: Assignment for a role with project scope.
+          description: The API key ID.
+      description: The model to specify a user and their API key in a delete request.
     IdpConfigurationRequest:
       type: object
       required:
@@ -2506,6 +2377,31 @@ components:
           description: The SAML2 IdP configuration
           $ref: '#/components/schemas/SamlIdp'
       description: A request to setup an organization IdP
+    EmptyResponse:
+      type: object
+    DeleteRoleMappingsResponse:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: The list of deleted role assignments to the organization
+          items:
+            type: string
+    RoleMappingRule:
+      type: object
+      properties:
+        any:
+          type: array
+          description: The rules that must match. Only one rule must match for the role assignment to be applied.
+          items:
+            $ref: '#/components/schemas/RoleMappingPropertyRule'
+        all:
+          type: array
+          description: The rules that must match. All rules must match for the role assignment to be applied.
+          items:
+            $ref: '#/components/schemas/RoleMappingPropertyRule'
     ApiKeysResponse:
       type: object
       required:
@@ -2520,341 +2416,6 @@ components:
           type: string
           description: A cursor to get the next page of results
       description: The response model for the API keys.
-    AddRoleMappingRequest:
-      type: object
-      required:
-      - mappings
-      properties:
-        mappings:
-          type: array
-          description: A rule to add to the role assignments in the organization
-          items:
-            $ref: '#/components/schemas/RoleMapping'
-    UpdateRoleMappingRequest:
-      type: object
-      required:
-      - mapping
-      properties:
-        mapping:
-          description: The content of the role mapping to update
-          $ref: '#/components/schemas/RoleMapping'
-    OrganizationRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to a deployment or project
-          items:
-            type: string
-      description: Assignment for a role with organization scope.
-    AvailableAuthenticationMethods:
-      type: object
-      required:
-      - openid
-      - password
-      - saml
-      - sso_methods
-      properties:
-        password:
-          type: boolean
-          description: Indicates that username and password authentication is available.
-        saml:
-          type: boolean
-          description: Indicates that SAML single sign-on authentication is available.
-        openid:
-          type: boolean
-          description: '> WARNING
-
-            > This endpoint is deprecated and scheduled to be removed in the next major version. This field is no longer used and will always be false.
-
-
-            '
-        sso_methods:
-          type: array
-          description: Lists details for the available single sign-on methods.
-          items:
-            $ref: '#/components/schemas/SsoAuthenticationMethodInfo'
-      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
-    RoleMappingRule:
-      type: object
-      properties:
-        any:
-          type: array
-          description: The rules that must match. Only one rule must match for the role assignment to be applied.
-          items:
-            $ref: '#/components/schemas/RoleMappingPropertyRule'
-        all:
-          type: array
-          description: The rules that must match. All rules must match for the role assignment to be applied.
-          items:
-            $ref: '#/components/schemas/RoleMappingPropertyRule'
-    SamlIdp:
-      type: object
-      required:
-      - issuer
-      - public_certificate
-      - sso_url
-      properties:
-        public_certificate:
-          type: array
-          description: Base64-encoded PEM-format X.509 certificate
-          items:
-            type: string
-        issuer:
-          type: string
-          description: The IdP URI that identifies the issuer of a SAML2 response message assertion
-        sso_url:
-          type: string
-          description: The IdP SAML HTTP-POST endpoint URL that will receive SAML requests during SP-initiated login
-      description: SAML2 IdP configuration object
-    RoleMappingPropertyRule:
-      type: object
-      properties:
-        group:
-          type: string
-          description: The group to match. Can have wildcards. Must specify either `group` or `email` but not both.
-        email:
-          type: string
-          description: The email to match. Can have wildcards. Must specify either `group` or `email` but not both.
-    OrganizationIdpConfiguration:
-      type: object
-      required:
-      - enabled
-      - login_identifier_prefix
-      - saml_idp
-      properties:
-        enabled:
-          type: boolean
-          description: Whether or not the IdP is enabled
-        login_identifier_prefix:
-          type: string
-          description: The prefix of the login identifier that will be generated
-        saml_idp:
-          description: The SAML2 IdP configuration
-          $ref: '#/components/schemas/SamlIdp'
-      description: The organization's IdP configuration
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    OrganizationInvitations:
-      type: object
-      required:
-      - invitations
-      properties:
-        invitations:
-          type: array
-          description: The list of organization invitations
-          items:
-            $ref: '#/components/schemas/OrganizationInvitation'
-      description: A collection of invitations to an organization
-    DeleteRoleMappingsResponse:
-      type: object
-      required:
-      - mappings
-      properties:
-        mappings:
-          type: array
-          description: The list of deleted role assignments to the organization
-          items:
-            type: string
-    Organization:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          description: The organization's identifier
-        name:
-          type: string
-          description: The organization's friendly name
-        default_disk_usage_alerts_enabled:
-          type: boolean
-          description: Whether the default disk alerts are enabled
-        notifications_allowed_email_domains:
-          type: array
-          description: The list of allowed domains for notification-email recipients
-          items:
-            type: string
-        billing_contacts:
-          type: array
-          description: The list of contacts for billing notifications, if specified
-          items:
-            type: string
-        operational_contacts:
-          type: array
-          description: The list of contacts for operational notifications, if specified
-          items:
-            type: string
-        sso_login_identifier:
-          type: string
-          description: The login identifier for initiating SSO
-      description: An organization
-    UserSecurityRealm:
-      type: object
-      required:
-      - id
-      - type
-      properties:
-        type:
-          type: string
-          description: The type of the security realm
-          enum:
-          - native
-          - ldap
-          - saml
-          - active_directory
-        id:
-          type: string
-          description: The identifier for the security realm
-      description: The security realm the user belongs to
-    CreateApiKeyRequest:
-      type: object
-      required:
-      - description
-      properties:
-        description:
-          type: string
-          description: API key description. Useful if there are multiple keys
-        expiration:
-          type: string
-          description: 'The optional expiration for the API key, provided as a duration (ex: ''1d'', ''3h'')'
-        role_assignments:
-          description: The optional roles for the API key. Takes the role of the creator if not specified. Currently unavailable in self-hosted ECE.
-          $ref: '#/components/schemas/RoleAssignments'
-      description: The request payload that creates the API keys.
-    UserMetadata:
-      type: object
-      properties:
-        created_by:
-          type: string
-          description: The Id of the user that created this user
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was created
-        updated_by:
-          type: string
-          description: The Id of the user that last updated this user
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was last updated
-        first_login_at:
-          type: string
-          format: date-time
-          description: The date and time when the user first logged in
-        last_login_at:
-          type: string
-          format: date-time
-          description: The date and time when the user last logged in
-      description: Metadata for a user
-    AuthenticationInfo:
-      type: object
-      required:
-      - has_elevated_permissions
-      - refresh_token_url
-      properties:
-        has_totp_device:
-          type: boolean
-          description: 'Deprecated: True if the user has an available TOTP device'
-        totp_device_source:
-          type: string
-          description: 'Deprecated: The TOTP device source'
-        has_elevated_permissions:
-          type: boolean
-          description: 'Deprecated: True if the user has elevated permissions'
-        elevated_permissions_expire_at:
-          type: string
-          format: date-time
-          description: 'Deprecated: The UTC time when elevated permissions will expire, if the user has elevated permissions'
-        totp_device_source_enable_mfa_href:
-          type: string
-          description: 'Deprecated: URL for configuring an MFA TOTP device.  Does not apply when totp_device_source is ''native''.'
-        refresh_token_url:
-          type: string
-          description: The API to be used when refreshing the current user's JWT
-        expires_at:
-          type: string
-          format: date-time
-          description: The UTC time when current authentication will expire. Applies to only token based authentication
-      description: A user's authentication info
-    UserApiKey:
-      type: object
-      required:
-      - api_key_id
-      - user_id
-      properties:
-        user_id:
-          type: string
-          description: The user ID.
-        api_key_id:
-          type: string
-          description: The API key ID.
-      description: The model to specify a user and their API key in a delete request.
-    OrganizationMembership:
-      type: object
-      required:
-      - member_since
-      - organization_id
-      - user_id
-      properties:
-        organization_id:
-          type: string
-          description: The organization's identifier
-        user_id:
-          type: string
-          description: The users's identifier
-        name:
-          type: string
-          description: The user's full name
-        email:
-          type: string
-          description: The user's email address
-        member_since:
-          type: string
-          format: date-time
-          description: The date and time the user was added to the organization
-        role_assignments:
-          description: The user's assigned roles. Currently unavailable in self-hosted ECE.
-          $ref: '#/components/schemas/RoleAssignments'
-      description: A user's membership to an organization
-    EmptyResponse:
-      type: object
-    UpdateOrganizationRoleMappingRequest:
-      type: object
-      required:
-      - mappings
-      properties:
-        mappings:
-          type: array
-          description: The rules for mapping role assignments in the organization
-          items:
-            $ref: '#/components/schemas/RoleMapping'
     LoginRequest:
       type: object
       required:
@@ -2870,73 +2431,16 @@ components:
         login_state:
           $ref: '#/components/schemas/LoginState'
       description: The body of a login request.
-    GetOrganizationClaimedDomainsResponse:
+    AddRoleMappingRequest:
       type: object
       required:
-      - domains
+      - mappings
       properties:
-        domains:
+        mappings:
           type: array
-          description: The list of claimed domains in the organization
+          description: A rule to add to the role assignments in the organization
           items:
-            type: string
-    PlatformRoleAssignment:
-      type: object
-      required:
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-      description: Assignment for a role with platform scope.
-    DeploymentRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        all:
-          type: boolean
-          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
-        deployment_ids:
-          type: array
-          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
-          items:
-            type: string
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
-          items:
-            type: string
-      description: Assignment for a role with deployment scope.
-    RoleAssignments:
-      type: object
-      properties:
-        platform:
-          type: array
-          description: Assignments for roles with platform scope.
-          items:
-            $ref: '#/components/schemas/PlatformRoleAssignment'
-        organization:
-          type: array
-          description: Assignments for roles with organization scope.
-          items:
-            $ref: '#/components/schemas/OrganizationRoleAssignment'
-        deployment:
-          type: array
-          description: Assignments for roles with deployment scope.
-          items:
-            $ref: '#/components/schemas/DeploymentRoleAssignment'
-        project:
-          description: Assignments for roles with project scope.
-          $ref: '#/components/schemas/ProjectRoleAssignments'
-      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+            $ref: '#/components/schemas/RoleMapping'
     ElevatedPermissions:
       type: object
       required:
@@ -2950,35 +2454,22 @@ components:
           format: date-time
           description: The time at which the user's elevated permissions expire
       description: A user's elevated permissions status
-    OrganizationMemberships:
+    DeleteDomainClaimRequest:
       type: object
       required:
-      - members
+      - domain_claim_request
       properties:
-        members:
-          type: array
-          description: The list of organization memberships
-          items:
-            $ref: '#/components/schemas/OrganizationMembership'
-      description: All user memberships to an organization
-    UserList:
-      type: object
-      required:
-      - users
-      properties:
-        users:
-          type: array
-          description: A list of users
-          items:
-            $ref: '#/components/schemas/User'
-      description: A collection of users
-    LoginState:
-      type: object
-      properties:
-        path:
+        domain_claim_request:
           type: string
-          description: The path to which to redirect post login - if not specified then no redirect is performed, instead 200 is returned with the token in the body
-      description: Configure how the API responds after a successful login.
+          description: The request to remove a domain claim
+    VerificationCodeResponse:
+      type: object
+      required:
+      - verification
+      properties:
+        verification:
+          type: string
+          description: The verification code to use for the domain claim challenge
     ApiKeyResponse:
       type: object
       required:
@@ -3013,6 +2504,414 @@ components:
           description: The optional roles for the API key. Currently unavailable in self-hosted ECE.
           $ref: '#/components/schemas/RoleAssignments'
       description: The response model for an API key.
+    ProjectRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
+        project_ids:
+          type: array
+          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with project scope.
+    User:
+      type: object
+      required:
+      - security
+      - user_name
+      properties:
+        user_name:
+          type: string
+          description: The user's identifier
+        security:
+          description: The user's security information
+          $ref: '#/components/schemas/UserSecurity'
+        metadata:
+          description: The users metadata
+          $ref: '#/components/schemas/UserMetadata'
+        full_name:
+          type: string
+          description: The user's optional full name
+        email:
+          type: string
+          description: The user's optional email address
+        builtin:
+          type: boolean
+          description: True if the user is a built-in read-only user
+      description: An API user
+    SsoAuthenticationMethodInfo:
+      type: object
+      required:
+      - name
+      - sso_type
+      - url
+      properties:
+        sso_type:
+          type: string
+          description: Indicates the protocol of the single sign-on method.
+          enum:
+          - saml
+        name:
+          type: string
+          description: The friendly name of the single sign-on method.
+        url:
+          type: string
+          description: The URL to initiate the single sign-on login.
+      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
+    OrganizationMemberships:
+      type: object
+      required:
+      - members
+      properties:
+        members:
+          type: array
+          description: The list of organization memberships
+          items:
+            $ref: '#/components/schemas/OrganizationMembership'
+      description: All user memberships to an organization
+    GetRoleMappingsResponse:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: The list of role assignments for the organization
+          items:
+            $ref: '#/components/schemas/RoleMapping'
+    TokenResponse:
+      type: object
+      required:
+      - session_expiration_time
+      - token
+      properties:
+        token:
+          type: string
+          description: The authorization bearer token that you use in subsequent requests
+        session_expiration_time:
+          type: string
+          format: date-time
+          description: The time that the session token will expire
+      description: The response value after a login without redirect configured, or after elevated permissions are enabled or disabled.
+    OrganizationInvitationRequest:
+      type: object
+      required:
+      - emails
+      properties:
+        emails:
+          type: array
+          description: The email addresses to invite to the organization
+          items:
+            type: string
+        expires_in:
+          type: string
+          description: The date and time when the invitation expires. Defaults to three days from now.
+        role_assignments:
+          description: The roles that will be assigned to users once they accept the invitation. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: A request to create one or more invitations to an organization
+    UserMetadata:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: The Id of the user that created this user
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was created
+        updated_by:
+          type: string
+          description: The Id of the user that last updated this user
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was last updated
+        first_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user first logged in
+        last_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user last logged in
+      description: Metadata for a user
+    DomainVerificationRequest:
+      type: object
+      required:
+      - domain_claim_request
+      properties:
+        domain_claim_request:
+          type: string
+          description: The domain claim request
+    DeploymentRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
+        deployment_ids:
+          type: array
+          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with deployment scope.
+    Organization:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          description: The organization's identifier
+        name:
+          type: string
+          description: The organization's friendly name
+        default_disk_usage_alerts_enabled:
+          type: boolean
+          description: Whether the default disk alerts are enabled
+        notifications_allowed_email_domains:
+          type: array
+          description: The list of allowed domains for notification-email recipients
+          items:
+            type: string
+        billing_contacts:
+          type: array
+          description: The list of contacts for billing notifications, if specified
+          items:
+            type: string
+        operational_contacts:
+          type: array
+          description: The list of contacts for operational notifications, if specified
+          items:
+            type: string
+        sso_login_identifier:
+          type: string
+          description: The login identifier for initiating SSO
+      description: An organization
+    LoginState:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The path to which to redirect post login - if not specified then no redirect is performed, instead 200 is returned with the token in the body
+      description: Configure how the API responds after a successful login.
+    AvailableAuthenticationMethods:
+      type: object
+      required:
+      - openid
+      - password
+      - saml
+      - sso_methods
+      properties:
+        password:
+          type: boolean
+          description: Indicates that username and password authentication is available.
+        saml:
+          type: boolean
+          description: Indicates that SAML single sign-on authentication is available.
+        openid:
+          type: boolean
+          description: '> WARNING
+
+            > This endpoint is deprecated and scheduled to be removed in the next major version. This field is no longer used and will always be false.
+
+
+            '
+        sso_methods:
+          type: array
+          description: Lists details for the available single sign-on methods.
+          items:
+            $ref: '#/components/schemas/SsoAuthenticationMethodInfo'
+      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
+    UserSecurity:
+      type: object
+      properties:
+        roles:
+          type: array
+          description: The set of roles assigned to a user
+          items:
+            type: string
+        permissions:
+          type: array
+          description: The distinct set of permissions allowed by the user's roles. These correspond to operationId values in the OpenAPI definition.
+          items:
+            type: string
+        elevated_permissions:
+          description: The user's elevated permission status
+          $ref: '#/components/schemas/ElevatedPermissions'
+        password:
+          type: string
+          description: The user's password. Only used when modifying a user.
+        enabled:
+          type: boolean
+          description: True if the user is enabled
+        security_realm:
+          description: The user's security realm
+          $ref: '#/components/schemas/UserSecurityRealm'
+      description: A user's security information
+    RoleAssignments:
+      type: object
+      properties:
+        platform:
+          type: array
+          description: Assignments for roles with platform scope.
+          items:
+            $ref: '#/components/schemas/PlatformRoleAssignment'
+        organization:
+          type: array
+          description: Assignments for roles with organization scope.
+          items:
+            $ref: '#/components/schemas/OrganizationRoleAssignment'
+        deployment:
+          type: array
+          description: Assignments for roles with deployment scope.
+          items:
+            $ref: '#/components/schemas/DeploymentRoleAssignment'
+        project:
+          description: Assignments for roles with project scope.
+          $ref: '#/components/schemas/ProjectRoleAssignments'
+      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+    OrganizationRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to a deployment or project
+          items:
+            type: string
+      description: Assignment for a role with organization scope.
+    RoleMapping:
+      type: object
+      required:
+      - enabled
+      - name
+      - role_assignments
+      - rule
+      properties:
+        enabled:
+          type: boolean
+          description: Whether or not the role mapping is enabled
+        name:
+          type: string
+          description: The name of the role mapping
+        rule:
+          description: The rule to match
+          $ref: '#/components/schemas/RoleMappingRule'
+        role_assignments:
+          description: The role assignments to apply if the rule matches
+          $ref: '#/components/schemas/RoleAssignments'
+    RoleMappingPropertyRule:
+      type: object
+      properties:
+        group:
+          type: string
+          description: The group to match. Can have wildcards. Must specify either `group` or `email` but not both.
+        email:
+          type: string
+          description: The email to match. Can have wildcards. Must specify either `group` or `email` but not both.
+    DeleteApiKeysRequest:
+      type: object
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          description: The list of API key IDs.
+          items:
+            type: string
+      description: The request payload that deletes the API keys.
+    OrganizationList:
+      type: object
+      required:
+      - organizations
+      properties:
+        organizations:
+          type: array
+          description: The list of organizations
+          items:
+            $ref: '#/components/schemas/Organization'
+        next_page:
+          type: string
+          description: A cursor to get the next page of results
+      description: A collection of Organizations
+    OrganizationMembership:
+      type: object
+      required:
+      - member_since
+      - organization_id
+      - user_id
+      properties:
+        organization_id:
+          type: string
+          description: The organization's identifier
+        user_id:
+          type: string
+          description: The users's identifier
+        name:
+          type: string
+          description: The user's full name
+        email:
+          type: string
+          description: The user's email address
+        member_since:
+          type: string
+          format: date-time
+          description: The date and time the user was added to the organization
+        role_assignments:
+          description: The user's assigned roles. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: A user's membership to an organization
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     ProjectRoleAssignments:
       type: object
       properties:
@@ -3042,77 +2941,109 @@ components:
           items:
             $ref: '#/components/schemas/ProjectRoleAssignment'
       description: Assignments for roles with project scope.
-    User:
+    UpdateRoleMappingRequest:
       type: object
       required:
-      - security
-      - user_name
+      - mapping
       properties:
-        user_name:
-          type: string
-          description: The user's identifier
-        security:
-          description: The user's security information
-          $ref: '#/components/schemas/UserSecurity'
-        metadata:
-          description: The users metadata
-          $ref: '#/components/schemas/UserMetadata'
-        full_name:
-          type: string
-          description: The user's optional full name
-        email:
-          type: string
-          description: The user's optional email address
-        builtin:
+        mapping:
+          description: The content of the role mapping to update
+          $ref: '#/components/schemas/RoleMapping'
+    UpdateOrganizationRoleMappingRequest:
+      type: object
+      required:
+      - mappings
+      properties:
+        mappings:
+          type: array
+          description: The rules for mapping role assignments in the organization
+          items:
+            $ref: '#/components/schemas/RoleMapping'
+    AuthenticationInfo:
+      type: object
+      required:
+      - has_elevated_permissions
+      - refresh_token_url
+      properties:
+        has_totp_device:
           type: boolean
-          description: True if the user is a built-in read-only user
-      description: An API user
-    DeleteUsersApiKeysRequest:
-      type: object
-      required:
-      - user_api_keys
-      properties:
-        user_api_keys:
-          type: array
-          description: The list of API key IDs.
-          items:
-            $ref: '#/components/schemas/UserApiKey'
-      description: The request payload that deletes the API keys.
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    DeleteApiKeysRequest:
-      type: object
-      required:
-      - keys
-      properties:
-        keys:
-          type: array
-          description: The list of API key IDs.
-          items:
-            type: string
-      description: The request payload that deletes the API keys.
-    TokenResponse:
-      type: object
-      required:
-      - session_expiration_time
-      - token
-      properties:
-        token:
+          description: 'Deprecated: True if the user has an available TOTP device'
+        totp_device_source:
           type: string
-          description: The authorization bearer token that you use in subsequent requests
-        session_expiration_time:
+          description: 'Deprecated: The TOTP device source'
+        has_elevated_permissions:
+          type: boolean
+          description: 'Deprecated: True if the user has elevated permissions'
+        elevated_permissions_expire_at:
           type: string
           format: date-time
-          description: The time that the session token will expire
-      description: The response value after a login without redirect configured, or after elevated permissions are enabled or disabled.
+          description: 'Deprecated: The UTC time when elevated permissions will expire, if the user has elevated permissions'
+        totp_device_source_enable_mfa_href:
+          type: string
+          description: 'Deprecated: URL for configuring an MFA TOTP device.  Does not apply when totp_device_source is ''native''.'
+        refresh_token_url:
+          type: string
+          description: The API to be used when refreshing the current user's JWT
+        expires_at:
+          type: string
+          format: date-time
+          description: The UTC time when current authentication will expire. Applies to only token based authentication
+      description: A user's authentication info
+    SamlIdp:
+      type: object
+      required:
+      - issuer
+      - public_certificate
+      - sso_url
+      properties:
+        public_certificate:
+          type: array
+          description: Base64-encoded PEM-format X.509 certificate
+          items:
+            type: string
+        issuer:
+          type: string
+          description: The IdP URI that identifies the issuer of a SAML2 response message assertion
+        sso_url:
+          type: string
+          description: The IdP SAML HTTP-POST endpoint URL that will receive SAML requests during SP-initiated login
+      description: SAML2 IdP configuration object
+    VerificationCodeRequest:
+      type: object
+      required:
+      - domain_claim_request
+      properties:
+        domain_claim_request:
+          type: string
+          description: The domain claim request
+    OrganizationIdpConfiguration:
+      type: object
+      required:
+      - enabled
+      - login_identifier_prefix
+      - saml_idp
+      properties:
+        enabled:
+          type: boolean
+          description: Whether or not the IdP is enabled
+        login_identifier_prefix:
+          type: string
+          description: The prefix of the login identifier that will be generated
+        saml_idp:
+          description: The SAML2 IdP configuration
+          $ref: '#/components/schemas/SamlIdp'
+      description: The organization's IdP configuration
+    UserList:
+      type: object
+      required:
+      - users
+      properties:
+        users:
+          type: array
+          description: A list of users
+          items:
+            $ref: '#/components/schemas/User'
+      description: A collection of users
     OrganizationIdp:
       type: object
       required:
@@ -3154,91 +3085,160 @@ components:
           description: The organization's IdP configuration
           $ref: '#/components/schemas/OrganizationIdpConfiguration'
       description: The organization's IdP info
-    OrganizationList:
+    BasicFailedReplyElement:
       type: object
       required:
-      - organizations
+      - code
+      - message
       properties:
-        organizations:
-          type: array
-          description: The list of organizations
-          items:
-            $ref: '#/components/schemas/Organization'
-        next_page:
+        code:
           type: string
-          description: A cursor to get the next page of results
-      description: A collection of Organizations
-    UserSecurity:
-      type: object
-      properties:
-        roles:
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: The set of roles assigned to a user
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-        permissions:
-          type: array
-          description: The distinct set of permissions allowed by the user's roles. These correspond to operationId values in the OpenAPI definition.
-          items:
-            type: string
-        elevated_permissions:
-          description: The user's elevated permission status
-          $ref: '#/components/schemas/ElevatedPermissions'
-        password:
-          type: string
-          description: The user's password. Only used when modifying a user.
-        enabled:
-          type: boolean
-          description: True if the user is enabled
-        security_realm:
-          description: The user's security realm
-          $ref: '#/components/schemas/UserSecurityRealm'
-      description: A user's security information
-    SsoAuthenticationMethodInfo:
+    OrganizationInvitations:
       type: object
       required:
-      - name
-      - sso_type
-      - url
+      - invitations
       properties:
-        sso_type:
+        invitations:
+          type: array
+          description: The list of organization invitations
+          items:
+            $ref: '#/components/schemas/OrganizationInvitation'
+      description: A collection of invitations to an organization
+    GetOrganizationClaimedDomainsResponse:
+      type: object
+      required:
+      - domains
+      properties:
+        domains:
+          type: array
+          description: The list of claimed domains in the organization
+          items:
+            type: string
+    PlatformRoleAssignment:
+      type: object
+      required:
+      - role_id
+      properties:
+        role_id:
           type: string
-          description: Indicates the protocol of the single sign-on method.
-          enum:
-          - saml
+          description: The ID of the role that is assigned.
+      description: Assignment for a role with platform scope.
+    OrganizationRequest:
+      type: object
+      properties:
         name:
           type: string
-          description: The friendly name of the single sign-on method.
-        url:
-          type: string
-          description: The URL to initiate the single sign-on login.
-      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
-    DomainVerificationRequest:
-      type: object
-      required:
-      - domain_claim_request
-      properties:
-        domain_claim_request:
-          type: string
-          description: The domain claim request
-    GetRoleMappingsResponse:
-      type: object
-      required:
-      - mappings
-      properties:
-        mappings:
+          description: The organization's friendly name
+        default_disk_usage_alerts_enabled:
+          type: boolean
+          description: Whether the default disk alerts are enabled
+        notifications_allowed_email_domains:
           type: array
-          description: The list of role assignments for the organization
+          description: The list of allowed domains for notification-email recipients
           items:
-            $ref: '#/components/schemas/RoleMapping'
-    VerificationCodeResponse:
+            type: string
+        billing_contacts:
+          type: array
+          description: The list of contacts for billing notifications
+          items:
+            type: string
+        operational_contacts:
+          type: array
+          description: The list of contacts for operational notifications
+          items:
+            type: string
+      description: A request to create or update an organization
+    CreateApiKeyRequest:
       type: object
       required:
-      - verification
+      - description
       properties:
-        verification:
+        description:
           type: string
-          description: The verification code to use for the domain claim challenge
+          description: API key description. Useful if there are multiple keys
+        expiration:
+          type: string
+          description: 'The optional expiration for the API key, provided as a duration (ex: ''1d'', ''3h'')'
+        role_assignments:
+          description: The optional roles for the API key. Takes the role of the creator if not specified. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: The request payload that creates the API keys.
+    OrganizationInvitation:
+      type: object
+      required:
+      - created_at
+      - email
+      - expired
+      - expires_at
+      - organization
+      - token
+      properties:
+        token:
+          type: string
+          description: The token used to accept the invitation
+        email:
+          type: string
+          description: The email address to invite to the organization
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation was created
+        expires_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation expires
+        expired:
+          type: boolean
+          description: True if the invitation is expired
+        accepted_at:
+          type: string
+          format: date-time
+          description: The date and time when the invitation was accepted
+        organization:
+          description: The organization associated with this invitation
+          $ref: '#/components/schemas/Organization'
+        role_assignments:
+          description: The roles that will be assigned to users once they accept the invitation. Currently unavailable in self-hosted ECE.
+          $ref: '#/components/schemas/RoleAssignments'
+      description: An invitation to an organization
+    DeleteUsersApiKeysRequest:
+      type: object
+      required:
+      - user_api_keys
+      properties:
+        user_api_keys:
+          type: array
+          description: The list of API key IDs.
+          items:
+            $ref: '#/components/schemas/UserApiKey'
+      description: The request payload that deletes the API keys.
+    UserSecurityRealm:
+      type: object
+      required:
+      - id
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of the security realm
+          enum:
+          - native
+          - ldap
+          - saml
+          - active_directory
+        id:
+          type: string
+          description: The identifier for the security realm
+      description: The security realm the user belongs to
   securitySchemes:
     apiKey:
       type: apiKey

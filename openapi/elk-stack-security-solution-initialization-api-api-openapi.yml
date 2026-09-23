@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Security Solution Initialization API
   version: ''
   x-doc-license:
@@ -76,9 +23,7 @@ tags:
 - description: 'Use the initialization API to set up the assets Elastic Security needs to operate in a Kibana space.
 
 
-    A single request can run one or more initialization flows. Each flow provisions a specific set of assets (for example, list indices, security data views, prebuilt detection rules, endpoint protection, AI prompts, or detection rule monitoring assets). The response reports a per-flow result so you can tell which flows completed and which returned an error.
-
-    '
+    A single request can run one or more initialization flows. Each flow provisions a specific set of assets (for example, list indices, security data views, prebuilt detection rules, endpoint protection, AI prompts, or detection rule monitoring assets). The response reports a per-flow result so you can tell which flows completed and which returned an error.'
   name: Security Solution Initialization API
   x-displayName: Security solution initialization
 paths:
@@ -87,10 +32,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/security_solution/initialize</span></div>
+        post /s/{space_id}/api/security_solution/initialize
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Run one or more Security Solution initialization flows for the current space.
@@ -101,9 +46,7 @@ paths:
 
         or detection rule monitoring assets. Only the requested flows are run, and the
 
-        response reports a result for each one.
-
-        '
+        response reports a result for each one.'
       operationId: InitializeSecuritySolution
       requestBody:
         content:
@@ -169,61 +112,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
-      type: object
-      properties:
-        payload:
-          type: object
-          properties:
-            alertDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            attackDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            defaultDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            kibanaDataViews:
-              items:
-                $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-              type: array
-            signalIndexName:
-              type: string
-          required:
-          - defaultDataView
-          - alertDataView
-          - kibanaDataViews
-          - signalIndexName
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
-      - payload
-    Security_Solution_Initialization_API_DataViewPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        patternList:
-          items:
-            type: string
-          type: array
-        title:
-          type: string
-      required:
-      - id
-      - title
-      - patternList
-    Security_Solution_Initialization_API_InitializationFlowId:
-      description: Identifier for an initialization flow.
-      enum:
-      - create-list-indices
-      - security-data-views
-      - init-prebuilt-rules
-      - init-endpoint-protection
-      - init-ai-prompts
-      - init-detection-rule-monitoring
-      type: string
     Security_Solution_Initialization_API_CreateListIndicesReadyResult:
       type: object
       properties:
@@ -233,30 +121,6 @@ components:
           type: string
       required:
       - status
-    Security_Solution_Initialization_API_PackageInstallReadyResult:
-      type: object
-      properties:
-        payload:
-          type: object
-          properties:
-            install_status:
-              description: Fleet package installation status (e.g., installed, already_installed).
-              type: string
-            name:
-              type: string
-            version:
-              type: string
-          required:
-          - name
-          - version
-          - install_status
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
-      - payload
     Security_Solution_Initialization_API_InitializationFlowErrorResult:
       type: object
       properties:
@@ -308,6 +172,85 @@ components:
           oneOf:
           - $ref: '#/components/schemas/Security_Solution_Initialization_API_SecurityDataViewsReadyResult'
           - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+    Security_Solution_Initialization_API_PackageInstallReadyResult:
+      type: object
+      properties:
+        payload:
+          type: object
+          properties:
+            install_status:
+              description: Fleet package installation status (e.g., installed, already_installed).
+              type: string
+            name:
+              type: string
+            version:
+              type: string
+          required:
+          - name
+          - version
+          - install_status
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+      - payload
+    Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
+      type: object
+      properties:
+        payload:
+          type: object
+          properties:
+            alertDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            attackDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            defaultDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            kibanaDataViews:
+              items:
+                $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+              type: array
+            signalIndexName:
+              type: string
+          required:
+          - defaultDataView
+          - alertDataView
+          - kibanaDataViews
+          - signalIndexName
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+      - payload
+    Security_Solution_Initialization_API_InitializationFlowId:
+      description: Identifier for an initialization flow.
+      enum:
+      - create-list-indices
+      - security-data-views
+      - init-prebuilt-rules
+      - init-endpoint-protection
+      - init-ai-prompts
+      - init-detection-rule-monitoring
+      type: string
+    Security_Solution_Initialization_API_DataViewPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        patternList:
+          items:
+            type: string
+          type: array
+        title:
+          type: string
+      required:
+      - id
+      - title
+      - patternList
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Alerting V2 API
   version: ''
   x-doc-license:
@@ -74,9 +21,7 @@ security:
 - basicAuth: []
 tags:
 - name: alerting-v2
-  description: 'Alerting V2 is an ES|QL-first alerting API for managing rules, alert actions, and action policies. Use these endpoints to create and manage detection rules, act on alerts, and control when and how notifications are delivered. These APIs are experimental.
-
-    '
+  description: Alerting V2 is an ES|QL-first alerting API for managing rules, alert actions, and action policies. Use these endpoints to create and manage detection rules, act on alerts, and control when and how notifications are delivered. These APIs are experimental.
   x-displayName: Alerting V2
 paths:
   /api/alerting/v2/action_policies:
@@ -84,13 +29,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies</span></div>
+        get /s/{space_id}/api/alerting/v2/action_policies
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a paginated list of action policies with optional filtering and sorting.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-action-policies.'
+        Get a paginated list of action policies with optional filtering and sorting.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-action-policies.'
       operationId: get-alerting-v2-action-policies
       parameters:
       - description: The page number to return. Defaults to 1.
@@ -277,13 +225,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Creates an action policy with a server-generated identifier. To create or replace an action policy with a client-supplied identifier, use PUT /api/alerting/v2/action_policies/.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies AND read_alerting-v2-rules.'
+        Creates an action policy with a server-generated identifier. To create or replace an action policy with a client-supplied identifier, use PUT /api/alerting/v2/action_policies/.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies AND read_alerting-v2-rules.'
       operationId: post-alerting-v2-action-policies
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -433,10 +384,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_bulk_delete</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_bulk_delete
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
@@ -558,10 +509,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_bulk_disable</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_bulk_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
@@ -683,10 +634,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_bulk_enable</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_bulk_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
@@ -808,10 +759,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_bulk_snooze</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_bulk_snooze
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
@@ -934,10 +885,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_bulk_unsnooze</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_bulk_unsnooze
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
@@ -1059,10 +1010,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_bulk_update_api_key</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_bulk_update_api_key
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
@@ -1184,13 +1135,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/_match_for_rule</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/_match_for_rule
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Returns action policies that match a given rule, categorised as direct, global, or global-filtered.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-action-policies.'
+        Returns action policies that match a given rule, categorised as direct, global, or global-filtered.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-action-policies.'
       operationId: post-alerting-v2-action-policies-match-for-rule
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1337,13 +1291,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}</span></div>
+        delete /s/{space_id}/api/alerting/v2/action_policies/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Delete an action policy by identifier.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Delete an action policy by identifier.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: delete-alerting-v2-action-policies-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1462,13 +1419,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}</span></div>
+        get /s/{space_id}/api/alerting/v2/action_policies/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get an action policy by identifier.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-action-policies.'
+        Get an action policy by identifier.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-action-policies.'
       operationId: get-alerting-v2-action-policies-id
       parameters:
       - description: The action policy identifier.
@@ -1612,13 +1572,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}</span></div>
+        patch /s/{space_id}/api/alerting/v2/action_policies/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Apply a partial update to an existing action policy. Fields not present in the body are left unchanged.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Apply a partial update to an existing action policy. Fields not present in the body are left unchanged.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: patch-alerting-v2-action-policies-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1786,7 +1749,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_error_response'
           description: Indicates the alerting engine is disabled by the `alerting:v2:enabled` advanced setting.
-      summary: Partially update an action policy.
+      summary: Partially update an action policy
       tags:
       - alerting-v2
       x-state: Experimental; added in 9.5.0
@@ -1797,13 +1760,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}</span></div>
+        put /s/{space_id}/api/alerting/v2/action_policies/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Creates an action policy with the given identifier, or fully replaces it if one already exists.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies AND read_alerting-v2-rules.'
+        Creates an action policy with the given identifier, or fully replaces it if one already exists.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies AND read_alerting-v2-rules.'
       operationId: put-alerting-v2-action-policies-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2025,13 +1991,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}/_disable</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/{id}/_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Disable an action policy by identifier.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Disable an action policy by identifier.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: post-alerting-v2-action-policies-id-disable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2198,13 +2167,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}/_enable</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/{id}/_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Enable an action policy by identifier.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Enable an action policy by identifier.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: post-alerting-v2-action-policies-id-enable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2371,13 +2343,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}/_snooze</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/{id}/_snooze
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Snooze an action policy until a specified time.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Snooze an action policy until a specified time.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: post-alerting-v2-action-policies-id-snooze
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2554,13 +2529,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}/_unsnooze</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/{id}/_unsnooze
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Remove the snooze from an action policy.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Remove the snooze from an action policy.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: post-alerting-v2-action-policies-id-unsnooze
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2727,13 +2705,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/{id}/_update_api_key</span></div>
+        post /s/{space_id}/api/alerting/v2/action_policies/{id}/_update_api_key
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Rotate the API key for an action policy.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
+        Rotate the API key for an action policy.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-action-policies.'
       operationId: post-alerting-v2-action-policies-id-update-api-key
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -2868,13 +2849,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/action_policies/tags</span></div>
+        get /s/{space_id}/api/alerting/v2/action_policies/tags
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get unique tags used across action policies.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-action-policies.'
+        Get unique tags used across action policies.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-action-policies.'
       operationId: get-alerting-v2-action-policies-tags
       parameters:
       - description: Prefix to filter tags by. Returns all most-used tags when omitted.
@@ -2993,13 +2977,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/_bulk_action</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/_bulk_action
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create actions for multiple alert groups in a single request.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create actions for multiple alert groups in a single request.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-bulk-action
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3119,13 +3106,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_ack</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_ack
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-ack
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3253,13 +3243,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_activate</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_activate
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-activate
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3388,13 +3381,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_assign</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_assign
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-assign
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3523,13 +3519,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_deactivate</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_deactivate
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-deactivate
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3658,13 +3657,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_snooze</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_snooze
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-snooze
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3792,13 +3794,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_tag</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_tag
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-tag
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -3928,13 +3933,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_unack</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_unack
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-unack
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -4062,13 +4070,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/alerts/{group_hash}/_unsnooze</span></div>
+        post /s/{space_id}/api/alerting/v2/alerts/{group_hash}/_unsnooze
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Create an action for a specific alert group.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-alerts.'
+        Create an action for a specific alert group.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-alerts.'
       operationId: post-alerting-v2-alerts-group-hash-unsnooze
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -4195,13 +4206,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/execution_history/action_policies</span></div>
+        get /s/{space_id}/api/alerting/v2/execution_history/action_policies
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a paginated list of dispatcher summary events for action policies in the current space.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-execution-history.'
+        Get a paginated list of dispatcher summary events for action policies in the current space.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-execution-history.'
       operationId: get-alerting-v2-execution-history-action-policies
       parameters:
       - description: Page number (1-indexed). Defaults to 1.
@@ -4387,13 +4401,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/execution_history/rules</span></div>
+        get /s/{space_id}/api/alerting/v2/execution_history/rules
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a paginated list of rule execution events.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-execution-history.'
+        Get a paginated list of rule execution events.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-execution-history.'
       operationId: get-alerting-v2-execution-history-rules
       parameters:
       - description: 'Rule id filter. '
@@ -4584,10 +4601,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules</span></div>
+        get /s/{space_id}/api/alerting/v2/rules
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: read_alerting-v2-rules.'
@@ -4770,13 +4787,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules</span></div>
+        post /s/{space_id}/api/alerting/v2/rules
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Creates a rule with a server-generated identifier. To create or replace a rule with a client-supplied identifier, use PUT /api/alerting/v2/rules/.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-rules.'
+        Creates a rule with a server-generated identifier. To create or replace a rule with a client-supplied identifier, use PUT /api/alerting/v2/rules/.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-rules.'
       operationId: post-alerting-v2-rules
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -4939,10 +4959,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_bulk_delete</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_bulk_delete
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -5061,10 +5081,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_bulk_disable</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_bulk_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -5183,10 +5203,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_bulk_enable</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_bulk_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -5305,10 +5325,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_bulk_get</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_bulk_get
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: read_alerting-v2-rules.'
@@ -5469,13 +5489,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_bulk_update_api_key</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_bulk_update_api_key
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Rotates each rule executor task API key to one derived from the current user’s credentials.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-rules.'
+        Rotates each rule executor task API key to one derived from the current user’s credentials.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-rules.'
       operationId: post-alerting-v2-rules-bulk-update-api-key
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -5591,10 +5614,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_delete_by_query</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_delete_by_query
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -5715,10 +5738,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_disable_by_query</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_disable_by_query
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -5839,10 +5862,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_enable_by_query</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_enable_by_query
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -5963,13 +5986,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/_update_api_key_by_query</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/_update_api_key_by_query
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Rotates each matching rule executor task API key to one derived from the current user’s credentials.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-rules.'
+        Rotates each matching rule executor task API key to one derived from the current user’s credentials.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-rules.'
       operationId: post-alerting-v2-rules-update-api-key-by-query
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -6087,10 +6113,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}</span></div>
+        delete /s/{space_id}/api/alerting/v2/rules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -6212,10 +6238,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}</span></div>
+        get /s/{space_id}/api/alerting/v2/rules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: read_alerting-v2-rules.'
@@ -6368,10 +6394,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}</span></div>
+        patch /s/{space_id}/api/alerting/v2/rules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -6556,13 +6582,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}</span></div>
+        put /s/{space_id}/api/alerting/v2/rules/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Creates a rule with the given identifier, or fully replaces it if one already exists.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-rules.'
+        Creates a rule with the given identifier, or fully replaces it if one already exists.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-rules.'
       operationId: put-alerting-v2-rules-id
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -6803,13 +6832,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}/_disable</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/{id}/_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Disable a rule by identifier.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-rules.'
+        Disable a rule by identifier.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-rules.'
       operationId: post-alerting-v2-rules-id-disable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -6982,13 +7014,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}/_enable</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/{id}/_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Enable a rule by identifier.<br/><br/>[Required authorization] Route required privileges: manage_alerting-v2-rules.'
+        Enable a rule by identifier.
+
+
+        [Required authorization] Route required privileges: manage_alerting-v2-rules.'
       operationId: post-alerting-v2-rules-id-enable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -7157,10 +7192,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}/_run</span></div>
+        post /s/{space_id}/api/alerting/v2/rules/{id}/_run
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: manage_alerting-v2-rules.'
@@ -7293,13 +7328,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}/history</span></div>
+        get /s/{space_id}/api/alerting/v2/rules/{id}/history
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get a paginated list of prior configurations for a rule from change history. List rows are lean (diff summary only); use the detail route for full snapshots.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-rules.'
+        Get a paginated list of prior configurations for a rule from change history. List rows are lean (diff summary only); use the detail route for full snapshots.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-rules.'
       operationId: get-alerting-v2-rules-id-history
       parameters:
       - description: The identifier for the rule.
@@ -7507,13 +7545,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/{id}/history/{eventId}</span></div>
+        get /s/{space_id}/api/alerting/v2/rules/{id}/history/{eventId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get the full detail for a single rule change-history event, including the rule configuration snapshot.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-rules.'
+        Get the full detail for a single rule change-history event, including the rule configuration snapshot.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-rules.'
       operationId: get-alerting-v2-rules-id-history-eventid
       parameters:
       - description: The identifier for the rule.
@@ -7746,10 +7787,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/rules/tags</span></div>
+        get /s/{space_id}/api/alerting/v2/rules/tags
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         [Required authorization] Route required privileges: read_alerting-v2-rules.'
@@ -7875,13 +7916,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/alerting/v2/suggestions/rule_event_fields</span></div>
+        get /s/{space_id}/api/alerting/v2/suggestions/rule_event_fields
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Get suggestions for matcher data fields.<br/><br/>[Required authorization] Route required privileges: read_alerting-v2-alerts.'
+        Get suggestions for matcher data fields.
+
+
+        [Required authorization] Route required privileges: read_alerting-v2-alerts.'
       operationId: get-alerting-v2-suggestions-rule-event-fields
       parameters:
       - description: Optional matcher expression used to scope suggested data field names.
@@ -7990,6 +8034,191 @@ paths:
         name: product_name
 components:
   schemas:
+    Kibana_HTTP_APIs_alerting_error_response:
+      additionalProperties: false
+      type: object
+      properties:
+        code:
+          description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
+          type: string
+        details:
+          additionalProperties: {}
+          description: Optional structured context (e.g., validation field errors, conflict resource IDs).
+          type: object
+        error:
+          description: A short human-readable summary of the error category (e.g., "Not Found", "Bad Request"). Subject to change without notice. Do not parse or rely on its content.
+          type: string
+        message:
+          description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
+          type: string
+      required:
+      - code
+      - error
+      - message
+    Kibana_HTTP_APIs_alerting_bulk_get_rules_request:
+      additionalProperties: false
+      type: object
+      properties:
+        ids:
+          description: Rule identifiers to retrieve. The response preserved this order.
+          items:
+            description: A rule identifier.
+            maxLength: 150
+            minLength: 1
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+      required:
+      - ids
+    Kibana_HTTP_APIs_alerting_new_ack_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        episode_id:
+          description: The episode identifier for the alert to acknowledge.
+          maxLength: 150
+          minLength: 1
+          type: string
+      required:
+      - episode_id
+    Kibana_HTTP_APIs_alerting_new_rule:
+      additionalProperties: false
+      type: object
+      properties:
+        artifacts:
+          description: Artifacts attached to the rule, each shaped as `{ id, type, data }`. `data` is a type-specific object (for example a `runbook` may carry `content`, a `dashboard` may carry `dashboardId`). Per-type shape is validated by the artifact-type registry when the type is registered; unregistered types pass through with envelope bounds only.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_artifact'
+          maxItems: 100
+          type: array
+        grouping:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_grouping'
+        kind:
+          anyOf:
+          - description: Default. Tracks each problem as an alert episode and its lifecycle, link it to workflows to notify your team. Use when the user wants to detect and respond.
+            enum:
+            - alert
+            type: string
+          - description: Matches are stored as queryable events. No alerts, no notifications - just data. Use when the user wants to collect evidence.
+            enum:
+            - signal
+            type: string
+          description: The kind of the rule.
+        metadata:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_metadata'
+        no_data_strategy:
+          anyOf:
+          - description: Holds the last known episode status when no data is present.
+            enum:
+            - last_known_status
+            type: string
+          - description: Emits a `no_data` alert event when no_data query returns no rows for the group. "emit" is not currently accepted by the create/update API.
+            enum:
+            - emit
+            type: string
+          - description: Resolves the alert episode to inactive on the first no-data run.
+            enum:
+            - recover
+            type: string
+          - description: No-data situations are ignored (default).
+            enum:
+            - none
+            type: string
+          description: How to handle no-data situations. "last_known_status" holds the last known status; "recover" forces recovery; "none" disables no-data detection. "emit" is not currently accepted by the create/update API. Standalone-format rules must provide a `no_data` query block when this is not "none"; composed-format rules use `base` as the data-presence query.
+        query:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_query'
+        recovery_strategy:
+          anyOf:
+          - description: recovers groups that stop breaching (default).
+            enum:
+            - no_breach
+            type: string
+          - description: uses a custom recovery query to detect recovery.
+            enum:
+            - query
+            type: string
+          - description: disables recovery entirely.
+            enum:
+            - none
+            type: string
+          description: How recovery is detected. "no_breach" recovers groups that stop breaching; "query" uses a custom recovery query; "none" disables recovery.
+        schedule:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_schedule'
+        state_transition:
+          additionalProperties: false
+          description: Episode state transition thresholds (alert-only).
+          type:
+          - object
+          - 'null'
+          properties:
+            pending_count:
+              description: Consecutive breaches before transitioning to active.
+              maximum: 1000
+              minimum: 0
+              type: integer
+            pending_operator:
+              description: How to combine count and timeframe for pending.
+              enum:
+              - AND
+              - OR
+              type: string
+            pending_timeframe:
+              description: Time window for pending evaluation, e.g. 5m, 15m.
+              type: string
+            recovering_count:
+              description: Consecutive recoveries before transitioning to inactive.
+              maximum: 1000
+              minimum: 0
+              type: integer
+            recovering_operator:
+              description: How to combine count and timeframe for recovering.
+              enum:
+              - AND
+              - OR
+              type: string
+            recovering_timeframe:
+              description: Time window for recovering evaluation, e.g. 5m, 15m.
+              type: string
+        time_field:
+          default: '@timestamp'
+          description: Time field used for the lookback window range filter.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - kind
+      - metadata
+      - schedule
+      - query
+    Kibana_HTTP_APIs_alerting_bulk_get_rules_response:
+      additionalProperties: false
+      type: object
+      properties:
+        rules:
+          description: The requested rules, in the same order as the requested ids.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_response'
+          type: array
+      required:
+      - rules
+    Kibana_HTTP_APIs_alerting_unack_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Removes acknowledgement from an alert.
+          enum:
+          - unack
+          type: string
+        episode_id:
+          description: The episode identifier for the alert to unacknowledge.
+          maxLength: 150
+          minLength: 1
+          type: string
+      required:
+      - action_type
+      - episode_id
     Kibana_HTTP_APIs_alerting_alert_action:
       description: 'Request body for creating a single alert action. One of: ack, unack, assign, tag, snooze, unsnooze, activate, deactivate.'
       discriminator:
@@ -8012,166 +8241,49 @@ components:
       - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_unsnooze_alert_action'
       - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_activate_alert_action'
       - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_deactivate_alert_action'
-    Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_request:
+    Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_response:
       additionalProperties: false
+      description: Action policies that match a given rule, grouped by match category.
       type: object
       properties:
-        rule:
-          additionalProperties: false
-          type: object
-          properties:
-            id:
-              description: The ID of the rule.
-              maxLength: 256
-              minLength: 1
-              type: string
-            name:
-              description: The name of the rule, used to evaluate global matcher expressions.
-              maxLength: 256
-              minLength: 1
-              type: string
-            tags:
-              description: The tags of the rule, used to evaluate global matcher expressions.
-              items:
-                maxLength: 256
-                minLength: 1
-                type: string
-              maxItems: 100
-              type: array
-    Kibana_HTTP_APIs_alerting_action_policy_throttle:
-      additionalProperties: false
-      type: object
-      properties:
-        interval:
-          description: The throttle interval duration (e.g. 5m, 1h), or null when the strategy is intervalless.
-          type:
-          - string
-          - 'null'
-        strategy:
-          anyOf:
-          - description: notify only on episode status transitions (default for `per_episode`).
-            enum:
-            - on_status_change
-            type: string
-          - description: notify on transitions and at regular intervals.
-            enum:
-            - per_status_interval
-            type: string
-          - description: notify at regular intervals regardless of status (default for `all`/`per_field`).
-            enum:
-            - time_interval
-            type: string
-          - description: notify on every evaluation cycle (high volume).
-            enum:
-            - every_time
-            type: string
-          description: The throttle strategy.
-    Kibana_HTTP_APIs_alerting_action_policy_grouping_mode:
-      anyOf:
-      - description: one notification per alert episode lifecycle (default).
-        enum:
-        - per_episode
-        type: string
-      - description: a single notification for all matching episodes.
-        enum:
-        - all
-        type: string
-      - description: group by specified `groupBy` fields.
-        enum:
-        - per_field
-        type: string
-      description: 'The grouping mode: per_episode groups by episode lifecycle, all sends a single notification for all alerts, per_field groups by the specified fields.'
-    Kibana_HTTP_APIs_alerting_unsnooze_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Removes snooze from an alert.
-          enum:
-          - unsnooze
-          type: string
-      required:
-      - action_type
-    Kibana_HTTP_APIs_alerting_bulk_dry_run_response:
-      additionalProperties: false
-      description: Dry-run preview returned by a by-query bulk endpoint when `force` is false.
-      type: object
-      properties:
-        match_count:
-          description: 'Total number of resources matching the query. A dry run never fails on size, but if this exceeds 10000, re-sending the same query with `force: true` is rejected with `BULK_QUERY_MATCH_LIMIT_EXCEEDED`; narrow the query before executing.'
+        items:
+          description: The list of matched action policies.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_matched_action_policy'
+          type: array
+        total:
+          description: Total number of action policies in the space. If greater than the number evaluated, the match results may be incomplete.
           maximum: 9007199254740991
           minimum: 0
           type: integer
-        sample:
-          description: Sample of matching resource IDs (up to 100) for spot-checking before executing.
-          items:
-            type: string
-          maxItems: 100
-          type: array
       required:
-      - match_count
-      - sample
-    Kibana_HTTP_APIs_alerting_update_action_policy:
+      - items
+      - total
+    Kibana_HTTP_APIs_alerting_rule_executions_response:
       additionalProperties: false
       type: object
       properties:
-        description:
-          description: A description of the action policy.
-          maxLength: 1024
-          type: string
-        destinations:
-          description: The list of destinations. At least one is required.
+        items:
           items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_destination'
-          maxItems: 10
-          minItems: 1
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_execution'
           type: array
-        group_by:
-          description: The fields used to group alerts.
-          items:
-            maxLength: 256
-            minLength: 1
-            type: string
-          maxItems: 16
-          type:
-          - array
-          - 'null'
-        grouping_mode:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_grouping_mode'
-          description: The grouping mode for alert notifications.
-        matcher:
-          description: A KQL query string to match alerts.
-          maxLength: 4096
-          type:
-          - string
-          - 'null'
-        name:
-          description: The name of the action policy.
-          maxLength: 256
-          minLength: 1
-          type: string
-        tags:
-          description: Tags for categorizing the action policy.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type:
-          - array
-          - 'null'
-        throttle:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_throttle'
-          description: The throttle configuration for notifications.
-        version:
-          description: The current version of the action policy, used for optimistic concurrency control.
-          maxLength: 256
-          minLength: 1
-          type: string
+        page:
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
+        per_page:
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
+        total:
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
       required:
-      - version
+      - items
+      - total
+      - page
+      - per_page
     Kibana_HTTP_APIs_alerting_rule_response:
       additionalProperties: false
       type: object
@@ -8312,6 +8424,716 @@ components:
       - created_at
       - updated_by
       - updated_at
+    Kibana_HTTP_APIs_alerting_rule_execution:
+      additionalProperties: false
+      type: object
+      properties:
+        ended_at:
+          type: string
+        error:
+          additionalProperties: false
+          type:
+          - object
+          - 'null'
+          properties:
+            message:
+              type: string
+            stack_trace:
+              type:
+              - string
+              - 'null'
+          required:
+          - message
+          - stack_trace
+        id:
+          type: string
+        outcome:
+          enum:
+          - success
+          - failure
+          type: string
+        reason:
+          type:
+          - string
+          - 'null'
+        rule:
+          additionalProperties: false
+          type: object
+          properties:
+            id:
+              type: string
+            version:
+              maximum: 9007199254740991
+              minimum: -9007199254740991
+              type:
+              - integer
+              - 'null'
+          required:
+          - id
+          - version
+        space_id:
+          type: string
+        started_at:
+          type: string
+        timings:
+          additionalProperties: false
+          type: object
+          properties:
+            duration:
+              maximum: 9007199254740991
+              minimum: 0
+              type: integer
+            scheduled_delay:
+              maximum: 9007199254740991
+              minimum: -9007199254740991
+              type: integer
+          required:
+          - duration
+          - scheduled_delay
+      required:
+      - id
+      - rule
+      - space_id
+      - started_at
+      - ended_at
+      - timings
+      - outcome
+      - reason
+      - error
+    Kibana_HTTP_APIs_alerting_update_action_policy:
+      additionalProperties: false
+      type: object
+      properties:
+        description:
+          description: A description of the action policy.
+          maxLength: 1024
+          type: string
+        destinations:
+          description: The list of destinations. At least one is required.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_destination'
+          maxItems: 10
+          minItems: 1
+          type: array
+        group_by:
+          description: The fields used to group alerts.
+          items:
+            maxLength: 256
+            minLength: 1
+            type: string
+          maxItems: 16
+          type:
+          - array
+          - 'null'
+        grouping_mode:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_grouping_mode'
+          description: The grouping mode for alert notifications.
+        matcher:
+          description: A KQL query string to match alerts.
+          maxLength: 4096
+          type:
+          - string
+          - 'null'
+        name:
+          description: The name of the action policy.
+          maxLength: 256
+          minLength: 1
+          type: string
+        tags:
+          description: Tags for categorizing the action policy.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type:
+          - array
+          - 'null'
+        throttle:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_throttle'
+          description: The throttle configuration for notifications.
+        version:
+          description: The current version of the action policy, used for optimistic concurrency control.
+          maxLength: 256
+          minLength: 1
+          type: string
+      required:
+      - version
+    Kibana_HTTP_APIs_alerting_bulk_dry_run_response:
+      additionalProperties: false
+      description: Dry-run preview returned by a by-query bulk endpoint when `force` is false.
+      type: object
+      properties:
+        match_count:
+          description: 'Total number of resources matching the query. A dry run never fails on size, but if this exceeds 10000, re-sending the same query with `force: true` is rejected with `BULK_QUERY_MATCH_LIMIT_EXCEEDED`; narrow the query before executing.'
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        sample:
+          description: Sample of matching resource IDs (up to 100) for spot-checking before executing.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+      required:
+      - match_count
+      - sample
+    Kibana_HTTP_APIs_alerting_action_policy_list_response:
+      additionalProperties: false
+      description: Paginated list of action policies.
+      type: object
+      properties:
+        items:
+          description: The list of action policies.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_response'
+          type: array
+        page:
+          description: The current page number.
+          type: number
+        per_page:
+          description: The number of action policies per page.
+          type: number
+        total:
+          description: The total number of action policies matching the query.
+          type: number
+      required:
+      - items
+      - total
+      - page
+      - per_page
+    Kibana_HTTP_APIs_alerting_new_tag_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        tags:
+          description: List of tags to add to the alert.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type: array
+      required:
+      - tags
+    Kibana_HTTP_APIs_alerting_bulk_create_alert_actions_request:
+      description: Request body for bulk create alert actions. Array of 1 to 100 actions, each with group_hash and action payload.
+      items:
+        $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item'
+      maxItems: 100
+      minItems: 1
+      type: array
+    Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_alert_action'
+      - additionalProperties: false
+        description: Alert action payload with group identifier for bulk requests.
+        type: object
+        properties:
+          group_hash:
+            description: Hash identifying the alert group to apply the action to.
+            maxLength: 256
+            minLength: 1
+            type: string
+        required:
+        - group_hash
+    Kibana_HTTP_APIs_alerting_activate_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Activates an alert.
+          enum:
+          - activate
+          type: string
+        reason:
+          description: Reason for activating the alert.
+          maxLength: 1024
+          minLength: 1
+          type: string
+      required:
+      - action_type
+      - reason
+    Kibana_HTTP_APIs_alerting_rule_tags_response:
+      additionalProperties: false
+      description: All unique tags across rules.
+      type: object
+      properties:
+        tags:
+          description: The list of unique tags.
+          items:
+            type: string
+          type: array
+      required:
+      - tags
+    Kibana_HTTP_APIs_alerting_new_deactivate_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        reason:
+          description: Reason for deactivating the alert.
+          maxLength: 1024
+          minLength: 1
+          type: string
+      required:
+      - reason
+    Kibana_HTTP_APIs_alerting_bulk_by_ids_request:
+      additionalProperties: false
+      type: object
+      properties:
+        ids:
+          description: Explicit list of IDs to operate on.
+          items:
+            maxLength: 150
+            minLength: 1
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+      required:
+      - ids
+    Kibana_HTTP_APIs_alerting_rule_schedule:
+      additionalProperties: false
+      description: Execution schedule configuration.
+      type: object
+      properties:
+        every:
+          description: Execution interval, e.g. 1m, 5m, 1h.
+          type: string
+        lookback:
+          description: Lookback window for the query, e.g. 5m, 1h. Can also be expressed in ES|QL.
+          type: string
+      required:
+      - every
+    Kibana_HTTP_APIs_alerting_tag_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Adds tags to an alert.
+          enum:
+          - tag
+          type: string
+        tags:
+          description: List of tags to add to the alert.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type: array
+      required:
+      - action_type
+      - tags
+    Kibana_HTTP_APIs_alerting_assign_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Assigns an alerting episode to a user, or clears the assignee when null.
+          enum:
+          - assign
+          type: string
+        assignee_uid:
+          description: User profile UID of the assignee, or null to remove the assignee from the episode.
+          maxLength: 256
+          type:
+          - string
+          - 'null'
+        episode_id:
+          description: The episode identifier to assign.
+          maxLength: 150
+          minLength: 1
+          type: string
+      required:
+      - action_type
+      - episode_id
+      - assignee_uid
+    Kibana_HTTP_APIs_alerting_snooze_action_policy_request:
+      additionalProperties: false
+      type: object
+      properties:
+        snoozed_until:
+          description: The ISO datetime until which the action policy should be snoozed.
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+          type: string
+      required:
+      - snoozed_until
+    Kibana_HTTP_APIs_alerting_policy_execution_history_response:
+      additionalProperties: false
+      type: object
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_policy_execution_history_item'
+          type: array
+        page:
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
+        per_page:
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        search_matches:
+          additionalProperties: false
+          description: Per-type match counts for the active search, plus the cap used as filter. Null when no search was provided. When policies > cap or rules > cap the result is truncated.
+          type:
+          - object
+          - 'null'
+          properties:
+            cap:
+              description: Maximum number of policy/rule ids the server uses as a filter.
+              type: number
+            policies:
+              description: Total policies matching the search.
+              type: number
+            rules:
+              description: Total rules matching the search.
+              type: number
+          required:
+          - policies
+          - rules
+          - cap
+        total_events:
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+      required:
+      - items
+      - page
+      - per_page
+      - total_events
+      - search_matches
+    Kibana_HTTP_APIs_alerting_policy_execution_history_item:
+      additionalProperties: false
+      type: object
+      properties:
+        action_group_count:
+          type: number
+        dispatched_at:
+          type: string
+        episode_count:
+          type: number
+        episodes:
+          description: Episode ids referenced by this event, bounded to MAX_EMBEDDED_EPISODES_PER_ITEM. Use `episode_count` for the true total.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+            required:
+            - id
+          maxItems: 50
+          type: array
+        error:
+          additionalProperties: false
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+          - message
+        failure_reason:
+          enum:
+          - missing_api_key
+          - workflow_not_found
+          - workflow_disabled
+          - schedule_error
+          type: string
+        outcome:
+          enum:
+          - dispatched
+          - throttled
+          - dispatch_failed
+          type: string
+        policy:
+          additionalProperties: false
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type:
+              - string
+              - 'null'
+          required:
+          - id
+        rules:
+          description: Rules referenced by this event, bounded to MAX_EMBEDDED_RULES_PER_ITEM. When a search or rule filter narrows the match, this array is intersected with the matched subset server-side. Use `total_rule_count` for the full count.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type:
+                - string
+                - 'null'
+            required:
+            - id
+          maxItems: 20
+          type: array
+        total_rule_count:
+          description: Total number of rules referenced by this event after search / rule-filter narrowing. May exceed `rules.length` when the embedded array is truncated to the cap.
+          type: number
+        workflows:
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type:
+                - string
+                - 'null'
+            required:
+            - id
+          maxItems: 100
+          type: array
+      required:
+      - dispatched_at
+      - policy
+      - outcome
+      - episode_count
+      - action_group_count
+      - rules
+      - total_rule_count
+      - workflows
+    Kibana_HTTP_APIs_alerting_composed_rule_query:
+      additionalProperties: false
+      description: 'Composed query: a shared base with appendable breach and recovery segments.'
+      type: object
+      properties:
+        base:
+          description: Base ES|QL query. Time filters are applied automatically via the lookback window.
+          maxLength: 10000
+          minLength: 1
+          type: string
+        breach:
+          additionalProperties: false
+          description: Breach detection configuration. Omit to treat every base row as a breach.
+          type: object
+          properties:
+            segment:
+              description: A clause appended to the end of the rule's ES|QL query. Required in breach blocks.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - segment
+        format:
+          enum:
+          - composed
+          type: string
+        recovery:
+          additionalProperties: false
+          description: Recovery query segment. Required when recovery_strategy is "query".
+          type: object
+          properties:
+            segment:
+              description: Appendable ES|QL segment for recovery detection.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - segment
+      required:
+      - format
+      - base
+    Kibana_HTTP_APIs_alerting_bulk_by_query_request:
+      additionalProperties: false
+      type: object
+      properties:
+        filter:
+          description: 'KQL filter string to match target resources. At most 10000 matching resources are processed per request. Cannot be empty; to target every resource use `match_all: true`.'
+          maxLength: 4096
+          minLength: 1
+          type: string
+        force:
+          default: false
+          description: When true, executes the operation. When false (default), returns a dry-run preview with `match_count` and a `sample` of matching resource IDs so the client can verify before committing.
+          type: boolean
+        match_all:
+          description: When true, targets every resource. Requires an explicit opt-in. Omitted by default.
+          enum:
+          - true
+          type: boolean
+        search:
+          description: 'Free-text search string matched against the resource-defined searchable fields. Cannot be empty; to target every resource use `match_all: true`.'
+          maxLength: 256
+          minLength: 1
+          type: string
+    Kibana_HTTP_APIs_alerting_rule_grouping:
+      additionalProperties: false
+      description: Grouping configuration.
+      type: object
+      properties:
+        fields:
+          description: Fields to group alerts by, e.g. ["host.name", "service.name"]. Should match ES|QL GROUP BY fields.
+          items:
+            maxLength: 256
+            minLength: 1
+            type: string
+          maxItems: 16
+          type: array
+      required:
+      - fields
+    Kibana_HTTP_APIs_alerting_new_activate_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        reason:
+          description: Reason for activating the alert.
+          maxLength: 1024
+          minLength: 1
+          type: string
+      required:
+      - reason
+    Kibana_HTTP_APIs_alerting_action_policy_throttle:
+      additionalProperties: false
+      type: object
+      properties:
+        interval:
+          description: The throttle interval duration (e.g. 5m, 1h), or null when the strategy is intervalless.
+          type:
+          - string
+          - 'null'
+        strategy:
+          anyOf:
+          - description: notify only on episode status transitions (default for `per_episode`).
+            enum:
+            - on_status_change
+            type: string
+          - description: notify on transitions and at regular intervals.
+            enum:
+            - per_status_interval
+            type: string
+          - description: notify at regular intervals regardless of status (default for `all`/`per_field`).
+            enum:
+            - time_interval
+            type: string
+          - description: notify on every evaluation cycle (high volume).
+            enum:
+            - every_time
+            type: string
+          description: The throttle strategy.
+    Kibana_HTTP_APIs_alerting_action_policy_grouping_mode:
+      anyOf:
+      - description: one notification per alert episode lifecycle (default).
+        enum:
+        - per_episode
+        type: string
+      - description: a single notification for all matching episodes.
+        enum:
+        - all
+        type: string
+      - description: group by specified `groupBy` fields.
+        enum:
+        - per_field
+        type: string
+      description: 'The grouping mode: per_episode groups by episode lifecycle, all sends a single notification for all alerts, per_field groups by the specified fields.'
+    Kibana_HTTP_APIs_alerting_standalone_rule_query:
+      additionalProperties: false
+      description: 'Standalone queries: independent full queries for breach, recovery, and no_data.'
+      type: object
+      properties:
+        breach:
+          additionalProperties: false
+          description: Breach detection configuration (required).
+          type: object
+          properties:
+            query:
+              description: Full ES|QL query for breach detection (required).
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - query
+        format:
+          enum:
+          - standalone
+          type: string
+        no_data:
+          additionalProperties: false
+          description: No-data detection query. Required when no_data_strategy is not "none".
+          type: object
+          properties:
+            query:
+              description: Full ES|QL query that detects presence of data.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - query
+        recovery:
+          additionalProperties: false
+          description: Recovery query. Required when recovery_strategy is "query".
+          type: object
+          properties:
+            query:
+              description: Full ES|QL query for recovery detection.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - query
+      required:
+      - format
+      - breach
+    Kibana_HTTP_APIs_alerting_new_action_policy:
+      additionalProperties: false
+      type: object
+      properties:
+        description:
+          description: A description of the action policy.
+          maxLength: 1024
+          type: string
+        destinations:
+          description: The list of destinations. At least one is required.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_destination'
+          maxItems: 10
+          minItems: 1
+          type: array
+        group_by:
+          description: The fields used to group alerts.
+          items:
+            maxLength: 256
+            minLength: 1
+            type: string
+          maxItems: 16
+          type: array
+        grouping_mode:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_grouping_mode'
+          description: The grouping mode for alert notifications.
+        matcher:
+          description: A KQL query string to match alerts.
+          maxLength: 4096
+          type: string
+        name:
+          description: The name of the action policy.
+          maxLength: 256
+          minLength: 1
+          type: string
+        tags:
+          description: Tags for categorizing the action policy.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type: array
+        throttle:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_throttle'
+          description: The throttle configuration for notifications.
+      required:
+      - name
+      - description
+      - destinations
     Kibana_HTTP_APIs_alerting_bulk_snooze_action_policies_request:
       additionalProperties: false
       type: object
@@ -8333,105 +9155,35 @@ components:
       required:
       - ids
       - snoozed_until
-    Kibana_HTTP_APIs_alerting_new_ack_alert_action:
+    Kibana_HTTP_APIs_alerting_new_assign_alert_action:
       additionalProperties: false
       type: object
       properties:
+        assignee_uid:
+          description: User profile UID of the assignee, or null to remove the assignee from the episode.
+          maxLength: 256
+          type:
+          - string
+          - 'null'
         episode_id:
-          description: The episode identifier for the alert to acknowledge.
+          description: The episode identifier to assign.
           maxLength: 150
           minLength: 1
           type: string
       required:
       - episode_id
-    Kibana_HTTP_APIs_alerting_new_tag_alert_action:
+      - assignee_uid
+    Kibana_HTTP_APIs_alerting_new_unack_alert_action:
       additionalProperties: false
       type: object
       properties:
-        tags:
-          description: List of tags to add to the alert.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type: array
-      required:
-      - tags
-    Kibana_HTTP_APIs_alerting_bulk_get_rules_request:
-      additionalProperties: false
-      type: object
-      properties:
-        ids:
-          description: Rule identifiers to retrieve. The response preserved this order.
-          items:
-            description: A rule identifier.
-            maxLength: 150
-            minLength: 1
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-      required:
-      - ids
-    Kibana_HTTP_APIs_alerting_tag_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Adds tags to an alert.
-          enum:
-          - tag
-          type: string
-        tags:
-          description: List of tags to add to the alert.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type: array
-      required:
-      - action_type
-      - tags
-    Kibana_HTTP_APIs_alerting_rule_response_metadata:
-      additionalProperties: false
-      type: object
-      properties:
-        builder_type:
-          description: Identifies the rule builder that authored this rule (e.g. "threshold"). Absent for rules authored directly in ES|QL.
-          maxLength: 64
-          type: string
-        description:
-          description: Human-readable description of the rule.
-          maxLength: 1024
-          type: string
-        name:
-          description: Rule name (must be unique within the space).
-          maxLength: 256
+        episode_id:
+          description: The episode identifier for the alert to unacknowledge.
+          maxLength: 150
           minLength: 1
           type: string
-        owner:
-          description: Owner of the rule.
-          maxLength: 256
-          type: string
-        tags:
-          description: Tags for categorization, e.g. ["production", "infra"].
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          minItems: 1
-          type: array
-        version:
-          description: Monotonically increasing integer number representing a rule configuration version, incremented on every change. Used on generated rule events as `rule.version`.
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
       required:
-      - name
-      - version
+      - episode_id
     Kibana_HTTP_APIs_alerting_update_rule:
       additionalProperties: false
       type: object
@@ -8568,499 +9320,36 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-    Kibana_HTTP_APIs_alerting_policy_execution_history_response:
+    Kibana_HTTP_APIs_alerting_new_unsnooze_alert_action:
+      additionalProperties: false
+      type: object
+      properties: {}
+    Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_request:
       additionalProperties: false
       type: object
       properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_policy_execution_history_item'
-          type: array
-        page:
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
-        per_page:
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-        search_matches:
-          additionalProperties: false
-          description: Per-type match counts for the active search, plus the cap used as filter. Null when no search was provided. When policies > cap or rules > cap the result is truncated.
-          type:
-          - object
-          - 'null'
-          properties:
-            cap:
-              description: Maximum number of policy/rule ids the server uses as a filter.
-              type: number
-            policies:
-              description: Total policies matching the search.
-              type: number
-            rules:
-              description: Total rules matching the search.
-              type: number
-          required:
-          - policies
-          - rules
-          - cap
-        total_events:
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-      required:
-      - items
-      - page
-      - per_page
-      - total_events
-      - search_matches
-    Kibana_HTTP_APIs_alerting_rule_query:
-      description: Detection query configuration.
-      discriminator:
-        mapping:
-          composed: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
-          standalone: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
-        propertyName: format
-      oneOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
-    Kibana_HTTP_APIs_alerting_activate_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Activates an alert.
-          enum:
-          - activate
-          type: string
-        reason:
-          description: Reason for activating the alert.
-          maxLength: 1024
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - reason
-    Kibana_HTTP_APIs_alerting_rule_execution:
-      additionalProperties: false
-      type: object
-      properties:
-        ended_at:
-          type: string
-        error:
-          additionalProperties: false
-          type:
-          - object
-          - 'null'
-          properties:
-            message:
-              type: string
-            stack_trace:
-              type:
-              - string
-              - 'null'
-          required:
-          - message
-          - stack_trace
-        id:
-          type: string
-        outcome:
-          enum:
-          - success
-          - failure
-          type: string
-        reason:
-          type:
-          - string
-          - 'null'
         rule:
           additionalProperties: false
           type: object
           properties:
             id:
-              type: string
-            version:
-              maximum: 9007199254740991
-              minimum: -9007199254740991
-              type:
-              - integer
-              - 'null'
-          required:
-          - id
-          - version
-        space_id:
-          type: string
-        started_at:
-          type: string
-        timings:
-          additionalProperties: false
-          type: object
-          properties:
-            duration:
-              maximum: 9007199254740991
-              minimum: 0
-              type: integer
-            scheduled_delay:
-              maximum: 9007199254740991
-              minimum: -9007199254740991
-              type: integer
-          required:
-          - duration
-          - scheduled_delay
-      required:
-      - id
-      - rule
-      - space_id
-      - started_at
-      - ended_at
-      - timings
-      - outcome
-      - reason
-      - error
-    Kibana_HTTP_APIs_alerting_new_assign_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        assignee_uid:
-          description: User profile UID of the assignee, or null to remove the assignee from the episode.
-          maxLength: 256
-          type:
-          - string
-          - 'null'
-        episode_id:
-          description: The episode identifier to assign.
-          maxLength: 150
-          minLength: 1
-          type: string
-      required:
-      - episode_id
-      - assignee_uid
-    Kibana_HTTP_APIs_alerting_action_policy_list_response:
-      additionalProperties: false
-      description: Paginated list of action policies.
-      type: object
-      properties:
-        items:
-          description: The list of action policies.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_response'
-          type: array
-        page:
-          description: The current page number.
-          type: number
-        per_page:
-          description: The number of action policies per page.
-          type: number
-        total:
-          description: The total number of action policies matching the query.
-          type: number
-      required:
-      - items
-      - total
-      - page
-      - per_page
-    Kibana_HTTP_APIs_alerting_new_rule:
-      additionalProperties: false
-      type: object
-      properties:
-        artifacts:
-          description: Artifacts attached to the rule, each shaped as `{ id, type, data }`. `data` is a type-specific object (for example a `runbook` may carry `content`, a `dashboard` may carry `dashboardId`). Per-type shape is validated by the artifact-type registry when the type is registered; unregistered types pass through with envelope bounds only.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_artifact'
-          maxItems: 100
-          type: array
-        grouping:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_grouping'
-        kind:
-          anyOf:
-          - description: Default. Tracks each problem as an alert episode and its lifecycle, link it to workflows to notify your team. Use when the user wants to detect and respond.
-            enum:
-            - alert
-            type: string
-          - description: Matches are stored as queryable events. No alerts, no notifications - just data. Use when the user wants to collect evidence.
-            enum:
-            - signal
-            type: string
-          description: The kind of the rule.
-        metadata:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_metadata'
-        no_data_strategy:
-          anyOf:
-          - description: Holds the last known episode status when no data is present.
-            enum:
-            - last_known_status
-            type: string
-          - description: Emits a `no_data` alert event when no_data query returns no rows for the group. "emit" is not currently accepted by the create/update API.
-            enum:
-            - emit
-            type: string
-          - description: Resolves the alert episode to inactive on the first no-data run.
-            enum:
-            - recover
-            type: string
-          - description: No-data situations are ignored (default).
-            enum:
-            - none
-            type: string
-          description: How to handle no-data situations. "last_known_status" holds the last known status; "recover" forces recovery; "none" disables no-data detection. "emit" is not currently accepted by the create/update API. Standalone-format rules must provide a `no_data` query block when this is not "none"; composed-format rules use `base` as the data-presence query.
-        query:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_query'
-        recovery_strategy:
-          anyOf:
-          - description: recovers groups that stop breaching (default).
-            enum:
-            - no_breach
-            type: string
-          - description: uses a custom recovery query to detect recovery.
-            enum:
-            - query
-            type: string
-          - description: disables recovery entirely.
-            enum:
-            - none
-            type: string
-          description: How recovery is detected. "no_breach" recovers groups that stop breaching; "query" uses a custom recovery query; "none" disables recovery.
-        schedule:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_schedule'
-        state_transition:
-          additionalProperties: false
-          description: Episode state transition thresholds (alert-only).
-          type:
-          - object
-          - 'null'
-          properties:
-            pending_count:
-              description: Consecutive breaches before transitioning to active.
-              maximum: 1000
-              minimum: 0
-              type: integer
-            pending_operator:
-              description: How to combine count and timeframe for pending.
-              enum:
-              - AND
-              - OR
-              type: string
-            pending_timeframe:
-              description: Time window for pending evaluation, e.g. 5m, 15m.
-              type: string
-            recovering_count:
-              description: Consecutive recoveries before transitioning to inactive.
-              maximum: 1000
-              minimum: 0
-              type: integer
-            recovering_operator:
-              description: How to combine count and timeframe for recovering.
-              enum:
-              - AND
-              - OR
-              type: string
-            recovering_timeframe:
-              description: Time window for recovering evaluation, e.g. 5m, 15m.
-              type: string
-        time_field:
-          default: '@timestamp'
-          description: Time field used for the lookback window range filter.
-          maxLength: 128
-          minLength: 1
-          type: string
-      required:
-      - kind
-      - metadata
-      - schedule
-      - query
-    Kibana_HTTP_APIs_alerting_standalone_rule_query:
-      additionalProperties: false
-      description: 'Standalone queries: independent full queries for breach, recovery, and no_data.'
-      type: object
-      properties:
-        breach:
-          additionalProperties: false
-          description: Breach detection configuration (required).
-          type: object
-          properties:
-            query:
-              description: Full ES|QL query for breach detection (required).
-              maxLength: 10000
+              description: The ID of the rule.
+              maxLength: 256
               minLength: 1
               type: string
-          required:
-          - query
-        format:
-          enum:
-          - standalone
-          type: string
-        no_data:
-          additionalProperties: false
-          description: No-data detection query. Required when no_data_strategy is not "none".
-          type: object
-          properties:
-            query:
-              description: Full ES|QL query that detects presence of data.
-              maxLength: 10000
+            name:
+              description: The name of the rule, used to evaluate global matcher expressions.
+              maxLength: 256
               minLength: 1
               type: string
-          required:
-          - query
-        recovery:
-          additionalProperties: false
-          description: Recovery query. Required when recovery_strategy is "query".
-          type: object
-          properties:
-            query:
-              description: Full ES|QL query for recovery detection.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - query
-      required:
-      - format
-      - breach
-    Kibana_HTTP_APIs_alerting_rule_executions_response:
-      additionalProperties: false
-      type: object
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_execution'
-          type: array
-        page:
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
-        per_page:
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
-        total:
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-      required:
-      - items
-      - total
-      - page
-      - per_page
-    Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item:
-      allOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_alert_action'
-      - additionalProperties: false
-        description: Alert action payload with group identifier for bulk requests.
-        type: object
-        properties:
-          group_hash:
-            description: Hash identifying the alert group to apply the action to.
-            maxLength: 256
-            minLength: 1
-            type: string
-        required:
-        - group_hash
-    Kibana_HTTP_APIs_alerting_error_response:
-      additionalProperties: false
-      type: object
-      properties:
-        code:
-          description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
-          type: string
-        details:
-          additionalProperties: {}
-          description: Optional structured context (e.g., validation field errors, conflict resource IDs).
-          type: object
-        error:
-          description: A short human-readable summary of the error category (e.g., "Not Found", "Bad Request"). Subject to change without notice. Do not parse or rely on its content.
-          type: string
-        message:
-          description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
-          type: string
-      required:
-      - code
-      - error
-      - message
-    Kibana_HTTP_APIs_alerting_assign_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Assigns an alerting episode to a user, or clears the assignee when null.
-          enum:
-          - assign
-          type: string
-        assignee_uid:
-          description: User profile UID of the assignee, or null to remove the assignee from the episode.
-          maxLength: 256
-          type:
-          - string
-          - 'null'
-        episode_id:
-          description: The episode identifier to assign.
-          maxLength: 150
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - episode_id
-      - assignee_uid
-    Kibana_HTTP_APIs_alerting_snooze_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Snoozes an alert.
-          enum:
-          - snooze
-          type: string
-        expiry:
-          description: ISO datetime when snooze should expire.
-          format: date-time
-          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
-          type: string
-      required:
-      - action_type
-    Kibana_HTTP_APIs_alerting_matched_action_policy:
-      additionalProperties: false
-      description: An action policy that matches a rule, along with the reason it matched.
-      type: object
-      properties:
-        actionPolicy:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_response'
-          description: The matched action policy.
-        category:
-          description: 'Why this action policy matches the rule: "global" (applies to all rules, no filter), or "global-filtered" (applies to all rules, KQL filter evaluated to true).'
-          enum:
-          - global
-          - global-filtered
-          type: string
-      required:
-      - actionPolicy
-      - category
-    Kibana_HTTP_APIs_alerting_unack_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Removes acknowledgement from an alert.
-          enum:
-          - unack
-          type: string
-        episode_id:
-          description: The episode identifier for the alert to unacknowledge.
-          maxLength: 150
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - episode_id
-    Kibana_HTTP_APIs_alerting_new_activate_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        reason:
-          description: Reason for activating the alert.
-          maxLength: 1024
-          minLength: 1
-          type: string
-      required:
-      - reason
+            tags:
+              description: The tags of the rule, used to evaluate global matcher expressions.
+              items:
+                maxLength: 256
+                minLength: 1
+                type: string
+              maxItems: 100
+              type: array
     Kibana_HTTP_APIs_alerting_rule_metadata:
       additionalProperties: false
       description: Rule metadata.
@@ -9094,221 +9383,90 @@ components:
           type: array
       required:
       - name
-    Kibana_HTTP_APIs_alerting_policy_execution_history_item:
+    Kibana_HTTP_APIs_alerting_matched_action_policy:
       additionalProperties: false
+      description: An action policy that matches a rule, along with the reason it matched.
       type: object
       properties:
-        action_group_count:
-          type: number
-        dispatched_at:
-          type: string
-        episode_count:
-          type: number
-        episodes:
-          description: Episode ids referenced by this event, bounded to MAX_EMBEDDED_EPISODES_PER_ITEM. Use `episode_count` for the true total.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-            required:
-            - id
-          maxItems: 50
-          type: array
-        error:
-          additionalProperties: false
-          type: object
-          properties:
-            message:
-              type: string
-          required:
-          - message
-        failure_reason:
+        actionPolicy:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_response'
+          description: The matched action policy.
+        category:
+          description: 'Why this action policy matches the rule: "global" (applies to all rules, no filter), or "global-filtered" (applies to all rules, KQL filter evaluated to true).'
           enum:
-          - missing_api_key
-          - workflow_not_found
-          - workflow_disabled
-          - schedule_error
-          type: string
-        outcome:
-          enum:
-          - dispatched
-          - throttled
-          - dispatch_failed
-          type: string
-        policy:
-          additionalProperties: false
-          type: object
-          properties:
-            id:
-              type: string
-            name:
-              type:
-              - string
-              - 'null'
-          required:
-          - id
-        rules:
-          description: Rules referenced by this event, bounded to MAX_EMBEDDED_RULES_PER_ITEM. When a search or rule filter narrows the match, this array is intersected with the matched subset server-side. Use `total_rule_count` for the full count.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type:
-                - string
-                - 'null'
-            required:
-            - id
-          maxItems: 20
-          type: array
-        total_rule_count:
-          description: Total number of rules referenced by this event after search / rule-filter narrowing. May exceed `rules.length` when the embedded array is truncated to the cap.
-          type: number
-        workflows:
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type:
-                - string
-                - 'null'
-            required:
-            - id
-          maxItems: 100
-          type: array
-      required:
-      - dispatched_at
-      - policy
-      - outcome
-      - episode_count
-      - action_group_count
-      - rules
-      - total_rule_count
-      - workflows
-    Kibana_HTTP_APIs_alerting_bulk_get_rules_response:
-      additionalProperties: false
-      type: object
-      properties:
-        rules:
-          description: The requested rules, in the same order as the requested ids.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_response'
-          type: array
-      required:
-      - rules
-    Kibana_HTTP_APIs_alerting_new_unack_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        episode_id:
-          description: The episode identifier for the alert to unacknowledge.
-          maxLength: 150
-          minLength: 1
+          - global
+          - global-filtered
           type: string
       required:
-      - episode_id
-    Kibana_HTTP_APIs_alerting_bulk_create_alert_actions_request:
-      description: Request body for bulk create alert actions. Array of 1 to 100 actions, each with group_hash and action payload.
-      items:
-        $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item'
-      maxItems: 100
-      minItems: 1
-      type: array
-    Kibana_HTTP_APIs_alerting_new_action_policy:
-      additionalProperties: false
-      type: object
-      properties:
-        description:
-          description: A description of the action policy.
-          maxLength: 1024
-          type: string
-        destinations:
-          description: The list of destinations. At least one is required.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_destination'
-          maxItems: 10
-          minItems: 1
-          type: array
-        group_by:
-          description: The fields used to group alerts.
-          items:
-            maxLength: 256
-            minLength: 1
-            type: string
-          maxItems: 16
-          type: array
-        grouping_mode:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_grouping_mode'
-          description: The grouping mode for alert notifications.
-        matcher:
-          description: A KQL query string to match alerts.
-          maxLength: 4096
-          type: string
-        name:
-          description: The name of the action policy.
-          maxLength: 256
-          minLength: 1
-          type: string
-        tags:
-          description: Tags for categorizing the action policy.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type: array
-        throttle:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_throttle'
-          description: The throttle configuration for notifications.
-      required:
-      - name
-      - description
-      - destinations
-    Kibana_HTTP_APIs_alerting_rule_schedule:
-      additionalProperties: false
-      description: Execution schedule configuration.
-      type: object
-      properties:
-        every:
-          description: Execution interval, e.g. 1m, 5m, 1h.
-          type: string
-        lookback:
-          description: Lookback window for the query, e.g. 5m, 1h. Can also be expressed in ES|QL.
-          type: string
-      required:
-      - every
-    Kibana_HTTP_APIs_alerting_deactivate_alert_action:
+      - actionPolicy
+      - category
+    Kibana_HTTP_APIs_alerting_rule_query:
+      description: Detection query configuration.
+      discriminator:
+        mapping:
+          composed: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
+          standalone: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
+        propertyName: format
+      oneOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
+    Kibana_HTTP_APIs_alerting_snooze_alert_action:
       additionalProperties: false
       type: object
       properties:
         action_type:
-          description: Deactivates an alert.
+          description: Snoozes an alert.
           enum:
-          - deactivate
+          - snooze
           type: string
-        reason:
-          description: Reason for deactivating the alert.
-          maxLength: 1024
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - reason
-    Kibana_HTTP_APIs_alerting_snooze_action_policy_request:
-      additionalProperties: false
-      type: object
-      properties:
-        snoozed_until:
-          description: The ISO datetime until which the action policy should be snoozed.
+        expiry:
+          description: ISO datetime when snooze should expire.
           format: date-time
           pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
           type: string
       required:
-      - snoozed_until
+      - action_type
+    Kibana_HTTP_APIs_alerting_bulk_operation_response:
+      additionalProperties: false
+      description: Result of an executed bulk operation.
+      type: object
+      properties:
+        affected_count:
+          description: Number of resources the operation successfully touched.
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        errors:
+          description: Errors encountered during the operation.
+          items:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  code:
+                    description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
+                    type: string
+                  details:
+                    additionalProperties: {}
+                    description: Optional structured context (e.g., validation field errors, conflict resource IDs).
+                    type: object
+                  message:
+                    description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
+                    type: string
+                required:
+                - code
+                - message
+              id:
+                description: The identifier of the resource that failed.
+                type: string
+            required:
+            - id
+            - error
+          type: array
+      required:
+      - affected_count
+      - errors
     Kibana_HTTP_APIs_alerting_action_policy_response:
       additionalProperties: false
       type: object
@@ -9441,48 +9599,61 @@ components:
       - created_at
       - updated_by
       - updated_at
-    Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_response:
+    Kibana_HTTP_APIs_alerting_rule_response_metadata:
       additionalProperties: false
-      description: Action policies that match a given rule, grouped by match category.
       type: object
       properties:
-        items:
-          description: The list of matched action policies.
+        builder_type:
+          description: Identifies the rule builder that authored this rule (e.g. "threshold"). Absent for rules authored directly in ES|QL.
+          maxLength: 64
+          type: string
+        description:
+          description: Human-readable description of the rule.
+          maxLength: 1024
+          type: string
+        name:
+          description: Rule name (must be unique within the space).
+          maxLength: 256
+          minLength: 1
+          type: string
+        owner:
+          description: Owner of the rule.
+          maxLength: 256
+          type: string
+        tags:
+          description: Tags for categorization, e.g. ["production", "infra"].
           items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_matched_action_policy'
-          type: array
-        total:
-          description: Total number of action policies in the space. If greater than the number evaluated, the match results may be incomplete.
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-      required:
-      - items
-      - total
-    Kibana_HTTP_APIs_alerting_rule_grouping:
-      additionalProperties: false
-      description: Grouping configuration.
-      type: object
-      properties:
-        fields:
-          description: Fields to group alerts by, e.g. ["host.name", "service.name"]. Should match ES|QL GROUP BY fields.
-          items:
-            maxLength: 256
+            maxLength: 128
             minLength: 1
             type: string
-          maxItems: 16
+          maxItems: 20
+          minItems: 1
           type: array
+        version:
+          description: Monotonically increasing integer number representing a rule configuration version, incremented on every change. Used on generated rule events as `rule.version`.
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
       required:
-      - fields
-    Kibana_HTTP_APIs_alerting_new_snooze_alert_action:
+      - name
+      - version
+    Kibana_HTTP_APIs_alerting_ack_alert_action:
       additionalProperties: false
       type: object
       properties:
-        expiry:
-          description: ISO datetime when snooze should expire.
-          format: date-time
-          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+        action_type:
+          description: Acknowledges an alert.
+          enum:
+          - ack
           type: string
+        episode_id:
+          description: The episode identifier for the alert to acknowledge.
+          maxLength: 150
+          minLength: 1
+          type: string
+      required:
+      - action_type
+      - episode_id
     Kibana_HTTP_APIs_alerting_action_policy_destination:
       description: An action policy destination configuration.
       discriminator:
@@ -9491,64 +9662,6 @@ components:
         propertyName: type
       oneOf:
       - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_workflow_action_policy_destination'
-    Kibana_HTTP_APIs_alerting_composed_rule_query:
-      additionalProperties: false
-      description: 'Composed query: a shared base with appendable breach and recovery segments.'
-      type: object
-      properties:
-        base:
-          description: Base ES|QL query. Time filters are applied automatically via the lookback window.
-          maxLength: 10000
-          minLength: 1
-          type: string
-        breach:
-          additionalProperties: false
-          description: Breach detection configuration. Omit to treat every base row as a breach.
-          type: object
-          properties:
-            segment:
-              description: A clause appended to the end of the rule's ES|QL query. Required in breach blocks.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - segment
-        format:
-          enum:
-          - composed
-          type: string
-        recovery:
-          additionalProperties: false
-          description: Recovery query segment. Required when recovery_strategy is "query".
-          type: object
-          properties:
-            segment:
-              description: Appendable ES|QL segment for recovery detection.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - segment
-      required:
-      - format
-      - base
-    Kibana_HTTP_APIs_alerting_workflow_action_policy_destination:
-      additionalProperties: false
-      type: object
-      properties:
-        id:
-          description: The workflow connector identifier.
-          maxLength: 150
-          minLength: 1
-          type: string
-        type:
-          description: The destination type.
-          enum:
-          - workflow
-          type: string
-      required:
-      - type
-      - id
     Kibana_HTTP_APIs_alerting_rule_list_response:
       additionalProperties: false
       description: Paginated list of rules.
@@ -9573,99 +9686,14 @@ components:
       - total
       - page
       - per_page
-    Kibana_HTTP_APIs_alerting_bulk_by_ids_request:
+    Kibana_HTTP_APIs_alerting_new_snooze_alert_action:
       additionalProperties: false
       type: object
       properties:
-        ids:
-          description: Explicit list of IDs to operate on.
-          items:
-            maxLength: 150
-            minLength: 1
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-      required:
-      - ids
-    Kibana_HTTP_APIs_alerting_bulk_operation_response:
-      additionalProperties: false
-      description: Result of an executed bulk operation.
-      type: object
-      properties:
-        affected_count:
-          description: Number of resources the operation successfully touched.
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-        errors:
-          description: Errors encountered during the operation.
-          items:
-            type: object
-            properties:
-              error:
-                type: object
-                properties:
-                  code:
-                    description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
-                    type: string
-                  details:
-                    additionalProperties: {}
-                    description: Optional structured context (e.g., validation field errors, conflict resource IDs).
-                    type: object
-                  message:
-                    description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
-                    type: string
-                required:
-                - code
-                - message
-              id:
-                description: The identifier of the resource that failed.
-                type: string
-            required:
-            - id
-            - error
-          type: array
-      required:
-      - affected_count
-      - errors
-    Kibana_HTTP_APIs_alerting_new_deactivate_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        reason:
-          description: Reason for deactivating the alert.
-          maxLength: 1024
-          minLength: 1
-          type: string
-      required:
-      - reason
-    Kibana_HTTP_APIs_alerting_new_unsnooze_alert_action:
-      additionalProperties: false
-      type: object
-      properties: {}
-    Kibana_HTTP_APIs_alerting_bulk_by_query_request:
-      additionalProperties: false
-      type: object
-      properties:
-        filter:
-          description: 'KQL filter string to match target resources. At most 10000 matching resources are processed per request. Cannot be empty; to target every resource use `match_all: true`.'
-          maxLength: 4096
-          minLength: 1
-          type: string
-        force:
-          default: false
-          description: When true, executes the operation. When false (default), returns a dry-run preview with `match_count` and a `sample` of matching resource IDs so the client can verify before committing.
-          type: boolean
-        match_all:
-          description: When true, targets every resource. Requires an explicit opt-in. Omitted by default.
-          enum:
-          - true
-          type: boolean
-        search:
-          description: 'Free-text search string matched against the resource-defined searchable fields. Cannot be empty; to target every resource use `match_all: true`.'
-          maxLength: 256
-          minLength: 1
+        expiry:
+          description: ISO datetime when snooze should expire.
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
           type: string
     Kibana_HTTP_APIs_alerting_rule_artifact:
       additionalProperties: false
@@ -9689,35 +9717,51 @@ components:
       - id
       - type
       - data
-    Kibana_HTTP_APIs_alerting_rule_tags_response:
+    Kibana_HTTP_APIs_alerting_workflow_action_policy_destination:
       additionalProperties: false
-      description: All unique tags across rules.
       type: object
       properties:
-        tags:
-          description: The list of unique tags.
-          items:
-            type: string
-          type: array
+        id:
+          description: The workflow connector identifier.
+          maxLength: 150
+          minLength: 1
+          type: string
+        type:
+          description: The destination type.
+          enum:
+          - workflow
+          type: string
       required:
-      - tags
-    Kibana_HTTP_APIs_alerting_ack_alert_action:
+      - type
+      - id
+    Kibana_HTTP_APIs_alerting_deactivate_alert_action:
       additionalProperties: false
       type: object
       properties:
         action_type:
-          description: Acknowledges an alert.
+          description: Deactivates an alert.
           enum:
-          - ack
+          - deactivate
           type: string
-        episode_id:
-          description: The episode identifier for the alert to acknowledge.
-          maxLength: 150
+        reason:
+          description: Reason for deactivating the alert.
+          maxLength: 1024
           minLength: 1
           type: string
       required:
       - action_type
-      - episode_id
+      - reason
+    Kibana_HTTP_APIs_alerting_unsnooze_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Removes snooze from an alert.
+          enum:
+          - unsnooze
+          type: string
+      required:
+      - action_type
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

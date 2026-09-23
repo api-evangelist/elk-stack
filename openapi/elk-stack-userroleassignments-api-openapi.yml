@@ -157,70 +157,8 @@ paths:
         required: true
 components:
   schemas:
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
     EmptyResponse:
       type: object
-    ProjectRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        all:
-          type: boolean
-          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
-        project_ids:
-          type: array
-          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
-          items:
-            type: string
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
-          items:
-            type: string
-      description: Assignment for a role with project scope.
-    PlatformRoleAssignment:
-      type: object
-      required:
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-      description: Assignment for a role with platform scope.
     DeploymentRoleAssignment:
       type: object
       required:
@@ -247,6 +185,58 @@ components:
           items:
             type: string
       description: Assignment for a role with deployment scope.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    PlatformRoleAssignment:
+      type: object
+      required:
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+      description: Assignment for a role with platform scope.
+    ProjectRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
+        project_ids:
+          type: array
+          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with project scope.
     RoleAssignments:
       type: object
       properties:
@@ -287,6 +277,16 @@ components:
           items:
             type: string
       description: Assignment for a role with organization scope.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     ProjectRoleAssignments:
       type: object
       properties:

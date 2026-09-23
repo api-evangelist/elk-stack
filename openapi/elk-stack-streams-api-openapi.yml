@@ -12,12 +12,12 @@ servers:
     kibana_url:
       default: localhost:5601
 tags:
-- name: streams
+- name: Streams
 paths:
   /_streams/{name}/_disable:
     post:
       tags:
-      - streams
+      - Streams
       summary: Disable a named stream
       description: 'Turn off the named stream feature for this cluster.
 
@@ -25,9 +25,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       operationId: streams-logs-disable
       parameters:
       - in: path
@@ -81,14 +79,14 @@ paths:
   /_streams/{name}/_enable:
     post:
       tags:
-      - streams
+      - Streams
       summary: Enable a named stream
       description: 'Turn on the named stream feature for this cluster.
 
 
         NOTE: To protect existing data, this feature can be turned on only if the cluster does not have
 
-        existing indices or data streams that match the pattern `<name>|<name>.*` for the enabled stream
+        existing indices or data streams that match the pattern `|.*` for the enabled stream
 
         type name. If those indices or data streams exist, a `409 - Conflict` response and error is
 
@@ -98,9 +96,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `manage`
-
-        '
+        * Cluster privileges: `manage`'
       operationId: streams-logs-enable
       parameters:
       - in: path
@@ -154,7 +150,7 @@ paths:
   /_streams/status:
     get:
       tags:
-      - streams
+      - Streams
       summary: Get the status of streams
       description: 'Get the current status for all types of streams.
 
@@ -162,9 +158,7 @@ paths:
         ## Required authorization
 
 
-        * Cluster privileges: `monitor`
-
-        '
+        * Cluster privileges: `monitor`'
       operationId: streams-status
       parameters:
       - in: query
@@ -210,13 +204,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams</span></div>
+        get /s/{space_id}/api/streams
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Fetches list of all streams<br/><br/>[Required authorization] Route required privileges: read_stream.'
+        Fetches list of all streams
+
+
+        [Required authorization] Route required privileges: read_stream.'
       operationId: get-streams
       parameters: []
       requestBody:
@@ -321,7 +318,7 @@ paths:
           description: A list of all streams.
       summary: Get stream list
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -339,13 +336,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/_disable</span></div>
+        post /s/{space_id}/api/streams/_disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Disables wired streams and deletes all existing stream definitions. The data of wired streams is deleted, but the data of classic streams is preserved.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Disables wired streams and deletes all existing stream definitions. The data of wired streams is deleted, but the data of classic streams is preserved.
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-disable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -370,7 +370,7 @@ paths:
           description: Streams were disabled successfully.
       summary: Disable streams
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -388,13 +388,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/_enable</span></div>
+        post /s/{space_id}/api/streams/_enable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Enables wired streams<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Enables wired streams
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-enable
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -419,7 +422,7 @@ paths:
           description: Streams were enabled successfully.
       summary: Enable streams
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -437,13 +440,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/_resync</span></div>
+        post /s/{space_id}/api/streams/_resync
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Resyncs all streams, making sure that Elasticsearch assets are up to date<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Resyncs all streams, making sure that Elasticsearch assets are up to date
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-resync
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -468,7 +474,7 @@ paths:
           description: Streams were resynced successfully.
       summary: Resync streams
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -486,13 +492,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}</span></div>
+        delete /s/{space_id}/api/streams/{name}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Deletes a stream definition and the underlying data stream<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Deletes a stream definition and the underlying data stream
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: delete-streams-name
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -523,7 +532,7 @@ paths:
           description: The stream was deleted successfully.
       summary: Delete a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -535,13 +544,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}</span></div>
+        get /s/{space_id}/api/streams/{name}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Fetches a stream definition and associated dashboards<br/><br/>[Required authorization] Route required privileges: read_stream.'
+        Fetches a stream definition and associated dashboards
+
+
+        [Required authorization] Route required privileges: read_stream.'
       operationId: get-streams-name
       parameters:
       - description: The name of the stream.
@@ -626,7 +638,7 @@ paths:
           description: Stream definition and associated metadata.
       summary: Get a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -638,13 +650,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}</span></div>
+        put /s/{space_id}/api/streams/{name}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Creates or updates a stream definition. Classic streams can not be created through this API, only updated<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Creates or updates a stream definition. Classic streams can not be created through this API, only updated
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: put-streams-name
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -732,7 +747,7 @@ paths:
           description: The stream was created or updated successfully.
       summary: Create or update a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -750,13 +765,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_fork</span></div>
+        post /s/{space_id}/api/streams/{name}/_fork
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Forks a wired stream and creates a child stream<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Forks a wired stream and creates a child stream
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-name-fork
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -813,7 +831,7 @@ paths:
           description: The stream was forked successfully.
       summary: Fork a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -831,13 +849,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_ingest</span></div>
+        get /s/{space_id}/api/streams/{name}/_ingest
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Fetches the ingest settings of an ingest stream definition<br/><br/>[Required authorization] Route required privileges: read_stream.'
+        Fetches the ingest settings of an ingest stream definition
+
+
+        [Required authorization] Route required privileges: read_stream.'
       operationId: get-streams-name-ingest
       parameters:
       - description: The name of the stream.
@@ -898,7 +919,7 @@ paths:
           description: Ingest settings for the stream.
       summary: Get ingest stream settings
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -910,13 +931,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_ingest</span></div>
+        put /s/{space_id}/api/streams/{name}/_ingest
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Upserts the ingest settings of an ingest stream definition<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Upserts the ingest settings of an ingest stream definition
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: put-streams-name-ingest
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1141,7 +1165,7 @@ paths:
           description: The ingest settings were updated successfully.
       summary: Update ingest stream settings
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -1159,13 +1183,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_query</span></div>
+        get /s/{space_id}/api/streams/{name}/_query
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Fetches the query settings of a query stream definition<br/><br/>[Required authorization] Route required privileges: read_stream.'
+        Fetches the query settings of a query stream definition
+
+
+        [Required authorization] Route required privileges: read_stream.'
       operationId: get-streams-name-query
       parameters:
       - description: The name of the query stream.
@@ -1189,7 +1216,7 @@ paths:
           description: Query settings for the stream.
       summary: Get query stream settings
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.4.0
       x-metaTags:
       - content: Kibana
@@ -1201,13 +1228,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/_query</span></div>
+        put /s/{space_id}/api/streams/{name}/_query
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Upserts the query settings of a query stream definition<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Upserts the query settings of a query stream definition
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: put-streams-name-query
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1254,7 +1284,7 @@ paths:
           description: The query stream settings were updated successfully.
       summary: Upsert query stream settings
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.4.0
       x-metaTags:
       - content: Kibana
@@ -1272,13 +1302,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/content/export</span></div>
+        post /s/{space_id}/api/streams/{name}/content/export
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Exports a content pack with the stream structure (routing, mappings, and processing). Significant-event queries are not included; manage them via the /api/streams/{name}/queries endpoints.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Exports a content pack with the stream structure (routing, mappings, and processing). Significant-event queries are not included; manage them via the /api/streams/{name}/queries endpoints.
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-name-content-export
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1328,7 +1361,7 @@ paths:
           description: Content pack archive for the stream.
       summary: Export stream content
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -1346,13 +1379,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{name}/content/import</span></div>
+        post /s/{space_id}/api/streams/{name}/content/import
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Imports stream structure (routing, mappings, and processing) from a content pack into a stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Imports stream structure (routing, mappings, and processing) from a content pack into a stream.
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-name-content-import
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1391,7 +1427,7 @@ paths:
           description: Content was imported into the stream successfully.
       summary: Import content into a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.1.0
       x-metaTags:
       - content: Kibana
@@ -1409,13 +1445,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments</span></div>
+        get /s/{space_id}/api/streams/{streamName}/attachments
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Fetches all attachments linked to a stream that are visible to the current user in the current space. Optionally filter by attachment types, search query, and tags.<br/><br/>[Required authorization] Route required privileges: read_stream.'
+        Fetches all attachments linked to a stream that are visible to the current user in the current space. Optionally filter by attachment types, search query, and tags.
+
+
+        [Required authorization] Route required privileges: read_stream.'
       operationId: get-streams-streamname-attachments
       parameters:
       - description: The name of the stream
@@ -1485,7 +1524,7 @@ paths:
           description: Successfully retrieved attachments
       summary: Get stream attachments
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.3.0
       x-metaTags:
       - content: Kibana
@@ -1503,13 +1542,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments/_bulk</span></div>
+        post /s/{space_id}/api/streams/{streamName}/attachments/_bulk
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Bulk update attachments linked to a stream. Can link new attachments and delete existing ones. Supports mixed attachment types in a single request.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Bulk update attachments linked to a stream. Can link new attachments and delete existing ones. Supports mixed attachment types in a single request.
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: post-streams-streamname-attachments-bulk
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1595,7 +1637,7 @@ paths:
           description: Successfully performed bulk operations
       summary: Bulk update attachments
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.3.0
       x-metaTags:
       - content: Kibana
@@ -1613,13 +1655,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}</span></div>
+        delete /s/{space_id}/api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Unlinks an attachment from a stream. Noop if the attachment is not linked to the stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Unlinks an attachment from a stream. Noop if the attachment is not linked to the stream.
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: delete-streams-streamname-attachments-attachmenttype-attachmentid
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1674,7 +1719,7 @@ paths:
           description: Successfully unlinked attachment
       summary: Unlink an attachment from a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.3.0
       x-metaTags:
       - content: Kibana
@@ -1686,13 +1731,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}</span></div>
+        put /s/{space_id}/api/streams/{streamName}/attachments/{attachmentType}/{attachmentId}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
-        Links an attachment to a stream. Noop if the attachment is already linked to the stream.<br/><br/>[Required authorization] Route required privileges: manage_stream.'
+        Links an attachment to a stream. Noop if the attachment is already linked to the stream.
+
+
+        [Required authorization] Route required privileges: manage_stream.'
       operationId: put-streams-streamname-attachments-attachmenttype-attachmentid
       parameters:
       - description: A required header to protect against CSRF attacks
@@ -1747,7 +1795,7 @@ paths:
           description: Successfully linked attachment
       summary: Link an attachment to a stream
       tags:
-      - streams
+      - Streams
       x-state: Experimental; added in 9.3.0
       x-metaTags:
       - content: Kibana
@@ -1762,12 +1810,6 @@ paths:
           default: localhost:5601
 components:
   schemas:
-    streams._types.StreamType:
-      type: string
-      enum:
-      - logs
-      - logs.otel
-      - logs.ecs
     _types.AcknowledgedResponseBase:
       type: object
       properties:
@@ -1776,14 +1818,6 @@ components:
           type: boolean
       required:
       - acknowledged
-    streams.status.StreamStatus:
-      type: object
-      properties:
-        enabled:
-          description: If true, the stream feature is enabled.
-          type: boolean
-      required:
-      - enabled
     _types.Duration:
       externalDocs:
         url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
@@ -1798,6 +1832,20 @@ components:
       - type: string
         enum:
         - '0'
+    streams.status.StreamStatus:
+      type: object
+      properties:
+        enabled:
+          description: If true, the stream feature is enabled.
+          type: boolean
+      required:
+      - enabled
+    streams._types.StreamType:
+      type: string
+      enum:
+      - logs
+      - logs.otel
+      - logs.ecs
     Kibana_HTTP_APIs_ClassicStreamUpsertRequest:
       additionalProperties: false
       type: object
@@ -1910,6 +1958,677 @@ components:
       - dashboards
       - rules
       - stream
+    Kibana_HTTP_APIs_RecursiveRecord:
+      additionalProperties:
+        anyOf:
+        - anyOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - {}
+        - items:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - {}
+          type: array
+        - items: {}
+          type: array
+        - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
+      type: object
+    Kibana_HTTP_APIs_WiredStreamUpsertRequest:
+      additionalProperties: false
+      type: object
+      properties:
+        dashboards:
+          items:
+            type: string
+          type: array
+        rules:
+          items:
+            type: string
+          type: array
+        stream:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            ingest:
+              additionalProperties: false
+              type: object
+              properties:
+                failure_store:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_FailureStore'
+                lifecycle:
+                  $ref: '#/components/schemas/Kibana_HTTP_APIs_IngestStreamLifecycle'
+                processing:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    steps:
+                      items:
+                        $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+                      type: array
+                  required:
+                  - steps
+                settings:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    index.number_of_replicas:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                      required:
+                      - value
+                    index.number_of_shards:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                      required:
+                      - value
+                    index.refresh_interval:
+                      additionalProperties: false
+                      type: object
+                      properties:
+                        value:
+                          anyOf:
+                          - type: string
+                          - enum:
+                            - -1
+                            type: number
+                      required:
+                      - value
+                wired:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    draft:
+                      type: boolean
+                    fields:
+                      $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinition'
+                    routing:
+                      items:
+                        type: object
+                        properties:
+                          destination:
+                            description: A non-empty string.
+                            minLength: 1
+                            type: string
+                          draft:
+                            type: boolean
+                          status:
+                            enum:
+                            - enabled
+                            - disabled
+                            type: string
+                          where:
+                            $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+                        required:
+                        - destination
+                        - where
+                      type: array
+                  required:
+                  - fields
+                  - routing
+              required:
+              - lifecycle
+              - processing
+              - settings
+              - failure_store
+              - wired
+            query_streams:
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              type: array
+            type:
+              enum:
+              - wired
+              type: string
+          required:
+          - description
+          - ingest
+          - type
+      required:
+      - dashboards
+      - rules
+      - stream
+    Kibana_HTTP_APIs_ClassicFieldDefinitionConfig:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
+      - anyOf:
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            format:
+              description: A non-empty string.
+              minLength: 1
+              type: string
+            type:
+              enum:
+              - keyword
+              - match_only_text
+              - long
+              - double
+              - date
+              - boolean
+              - ip
+              - geo_point
+              - integer
+              - short
+              - byte
+              - float
+              - half_float
+              - text
+              - wildcard
+              - version
+              - unsigned_long
+              - date_nanos
+              type: string
+          required:
+          - type
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            type:
+              enum:
+              - system
+              type: string
+          required:
+          - type
+    Kibana_HTTP_APIs_IngestStreamLifecycle:
+      anyOf:
+      - additionalProperties: false
+        type: object
+        properties:
+          dsl:
+            additionalProperties: false
+            type: object
+            properties:
+              data_retention:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+              downsample:
+                items:
+                  type: object
+                  properties:
+                    after:
+                      description: A non-empty string.
+                      minLength: 1
+                      type: string
+                    fixed_interval:
+                      description: A non-empty string.
+                      minLength: 1
+                      type: string
+                  required:
+                  - after
+                  - fixed_interval
+                type: array
+              frozen_after:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+        required:
+        - dsl
+      - additionalProperties: false
+        type: object
+        properties:
+          ilm:
+            additionalProperties: false
+            type: object
+            properties:
+              policy:
+                description: A non-empty string.
+                minLength: 1
+                type: string
+            required:
+            - policy
+        required:
+        - ilm
+      - additionalProperties: false
+        type: object
+        properties:
+          inherit:
+            additionalProperties: false
+            type: object
+            properties: {}
+        required:
+        - inherit
+    Kibana_HTTP_APIs_FieldDefinitionConfig:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
+      - anyOf:
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            format:
+              description: A non-empty string.
+              minLength: 1
+              type: string
+            type:
+              enum:
+              - keyword
+              - match_only_text
+              - long
+              - double
+              - date
+              - boolean
+              - ip
+              - geo_point
+              - integer
+              - short
+              - byte
+              - float
+              - half_float
+              - text
+              - wildcard
+              - version
+              - unsigned_long
+              - date_nanos
+              type: string
+          required:
+          - type
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            format:
+              not: {}
+            type:
+              not: {}
+          required:
+          - description
+        - additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            type:
+              enum:
+              - system
+              type: string
+          required:
+          - type
+    Kibana_HTTP_APIs_QueryStreamUpsertRequest:
+      additionalProperties: false
+      type: object
+      properties:
+        dashboards:
+          items:
+            type: string
+          type: array
+        rules:
+          items:
+            type: string
+          type: array
+        stream:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            field_descriptions:
+              additionalProperties:
+                type: string
+              type: object
+            query:
+              additionalProperties: false
+              type: object
+              properties:
+                esql:
+                  type: string
+                view:
+                  type: string
+              required:
+              - view
+              - esql
+            query_streams:
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+              type: array
+            type:
+              enum:
+              - query
+              type: string
+          required:
+          - description
+          - type
+          - query
+      required:
+      - dashboards
+      - rules
+      - stream
+    Kibana_HTTP_APIs_StreamlangConditionBlock:
+      additionalProperties: false
+      type: object
+      properties:
+        condition:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_ConditionWithSteps'
+        customIdentifier:
+          type: string
+      required:
+      - condition
+    Kibana_HTTP_APIs_Condition:
+      anyOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_FilterCondition'
+      - additionalProperties: false
+        description: A logical AND that groups multiple conditions.
+        type: object
+        properties:
+          and:
+            description: An array of conditions. All sub-conditions must be true for this condition to be true.
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+            type: array
+        required:
+        - and
+      - additionalProperties: false
+        description: A logical OR that groups multiple conditions.
+        type: object
+        properties:
+          or:
+            description: An array of conditions. At least one sub-condition must be true for this condition to be true.
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+            type: array
+        required:
+        - or
+      - additionalProperties: false
+        description: A logical NOT that negates a condition.
+        type: object
+        properties:
+          not:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+            description: A condition that negates another condition.
+        required:
+        - not
+      - additionalProperties: false
+        description: A condition that always evaluates to false.
+        type: object
+        properties:
+          never:
+            additionalProperties: false
+            description: An empty object. This condition never matches.
+            type: object
+            properties: {}
+        required:
+        - never
+      - additionalProperties: false
+        description: A condition that always evaluates to true. Useful for catch-all scenarios, but use with caution as partitions are ordered.
+        type: object
+        properties:
+          always:
+            additionalProperties: false
+            description: An empty object. This condition always matches.
+            type: object
+            properties: {}
+        required:
+        - always
+      description: The root condition object. It can be a simple filter or a combination of other conditions.
+    Kibana_HTTP_APIs_StreamUpsertRequest:
+      anyOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_WiredStreamUpsertRequest'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicStreamUpsertRequest'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_QueryStreamUpsertRequest'
+    Kibana_HTTP_APIs_FieldDefinition:
+      additionalProperties:
+        $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinitionConfig'
+      type: object
+    Kibana_HTTP_APIs_ClassicFieldDefinition:
+      additionalProperties:
+        $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicFieldDefinitionConfig'
+      type: object
+    Kibana_HTTP_APIs_ConditionWithSteps:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
+      - additionalProperties: false
+        type: object
+        properties:
+          else:
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+            type: array
+          steps:
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
+            type: array
+        required:
+        - steps
+    Kibana_HTTP_APIs_ContentPackIncludedObjects:
+      anyOf:
+      - additionalProperties: false
+        type: object
+        properties:
+          objects:
+            additionalProperties: false
+            type: object
+            properties:
+              all:
+                additionalProperties: false
+                type: object
+                properties: {}
+            required:
+            - all
+        required:
+        - objects
+      - additionalProperties: false
+        type: object
+        properties:
+          objects:
+            additionalProperties: false
+            type: object
+            properties:
+              mappings:
+                type: boolean
+              routing:
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/Kibana_HTTP_APIs_ContentPackIncludedObjects'
+                  - type: object
+                    properties:
+                      destination:
+                        type: string
+                    required:
+                    - destination
+                type: array
+            required:
+            - mappings
+            - routing
+        required:
+        - objects
+    Kibana_HTTP_APIs_FailureStore:
+      anyOf:
+      - additionalProperties: false
+        type: object
+        properties:
+          inherit:
+            additionalProperties: false
+            type: object
+            properties: {}
+        required:
+        - inherit
+      - additionalProperties: false
+        type: object
+        properties:
+          disabled:
+            additionalProperties: false
+            type: object
+            properties: {}
+        required:
+        - disabled
+      - additionalProperties: false
+        type: object
+        properties:
+          lifecycle:
+            additionalProperties: false
+            type: object
+            properties:
+              enabled:
+                additionalProperties: false
+                type: object
+                properties:
+                  data_retention:
+                    description: A non-empty string.
+                    minLength: 1
+                    type: string
+            required:
+            - enabled
+        required:
+        - lifecycle
+      - additionalProperties: false
+        type: object
+        properties:
+          lifecycle:
+            additionalProperties: false
+            type: object
+            properties:
+              disabled:
+                additionalProperties: false
+                type: object
+                properties: {}
+            required:
+            - disabled
+        required:
+        - lifecycle
+    Kibana_HTTP_APIs_FilterCondition:
+      anyOf:
+      - additionalProperties: false
+        description: A condition that compares a field to a value or range using an operator as the key.
+        type: object
+        properties:
+          contains:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Contains comparison value.
+          endsWith:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Ends-with comparison value.
+          eq:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Equality comparison value.
+          field:
+            description: The document field to filter on.
+            minLength: 1
+            type: string
+          gt:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Greater-than comparison value.
+          gte:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Greater-than-or-equal comparison value.
+          includes:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Checks if multivalue field includes the value.
+          lt:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Less-than comparison value.
+          lte:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Less-than-or-equal comparison value.
+          neq:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Inequality comparison value.
+          range:
+            additionalProperties: false
+            description: Range comparison values.
+            type: object
+            properties:
+              gt:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+              gte:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+              lt:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+              lte:
+                anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                description: A value that can be a string, number, or boolean.
+          startsWith:
+            anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+            description: Starts-with comparison value.
+        required:
+        - field
+      - additionalProperties: false
+        description: A condition that checks for the existence or non-existence of a field.
+        type: object
+        properties:
+          exists:
+            description: Indicates whether the field exists or not.
+            type: boolean
+          field:
+            description: The document field to check.
+            minLength: 1
+            type: string
+        required:
+        - field
+      description: A basic filter condition, either unary or binary.
     Kibana_HTTP_APIs_StreamlangStep:
       anyOf:
       - anyOf:
@@ -2998,677 +3717,6 @@ components:
           - action
           - processors
       - $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangConditionBlock'
-    Kibana_HTTP_APIs_QueryStreamUpsertRequest:
-      additionalProperties: false
-      type: object
-      properties:
-        dashboards:
-          items:
-            type: string
-          type: array
-        rules:
-          items:
-            type: string
-          type: array
-        stream:
-          additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            field_descriptions:
-              additionalProperties:
-                type: string
-              type: object
-            query:
-              additionalProperties: false
-              type: object
-              properties:
-                esql:
-                  type: string
-                view:
-                  type: string
-              required:
-              - view
-              - esql
-            query_streams:
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                required:
-                - name
-              type: array
-            type:
-              enum:
-              - query
-              type: string
-          required:
-          - description
-          - type
-          - query
-      required:
-      - dashboards
-      - rules
-      - stream
-    Kibana_HTTP_APIs_RecursiveRecord:
-      additionalProperties:
-        anyOf:
-        - anyOf:
-          - type: string
-          - type: number
-          - type: boolean
-          - {}
-        - items:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            - {}
-          type: array
-        - items: {}
-          type: array
-        - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
-      type: object
-    Kibana_HTTP_APIs_ClassicFieldDefinitionConfig:
-      allOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
-      - anyOf:
-        - additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            format:
-              description: A non-empty string.
-              minLength: 1
-              type: string
-            type:
-              enum:
-              - keyword
-              - match_only_text
-              - long
-              - double
-              - date
-              - boolean
-              - ip
-              - geo_point
-              - integer
-              - short
-              - byte
-              - float
-              - half_float
-              - text
-              - wildcard
-              - version
-              - unsigned_long
-              - date_nanos
-              type: string
-          required:
-          - type
-        - additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            type:
-              enum:
-              - system
-              type: string
-          required:
-          - type
-    Kibana_HTTP_APIs_ConditionWithSteps:
-      allOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
-      - additionalProperties: false
-        type: object
-        properties:
-          else:
-            items:
-              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
-            type: array
-          steps:
-            items:
-              $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
-            type: array
-        required:
-        - steps
-    Kibana_HTTP_APIs_ContentPackIncludedObjects:
-      anyOf:
-      - additionalProperties: false
-        type: object
-        properties:
-          objects:
-            additionalProperties: false
-            type: object
-            properties:
-              all:
-                additionalProperties: false
-                type: object
-                properties: {}
-            required:
-            - all
-        required:
-        - objects
-      - additionalProperties: false
-        type: object
-        properties:
-          objects:
-            additionalProperties: false
-            type: object
-            properties:
-              mappings:
-                type: boolean
-              routing:
-                items:
-                  allOf:
-                  - $ref: '#/components/schemas/Kibana_HTTP_APIs_ContentPackIncludedObjects'
-                  - type: object
-                    properties:
-                      destination:
-                        type: string
-                    required:
-                    - destination
-                type: array
-            required:
-            - mappings
-            - routing
-        required:
-        - objects
-    Kibana_HTTP_APIs_FailureStore:
-      anyOf:
-      - additionalProperties: false
-        type: object
-        properties:
-          inherit:
-            additionalProperties: false
-            type: object
-            properties: {}
-        required:
-        - inherit
-      - additionalProperties: false
-        type: object
-        properties:
-          disabled:
-            additionalProperties: false
-            type: object
-            properties: {}
-        required:
-        - disabled
-      - additionalProperties: false
-        type: object
-        properties:
-          lifecycle:
-            additionalProperties: false
-            type: object
-            properties:
-              enabled:
-                additionalProperties: false
-                type: object
-                properties:
-                  data_retention:
-                    description: A non-empty string.
-                    minLength: 1
-                    type: string
-            required:
-            - enabled
-        required:
-        - lifecycle
-      - additionalProperties: false
-        type: object
-        properties:
-          lifecycle:
-            additionalProperties: false
-            type: object
-            properties:
-              disabled:
-                additionalProperties: false
-                type: object
-                properties: {}
-            required:
-            - disabled
-        required:
-        - lifecycle
-    Kibana_HTTP_APIs_StreamUpsertRequest:
-      anyOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_WiredStreamUpsertRequest'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicStreamUpsertRequest'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_QueryStreamUpsertRequest'
-    Kibana_HTTP_APIs_WiredStreamUpsertRequest:
-      additionalProperties: false
-      type: object
-      properties:
-        dashboards:
-          items:
-            type: string
-          type: array
-        rules:
-          items:
-            type: string
-          type: array
-        stream:
-          additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            ingest:
-              additionalProperties: false
-              type: object
-              properties:
-                failure_store:
-                  $ref: '#/components/schemas/Kibana_HTTP_APIs_FailureStore'
-                lifecycle:
-                  $ref: '#/components/schemas/Kibana_HTTP_APIs_IngestStreamLifecycle'
-                processing:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    steps:
-                      items:
-                        $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangStep'
-                      type: array
-                  required:
-                  - steps
-                settings:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    index.number_of_replicas:
-                      additionalProperties: false
-                      type: object
-                      properties:
-                        value:
-                          type: number
-                      required:
-                      - value
-                    index.number_of_shards:
-                      additionalProperties: false
-                      type: object
-                      properties:
-                        value:
-                          type: number
-                      required:
-                      - value
-                    index.refresh_interval:
-                      additionalProperties: false
-                      type: object
-                      properties:
-                        value:
-                          anyOf:
-                          - type: string
-                          - enum:
-                            - -1
-                            type: number
-                      required:
-                      - value
-                wired:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    draft:
-                      type: boolean
-                    fields:
-                      $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinition'
-                    routing:
-                      items:
-                        type: object
-                        properties:
-                          destination:
-                            description: A non-empty string.
-                            minLength: 1
-                            type: string
-                          draft:
-                            type: boolean
-                          status:
-                            enum:
-                            - enabled
-                            - disabled
-                            type: string
-                          where:
-                            $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
-                        required:
-                        - destination
-                        - where
-                      type: array
-                  required:
-                  - fields
-                  - routing
-              required:
-              - lifecycle
-              - processing
-              - settings
-              - failure_store
-              - wired
-            query_streams:
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                required:
-                - name
-              type: array
-            type:
-              enum:
-              - wired
-              type: string
-          required:
-          - description
-          - ingest
-          - type
-      required:
-      - dashboards
-      - rules
-      - stream
-    Kibana_HTTP_APIs_IngestStreamLifecycle:
-      anyOf:
-      - additionalProperties: false
-        type: object
-        properties:
-          dsl:
-            additionalProperties: false
-            type: object
-            properties:
-              data_retention:
-                description: A non-empty string.
-                minLength: 1
-                type: string
-              downsample:
-                items:
-                  type: object
-                  properties:
-                    after:
-                      description: A non-empty string.
-                      minLength: 1
-                      type: string
-                    fixed_interval:
-                      description: A non-empty string.
-                      minLength: 1
-                      type: string
-                  required:
-                  - after
-                  - fixed_interval
-                type: array
-              frozen_after:
-                description: A non-empty string.
-                minLength: 1
-                type: string
-        required:
-        - dsl
-      - additionalProperties: false
-        type: object
-        properties:
-          ilm:
-            additionalProperties: false
-            type: object
-            properties:
-              policy:
-                description: A non-empty string.
-                minLength: 1
-                type: string
-            required:
-            - policy
-        required:
-        - ilm
-      - additionalProperties: false
-        type: object
-        properties:
-          inherit:
-            additionalProperties: false
-            type: object
-            properties: {}
-        required:
-        - inherit
-    Kibana_HTTP_APIs_ClassicFieldDefinition:
-      additionalProperties:
-        $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicFieldDefinitionConfig'
-      type: object
-    Kibana_HTTP_APIs_StreamlangConditionBlock:
-      additionalProperties: false
-      type: object
-      properties:
-        condition:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_ConditionWithSteps'
-        customIdentifier:
-          type: string
-      required:
-      - condition
-    Kibana_HTTP_APIs_FieldDefinition:
-      additionalProperties:
-        $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinitionConfig'
-      type: object
-    Kibana_HTTP_APIs_Condition:
-      anyOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_FilterCondition'
-      - additionalProperties: false
-        description: A logical AND that groups multiple conditions.
-        type: object
-        properties:
-          and:
-            description: An array of conditions. All sub-conditions must be true for this condition to be true.
-            items:
-              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
-            type: array
-        required:
-        - and
-      - additionalProperties: false
-        description: A logical OR that groups multiple conditions.
-        type: object
-        properties:
-          or:
-            description: An array of conditions. At least one sub-condition must be true for this condition to be true.
-            items:
-              $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
-            type: array
-        required:
-        - or
-      - additionalProperties: false
-        description: A logical NOT that negates a condition.
-        type: object
-        properties:
-          not:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
-            description: A condition that negates another condition.
-        required:
-        - not
-      - additionalProperties: false
-        description: A condition that always evaluates to false.
-        type: object
-        properties:
-          never:
-            additionalProperties: false
-            description: An empty object. This condition never matches.
-            type: object
-            properties: {}
-        required:
-        - never
-      - additionalProperties: false
-        description: A condition that always evaluates to true. Useful for catch-all scenarios, but use with caution as partitions are ordered.
-        type: object
-        properties:
-          always:
-            additionalProperties: false
-            description: An empty object. This condition always matches.
-            type: object
-            properties: {}
-        required:
-        - always
-      description: The root condition object. It can be a simple filter or a combination of other conditions.
-    Kibana_HTTP_APIs_FilterCondition:
-      anyOf:
-      - additionalProperties: false
-        description: A condition that compares a field to a value or range using an operator as the key.
-        type: object
-        properties:
-          contains:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Contains comparison value.
-          endsWith:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Ends-with comparison value.
-          eq:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Equality comparison value.
-          field:
-            description: The document field to filter on.
-            minLength: 1
-            type: string
-          gt:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Greater-than comparison value.
-          gte:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Greater-than-or-equal comparison value.
-          includes:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Checks if multivalue field includes the value.
-          lt:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Less-than comparison value.
-          lte:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Less-than-or-equal comparison value.
-          neq:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Inequality comparison value.
-          range:
-            additionalProperties: false
-            description: Range comparison values.
-            type: object
-            properties:
-              gt:
-                anyOf:
-                - type: string
-                - type: number
-                - type: boolean
-                description: A value that can be a string, number, or boolean.
-              gte:
-                anyOf:
-                - type: string
-                - type: number
-                - type: boolean
-                description: A value that can be a string, number, or boolean.
-              lt:
-                anyOf:
-                - type: string
-                - type: number
-                - type: boolean
-                description: A value that can be a string, number, or boolean.
-              lte:
-                anyOf:
-                - type: string
-                - type: number
-                - type: boolean
-                description: A value that can be a string, number, or boolean.
-          startsWith:
-            anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            description: Starts-with comparison value.
-        required:
-        - field
-      - additionalProperties: false
-        description: A condition that checks for the existence or non-existence of a field.
-        type: object
-        properties:
-          exists:
-            description: Indicates whether the field exists or not.
-            type: boolean
-          field:
-            description: The document field to check.
-            minLength: 1
-            type: string
-        required:
-        - field
-      description: A basic filter condition, either unary or binary.
-    Kibana_HTTP_APIs_FieldDefinitionConfig:
-      allOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
-      - anyOf:
-        - additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            format:
-              description: A non-empty string.
-              minLength: 1
-              type: string
-            type:
-              enum:
-              - keyword
-              - match_only_text
-              - long
-              - double
-              - date
-              - boolean
-              - ip
-              - geo_point
-              - integer
-              - short
-              - byte
-              - float
-              - half_float
-              - text
-              - wildcard
-              - version
-              - unsigned_long
-              - date_nanos
-              type: string
-          required:
-          - type
-        - additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            format:
-              not: {}
-            type:
-              not: {}
-          required:
-          - description
-        - additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            type:
-              enum:
-              - system
-              type: string
-          required:
-          - type
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

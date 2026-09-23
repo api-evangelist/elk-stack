@@ -2,60 +2,7 @@ openapi: 3.2.0
 info:
   contact:
     name: Kibana Team
-  description: 'The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
-
-    The API calls are stateless.
-
-    Each request that you make happens in isolation from other calls and must include all of the necessary information for Kibana to fulfill the
-
-    request.
-
-    API requests return JSON output, which is a format that is machine-readable and works well for automation.
-
-
-    To interact with Kibana APIs, use the following operations:
-
-
-    - GET: Fetches the information.
-
-    - PATCH: Applies partial modifications to the existing information.
-
-    - POST: Adds new information.
-
-    - PUT: Updates the existing information.
-
-    - DELETE: Removes the information.
-
-
-    You can prepend any Kibana API endpoint with `kbn:` and run the request in **Dev Tools → Console**.
-
-    For example:
-
-
-    ```
-
-    GET kbn:/api/data_views
-
-    ```
-
-
-    For more information about the console, refer to [Run API requests](https://www.elastic.co/docs/explore-analyze/query-filter/tools/console).
-
-
-    NOTE: Access to internal Kibana API endpoints will be restricted in Kibana version 9.0. Please move any integrations to publicly documented APIs.
-
-
-    ## Documentation source and versions
-
-
-    This documentation is derived from the `main` branch of the [kibana](https://github.com/elastic/kibana) repository.
-
-    It is provided under license [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
-    This documentation contains work-in-progress information for future Elastic Stack releases.
-
-    '
+  description: The Kibana REST APIs enable you to manage resources such as connectors, data views, and saved objects.
   title: Kibana Security Entity Analytics API
   version: ''
   x-doc-license:
@@ -73,9 +20,7 @@ security:
 - apiKeyAuth: []
 - basicAuth: []
 tags:
-- description: 'Use the Security entity analytics APIs to manage entity analytics and risk scoring, including asset criticality, privileged user monitoring, and entity engines.
-
-    '
+- description: Use the Security entity analytics APIs to manage entity analytics and risk scoring, including asset criticality, privileged user monitoring, and entity engines.
   name: Security Entity Analytics API
   x-displayName: Security entity analytics
 paths:
@@ -85,18 +30,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/asset_criticality</span></div>
+        delete /s/{space_id}/api/asset_criticality
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Entity Store APIs to unassign asset criticality for a specific entity.
 
 
-        Delete the asset criticality record for a specific entity.
-
-        '
+        Delete the asset criticality record for a specific entity.'
       operationId: DeleteAssetCriticalityRecord
       parameters:
       - description: The ID value of the asset.
@@ -150,10 +93,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/asset_criticality</span></div>
+        get /s/{space_id}/api/asset_criticality
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Get the asset criticality record for a specific entity.'
@@ -195,10 +138,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/asset_criticality</span></div>
+        post /s/{space_id}/api/asset_criticality
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Entity Store APIs to assign asset criticality to an entity.
@@ -207,9 +150,7 @@ paths:
         Create or update an asset criticality record for a specific entity.
 
 
-        If a record already exists for the specified entity, that record is overwritten with the specified value. If a record doesn''t exist for the specified entity, a new record is created.
-
-        '
+        If a record already exists for the specified entity, that record is overwritten with the specified value. If a record doesn''t exist for the specified entity, a new record is created.'
       operationId: CreateAssetCriticalityRecord
       requestBody:
         content:
@@ -250,10 +191,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/asset_criticality/bulk</span></div>
+        post /s/{space_id}/api/asset_criticality/bulk
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Entity Store APIs to bulk assign asset criticality.
@@ -262,9 +203,7 @@ paths:
         Bulk upsert up to 1000 asset criticality records.
 
 
-        If asset criticality records already exist for the specified entities, those records are overwritten with the specified values. If asset criticality records don''t exist for the specified entities, new records are created.
-
-        '
+        If asset criticality records already exist for the specified entities, those records are overwritten with the specified values. If asset criticality records don''t exist for the specified entities, new records are created.'
       operationId: BulkUpsertAssetCriticalityRecords
       requestBody:
         content:
@@ -334,10 +273,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/asset_criticality/list</span></div>
+        get /s/{space_id}/api/asset_criticality/list
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** List asset criticality records, paging, sorting and filtering as needed.'
@@ -448,10 +387,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/engine/delete</span></div>
+        delete /s/{space_id}/api/entity_analytics/monitoring/engine/delete
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Deletes the Privilege Monitoring Engine and optionally removes all associated privileged user data.'
@@ -493,10 +432,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/engine/disable</span></div>
+        post /s/{space_id}/api/entity_analytics/monitoring/engine/disable
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Disables the Privilege Monitoring Engine, stopping all monitoring activity without removing data.'
@@ -525,10 +464,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/engine/init</span></div>
+        post /s/{space_id}/api/entity_analytics/monitoring/engine/init
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Initializes the Privilege Monitoring Engine, setting up the required resources and starting the engine.'
@@ -570,10 +509,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/engine/schedule_now</span></div>
+        post /s/{space_id}/api/entity_analytics/monitoring/engine/schedule_now
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Schedules the Privilege Monitoring Engine to run as soon as possible, triggering an immediate monitoring cycle.'
@@ -621,10 +560,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/privileges/health</span></div>
+        get /s/{space_id}/api/entity_analytics/monitoring/privileges/health
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Returns the current health status of the Privilege Monitoring Engine, including engine status, error details, and user count statistics.'
@@ -681,18 +620,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/privileges/privileges</span></div>
+        get /s/{space_id}/api/entity_analytics/monitoring/privileges/privileges
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Watchlists APIs instead.
 
 
-        Check if the current user has all required permissions for Privilege Monitoring.
-
-        '
+        Check if the current user has all required permissions for Privilege Monitoring.'
       operationId: PrivMonPrivileges
       responses:
         '200':
@@ -723,18 +660,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/users</span></div>
+        post /s/{space_id}/api/entity_analytics/monitoring/users
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Watchlists API instead.
 
 
-        Creates a new privileged user to be monitored by the Privilege Monitoring Engine.
-
-        '
+        Creates a new privileged user to be monitored by the Privilege Monitoring Engine.'
       operationId: CreatePrivMonUser
       requestBody:
         content:
@@ -788,18 +723,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/users/_csv</span></div>
+        post /s/{space_id}/api/entity_analytics/monitoring/users/_csv
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Watchlists API instead.
 
 
-        Bulk upserts privileged users by uploading a CSV file. Returns per-row errors and aggregate upload statistics.
-
-        '
+        Bulk upserts privileged users by uploading a CSV file. Returns per-row errors and aggregate upload statistics.'
       operationId: PrivmonBulkUploadUsersCSV
       requestBody:
         content:
@@ -868,18 +801,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/users/{id}</span></div>
+        delete /s/{space_id}/api/entity_analytics/monitoring/users/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Watchlists API instead.
 
 
-        Removes a privileged user from monitoring by their document ID.
-
-        '
+        Removes a privileged user from monitoring by their document ID.'
       operationId: DeletePrivMonUser
       parameters:
       - description: The document ID of the monitored user to delete
@@ -921,18 +852,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/users/{id}</span></div>
+        put /s/{space_id}/api/entity_analytics/monitoring/users/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Watchlists API instead.
 
 
-        Updates the details of an existing monitored privileged user by their document ID.
-
-        '
+        Updates the details of an existing monitored privileged user by their document ID.'
       operationId: UpdatePrivMonUser
       parameters:
       - description: The document ID of the monitored user to update
@@ -994,18 +923,16 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/monitoring/users/list</span></div>
+        get /s/{space_id}/api/entity_analytics/monitoring/users/list
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         **Deprecated in 9.4.0.** Use the Watchlists API instead.
 
 
-        Returns a list of all privileged users currently being monitored. Supports optional KQL filtering.
-
-        '
+        Returns a list of all privileged users currently being monitored. Supports optional KQL filtering.'
       operationId: ListPrivMonUsers
       parameters:
       - description: KQL query to filter the list of monitored users
@@ -1062,10 +989,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/privileged_user_monitoring/pad/install</span></div>
+        post /s/{space_id}/api/entity_analytics/privileged_user_monitoring/pad/install
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Installs the privileged access detection integration package and sets up the associated ML modules required for the Entity Analytics privileged user monitoring experience.'
@@ -1087,7 +1014,7 @@ paths:
                 required:
                 - message
           description: Successful response
-      summary: Installs the privileged access detection package for the Entity Analytics privileged user monitoring experience
+      summary: Installs the privileged access detection package for the Entity Analytics…
       tags:
       - Security Entity Analytics API
       x-metaTags:
@@ -1098,10 +1025,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/privileged_user_monitoring/pad/status</span></div>
+        get /s/{space_id}/api/entity_analytics/privileged_user_monitoring/pad/status
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns the installation and ML module setup status of the privileged access detection package, along with the state of each associated ML job.'
@@ -1161,7 +1088,7 @@ paths:
                 - ml_module_setup_status
                 - jobs
           description: Privileged access detection status retrieved
-      summary: Gets the status of the privileged access detection package for the Entity Analytics privileged user monitoring experience
+      summary: Gets the status of the privileged access detection package for the Entity…
       tags:
       - Security Entity Analytics API
       x-metaTags:
@@ -1172,10 +1099,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists</span></div>
+        post /s/{space_id}/api/entity_analytics/watchlists
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Creates a new entity analytics watchlist with an optional set of entity sources. Watchlists apply a risk score modifier to matched entities.'
@@ -1306,10 +1233,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists/{id}</span></div>
+        get /s/{space_id}/api/entity_analytics/watchlists/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Retrieves the details of an entity analytics watchlist by its unique identifier.'
@@ -1350,10 +1277,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb put">put</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists/{id}</span></div>
+        put /s/{space_id}/api/entity_analytics/watchlists/{id}
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Updates the name, description, risk modifier, or managed status of an existing entity analytics watchlist.'
@@ -1430,10 +1357,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists/{watchlist_id}/csv_upload</span></div>
+        post /s/{space_id}/api/entity_analytics/watchlists/{watchlist_id}/csv_upload
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Uploads a CSV file to add entities to a watchlist. The CSV must contain a header row
@@ -1448,9 +1375,7 @@ paths:
         field is updated in the entity store.
 
 
-        Each row will match up to 10,000 entities.
-
-        '
+        Each row will match up to 10,000 entities.'
       operationId: UploadWatchlistCsv
       parameters:
       - description: The ID of the watchlist to add entities to
@@ -1548,10 +1473,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists/{watchlist_id}/entities/assign</span></div>
+        post /s/{space_id}/api/entity_analytics/watchlists/{watchlist_id}/entities/assign
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Assigns the provided entities to the specified watchlist using a "manual" source label.
@@ -1561,9 +1486,7 @@ paths:
 
         If an entity is already on the watchlist, no new document is created — the "manual" label
 
-        is added to its existing source labels instead.
-
-        '
+        is added to its existing source labels instead.'
       operationId: AssignWatchlistEntities
       parameters:
       - description: The ID of the watchlist to add entities to
@@ -1656,10 +1579,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists/{watchlist_id}/entities/unassign</span></div>
+        post /s/{space_id}/api/entity_analytics/watchlists/{watchlist_id}/entities/unassign
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Unassigns the provided entities from the specified watchlist.
@@ -1668,9 +1591,7 @@ paths:
 
         assigned via other sources (for example, index or integration), it will
 
-        remain on the watchlist.
-
-        '
+        remain on the watchlist.'
       operationId: UnassignWatchlistEntities
       parameters:
       - description: The ID of the watchlist to remove entities from
@@ -1763,10 +1684,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/entity_analytics/watchlists/list</span></div>
+        get /s/{space_id}/api/entity_analytics/watchlists/list
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns a list of all entity analytics watchlists.'
@@ -1810,10 +1731,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb delete">delete</span>&nbsp;<span class="operation-path">/s/{space_id}/api/risk_score/engine/dangerously_delete_data</span></div>
+        delete /s/{space_id}/api/risk_score/engine/dangerously_delete_data
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Cleaning up the the Risk Engine by removing the indices, mapping and transforms'
@@ -1870,10 +1791,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb patch">patch</span>&nbsp;<span class="operation-path">/s/{space_id}/api/risk_score/engine/saved_object/configure</span></div>
+        patch /s/{space_id}/api/risk_score/engine/saved_object/configure
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Configuring the Risk Engine Saved Object'
@@ -1997,10 +1918,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb post">post</span>&nbsp;<span class="operation-path">/s/{space_id}/api/risk_score/engine/schedule_now</span></div>
+        post /s/{space_id}/api/risk_score/engine/schedule_now
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Schedule the risk scoring engine to run as soon as possible. You can use this to recalculate entity risk scores after updating their asset criticality.'
@@ -2061,10 +1982,10 @@ paths:
       description: '**Spaces method and path for this operation:**
 
 
-        <div><span class="operation-verb get">get</span>&nbsp;<span class="operation-path">/s/{space_id}/api/risk_score/history</span></div>
+        get /s/{space_id}/api/risk_score/history
 
 
-        Refer to [Spaces](https://www.elastic.co/docs/deploy-manage/manage-spaces) for more information.
+        Refer to Spaces for more information.
 
 
         Returns time-ordered historical risk score entries from the risk score time-series index for a given entity.'
@@ -2148,60 +2069,265 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Entity_Analytics_API_WatchlistEntityAssignResponseItem:
-      example:
-        euid: user:john.doe
-        status: success
-      type: object
-      properties:
-        error:
-          description: Error message if the entity failed to process
-          example: Invalid entity type
-          type: string
-        euid:
-          description: The EUID of the entity
-          example: user:john.doe
-          type: string
-        status:
-          enum:
-          - success
-          - failure
-          - not_found
-          example: success
-          type: string
-      required:
-      - euid
-      - status
-    Security_Entity_Analytics_API_EntitySourceType:
+    Security_Entity_Analytics_API_IdField:
       enum:
-      - index
-      - entity_analytics_integration
-      - store
+      - host.name
+      - user.name
+      - service.name
+      - entity.id
       type: string
-    Security_Entity_Analytics_API_WatchlistEntityUnassignResponseItem:
+    Security_Entity_Analytics_API_WatchlistObject:
       example:
-        euid: user:john.doe
-        status: success
+        createdAt: '2026-01-28T12:00:00.000Z'
+        description: High risk vendor watchlist
+        id: watchlist-123
+        managed: false
+        name: High Risk Vendors
+        riskModifier: 1.5
+        updatedAt: '2026-02-18T12:00:00.000Z'
+      type: object
+      properties:
+        createdAt:
+          description: Timestamp indicating when the watchlist was created
+          format: date-time
+          type: string
+        description:
+          description: Description of the watchlist
+          type: string
+        entityCount:
+          description: Number of entities in the watchlist
+          type: number
+        entitySourceIds:
+          description: List of entity source IDs associated with the watchlist
+          items:
+            type: string
+          type: array
+        hasManualEntities:
+          description: Indicates whether the watchlist contains manually assigned entities
+          type: boolean
+        id:
+          description: The unique ID of the watchlist
+          type: string
+        managed:
+          description: Indicates if the watchlist is managed by the system
+          type: boolean
+        name:
+          description: The name of the watchlist
+          type: string
+        riskModifier:
+          description: Risk score modifier associated with the watchlist
+          type: number
+        updatedAt:
+          description: Timestamp indicating when the watchlist was last updated
+          format: date-time
+          type: string
+      required:
+      - name
+      - riskModifier
+      - managed
+    Security_Entity_Analytics_API_MonitoredUserUpdateDoc:
+      type: object
+      properties:
+        entity_analytics_monitoring:
+          type: object
+          properties:
+            labels:
+              items:
+                $ref: '#/components/schemas/Security_Entity_Analytics_API_MonitoringLabel'
+              type: array
+        id:
+          maxLength: 256
+          type: string
+        labels:
+          type: object
+          properties:
+            source_ids:
+              items:
+                maxLength: 256
+                type: string
+              maxItems: 100
+              type: array
+            source_integrations:
+              items:
+                maxLength: 256
+                type: string
+              maxItems: 100
+              type: array
+            sources:
+              items:
+                enum:
+                - csv
+                - index_sync
+                - api
+              maxItems: 100
+              type: array
+        user:
+          type: object
+          properties:
+            is_privileged:
+              description: Indicates if the user is privileged.
+              type: boolean
+            name:
+              maxLength: 512
+              type: string
+    Security_Entity_Analytics_API_PrivmonUserCsvUploadErrorItem:
+      type: object
+      properties:
+        index:
+          type:
+          - integer
+          - 'null'
+        message:
+          type: string
+        username:
+          type:
+          - string
+          - 'null'
+      required:
+      - message
+      - index
+      - username
+    Security_Entity_Analytics_API_CleanUpRiskEngineErrorResponse:
+      type: object
+      properties:
+        cleanup_successful:
+          example: false
+          type: boolean
+        errors:
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              seq:
+                type: integer
+            required:
+            - seq
+            - error
+          type: array
+      required:
+      - cleanup_successful
+      - errors
+    Security_Entity_Analytics_API_AssetCriticalityBulkUploadErrorItem:
+      type: object
+      properties:
+        index:
+          type: integer
+        message:
+          type: string
+      required:
+      - message
+      - index
+    Security_Entity_Analytics_API_PrivmonUserCsvUploadStats:
+      type: object
+      properties:
+        failedOperations:
+          type: integer
+        successfulOperations:
+          type: integer
+        totalOperations:
+          type: integer
+        uploaded:
+          type: integer
+      required:
+      - successfulOperations
+      - uploaded
+      - failedOperations
+      - totalOperations
+    Security_Entity_Analytics_API_MonitoringEngineDescriptor:
       type: object
       properties:
         error:
-          description: Error message if the entity failed to process
-          example: Invalid entity type
-          type: string
-        euid:
-          description: The EUID of the entity
-          example: user:john.doe
-          type: string
+          type: object
+          properties:
+            message:
+              description: Error message typically only present if the engine is in error state
+              type: string
         status:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_PrivilegeMonitoringEngineStatus'
+      required:
+      - status
+    Security_Entity_Analytics_API_RiskEngineScheduleNowResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+    Security_Entity_Analytics_API_RiskScoreHistoryEntry:
+      type: object
+      properties:
+        '@timestamp':
+          format: date-time
+          maxLength: 33
+          type: string
+        calculated_level:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntityRiskLevels'
+        calculated_score:
+          format: double
+          type: number
+        calculated_score_norm:
+          format: double
+          maximum: 100
+          minimum: 0
+          type: number
+        category_1_count:
+          type: integer
+        category_1_score:
+          format: double
+          type: number
+        category_2_count:
+          type: integer
+        category_2_score:
+          format: double
+          type: number
+        criticality_level:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityLevel'
+        inputs:
+          description: Present only when requested with `include_contributions=true`.
+          items:
+            $ref: '#/components/schemas/Security_Entity_Analytics_API_RiskScoreInput'
+          type: array
+        modifiers:
+          description: Present only when requested with `include_contributions=true`.
+          items:
+            $ref: '#/components/schemas/Security_Entity_Analytics_API_RiskScoreModifier'
+          type: array
+        score_type:
           enum:
-          - success
-          - failure
-          - not_found
-          example: success
+          - base
+          - propagated
+          - resolution
           type: string
       required:
-      - euid
-      - status
+      - '@timestamp'
+      - calculated_score_norm
+      - calculated_level
+    Security_Entity_Analytics_API_EntityAnalyticsPrivileges:
+      type: object
+      properties:
+        has_all_required:
+          type: boolean
+        has_install_permissions:
+          type: boolean
+        has_read_permissions:
+          type: boolean
+        has_write_permissions:
+          type: boolean
+        install_privileges:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntityAnalyticsPrivilegesDetail'
+        privileges:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntityAnalyticsPrivilegesDetail'
+      required:
+      - has_all_required
+      - privileges
+    Security_Entity_Analytics_API_AssetCriticalityLevelsForBulkUpload:
+      description: The criticality level of the asset for bulk upload. The value `unassigned` is used to indicate that the criticality level is not assigned and is only used for bulk upload.
+      enum:
+      - low_impact
+      - medium_impact
+      - high_impact
+      - extreme_impact
+      - unassigned
+      type: string
     Security_Entity_Analytics_API_Filter:
       type: object
       properties:
@@ -2245,64 +2371,67 @@ components:
                 type: boolean
               name:
                 type: string
-    Security_Entity_Analytics_API_EntityAnalyticsPrivileges:
+    Security_Entity_Analytics_API_PrivilegeMonitoringEngineStatus:
+      description: The status of the Privilege Monitoring Engine
+      enum:
+      - started
+      - error
+      - disabled
+      - not_installed
+      type: string
+    Security_Entity_Analytics_API_EntitySourceType:
+      enum:
+      - index
+      - entity_analytics_integration
+      - store
+      type: string
+    Security_Entity_Analytics_API_RiskScoreHistoryResponse:
       type: object
       properties:
-        has_all_required:
-          type: boolean
-        has_install_permissions:
-          type: boolean
-        has_read_permissions:
-          type: boolean
-        has_write_permissions:
-          type: boolean
-        install_privileges:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntityAnalyticsPrivilegesDetail'
-        privileges:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntityAnalyticsPrivilegesDetail'
-      required:
-      - has_all_required
-      - privileges
-    Security_Entity_Analytics_API_CreateAssetCriticalityRecord:
-      allOf:
-      - $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityRecordIdParts'
-      - type: object
-        properties:
-          criticality_level:
-            $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityLevel'
-        required:
-        - criticality_level
-    Security_Entity_Analytics_API_AssetCriticalityBulkUploadErrorItem:
-      type: object
-      properties:
-        index:
-          type: integer
-        message:
+        entity_id:
+          maxLength: 1000
+          type: string
+        entity_type:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_IdentifierType'
+        entries:
+          items:
+            $ref: '#/components/schemas/Security_Entity_Analytics_API_RiskScoreHistoryEntry'
+          type: array
+        interval:
+          description: The effective Elasticsearch `date_histogram` interval expression the entries were aggregated into (for example `3h`, `1d`, `1w`), derived from the requested time range.
+          maxLength: 10
           type: string
       required:
-      - message
-      - index
-    Security_Entity_Analytics_API_CleanUpRiskEngineErrorResponse:
+      - entity_id
+      - entity_type
+      - interval
+      - entries
+    Security_Entity_Analytics_API_Matcher:
       type: object
       properties:
-        cleanup_successful:
-          example: false
-          type: boolean
-        errors:
+        fields:
           items:
-            type: object
-            properties:
-              error:
-                type: string
-              seq:
-                type: integer
-            required:
-            - seq
-            - error
+            maxLength: 256
+            type: string
+          maxItems: 100
           type: array
+        values:
+          description: 'Matcher values. Must be either an array of strings (e.g. group or role names) or an array of booleans (e.g. integration-derived flags like privileged_group_member). Mixed types are intentionally not supported for simplicity and predictability.
+
+            '
+          oneOf:
+          - items:
+              maxLength: 256
+              type: string
+            maxItems: 1000
+            type: array
+          - items:
+              type: boolean
+            maxItems: 1000
+            type: array
       required:
-      - cleanup_successful
-      - errors
+      - fields
+      - values
     Security_Entity_Analytics_API_AssetCriticalityRecordEcsParts:
       type: object
       properties:
@@ -2371,22 +2500,392 @@ components:
           - name
       required:
       - asset
-    Security_Entity_Analytics_API_PrivmonUserCsvUploadStats:
+    Security_Entity_Analytics_API_UpdateableMonitoringEntitySourceProperties:
       type: object
       properties:
-        failedOperations:
-          type: integer
-        successfulOperations:
-          type: integer
-        totalOperations:
-          type: integer
-        uploaded:
+        enabled:
+          type: boolean
+        filter:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_Filter'
+        identifierField:
+          description: Field used to query the entity store for index-type sources
+          maxLength: 256
+          type: string
+        indexPattern:
+          maxLength: 1000
+          type: string
+        integrationName:
+          maxLength: 256
+          type: string
+        integrations:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_Integrations'
+        matchers:
+          items:
+            $ref: '#/components/schemas/Security_Entity_Analytics_API_Matcher'
+          maxItems: 100
+          type: array
+        name:
+          maxLength: 256
+          type: string
+        queryRule:
+          description: KQL query used to filter data from the provided index patterns
+          maxLength: 4096
+          type: string
+        range:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_DateRange'
+        type:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntitySourceType'
+    Security_Entity_Analytics_API_Integrations:
+      type: object
+      properties:
+        syncData:
+          description: integrations latest full sync and update syncData
+          type: object
+          properties:
+            lastFullSync:
+              description: Timestamp of the last full sync from integrations
+              format: date-time
+              type: string
+            lastUpdateProcessed:
+              description: Timestamp of the last update processed from integrations
+              format: date-time
+              type: string
+        syncMarkerIndex:
+          description: Index to read latest sync markers from
+          maxLength: 1000
+          type: string
+    Security_Entity_Analytics_API_AssetCriticalityRecordIdParts:
+      type: object
+      properties:
+        id_field:
+          $ref: '#/components/schemas/Security_Entity_Analytics_API_IdField'
+          description: The field representing the ID.
+          example: host.name
+        id_value:
+          description: The ID value of the asset.
+          type: string
+      required:
+      - id_value
+      - id_field
+    Security_Entity_Analytics_API_IdentifierType:
+      enum:
+      - host
+      - user
+      - service
+      - generic
+      type: string
+    Security_Entity_Analytics_API_TaskManagerUnavailableResponse:
+      description: Task manager is unavailable
+      type: object
+      properties:
+        message:
+          type: string
+        status_code:
+          minimum: 400
           type: integer
       required:
-      - successfulOperations
-      - uploaded
-      - failedOperations
-      - totalOperations
+      - status_code
+      - message
+    Security_Entity_Analytics_API_ConfigureRiskEngineSavedObjectErrorResponse:
+      type: object
+      properties:
+        errors:
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              seq:
+                type: integer
+            required:
+            - seq
+            - error
+          type: array
+        risk_engine_saved_object_configured:
+          example: false
+          type: boolean
+      required:
+      - risk_engine_saved_object_configured
+      - errors
+    Security_Entity_Analytics_API_AssetCriticalityRecord:
+      allOf:
+      - $ref: '#/components/schemas/Security_Entity_Analytics_API_CreateAssetCriticalityRecord'
+      - $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityRecordEcsParts'
+      - type: object
+        properties:
+          '@timestamp':
+            description: The time the record was created or updated.
+            example: '2017-07-21T17:32:28Z'
+            format: date-time
+            type: string
+        required:
+        - '@timestamp'
+      example:
+        '@timestamp': '2024-08-02T11:15:34.290Z'
+        asset:
+          criticality: high_impact
+        criticality_level: high_impact
+        host:
+          asset:
+            criticality: high_impact
+          name: my_host
+        id_field: host.name
+        id_value: my_host
+    Security_Entity_Analytics_API_MonitoringEntitySource:
+      allOf:
+      - $ref: '#/components/schemas/Security_Entity_Analytics_API_MonitoringEntitySourceProperties'
+      - type: object
+        properties:
+          apiKeyId:
+            description: ID of the API key used for scoped reads from the source index. Only present for index-type sources.
+            maxLength: 64
+            type:
+            - string
+            - 'null'
+          id:
+            type: string
+        required:
+        - type
+        - name
+        - id
+        - managed
+    Security_Entity_Analytics_API_EntityAnalyticsPrivilegesDetail:
+      type: object
+      properties:
+        elasticsearch:
+          type: object
+          properties:
+            cluster:
+              additionalProperties:
+                type: boolean
+              type: object
+            index:
+              additionalProperties:
+                additionalProperties:
+                  type: boolean
+                type: object
+              type: object
+        kibana:
+          additionalProperties:
+            type: boolean
+          type: object
+      required:
+      - elasticsearch
+    Security_Entity_Analytics_API_AssetCriticalityLevel:
+      description: The criticality level of the asset.
+      enum:
+      - low_impact
+      - medium_impact
+      - high_impact
+      - extreme_impact
+      type: string
+    Security_Entity_Analytics_API_EntityRiskLevels:
+      enum:
+      - Unknown
+      - Low
+      - Moderate
+      - High
+      - Critical
+      type: string
+    Security_Entity_Analytics_API_MonitoringEntitySourceProperties:
+      allOf:
+      - $ref: '#/components/schemas/Security_Entity_Analytics_API_UpdateableMonitoringEntitySourceProperties'
+      - type: object
+        properties:
+          managed:
+            type: boolean
+    Security_Entity_Analytics_API_WatchlistEntityAssignResponseItem:
+      example:
+        euid: user:john.doe
+        status: success
+      type: object
+      properties:
+        error:
+          description: Error message if the entity failed to process
+          example: Invalid entity type
+          type: string
+        euid:
+          description: The EUID of the entity
+          example: user:john.doe
+          type: string
+        status:
+          enum:
+          - success
+          - failure
+          - not_found
+          example: success
+          type: string
+      required:
+      - euid
+      - status
+    Security_Entity_Analytics_API_WatchlistEntityUnassignResponseItem:
+      example:
+        euid: user:john.doe
+        status: success
+      type: object
+      properties:
+        error:
+          description: Error message if the entity failed to process
+          example: Invalid entity type
+          type: string
+        euid:
+          description: The EUID of the entity
+          example: user:john.doe
+          type: string
+        status:
+          enum:
+          - success
+          - failure
+          - not_found
+          example: success
+          type: string
+      required:
+      - euid
+      - status
+    Security_Entity_Analytics_API_DateRange:
+      description: Defines the lookback period for filtering source data by timestamp.
+      type: object
+      properties:
+        end:
+          description: End of the lookback period (date math or ISO string, e.g. "now")
+          maxLength: 256
+          type: string
+        start:
+          description: Start of the lookback period (date math or ISO string, e.g. "now-10d")
+          maxLength: 256
+          type: string
+      required:
+      - start
+      - end
+    Security_Entity_Analytics_API_MonitoringLabel:
+      type: object
+      properties:
+        field:
+          maxLength: 256
+          type: string
+        source:
+          type: string
+        value:
+          maxLength: 256
+          type: string
+      required:
+      - field
+      - value
+      - source
+    Security_Entity_Analytics_API_AssetCriticalityBulkUploadStats:
+      type: object
+      properties:
+        failed:
+          type: integer
+        successful:
+          type: integer
+        total:
+          type: integer
+      required:
+      - successful
+      - failed
+      - total
+    Security_Entity_Analytics_API_RiskScoreModifier:
+      description: A modifier that was applied to the risk score calculation.
+      type: object
+      properties:
+        contribution:
+          format: double
+          type: number
+        metadata:
+          additionalProperties: true
+          type: object
+        modifier_value:
+          format: double
+          type: number
+        subtype:
+          maxLength: 100
+          type: string
+        type:
+          maxLength: 100
+          type: string
+      required:
+      - type
+      - contribution
+    Security_Entity_Analytics_API_WatchlistCsvUploadResponseItem:
+      example:
+        matchedEntities: 1
+        status: success
+      type: object
+      properties:
+        error:
+          description: Error message if the row failed to process
+          example: Invalid entity type
+          type: string
+        matchedEntities:
+          description: Number of entities matched for this row
+          example: 1
+          type: integer
+        status:
+          enum:
+          - success
+          - failure
+          - unmatched
+          example: success
+          type: string
+      required:
+      - status
+      - matchedEntities
+    Security_Entity_Analytics_API_CreateAssetCriticalityRecord:
+      allOf:
+      - $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityRecordIdParts'
+      - type: object
+        properties:
+          criticality_level:
+            $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityLevel'
+        required:
+        - criticality_level
+    Security_Entity_Analytics_API_RiskEngineScheduleNowErrorResponse:
+      type: object
+      properties:
+        full_error:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      - full_error
+    Security_Entity_Analytics_API_UserName:
+      type: object
+      properties:
+        entity_analytics_monitoring:
+          description: Entity analytics monitoring configuration for the user
+          type: object
+          properties:
+            labels:
+              description: Array of labels associated with the user
+              items:
+                type: object
+                properties:
+                  field:
+                    description: The field name for the label
+                    maxLength: 256
+                    type: string
+                  source:
+                    description: The source where this label was created (api, csv, or index_sync)
+                    enum:
+                    - api
+                    - csv
+                    - index_sync
+                    type: string
+                  value:
+                    description: The value of the label
+                    maxLength: 256
+                    type: string
+              maxItems: 100
+              type: array
+        user:
+          type: object
+          properties:
+            name:
+              description: The name of the user.
+              maxLength: 512
+              type: string
     Security_Entity_Analytics_API_RiskScoreInput:
       description: A generic representation of a document contributing to a Risk Score.
       type: object
@@ -2428,584 +2927,6 @@ components:
       - index
       - description
       - category
-    Security_Entity_Analytics_API_UpdateableMonitoringEntitySourceProperties:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-        filter:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_Filter'
-        identifierField:
-          description: Field used to query the entity store for index-type sources
-          maxLength: 256
-          type: string
-        indexPattern:
-          maxLength: 1000
-          type: string
-        integrationName:
-          maxLength: 256
-          type: string
-        integrations:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_Integrations'
-        matchers:
-          items:
-            $ref: '#/components/schemas/Security_Entity_Analytics_API_Matcher'
-          maxItems: 100
-          type: array
-        name:
-          maxLength: 256
-          type: string
-        queryRule:
-          description: KQL query used to filter data from the provided index patterns
-          maxLength: 4096
-          type: string
-        range:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_DateRange'
-        type:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntitySourceType'
-    Security_Entity_Analytics_API_PrivilegeMonitoringEngineStatus:
-      description: The status of the Privilege Monitoring Engine
-      enum:
-      - started
-      - error
-      - disabled
-      - not_installed
-      type: string
-    Security_Entity_Analytics_API_MonitoringEntitySourceProperties:
-      allOf:
-      - $ref: '#/components/schemas/Security_Entity_Analytics_API_UpdateableMonitoringEntitySourceProperties'
-      - type: object
-        properties:
-          managed:
-            type: boolean
-    Security_Entity_Analytics_API_AssetCriticalityLevel:
-      description: The criticality level of the asset.
-      enum:
-      - low_impact
-      - medium_impact
-      - high_impact
-      - extreme_impact
-      type: string
-    Security_Entity_Analytics_API_RiskEngineScheduleNowResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-    Security_Entity_Analytics_API_AssetCriticalityRecord:
-      allOf:
-      - $ref: '#/components/schemas/Security_Entity_Analytics_API_CreateAssetCriticalityRecord'
-      - $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityRecordEcsParts'
-      - type: object
-        properties:
-          '@timestamp':
-            description: The time the record was created or updated.
-            example: '2017-07-21T17:32:28Z'
-            format: date-time
-            type: string
-        required:
-        - '@timestamp'
-      example:
-        '@timestamp': '2024-08-02T11:15:34.290Z'
-        asset:
-          criticality: high_impact
-        criticality_level: high_impact
-        host:
-          asset:
-            criticality: high_impact
-          name: my_host
-        id_field: host.name
-        id_value: my_host
-    Security_Entity_Analytics_API_IdentifierType:
-      enum:
-      - host
-      - user
-      - service
-      - generic
-      type: string
-    Security_Entity_Analytics_API_WatchlistObject:
-      example:
-        createdAt: '2026-01-28T12:00:00.000Z'
-        description: High risk vendor watchlist
-        id: watchlist-123
-        managed: false
-        name: High Risk Vendors
-        riskModifier: 1.5
-        updatedAt: '2026-02-18T12:00:00.000Z'
-      type: object
-      properties:
-        createdAt:
-          description: Timestamp indicating when the watchlist was created
-          format: date-time
-          type: string
-        description:
-          description: Description of the watchlist
-          type: string
-        entityCount:
-          description: Number of entities in the watchlist
-          type: number
-        entitySourceIds:
-          description: List of entity source IDs associated with the watchlist
-          items:
-            type: string
-          type: array
-        hasManualEntities:
-          description: Indicates whether the watchlist contains manually assigned entities
-          type: boolean
-        id:
-          description: The unique ID of the watchlist
-          type: string
-        managed:
-          description: Indicates if the watchlist is managed by the system
-          type: boolean
-        name:
-          description: The name of the watchlist
-          type: string
-        riskModifier:
-          description: Risk score modifier associated with the watchlist
-          type: number
-        updatedAt:
-          description: Timestamp indicating when the watchlist was last updated
-          format: date-time
-          type: string
-      required:
-      - name
-      - riskModifier
-      - managed
-    Security_Entity_Analytics_API_EntityAnalyticsPrivilegesDetail:
-      type: object
-      properties:
-        elasticsearch:
-          type: object
-          properties:
-            cluster:
-              additionalProperties:
-                type: boolean
-              type: object
-            index:
-              additionalProperties:
-                additionalProperties:
-                  type: boolean
-                type: object
-              type: object
-        kibana:
-          additionalProperties:
-            type: boolean
-          type: object
-      required:
-      - elasticsearch
-    Security_Entity_Analytics_API_MonitoringEntitySource:
-      allOf:
-      - $ref: '#/components/schemas/Security_Entity_Analytics_API_MonitoringEntitySourceProperties'
-      - type: object
-        properties:
-          apiKeyId:
-            description: ID of the API key used for scoped reads from the source index. Only present for index-type sources.
-            maxLength: 64
-            type:
-            - string
-            - 'null'
-          id:
-            type: string
-        required:
-        - type
-        - name
-        - id
-        - managed
-    Security_Entity_Analytics_API_RiskScoreModifier:
-      description: A modifier that was applied to the risk score calculation.
-      type: object
-      properties:
-        contribution:
-          format: double
-          type: number
-        metadata:
-          additionalProperties: true
-          type: object
-        modifier_value:
-          format: double
-          type: number
-        subtype:
-          maxLength: 100
-          type: string
-        type:
-          maxLength: 100
-          type: string
-      required:
-      - type
-      - contribution
-    Security_Entity_Analytics_API_Matcher:
-      type: object
-      properties:
-        fields:
-          items:
-            maxLength: 256
-            type: string
-          maxItems: 100
-          type: array
-        values:
-          description: 'Matcher values. Must be either an array of strings (e.g. group or role names) or an array of booleans (e.g. integration-derived flags like privileged_group_member). Mixed types are intentionally not supported for simplicity and predictability.
-
-            '
-          oneOf:
-          - items:
-              maxLength: 256
-              type: string
-            maxItems: 1000
-            type: array
-          - items:
-              type: boolean
-            maxItems: 1000
-            type: array
-      required:
-      - fields
-      - values
-    Security_Entity_Analytics_API_MonitoredUserUpdateDoc:
-      type: object
-      properties:
-        entity_analytics_monitoring:
-          type: object
-          properties:
-            labels:
-              items:
-                $ref: '#/components/schemas/Security_Entity_Analytics_API_MonitoringLabel'
-              type: array
-        id:
-          maxLength: 256
-          type: string
-        labels:
-          type: object
-          properties:
-            source_ids:
-              items:
-                maxLength: 256
-                type: string
-              maxItems: 100
-              type: array
-            source_integrations:
-              items:
-                maxLength: 256
-                type: string
-              maxItems: 100
-              type: array
-            sources:
-              items:
-                enum:
-                - csv
-                - index_sync
-                - api
-              maxItems: 100
-              type: array
-        user:
-          type: object
-          properties:
-            is_privileged:
-              description: Indicates if the user is privileged.
-              type: boolean
-            name:
-              maxLength: 512
-              type: string
-    Security_Entity_Analytics_API_MonitoringLabel:
-      type: object
-      properties:
-        field:
-          maxLength: 256
-          type: string
-        source:
-          type: string
-        value:
-          maxLength: 256
-          type: string
-      required:
-      - field
-      - value
-      - source
-    Security_Entity_Analytics_API_WatchlistCsvUploadResponseItem:
-      example:
-        matchedEntities: 1
-        status: success
-      type: object
-      properties:
-        error:
-          description: Error message if the row failed to process
-          example: Invalid entity type
-          type: string
-        matchedEntities:
-          description: Number of entities matched for this row
-          example: 1
-          type: integer
-        status:
-          enum:
-          - success
-          - failure
-          - unmatched
-          example: success
-          type: string
-      required:
-      - status
-      - matchedEntities
-    Security_Entity_Analytics_API_AssetCriticalityLevelsForBulkUpload:
-      description: The criticality level of the asset for bulk upload. The value `unassigned` is used to indicate that the criticality level is not assigned and is only used for bulk upload.
-      enum:
-      - low_impact
-      - medium_impact
-      - high_impact
-      - extreme_impact
-      - unassigned
-      type: string
-    Security_Entity_Analytics_API_EntityRiskLevels:
-      enum:
-      - Unknown
-      - Low
-      - Moderate
-      - High
-      - Critical
-      type: string
-    Security_Entity_Analytics_API_AssetCriticalityRecordIdParts:
-      type: object
-      properties:
-        id_field:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_IdField'
-          description: The field representing the ID.
-          example: host.name
-        id_value:
-          description: The ID value of the asset.
-          type: string
-      required:
-      - id_value
-      - id_field
-    Security_Entity_Analytics_API_TaskManagerUnavailableResponse:
-      description: Task manager is unavailable
-      type: object
-      properties:
-        message:
-          type: string
-        status_code:
-          minimum: 400
-          type: integer
-      required:
-      - status_code
-      - message
-    Security_Entity_Analytics_API_RiskScoreHistoryEntry:
-      type: object
-      properties:
-        '@timestamp':
-          format: date-time
-          maxLength: 33
-          type: string
-        calculated_level:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_EntityRiskLevels'
-        calculated_score:
-          format: double
-          type: number
-        calculated_score_norm:
-          format: double
-          maximum: 100
-          minimum: 0
-          type: number
-        category_1_count:
-          type: integer
-        category_1_score:
-          format: double
-          type: number
-        category_2_count:
-          type: integer
-        category_2_score:
-          format: double
-          type: number
-        criticality_level:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_AssetCriticalityLevel'
-        inputs:
-          description: Present only when requested with `include_contributions=true`.
-          items:
-            $ref: '#/components/schemas/Security_Entity_Analytics_API_RiskScoreInput'
-          type: array
-        modifiers:
-          description: Present only when requested with `include_contributions=true`.
-          items:
-            $ref: '#/components/schemas/Security_Entity_Analytics_API_RiskScoreModifier'
-          type: array
-        score_type:
-          enum:
-          - base
-          - propagated
-          - resolution
-          type: string
-      required:
-      - '@timestamp'
-      - calculated_score_norm
-      - calculated_level
-    Security_Entity_Analytics_API_DateRange:
-      description: Defines the lookback period for filtering source data by timestamp.
-      type: object
-      properties:
-        end:
-          description: End of the lookback period (date math or ISO string, e.g. "now")
-          maxLength: 256
-          type: string
-        start:
-          description: Start of the lookback period (date math or ISO string, e.g. "now-10d")
-          maxLength: 256
-          type: string
-      required:
-      - start
-      - end
-    Security_Entity_Analytics_API_RiskScoreHistoryResponse:
-      type: object
-      properties:
-        entity_id:
-          maxLength: 1000
-          type: string
-        entity_type:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_IdentifierType'
-        entries:
-          items:
-            $ref: '#/components/schemas/Security_Entity_Analytics_API_RiskScoreHistoryEntry'
-          type: array
-        interval:
-          description: The effective Elasticsearch `date_histogram` interval expression the entries were aggregated into (for example `3h`, `1d`, `1w`), derived from the requested time range.
-          maxLength: 10
-          type: string
-      required:
-      - entity_id
-      - entity_type
-      - interval
-      - entries
-    Security_Entity_Analytics_API_MonitoringEngineDescriptor:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            message:
-              description: Error message typically only present if the engine is in error state
-              type: string
-        status:
-          $ref: '#/components/schemas/Security_Entity_Analytics_API_PrivilegeMonitoringEngineStatus'
-      required:
-      - status
-    Security_Entity_Analytics_API_AssetCriticalityBulkUploadStats:
-      type: object
-      properties:
-        failed:
-          type: integer
-        successful:
-          type: integer
-        total:
-          type: integer
-      required:
-      - successful
-      - failed
-      - total
-    Security_Entity_Analytics_API_ConfigureRiskEngineSavedObjectErrorResponse:
-      type: object
-      properties:
-        errors:
-          items:
-            type: object
-            properties:
-              error:
-                type: string
-              seq:
-                type: integer
-            required:
-            - seq
-            - error
-          type: array
-        risk_engine_saved_object_configured:
-          example: false
-          type: boolean
-      required:
-      - risk_engine_saved_object_configured
-      - errors
-    Security_Entity_Analytics_API_UserName:
-      type: object
-      properties:
-        entity_analytics_monitoring:
-          description: Entity analytics monitoring configuration for the user
-          type: object
-          properties:
-            labels:
-              description: Array of labels associated with the user
-              items:
-                type: object
-                properties:
-                  field:
-                    description: The field name for the label
-                    maxLength: 256
-                    type: string
-                  source:
-                    description: The source where this label was created (api, csv, or index_sync)
-                    enum:
-                    - api
-                    - csv
-                    - index_sync
-                    type: string
-                  value:
-                    description: The value of the label
-                    maxLength: 256
-                    type: string
-              maxItems: 100
-              type: array
-        user:
-          type: object
-          properties:
-            name:
-              description: The name of the user.
-              maxLength: 512
-              type: string
-    Security_Entity_Analytics_API_PrivmonUserCsvUploadErrorItem:
-      type: object
-      properties:
-        index:
-          type:
-          - integer
-          - 'null'
-        message:
-          type: string
-        username:
-          type:
-          - string
-          - 'null'
-      required:
-      - message
-      - index
-      - username
-    Security_Entity_Analytics_API_Integrations:
-      type: object
-      properties:
-        syncData:
-          description: integrations latest full sync and update syncData
-          type: object
-          properties:
-            lastFullSync:
-              description: Timestamp of the last full sync from integrations
-              format: date-time
-              type: string
-            lastUpdateProcessed:
-              description: Timestamp of the last update processed from integrations
-              format: date-time
-              type: string
-        syncMarkerIndex:
-          description: Index to read latest sync markers from
-          maxLength: 1000
-          type: string
-    Security_Entity_Analytics_API_IdField:
-      enum:
-      - host.name
-      - user.name
-      - service.name
-      - entity.id
-      type: string
-    Security_Entity_Analytics_API_RiskEngineScheduleNowErrorResponse:
-      type: object
-      properties:
-        full_error:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      - full_error
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`
