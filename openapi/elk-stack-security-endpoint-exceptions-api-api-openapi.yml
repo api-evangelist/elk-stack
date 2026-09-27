@@ -897,9 +897,73 @@ paths:
         name: product_name
 components:
   schemas:
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntryExists:
+      type: object
+      properties:
+        field:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
+        operator:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryOperator'
+        type:
+          enum:
+          - exists
+          type: string
+      required:
+      - type
+      - field
+      - operator
+    Security_Endpoint_Exceptions_API_SiemErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        status_code:
+          type: integer
+      required:
+      - status_code
+      - message
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntry:
+      anyOf:
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatch'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchAny'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryList'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryExists'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryNested'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchWildcard'
+      discriminator:
+        propertyName: type
     Security_Endpoint_Exceptions_API_ExceptionListItemExpireTime:
       description: The exception item’s expiration date, in ISO format. This field is only available for regular exception items, not endpoint exceptions.
       format: date-time
+      type: string
+    Security_Endpoint_Exceptions_API_ExceptionListItemMeta:
+      additionalProperties: true
+      type: object
+    Security_Endpoint_Exceptions_API_ExceptionListDescription:
+      description: Describes the exception list.
+      example: This list tracks allowlisted values.
+      type: string
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchWildcard:
+      type: object
+      properties:
+        field:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
+        operator:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryOperator'
+        type:
+          enum:
+          - wildcard
+          type: string
+        value:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
+      required:
+      - type
+      - field
+      - value
+      - operator
+    Security_Endpoint_Exceptions_API_ExceptionListItemType:
+      enum:
+      - simple
       type: string
     Security_Endpoint_Exceptions_API_ExceptionListItemName:
       description: Exception list name.
@@ -913,13 +977,28 @@ components:
         minLength: 1
         type: string
       type: array
-    Security_Endpoint_Exceptions_API_ExceptionListDescription:
-      description: Describes the exception list.
-      example: This list tracks allowlisted values.
-      type: string
-    Security_Endpoint_Exceptions_API_ExceptionListItemType:
-      enum:
-      - simple
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntryNested:
+      type: object
+      properties:
+        entries:
+          items:
+            $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryNestedEntryItem'
+          minItems: 1
+          type: array
+        field:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
+        type:
+          enum:
+          - nested
+          type: string
+      required:
+      - type
+      - field
+      - entries
+    Security_Endpoint_Exceptions_API_NonEmptyString:
+      description: A string that does not contain only whitespace characters
+      format: nonempty
+      minLength: 1
       type: string
     Security_Endpoint_Exceptions_API_ExceptionListItemComment:
       type: object
@@ -945,12 +1024,23 @@ components:
       - comment
       - created_at
       - created_by
-    Security_Endpoint_Exceptions_API_ExceptionListOsType:
-      description: Use this field to specify the operating system.
+    Security_Endpoint_Exceptions_API_ExceptionNamespaceType:
+      description: 'Determines whether the exception container is available in all Kibana spaces or just the space
+
+        in which it is created, where:
+
+
+        - `single`: Only available in the Kibana space in which it is created.
+
+        - `agnostic`: Available in all Kibana spaces.
+
+
+        For endpoint artifacts, the `namespace_type` must always be `agnostic`. Space awareness for endpoint artifacts is enforced based on Elastic Defend policy assignments.
+
+        '
       enum:
-      - linux
-      - macos
-      - windows
+      - agnostic
+      - single
       type: string
     Security_Endpoint_Exceptions_API_ListId:
       description: Value list's identifier.
@@ -958,83 +1048,15 @@ components:
       format: nonempty
       minLength: 1
       type: string
-    Security_Endpoint_Exceptions_API_ExceptionList:
-      type: object
-      properties:
-        _version:
-          description: The version id, normally returned by the API when the item was retrieved. Use it ensure updates are done against the latest version.
-          type: string
-        created_at:
-          description: Autogenerated date of object creation.
-          format: date-time
-          type: string
-        created_by:
-          description: Autogenerated value - user that created object.
-          type: string
-        description:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListDescription'
-        id:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListId'
-        immutable:
-          type: boolean
-        list_id:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListHumanId'
-        meta:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListMeta'
-        name:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListName'
-        namespace_type:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionNamespaceType'
-        os_types:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListOsTypeArray'
-        tags:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListTags'
-        tie_breaker_id:
-          description: Field used in search to ensure all containers are sorted and returned correctly.
-          type: string
-        type:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListType'
-        updated_at:
-          description: Autogenerated date of last object update.
-          format: date-time
-          type: string
-        updated_by:
-          description: Autogenerated value - user that last updated object.
-          type: string
-        version:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListVersion'
-      required:
-      - id
-      - list_id
-      - type
-      - name
-      - description
-      - immutable
-      - namespace_type
-      - version
-      - tie_breaker_id
-      - created_at
-      - created_by
-      - updated_at
-      - updated_by
-    Security_Endpoint_Exceptions_API_NonEmptyString:
-      description: A string that does not contain only whitespace characters
-      format: nonempty
-      minLength: 1
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntryOperator:
+      enum:
+      - excluded
+      - included
       type: string
-    Security_Endpoint_Exceptions_API_PlatformErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-        statusCode:
-          type: integer
-      required:
-      - statusCode
-      - error
-      - message
+    Security_Endpoint_Exceptions_API_ExceptionListName:
+      description: The name of the exception list.
+      example: My exception list
+      type: string
     Security_Endpoint_Exceptions_API_ExceptionListItem:
       type: object
       properties:
@@ -1099,96 +1121,6 @@ components:
       - created_by
       - updated_at
       - updated_by
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntryNestedEntryItem:
-      oneOf:
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatch'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchAny'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryExists'
-    Security_Endpoint_Exceptions_API_ExceptionListTags:
-      description: String array containing words and phrases to help categorize exception containers.
-      items:
-        type: string
-      type: array
-    Security_Endpoint_Exceptions_API_ExceptionListOsTypeArray:
-      description: Use this field to specify the operating system. Only enter one value.
-      items:
-        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListOsType'
-      type: array
-    Security_Endpoint_Exceptions_API_ExceptionListItemOsTypeArray:
-      items:
-        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListOsType'
-      type: array
-    Security_Endpoint_Exceptions_API_ExceptionListType:
-      description: The type of exception list to be created. Different list types may denote where they can be utilized.
-      enum:
-      - detection
-      - rule_default
-      - endpoint
-      - endpoint_trusted_apps
-      - endpoint_trusted_devices
-      - endpoint_events
-      - endpoint_host_isolation_exceptions
-      - endpoint_blocklists
-      - endpoint_custom_yara_signatures
-      type: string
-    Security_Endpoint_Exceptions_API_ExceptionNamespaceType:
-      description: 'Determines whether the exception container is available in all Kibana spaces or just the space
-
-        in which it is created, where:
-
-
-        - `single`: Only available in the Kibana space in which it is created.
-
-        - `agnostic`: Available in all Kibana spaces.
-
-
-        For endpoint artifacts, the `namespace_type` must always be `agnostic`. Space awareness for endpoint artifacts is enforced based on Elastic Defend policy assignments.
-
-        '
-      enum:
-      - agnostic
-      - single
-      type: string
-    Security_Endpoint_Exceptions_API_ExceptionListItemDescription:
-      description: Describes the exception list.
-      type: string
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntryArray:
-      items:
-        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntry'
-      type: array
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntry:
-      anyOf:
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatch'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchAny'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryList'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryExists'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryNested'
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchWildcard'
-      discriminator:
-        propertyName: type
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchWildcard:
-      type: object
-      properties:
-        field:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
-        operator:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryOperator'
-        type:
-          enum:
-          - wildcard
-          type: string
-        value:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
-      required:
-      - type
-      - field
-      - value
-      - operator
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntryOperator:
-      enum:
-      - excluded
-      - included
-      type: string
     Security_Endpoint_Exceptions_API_ListType:
       description: 'Specifies the Elasticsearch data type of excludes the list container holds. Some common examples:
 
@@ -1225,29 +1157,54 @@ components:
       - short
       - text
       type: string
-    Security_Endpoint_Exceptions_API_EndpointList:
-      oneOf:
-      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionList'
-      - additionalProperties: false
-        type: object
-    Security_Endpoint_Exceptions_API_ExceptionListVersion:
-      description: The document version, automatically increasd on updates.
-      minimum: 1
-      type: integer
-    Security_Endpoint_Exceptions_API_SiemErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        status_code:
-          type: integer
-      required:
-      - status_code
-      - message
-    Security_Endpoint_Exceptions_API_ExceptionListName:
-      description: The name of the exception list.
-      example: My exception list
+    Security_Endpoint_Exceptions_API_ExceptionListHumanId:
+      description: 'The exception list''s human-readable string identifier.
+
+
+        For endpoint artifacts, use one of the following values:
+
+
+        * `endpoint_list`: Elastic Endpoint exceptions list
+
+        * `endpoint_trusted_apps`: Trusted applications list
+
+        * `endpoint_trusted_devices`: Trusted devices list
+
+        * `endpoint_event_filters`: Event filters list
+
+        * `endpoint_host_isolation_exceptions`: Host isolation exceptions list
+
+        * `endpoint_blocklists`: Blocklist
+
+        '
+      example: simple_list
+      format: nonempty
+      minLength: 1
       type: string
+    Security_Endpoint_Exceptions_API_ExceptionListItemOsTypeArray:
+      items:
+        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListOsType'
+      type: array
+    Security_Endpoint_Exceptions_API_ExceptionListOsTypeArray:
+      description: Use this field to specify the operating system. Only enter one value.
+      items:
+        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListOsType'
+      type: array
+    Security_Endpoint_Exceptions_API_ExceptionListTags:
+      description: String array containing words and phrases to help categorize exception containers.
+      items:
+        type: string
+      type: array
+    Security_Endpoint_Exceptions_API_ExceptionListItemCommentArray:
+      description: 'Array of comment fields:
+
+
+        - comment (string): Comments about the exception item.
+
+        '
+      items:
+        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemComment'
+      type: array
     Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchAny:
       type: object
       properties:
@@ -1269,9 +1226,125 @@ components:
       - field
       - value
       - operator
-    Security_Endpoint_Exceptions_API_ExceptionListItemMeta:
-      additionalProperties: true
+    Security_Endpoint_Exceptions_API_ExceptionListVersion:
+      description: The document version, automatically increasd on updates.
+      minimum: 1
+      type: integer
+    Security_Endpoint_Exceptions_API_EndpointList:
+      oneOf:
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionList'
+      - additionalProperties: false
+        type: object
+    Security_Endpoint_Exceptions_API_ExceptionListId:
+      description: Exception list's identifier.
+      example: 9e5fc75a-a3da-46c5-96e3-a2ec59c6bb85
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Endpoint_Exceptions_API_ExceptionListItemId:
+      description: Exception's identifier.
+      example: 71a9f4b2-c85c-49b4-866f-c71eb9e67da2
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Endpoint_Exceptions_API_PlatformErrorResponse:
       type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        statusCode:
+          type: integer
+      required:
+      - statusCode
+      - error
+      - message
+    Security_Endpoint_Exceptions_API_ExceptionList:
+      type: object
+      properties:
+        _version:
+          description: The version id, normally returned by the API when the item was retrieved. Use it ensure updates are done against the latest version.
+          type: string
+        created_at:
+          description: Autogenerated date of object creation.
+          format: date-time
+          type: string
+        created_by:
+          description: Autogenerated value - user that created object.
+          type: string
+        description:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListDescription'
+        id:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListId'
+        immutable:
+          type: boolean
+        list_id:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListHumanId'
+        meta:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListMeta'
+        name:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListName'
+        namespace_type:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionNamespaceType'
+        os_types:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListOsTypeArray'
+        tags:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListTags'
+        tie_breaker_id:
+          description: Field used in search to ensure all containers are sorted and returned correctly.
+          type: string
+        type:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListType'
+        updated_at:
+          description: Autogenerated date of last object update.
+          format: date-time
+          type: string
+        updated_by:
+          description: Autogenerated value - user that last updated object.
+          type: string
+        version:
+          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListVersion'
+      required:
+      - id
+      - list_id
+      - type
+      - name
+      - description
+      - immutable
+      - namespace_type
+      - version
+      - tie_breaker_id
+      - created_at
+      - created_by
+      - updated_at
+      - updated_by
+    Security_Endpoint_Exceptions_API_ExceptionListItemHumanId:
+      description: Human readable string identifier, e.g. `trusted-linux-processes`
+      example: simple_list_item
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Endpoint_Exceptions_API_ExceptionListMeta:
+      additionalProperties: true
+      description: Placeholder for metadata about the list container.
+      type: object
+    Security_Endpoint_Exceptions_API_ExceptionListType:
+      description: The type of exception list to be created. Different list types may denote where they can be utilized.
+      enum:
+      - detection
+      - rule_default
+      - endpoint
+      - endpoint_trusted_apps
+      - endpoint_trusted_devices
+      - endpoint_events
+      - endpoint_host_isolation_exceptions
+      - endpoint_blocklists
+      - endpoint_custom_yara_signatures
+      type: string
+    Security_Endpoint_Exceptions_API_ExceptionListItemDescription:
+      description: Describes the exception list.
+      type: string
     Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatch:
       type: object
       properties:
@@ -1290,18 +1363,6 @@ components:
       - field
       - value
       - operator
-    Security_Endpoint_Exceptions_API_ExceptionListItemId:
-      description: Exception's identifier.
-      example: 71a9f4b2-c85c-49b4-866f-c71eb9e67da2
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Endpoint_Exceptions_API_ExceptionListItemHumanId:
-      description: Human readable string identifier, e.g. `trusted-linux-processes`
-      example: simple_list_item
-      format: nonempty
-      minLength: 1
-      type: string
     Security_Endpoint_Exceptions_API_ExceptionListItemEntryList:
       type: object
       properties:
@@ -1328,83 +1389,22 @@ components:
       - field
       - list
       - operator
-    Security_Endpoint_Exceptions_API_ExceptionListMeta:
-      additionalProperties: true
-      description: Placeholder for metadata about the list container.
-      type: object
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntryExists:
-      type: object
-      properties:
-        field:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
-        operator:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryOperator'
-        type:
-          enum:
-          - exists
-          type: string
-      required:
-      - type
-      - field
-      - operator
-    Security_Endpoint_Exceptions_API_ExceptionListId:
-      description: Exception list's identifier.
-      example: 9e5fc75a-a3da-46c5-96e3-a2ec59c6bb85
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Endpoint_Exceptions_API_ExceptionListItemCommentArray:
-      description: 'Array of comment fields:
-
-
-        - comment (string): Comments about the exception item.
-
-        '
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntryArray:
       items:
-        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemComment'
+        $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntry'
       type: array
-    Security_Endpoint_Exceptions_API_ExceptionListHumanId:
-      description: 'The exception list''s human-readable string identifier.
-
-
-        For endpoint artifacts, use one of the following values:
-
-
-        * `endpoint_list`: Elastic Endpoint exceptions list
-
-        * `endpoint_trusted_apps`: Trusted applications list
-
-        * `endpoint_trusted_devices`: Trusted devices list
-
-        * `endpoint_event_filters`: Event filters list
-
-        * `endpoint_host_isolation_exceptions`: Host isolation exceptions list
-
-        * `endpoint_blocklists`: Blocklist
-
-        '
-      example: simple_list
-      format: nonempty
-      minLength: 1
+    Security_Endpoint_Exceptions_API_ExceptionListItemEntryNestedEntryItem:
+      oneOf:
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatch'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryMatchAny'
+      - $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryExists'
+    Security_Endpoint_Exceptions_API_ExceptionListOsType:
+      description: Use this field to specify the operating system.
+      enum:
+      - linux
+      - macos
+      - windows
       type: string
-    Security_Endpoint_Exceptions_API_ExceptionListItemEntryNested:
-      type: object
-      properties:
-        entries:
-          items:
-            $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_ExceptionListItemEntryNestedEntryItem'
-          minItems: 1
-          type: array
-        field:
-          $ref: '#/components/schemas/Security_Endpoint_Exceptions_API_NonEmptyString'
-        type:
-          enum:
-          - nested
-          type: string
-      required:
-      - type
-      - field
-      - entries
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

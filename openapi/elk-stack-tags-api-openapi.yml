@@ -460,6 +460,26 @@ paths:
         name: product_name
 components:
   schemas:
+    Kibana_HTTP_APIs_kbn-tags-request-attributes:
+      additionalProperties: false
+      type: object
+      properties:
+        color:
+          description: The tag color as a hex value (e.g. `#772299`). If omitted, a random color is generated.
+          maxLength: 256
+          minLength: 1
+          type: string
+        description:
+          description: Optional description of the tag.
+          maxLength: 2048
+          type: string
+        name:
+          description: The display name of the tag.
+          maxLength: 256
+          minLength: 1
+          type: string
+      required:
+      - name
     Kibana_HTTP_APIs_kbn-as-code-meta:
       additionalProperties: false
       type: object
@@ -485,26 +505,6 @@ components:
         version:
           description: Internal version identifier for optimistic concurrency control.
           type: string
-    Kibana_HTTP_APIs_kbn-tags-request-attributes:
-      additionalProperties: false
-      type: object
-      properties:
-        color:
-          description: The tag color as a hex value (e.g. `#772299`). If omitted, a random color is generated.
-          maxLength: 256
-          minLength: 1
-          type: string
-        description:
-          description: Optional description of the tag.
-          maxLength: 2048
-          type: string
-        name:
-          description: The display name of the tag.
-          maxLength: 256
-          minLength: 1
-          type: string
-      required:
-      - name
     Kibana_HTTP_APIs_kbn-tags-attributes:
       additionalProperties: false
       type: object

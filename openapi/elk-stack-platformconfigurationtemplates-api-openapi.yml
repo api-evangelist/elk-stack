@@ -39,30 +39,6 @@ components:
   schemas:
     EmptyResponse:
       type: object
-    GlobalDeploymentTemplateRegion:
-      type: object
-      required:
-      - deployment_template_id
-      - region_id
-      - versions
-      properties:
-        region_id:
-          type: string
-          description: The region identifier.
-        deployment_template_id:
-          type: string
-          description: The (region-specific) ID of the deployment template.
-        versions:
-          type: array
-          description: Versions supported in this region.
-          items:
-            type: string
-        kibana_deeplink:
-          type: array
-          description: The Kibana Deeplink for this type of deployment.
-          items:
-            $ref: '#/components/schemas/KibanaDeeplink'
-      description: Region-specific details about a template.
     KibanaDeeplink:
       type: object
       required:
@@ -76,19 +52,6 @@ components:
           type: string
           description: URI to which the user should be directed.
       description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
-    MetadataItem:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-          description: The metadata field name
-        value:
-          type: string
-          description: The metadata value
-      description: The key-value pair.
     GlobalDeploymentTemplateInfo:
       type: object
       required:
@@ -121,6 +84,43 @@ components:
           items:
             $ref: '#/components/schemas/GlobalDeploymentTemplateRegion'
       description: The top-level model for global (regionless) templates.
+    MetadataItem:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The metadata field name
+        value:
+          type: string
+          description: The metadata value
+      description: The key-value pair.
+    GlobalDeploymentTemplateRegion:
+      type: object
+      required:
+      - deployment_template_id
+      - region_id
+      - versions
+      properties:
+        region_id:
+          type: string
+          description: The region identifier.
+        deployment_template_id:
+          type: string
+          description: The (region-specific) ID of the deployment template.
+        versions:
+          type: array
+          description: Versions supported in this region.
+          items:
+            type: string
+        kibana_deeplink:
+          type: array
+          description: The Kibana Deeplink for this type of deployment.
+          items:
+            $ref: '#/components/schemas/KibanaDeeplink'
+      description: Region-specific details about a template.
   securitySchemes:
     apiKey:
       type: apiKey

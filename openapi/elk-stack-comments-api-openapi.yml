@@ -387,71 +387,31 @@ paths:
         tag: Comments
 components:
   schemas:
-    CommentCreateRequest:
+    CommentWithMeta:
       type: object
       required:
-      - message
+      - comment
+      - metadata
       properties:
-        message:
-          type: string
-          description: The message for the Comment.
-      description: A request for creating a new Comment
-    CommentUpdateRequest:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: The message for the Comment.
-      description: A request for updating an existing Comment
+        comment:
+          description: The comment
+          $ref: '#/components/schemas/Comment'
+        metadata:
+          description: The metadata
+          $ref: '#/components/schemas/Metadata'
+      description: A persisted Comment along with its metadata
     EmptyResponse:
       type: object
-    CommentsWithMetas:
+    BasicFailedReply:
       type: object
       required:
-      - values
+      - errors
       properties:
-        values:
+        errors:
           type: array
-          description: The list of comments
+          description: A list of errors that occurred in the failing request
           items:
-            $ref: '#/components/schemas/CommentWithMeta'
-      description: A list of persisted Comments
-    Comment:
-      type: object
-      required:
-      - id
-      - message
-      - user_id
-      properties:
-        id:
-          type: string
-          description: The id of this Comment
-        user_id:
-          type: string
-          description: The user id of the user who wrote this Comment
-        message:
-          type: string
-          description: The message content of this Comment
-      description: A persisted Comment
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     Metadata:
       type: object
       required:
@@ -471,29 +431,69 @@ components:
           type: string
           description: Version
       description: Metadata of an entity
-    CommentWithMeta:
+    BasicFailedReplyElement:
       type: object
       required:
-      - comment
-      - metadata
+      - code
+      - message
       properties:
-        comment:
-          description: The comment
-          $ref: '#/components/schemas/Comment'
-        metadata:
-          description: The metadata
-          $ref: '#/components/schemas/Metadata'
-      description: A persisted Comment along with its metadata
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: A list of errors that occurred in the failing request
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
+            type: string
+    Comment:
+      type: object
+      required:
+      - id
+      - message
+      - user_id
+      properties:
+        id:
+          type: string
+          description: The id of this Comment
+        user_id:
+          type: string
+          description: The user id of the user who wrote this Comment
+        message:
+          type: string
+          description: The message content of this Comment
+      description: A persisted Comment
+    CommentCreateRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: The message for the Comment.
+      description: A request for creating a new Comment
+    CommentsWithMetas:
+      type: object
+      required:
+      - values
+      properties:
+        values:
+          type: array
+          description: The list of comments
+          items:
+            $ref: '#/components/schemas/CommentWithMeta'
+      description: A list of persisted Comments
+    CommentUpdateRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: The message for the Comment.
+      description: A request for updating an existing Comment
   securitySchemes:
     apiKey:
       type: apiKey

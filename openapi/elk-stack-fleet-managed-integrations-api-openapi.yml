@@ -1390,7 +1390,7 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_bulk_upgrade_managed_integration_result:
+    Kibana_HTTP_APIs_managed_integration_upgrade_dry_run_result:
       additionalProperties: false
       properties:
         body:
@@ -1398,11 +1398,32 @@ components:
           type: object
           properties:
             message:
-              description: Error message when the upgrade failed for this policy.
+              description: Error message when the dry-run failed for this policy.
               maxLength: 4096
               type: string
           required:
           - message
+        currentVersion:
+          description: The current installed package version of the policy.
+          maxLength: 256
+          type: string
+        errors:
+          description: Migration errors encountered while computing the upgrade.
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              message:
+                description: Human-readable migration error.
+                maxLength: 4096
+                type: string
+            required:
+            - message
+          maxItems: 1000
+          type: array
+        hasErrors:
+          description: Whether the dry-run migration produced any errors.
+          type: boolean
         id:
           description: The ID of the managed integration.
           maxLength: 256
@@ -1411,16 +1432,180 @@ components:
           description: The name of the managed integration.
           maxLength: 256
           type: string
+        proposedPolicy:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
+        proposedVersion:
+          description: The package version the policy would be upgraded to.
+          maxLength: 256
+          type: string
         statusCode:
-          description: HTTP-like status code when the upgrade failed for this policy.
+          description: HTTP-like status code when the dry-run failed for this policy.
           type: number
-        success:
-          description: Whether the policy's saved object was upgraded successfully. The live workload is reconciled asynchronously in the background.
-          type: boolean
       required:
       - id
-      - success
-      title: bulk_upgrade_managed_integration_result
+      - hasErrors
+      title: managed_integration_upgrade_dry_run_result
+      type: object
+    Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: simplified_package_policy_input_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_managed_integration_package:
+      additionalProperties: false
+      properties:
+        name:
+          description: Integration package name.
+          maxLength: 255
+          type: string
+        title:
+          description: Integration package display title.
+          maxLength: 255
+          type: string
+        version:
+          description: Integration package version.
+          maxLength: 50
+          type: string
+      required:
+      - name
+      - title
+      - version
+      title: managed_integration_package
+      type: object
+    Kibana_HTTP_APIs_managed_integration_upgrade_dry_run_request:
+      additionalProperties: false
+      properties:
+        pkgVersion:
+          description: Target package version to preview the upgrade against. Defaults to the installed package version.
+          maxLength: 256
+          type: string
+        policyIds:
+          description: IDs of the managed integrations to preview upgrading.
+          items:
+            maxLength: 256
+            type: string
+          maxItems: 1000
+          type: array
+      required:
+      - policyIds
+      title: managed_integration_upgrade_dry_run_request
+      type: object
+    Kibana_HTTP_APIs_package_policy_package:
+      additionalProperties: false
+      properties:
+        experimental_data_stream_features:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              data_stream:
+                maxLength: 1024
+                type: string
+              features:
+                additionalProperties: false
+                type: object
+                properties:
+                  doc_value_only_numeric:
+                    type: boolean
+                  doc_value_only_other:
+                    type: boolean
+                  synthetic_source:
+                    type: boolean
+                  tsdb:
+                    type: boolean
+            required:
+            - data_stream
+            - features
+          maxItems: 100
+          type: array
+        fips_compatible:
+          type: boolean
+        name:
+          description: Package name
+          maxLength: 255
+          type: string
+        requires_root:
+          type: boolean
+        title:
+          maxLength: 255
+          type: string
+        version:
+          description: Package version
+          maxLength: 50
+          type: string
+      required:
+      - name
+      - version
+      title: package_policy_package
+      type: object
+    Kibana_HTTP_APIs_managed_integration_response:
+      additionalProperties: false
+      properties:
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
+      required:
+      - item
+      title: managed_integration_response
+      type: object
+    Kibana_HTTP_APIs_bulk_upgrade_managed_integrations_request:
+      additionalProperties: false
+      properties:
+        policyIds:
+          description: IDs of the managed integrations to upgrade to their installed package version.
+          items:
+            maxLength: 256
+            type: string
+          maxItems: 1000
+          type: array
+      required:
+      - policyIds
+      title: bulk_upgrade_managed_integrations_request
+      type: object
+    Kibana_HTTP_APIs_managed_integration_cloud_connector:
+      additionalProperties: false
+      properties:
+        cloud_connector_id:
+          description: The ID of the cloud connector.
+          maxLength: 255
+          type: string
+        enabled:
+          description: Whether the cloud connector is active for this policy.
+          type: boolean
+      required:
+      - enabled
+      - cloud_connector_id
+      title: managed_integration_cloud_connector
+      type: object
+    Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: simplified_package_policy_stream_deprecation_info
       type: object
     Kibana_HTTP_APIs_managed_integration:
       additionalProperties: false
@@ -1638,62 +1823,6 @@ components:
       - updated_at
       - updated_by
       title: managed_integration
-      type: object
-    Kibana_HTTP_APIs_managed_integration_upgrade_dry_run_result:
-      additionalProperties: false
-      properties:
-        body:
-          additionalProperties: false
-          type: object
-          properties:
-            message:
-              description: Error message when the dry-run failed for this policy.
-              maxLength: 4096
-              type: string
-          required:
-          - message
-        currentVersion:
-          description: The current installed package version of the policy.
-          maxLength: 256
-          type: string
-        errors:
-          description: Migration errors encountered while computing the upgrade.
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              message:
-                description: Human-readable migration error.
-                maxLength: 4096
-                type: string
-            required:
-            - message
-          maxItems: 1000
-          type: array
-        hasErrors:
-          description: Whether the dry-run migration produced any errors.
-          type: boolean
-        id:
-          description: The ID of the managed integration.
-          maxLength: 256
-          type: string
-        name:
-          description: The name of the managed integration.
-          maxLength: 256
-          type: string
-        proposedPolicy:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
-        proposedVersion:
-          description: The package version the policy would be upgraded to.
-          maxLength: 256
-          type: string
-        statusCode:
-          description: HTTP-like status code when the dry-run failed for this policy.
-          type: number
-      required:
-      - id
-      - hasErrors
-      title: managed_integration_upgrade_dry_run_result
       type: object
     Kibana_HTTP_APIs_create_managed_integration_request:
       additionalProperties: false
@@ -1924,166 +2053,37 @@ components:
       - package
       title: create_managed_integration_request
       type: object
-    Kibana_HTTP_APIs_managed_integration_response:
+    Kibana_HTTP_APIs_bulk_upgrade_managed_integration_result:
       additionalProperties: false
       properties:
-        item:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
-      required:
-      - item
-      title: managed_integration_response
-      type: object
-    Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info:
-      additionalProperties: false
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
+        body:
+          additionalProperties: false
           type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: simplified_package_policy_input_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_managed_integration_upgrade_dry_run_request:
-      additionalProperties: false
-      properties:
-        pkgVersion:
-          description: Target package version to preview the upgrade against. Defaults to the installed package version.
+          properties:
+            message:
+              description: Error message when the upgrade failed for this policy.
+              maxLength: 4096
+              type: string
+          required:
+          - message
+        id:
+          description: The ID of the managed integration.
           maxLength: 256
           type: string
-        policyIds:
-          description: IDs of the managed integrations to preview upgrading.
-          items:
-            maxLength: 256
-            type: string
-          maxItems: 1000
-          type: array
-      required:
-      - policyIds
-      title: managed_integration_upgrade_dry_run_request
-      type: object
-    Kibana_HTTP_APIs_package_policy_package:
-      additionalProperties: false
-      properties:
-        experimental_data_stream_features:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              data_stream:
-                maxLength: 1024
-                type: string
-              features:
-                additionalProperties: false
-                type: object
-                properties:
-                  doc_value_only_numeric:
-                    type: boolean
-                  doc_value_only_other:
-                    type: boolean
-                  synthetic_source:
-                    type: boolean
-                  tsdb:
-                    type: boolean
-            required:
-            - data_stream
-            - features
-          maxItems: 100
-          type: array
-        fips_compatible:
-          type: boolean
         name:
-          description: Package name
-          maxLength: 255
+          description: The name of the managed integration.
+          maxLength: 256
           type: string
-        requires_root:
-          type: boolean
-        title:
-          maxLength: 255
-          type: string
-        version:
-          description: Package version
-          maxLength: 50
-          type: string
-      required:
-      - name
-      - version
-      title: package_policy_package
-      type: object
-    Kibana_HTTP_APIs_bulk_upgrade_managed_integrations_request:
-      additionalProperties: false
-      properties:
-        policyIds:
-          description: IDs of the managed integrations to upgrade to their installed package version.
-          items:
-            maxLength: 256
-            type: string
-          maxItems: 1000
-          type: array
-      required:
-      - policyIds
-      title: bulk_upgrade_managed_integrations_request
-      type: object
-    Kibana_HTTP_APIs_managed_integration_cloud_connector:
-      additionalProperties: false
-      properties:
-        cloud_connector_id:
-          description: The ID of the cloud connector.
-          maxLength: 255
-          type: string
-        enabled:
-          description: Whether the cloud connector is active for this policy.
+        statusCode:
+          description: HTTP-like status code when the upgrade failed for this policy.
+          type: number
+        success:
+          description: Whether the policy's saved object was upgraded successfully. The live workload is reconciled asynchronously in the background.
           type: boolean
       required:
-      - enabled
-      - cloud_connector_id
-      title: managed_integration_cloud_connector
-      type: object
-    Kibana_HTTP_APIs_managed_integration_package:
-      additionalProperties: false
-      properties:
-        name:
-          description: Integration package name.
-          maxLength: 255
-          type: string
-        title:
-          description: Integration package display title.
-          maxLength: 255
-          type: string
-        version:
-          description: Integration package version.
-          maxLength: 50
-          type: string
-      required:
-      - name
-      - title
-      - version
-      title: managed_integration_package
-      type: object
-    Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info:
-      additionalProperties: false
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: simplified_package_policy_stream_deprecation_info
+      - id
+      - success
+      title: bulk_upgrade_managed_integration_result
       type: object
   securitySchemes:
     apiKeyAuth:

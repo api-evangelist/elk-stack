@@ -366,6 +366,18 @@ paths:
         required: true
 components:
   schemas:
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
     UserMetadata:
       type: object
       properties:
@@ -392,19 +404,44 @@ components:
           format: date-time
           description: The date and time when the user last logged in
       description: Metadata for a user
-    UserList:
+    User:
       type: object
       required:
-      - users
+      - security
+      - user_name
       properties:
-        users:
-          type: array
-          description: A list of users
-          items:
-            $ref: '#/components/schemas/User'
-      description: A collection of users
-    EmptyResponse:
+        user_name:
+          type: string
+          description: The user's identifier
+        security:
+          description: The user's security information
+          $ref: '#/components/schemas/UserSecurity'
+        metadata:
+          description: The users metadata
+          $ref: '#/components/schemas/UserMetadata'
+        full_name:
+          type: string
+          description: The user's optional full name
+        email:
+          type: string
+          description: The user's optional email address
+        builtin:
+          type: boolean
+          description: True if the user is a built-in read-only user
+      description: An API user
+    ElevatedPermissions:
       type: object
+      required:
+      - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: True if the user has elevated permissions
+        expires_at:
+          type: string
+          format: date-time
+          description: The time at which the user's elevated permissions expire
+      description: A user's elevated permissions status
     BasicFailedReplyElement:
       type: object
       required:
@@ -422,6 +459,35 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
+    UserSecurityRealm:
+      type: object
+      required:
+      - id
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of the security realm
+          enum:
+          - native
+          - ldap
+          - saml
+          - active_directory
+        id:
+          type: string
+          description: The identifier for the security realm
+      description: The security realm the user belongs to
+    UserList:
+      type: object
+      required:
+      - users
+      properties:
+        users:
+          type: array
+          description: A list of users
+          items:
+            $ref: '#/components/schemas/User'
+      description: A collection of users
     UserSecurity:
       type: object
       properties:
@@ -448,72 +514,6 @@ components:
           description: The user's security realm
           $ref: '#/components/schemas/UserSecurityRealm'
       description: A user's security information
-    User:
-      type: object
-      required:
-      - security
-      - user_name
-      properties:
-        user_name:
-          type: string
-          description: The user's identifier
-        security:
-          description: The user's security information
-          $ref: '#/components/schemas/UserSecurity'
-        metadata:
-          description: The users metadata
-          $ref: '#/components/schemas/UserMetadata'
-        full_name:
-          type: string
-          description: The user's optional full name
-        email:
-          type: string
-          description: The user's optional email address
-        builtin:
-          type: boolean
-          description: True if the user is a built-in read-only user
-      description: An API user
-    UserSecurityRealm:
-      type: object
-      required:
-      - id
-      - type
-      properties:
-        type:
-          type: string
-          description: The type of the security realm
-          enum:
-          - native
-          - ldap
-          - saml
-          - active_directory
-        id:
-          type: string
-          description: The identifier for the security realm
-      description: The security realm the user belongs to
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    ElevatedPermissions:
-      type: object
-      required:
-      - enabled
-      properties:
-        enabled:
-          type: boolean
-          description: True if the user has elevated permissions
-        expires_at:
-          type: string
-          format: date-time
-          description: The time at which the user's elevated permissions expire
-      description: A user's elevated permissions status
   securitySchemes:
     apiKey:
       type: apiKey

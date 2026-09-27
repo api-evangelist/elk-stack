@@ -298,108 +298,101 @@ paths:
       - content: Kibana
         name: product_name
 components:
-  schemas:
-    APM_UI_upload_source_maps_response:
-      allOf:
-      - type: object
-        properties:
-          body:
-            type: string
-      - $ref: '#/components/schemas/APM_UI_base_source_map_object'
-    APM_UI_upload_source_map_object:
-      type: object
-      properties:
-        bundle_filepath:
-          description: The absolute path of the final bundle as used in the web application.
-          type: string
-        service_name:
-          description: The name of the service that the service map should apply to.
-          type: string
-        service_version:
-          description: The version of the service that the service map should apply to.
-          type: string
-        sourcemap:
-          description: 'The source map. It can be a string or file upload. It must follow the
-
-            [source map format specification](https://tc39.es/ecma426/).
-
-            '
-          format: binary
-          type: string
-      required:
-      - service_name
-      - service_version
-      - bundle_filepath
-      - sourcemap
-    APM_UI_501_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Not Implemented
-          type: string
-        message:
-          description: Error message
-          example: Not Implemented
-          type: string
-        statusCode:
-          description: Error status code
-          example: 501
-          type: number
-    APM_UI_source_maps_response:
-      type: object
-      properties:
+  examples:
+    APM_UI_source_maps_get_200_response1:
+      description: A successful response from `GET /api/apm/sourcemaps`.
+      value:
         artifacts:
-          description: Artifacts
-          items:
-            allOf:
-            - type: object
-              properties:
-                body:
-                  type: object
-                  properties:
-                    bundleFilepath:
-                      type: string
-                    serviceName:
-                      type: string
-                    serviceVersion:
-                      type: string
-                    sourceMap:
-                      type: object
-                      properties:
-                        file:
-                          type: string
-                        mappings:
-                          type: string
-                        sourceRoot:
-                          type: string
-                        sources:
-                          items:
-                            type: string
-                          type: array
-                        sourcesContent:
-                          items:
-                            type: string
-                          type: array
-                        version:
-                          type: number
-            - $ref: '#/components/schemas/APM_UI_base_source_map_object'
-          type: array
-    APM_UI_400_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Not Found
-          type: string
-        message:
-          description: Error message
-          example: Not Found
-          type: string
-        statusCode:
-          description: Error status code
-          example: 400
-          type: number
+        - body:
+            bundleFilepath: /test/e2e/general-usecase/bundle.js
+            serviceName: foo
+            serviceVersion: 1.0.0
+            sourceMap:
+              file: static/js/main.chunk.js
+              mappings: mapping
+              sourceRoot: ''
+              sources:
+              - fleet-source-map-client/src/index.css
+              - fleet-source-map-client/src/App.js
+              - webpack:///./src/index.css?bb0a
+              - fleet-source-map-client/src/index.js
+              - fleet-source-map-client/src/reportWebVitals.js
+              sourcesContent:
+              - content
+              version: 3
+          compressionAlgorithm: zlib
+          created: '2021-07-09T20:47:44.812Z'
+          decodedSha256: 644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+          decodedSize: 441
+          encodedSha256: 024c72749c3e3dd411b103f7040ae62633558608f480bce4b108cf5b2275bd24
+          encodedSize: 237
+          encryptionAlgorithm: none
+          id: apm:foo-1.0.0-644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+          identifier: foo-1.0.0
+          packageName: apm
+          relative_url: /api/fleet/artifacts/foo-1.0.0/644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+          type: sourcemap
+    APM_UI_error_501_response:
+      description: An example of a 501 Not Implemented response, returned when the source map feature is not available on the current deployment.
+      value:
+        error: Not Implemented
+        message: Not Implemented
+        statusCode: 501
+    APM_UI_error_400_response:
+      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
+      value:
+        error: Bad Request
+        message: '[request body]: expected value of type [string] but got [undefined]'
+        statusCode: 400
+    APM_UI_source_maps_delete_200_response1:
+      description: An example of a successful response from `DELETE /api/apm/sourcemaps/{id}`. The response body is intentionally empty.
+      value: {}
+    APM_UI_error_500_response:
+      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
+      value:
+        error: Internal Server Error
+        message: An internal server error occurred. Check the Kibana server logs for details.
+        statusCode: 500
+    APM_UI_source_maps_upload_200_response1:
+      description: A successful response from `POST /api/apm/sourcemaps`.
+      value:
+        body: eJyFkL1OwzAUhd/Fc+MbYMuCEBIbHRjKgBgc96R16tiWr1OQqr47NwqJxEK3q/PzWccXxchnZ7E1A1SjuhjVZtF2yOxiEPlO17oWox3D3uPFeSRTjmJQARfCPeiAgGx8NTKsYdAc1T3rwaSJGcds8Sp3c1HnhfywUZ3QhMTFFGepZxqMC9oex3CS9tpk1XyozgOlmoVKuJX1DqEQZ0su7PGtLU+V/3JPKc3cL7TJ2FNDRPov4bFta3MDM4f7W69lpJjLO9qdK8bzVPhcJz3HUCQ4LbO/p5hCSC4cZPByrp/wFqOklbpefwAhzpqI
+        compressionAlgorithm: zlib
+        created: '2021-07-09T20:47:44.812Z'
+        decodedSha256: 644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+        decodedSize: 441
+        encodedSha256: 024c72749c3e3dd411b103f7040ae62633558608f480bce4b108cf5b2275bd24
+        encodedSize: 237
+        encryptionAlgorithm: none
+        id: apm:foo-1.0.0-644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+        identifier: foo-1.0.0
+        packageName: apm
+        relative_url: /api/fleet/artifacts/foo-1.0.0/644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
+        type: sourcemap
+    APM_UI_error_403_response:
+      description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
+      value:
+        error: Forbidden
+        message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
+        statusCode: 403
+    APM_UI_source_maps_upload_request1:
+      description: 'An example of a multipart/form-data request body for `POST /api/apm/sourcemaps`.
+
+        Each field is a separate form part; `sourcemap` is the source map file content (typically uploaded as a file).
+
+        '
+      value:
+        bundle_filepath: /test/e2e/general-usecase/bundle.js.map
+        service_name: opbeans-node
+        service_version: 1.0.0
+        sourcemap: '{"version":3,"sources":["bundle.js"],"names":[],"mappings":"AAAA","file":"bundle.js","sourcesContent":["console.log(''hello'');"]}'
+    APM_UI_error_401_response:
+      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
+      value:
+        error: Unauthorized
+        message: '[security_exception]: missing authentication credentials for REST request'
+        statusCode: 401
+  schemas:
     APM_UI_500_response:
       type: object
       properties:
@@ -414,19 +407,20 @@ components:
           description: Error status code
           example: 500
           type: number
-    APM_UI_403_response:
+    APM_UI_501_response:
       type: object
       properties:
         error:
           description: Error type
-          example: Forbidden
+          example: Not Implemented
           type: string
         message:
           description: Error message
+          example: Not Implemented
           type: string
         statusCode:
           description: Error status code
-          example: 403
+          example: 501
           type: number
     APM_UI_base_source_map_object:
       type: object
@@ -467,6 +461,13 @@ components:
         type:
           description: Type
           type: string
+    APM_UI_upload_source_maps_response:
+      allOf:
+      - type: object
+        properties:
+          body:
+            type: string
+      - $ref: '#/components/schemas/APM_UI_base_source_map_object'
     APM_UI_401_response:
       type: object
       properties:
@@ -481,100 +482,99 @@ components:
           description: Error status code
           example: 401
           type: number
-  examples:
-    APM_UI_source_maps_get_200_response1:
-      description: A successful response from `GET /api/apm/sourcemaps`.
-      value:
+    APM_UI_403_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Forbidden
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 403
+          type: number
+    APM_UI_400_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Found
+          type: string
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 400
+          type: number
+    APM_UI_upload_source_map_object:
+      type: object
+      properties:
+        bundle_filepath:
+          description: The absolute path of the final bundle as used in the web application.
+          type: string
+        service_name:
+          description: The name of the service that the service map should apply to.
+          type: string
+        service_version:
+          description: The version of the service that the service map should apply to.
+          type: string
+        sourcemap:
+          description: 'The source map. It can be a string or file upload. It must follow the
+
+            [source map format specification](https://tc39.es/ecma426/).
+
+            '
+          format: binary
+          type: string
+      required:
+      - service_name
+      - service_version
+      - bundle_filepath
+      - sourcemap
+    APM_UI_source_maps_response:
+      type: object
+      properties:
         artifacts:
-        - body:
-            bundleFilepath: /test/e2e/general-usecase/bundle.js
-            serviceName: foo
-            serviceVersion: 1.0.0
-            sourceMap:
-              file: static/js/main.chunk.js
-              mappings: mapping
-              sourceRoot: ''
-              sources:
-              - fleet-source-map-client/src/index.css
-              - fleet-source-map-client/src/App.js
-              - webpack:///./src/index.css?bb0a
-              - fleet-source-map-client/src/index.js
-              - fleet-source-map-client/src/reportWebVitals.js
-              sourcesContent:
-              - content
-              version: 3
-          compressionAlgorithm: zlib
-          created: '2021-07-09T20:47:44.812Z'
-          decodedSha256: 644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
-          decodedSize: 441
-          encodedSha256: 024c72749c3e3dd411b103f7040ae62633558608f480bce4b108cf5b2275bd24
-          encodedSize: 237
-          encryptionAlgorithm: none
-          id: apm:foo-1.0.0-644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
-          identifier: foo-1.0.0
-          packageName: apm
-          relative_url: /api/fleet/artifacts/foo-1.0.0/644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
-          type: sourcemap
-    APM_UI_source_maps_delete_200_response1:
-      description: An example of a successful response from `DELETE /api/apm/sourcemaps/{id}`. The response body is intentionally empty.
-      value: {}
-    APM_UI_error_500_response:
-      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
-      value:
-        error: Internal Server Error
-        message: An internal server error occurred. Check the Kibana server logs for details.
-        statusCode: 500
-    APM_UI_error_403_response:
-      description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
-      value:
-        error: Forbidden
-        message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
-        statusCode: 403
-    APM_UI_error_501_response:
-      description: An example of a 501 Not Implemented response, returned when the source map feature is not available on the current deployment.
-      value:
-        error: Not Implemented
-        message: Not Implemented
-        statusCode: 501
-    APM_UI_error_400_response:
-      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
-      value:
-        error: Bad Request
-        message: '[request body]: expected value of type [string] but got [undefined]'
-        statusCode: 400
-    APM_UI_source_maps_upload_200_response1:
-      description: A successful response from `POST /api/apm/sourcemaps`.
-      value:
-        body: eJyFkL1OwzAUhd/Fc+MbYMuCEBIbHRjKgBgc96R16tiWr1OQqr47NwqJxEK3q/PzWccXxchnZ7E1A1SjuhjVZtF2yOxiEPlO17oWox3D3uPFeSRTjmJQARfCPeiAgGx8NTKsYdAc1T3rwaSJGcds8Sp3c1HnhfywUZ3QhMTFFGepZxqMC9oex3CS9tpk1XyozgOlmoVKuJX1DqEQZ0su7PGtLU+V/3JPKc3cL7TJ2FNDRPov4bFta3MDM4f7W69lpJjLO9qdK8bzVPhcJz3HUCQ4LbO/p5hCSC4cZPByrp/wFqOklbpefwAhzpqI
-        compressionAlgorithm: zlib
-        created: '2021-07-09T20:47:44.812Z'
-        decodedSha256: 644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
-        decodedSize: 441
-        encodedSha256: 024c72749c3e3dd411b103f7040ae62633558608f480bce4b108cf5b2275bd24
-        encodedSize: 237
-        encryptionAlgorithm: none
-        id: apm:foo-1.0.0-644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
-        identifier: foo-1.0.0
-        packageName: apm
-        relative_url: /api/fleet/artifacts/foo-1.0.0/644fd5a997d1ddd90ee131ba18e2b3d03931d89dd1fe4599143c0b3264b3e456
-        type: sourcemap
-    APM_UI_error_401_response:
-      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
-      value:
-        error: Unauthorized
-        message: '[security_exception]: missing authentication credentials for REST request'
-        statusCode: 401
-    APM_UI_source_maps_upload_request1:
-      description: 'An example of a multipart/form-data request body for `POST /api/apm/sourcemaps`.
-
-        Each field is a separate form part; `sourcemap` is the source map file content (typically uploaded as a file).
-
-        '
-      value:
-        bundle_filepath: /test/e2e/general-usecase/bundle.js.map
-        service_name: opbeans-node
-        service_version: 1.0.0
-        sourcemap: '{"version":3,"sources":["bundle.js"],"names":[],"mappings":"AAAA","file":"bundle.js","sourcesContent":["console.log(''hello'');"]}'
+          description: Artifacts
+          items:
+            allOf:
+            - type: object
+              properties:
+                body:
+                  type: object
+                  properties:
+                    bundleFilepath:
+                      type: string
+                    serviceName:
+                      type: string
+                    serviceVersion:
+                      type: string
+                    sourceMap:
+                      type: object
+                      properties:
+                        file:
+                          type: string
+                        mappings:
+                          type: string
+                        sourceRoot:
+                          type: string
+                        sources:
+                          items:
+                            type: string
+                          type: array
+                        sourcesContent:
+                          items:
+                            type: string
+                          type: array
+                        version:
+                          type: number
+            - $ref: '#/components/schemas/APM_UI_base_source_map_object'
+          type: array
   parameters:
     APM_UI_elastic_api_version:
       description: The version of the API to use

@@ -2160,6 +2160,13 @@ paths:
       - content: Kibana
         name: product_name
 components:
+  examples:
+    Saved_objects_key_rotation_response:
+      summary: Encryption key rotation using default parameters.
+      value:
+        failed: 0
+        successful: 300
+        total: 1000
   schemas:
     Saved_objects_400_response:
       title: Bad request
@@ -2179,13 +2186,6 @@ components:
       - error
       - message
       - statusCode
-  examples:
-    Saved_objects_key_rotation_response:
-      summary: Encryption key rotation using default parameters.
-      value:
-        failed: 0
-        successful: 300
-        total: 1000
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

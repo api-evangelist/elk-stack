@@ -156,25 +156,6 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.Name:
-      type: string
-    search_application._types.AnalyticsCollection:
-      type: object
-      properties:
-        event_data_stream:
-          description: Data stream for the collection.
-          allOf:
-          - $ref: '#/components/schemas/search_application._types.EventDataStream'
-      required:
-      - event_data_stream
-    _types.IndexName:
-      type: string
-    search_application._types.EventType:
-      type: string
-      enum:
-      - page_view
-      - search
-      - search_click
     search_application.put_behavioral_analytics.AnalyticsAcknowledgeResponseBase:
       allOf:
       - $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
@@ -186,14 +167,6 @@ components:
             - $ref: '#/components/schemas/_types.Name'
         required:
         - name
-    search_application._types.EventDataStream:
-      type: object
-      properties:
-        name:
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-      required:
-      - name
     _types.AcknowledgedResponseBase:
       type: object
       properties:
@@ -202,6 +175,33 @@ components:
           type: boolean
       required:
       - acknowledged
+    search_application._types.AnalyticsCollection:
+      type: object
+      properties:
+        event_data_stream:
+          description: Data stream for the collection.
+          allOf:
+          - $ref: '#/components/schemas/search_application._types.EventDataStream'
+      required:
+      - event_data_stream
+    _types.Name:
+      type: string
+    search_application._types.EventDataStream:
+      type: object
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+      required:
+      - name
+    search_application._types.EventType:
+      type: string
+      enum:
+      - page_view
+      - search
+      - search_click
+    _types.IndexName:
+      type: string
   responses:
     search_application.get_behavioral_analytics-200:
       description: ''

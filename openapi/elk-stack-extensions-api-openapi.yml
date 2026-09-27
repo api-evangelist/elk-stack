@@ -428,103 +428,16 @@ paths:
         tag: Deployments - Extensions
 components:
   schemas:
-    ExtensionFileMetadata:
-      type: object
-      properties:
-        last_modified_date:
-          type: string
-          format: date-time
-          description: The date and time the extension was last modified.
-        size:
-          type: integer
-          format: int64
-          description: The extension file size in bytes.
-        url:
-          type: string
-          format: uri
-          description: The temporary URL to download the extension file. Usable for verification.
-    EmptyResponse:
-      type: object
-    Extensions:
+    BasicFailedReply:
       type: object
       required:
-      - extensions
+      - errors
       properties:
-        extensions:
+        errors:
           type: array
-          description: The list of extensions.
+          description: A list of errors that occurred in the failing request
           items:
-            $ref: '#/components/schemas/Extension'
-      description: A collection of extensions
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    UpdateExtensionRequest:
-      type: object
-      required:
-      - extension_type
-      - name
-      - version
-      properties:
-        name:
-          type: string
-          description: The extension name.
-        description:
-          type: string
-          description: The extension description.
-        download_url:
-          type: string
-          description: The URL to download the extension archive.
-        extension_type:
-          type: string
-          description: The extension type.
-          enum:
-          - plugin
-          - bundle
-        version:
-          type: string
-          description: The Elasticsearch version.
-      description: The body of a request to update an extension
-    CreateExtensionRequest:
-      type: object
-      required:
-      - extension_type
-      - name
-      - version
-      properties:
-        name:
-          type: string
-          description: The extension name. Only ASCII alphanumeric and [_.-] characters allowed
-        description:
-          type: string
-          description: The extension description.
-        download_url:
-          type: string
-          description: The URL to download the extension archive.
-        extension_type:
-          type: string
-          description: The extension type.
-          enum:
-          - plugin
-          - bundle
-        version:
-          type: string
-          description: The Elasticsearch version.
-      description: The body of a request to create a new extension
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     Extension:
       type: object
       required:
@@ -567,16 +480,103 @@ components:
           description: The extension file metadata.
           $ref: '#/components/schemas/ExtensionFileMetadata'
       description: An API extension. It represents clusters' plugins and bundles
-    BasicFailedReply:
+    EmptyResponse:
+      type: object
+    UpdateExtensionRequest:
       type: object
       required:
-      - errors
+      - extension_type
+      - name
+      - version
       properties:
-        errors:
+        name:
+          type: string
+          description: The extension name.
+        description:
+          type: string
+          description: The extension description.
+        download_url:
+          type: string
+          description: The URL to download the extension archive.
+        extension_type:
+          type: string
+          description: The extension type.
+          enum:
+          - plugin
+          - bundle
+        version:
+          type: string
+          description: The Elasticsearch version.
+      description: The body of a request to update an extension
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: A list of errors that occurred in the failing request
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
+            type: string
+    Extensions:
+      type: object
+      required:
+      - extensions
+      properties:
+        extensions:
+          type: array
+          description: The list of extensions.
+          items:
+            $ref: '#/components/schemas/Extension'
+      description: A collection of extensions
+    ExtensionFileMetadata:
+      type: object
+      properties:
+        last_modified_date:
+          type: string
+          format: date-time
+          description: The date and time the extension was last modified.
+        size:
+          type: integer
+          format: int64
+          description: The extension file size in bytes.
+        url:
+          type: string
+          format: uri
+          description: The temporary URL to download the extension file. Usable for verification.
+    CreateExtensionRequest:
+      type: object
+      required:
+      - extension_type
+      - name
+      - version
+      properties:
+        name:
+          type: string
+          description: The extension name. Only ASCII alphanumeric and [_.-] characters allowed
+        description:
+          type: string
+          description: The extension description.
+        download_url:
+          type: string
+          description: The URL to download the extension archive.
+        extension_type:
+          type: string
+          description: The extension type.
+          enum:
+          - plugin
+          - bundle
+        version:
+          type: string
+          description: The Elasticsearch version.
+      description: The body of a request to create a new extension
   securitySchemes:
     apiKey:
       type: apiKey

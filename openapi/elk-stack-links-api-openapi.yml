@@ -804,31 +804,6 @@ components:
       - id
       - data
       - meta
-    Kibana_HTTP_APIs_kbn-as-code-meta:
-      additionalProperties: false
-      type: object
-      properties:
-        created_at:
-          description: Timestamp when the object was created (ISO 8601).
-          type: string
-        created_by:
-          description: User profile ID of the user who created the object.
-          type: string
-        managed:
-          description: When `true`, the object is managed by Kibana and cannot be edited by users.
-          type: boolean
-        owner:
-          description: Identifier of the plugin or team that owns this object.
-          type: string
-        updated_at:
-          description: Timestamp when the object was last updated (ISO 8601).
-          type: string
-        updated_by:
-          description: User profile ID of the user who last updated the object.
-          type: string
-        version:
-          description: Internal version identifier for optimistic concurrency control.
-          type: string
     Kibana_HTTP_APIs_kbn-link-type-externalLink:
       additionalProperties: false
       description: Link type. Set to externalLink for a URL outside Kibana.
@@ -862,6 +837,31 @@ components:
       required:
       - type
       - destination
+    Kibana_HTTP_APIs_kbn-as-code-meta:
+      additionalProperties: false
+      type: object
+      properties:
+        created_at:
+          description: Timestamp when the object was created (ISO 8601).
+          type: string
+        created_by:
+          description: User profile ID of the user who created the object.
+          type: string
+        managed:
+          description: When `true`, the object is managed by Kibana and cannot be edited by users.
+          type: boolean
+        owner:
+          description: Identifier of the plugin or team that owns this object.
+          type: string
+        updated_at:
+          description: Timestamp when the object was last updated (ISO 8601).
+          type: string
+        updated_by:
+          description: User profile ID of the user who last updated the object.
+          type: string
+        version:
+          description: Internal version identifier for optimistic concurrency control.
+          type: string
     Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink:
       additionalProperties: false
       description: Link type. Set to dashboardLink for a link to another dashboard.

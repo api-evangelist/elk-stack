@@ -1926,15 +1926,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_action_message_response:
-      additionalProperties: false
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      title: action_message_response
-      type: object
     Kibana_HTTP_APIs_action_id_response:
       additionalProperties: false
       properties:
@@ -1943,6 +1934,15 @@ components:
       required:
       - actionId
       title: action_id_response
+      type: object
+    Kibana_HTTP_APIs_action_message_response:
+      additionalProperties: false
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      title: action_message_response
       type: object
   securitySchemes:
     apiKeyAuth:

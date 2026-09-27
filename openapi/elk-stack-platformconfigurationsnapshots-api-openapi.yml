@@ -128,17 +128,16 @@ paths:
         tag: Platform - Repository - CRUD
 components:
   schemas:
-    RepositoryConfigs:
+    BasicFailedReply:
       type: object
       required:
-      - configs
+      - errors
       properties:
-        configs:
+        errors:
           type: array
-          description: List of snapshot configurations
+          description: A list of errors that occurred in the failing request
           items:
-            $ref: '#/components/schemas/RepositoryConfig'
-      description: A list of snapshot repository configurations.
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     EmptyResponse:
       type: object
     BasicFailedReplyElement:
@@ -158,20 +157,6 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    SnapshotRepositoryConfiguration:
-      type: object
-      required:
-      - settings
-      - type
-      properties:
-        type:
-          type: string
-          description: 'Repository type, (Currently supported: ''s3'')'
-        settings:
-          type: object
-          description: Elasticsearch repository configuration settings JSON. See [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html) for more information
-          properties: {}
-      description: The configuration for an Elasticsearch snapshot repository.
     RepositoryConfig:
       type: object
       required:
@@ -186,16 +171,31 @@ components:
           description: Elasticsearch configuration JSON for a snapshot repository
           properties: {}
       description: The snapshot repository configuration.
-    BasicFailedReply:
+    SnapshotRepositoryConfiguration:
       type: object
       required:
-      - errors
+      - settings
+      - type
       properties:
-        errors:
+        type:
+          type: string
+          description: 'Repository type, (Currently supported: ''s3'')'
+        settings:
+          type: object
+          description: Elasticsearch repository configuration settings JSON. See [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html) for more information
+          properties: {}
+      description: The configuration for an Elasticsearch snapshot repository.
+    RepositoryConfigs:
+      type: object
+      required:
+      - configs
+      properties:
+        configs:
           type: array
-          description: A list of errors that occurred in the failing request
+          description: List of snapshot configurations
           items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
+            $ref: '#/components/schemas/RepositoryConfig'
+      description: A list of snapshot repository configurations.
   securitySchemes:
     apiKey:
       type: apiKey

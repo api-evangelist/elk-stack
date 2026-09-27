@@ -106,41 +106,35 @@ paths:
         name: product_name
 components:
   schemas:
-    APM_UI_403_response:
+    APM_UI_500_response:
       type: object
       properties:
         error:
           description: Error type
-          example: Forbidden
+          example: Internal Server Error
           type: string
         message:
           description: Error message
           type: string
         statusCode:
           description: Error status code
-          example: 403
+          example: 500
           type: number
-    APM_UI_agent_keys_object:
+    APM_UI_400_response:
       type: object
       properties:
-        name:
-          description: The name of the APM agent key.
+        error:
+          description: Error type
+          example: Not Found
           type: string
-        privileges:
-          description: 'The APM agent key privileges. It can take one or more of the following values:
-
-            * `event:write`, which is required for ingesting APM agent events. * `config_agent:read`, which is required for APM agents to read agent configuration remotely.
-
-            '
-          items:
-            enum:
-            - event:write
-            - config_agent:read
-            type: string
-          type: array
-      required:
-      - name
-      - privileges
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 400
+          type: number
     APM_UI_agent_keys_response:
       type: object
       properties:
@@ -178,35 +172,41 @@ components:
           description: Error status code
           example: 401
           type: number
-    APM_UI_400_response:
+    APM_UI_403_response:
       type: object
       properties:
         error:
           description: Error type
-          example: Not Found
-          type: string
-        message:
-          description: Error message
-          example: Not Found
-          type: string
-        statusCode:
-          description: Error status code
-          example: 400
-          type: number
-    APM_UI_500_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Internal Server Error
+          example: Forbidden
           type: string
         message:
           description: Error message
           type: string
         statusCode:
           description: Error status code
-          example: 500
+          example: 403
           type: number
+    APM_UI_agent_keys_object:
+      type: object
+      properties:
+        name:
+          description: The name of the APM agent key.
+          type: string
+        privileges:
+          description: 'The APM agent key privileges. It can take one or more of the following values:
+
+            * `event:write`, which is required for ingesting APM agent events. * `config_agent:read`, which is required for APM agents to read agent configuration remotely.
+
+            '
+          items:
+            enum:
+            - event:write
+            - config_agent:read
+            type: string
+          type: array
+      required:
+      - name
+      - privileges
   parameters:
     APM_UI_elastic_api_version:
       description: The version of the API to use
@@ -227,6 +227,18 @@ components:
         example: 'true'
         type: string
   examples:
+    APM_UI_error_401_response:
+      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
+      value:
+        error: Unauthorized
+        message: '[security_exception]: missing authentication credentials for REST request'
+        statusCode: 401
+    APM_UI_error_500_response:
+      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
+      value:
+        error: Internal Server Error
+        message: An internal server error occurred. Check the Kibana server logs for details.
+        statusCode: 500
     APM_UI_agent_keys_object_post_request1:
       description: Run `POST /api/apm/agent_keys` to create an APM agent API key with the specified privileges.
       value:
@@ -254,18 +266,6 @@ components:
         error: Forbidden
         message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
         statusCode: 403
-    APM_UI_error_401_response:
-      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
-      value:
-        error: Unauthorized
-        message: '[security_exception]: missing authentication credentials for REST request'
-        statusCode: 401
-    APM_UI_error_500_response:
-      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
-      value:
-        error: Internal Server Error
-        message: An internal server error occurred. Check the Kibana server logs for details.
-        statusCode: 500
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

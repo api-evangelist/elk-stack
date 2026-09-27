@@ -587,26 +587,49 @@ paths:
       - content: Elasticsearch
         name: product_name
 components:
+  parameters:
+    slm.get_lifecycle-policy_id:
+      in: path
+      name: policy_id
+      description: A comma-separated list of snapshot lifecycle policy identifiers.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Names'
+      style: simple
+    slm.get_lifecycle-timeout:
+      in: query
+      name: timeout
+      description: 'The period to wait for a response.
+
+        If no response is received before the timeout expires, the request fails and returns an error.'
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    slm.get_lifecycle-master_timeout:
+      in: query
+      name: master_timeout
+      description: 'The period to wait for a connection to the master node.
+
+        If no response is received before the timeout expires, the request fails and returns an error.'
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
   schemas:
-    slm._types.InProgress:
-      type: object
-      properties:
-        name:
-          allOf:
-          - $ref: '#/components/schemas/_types.Name'
-        start_time_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        state:
-          type: string
-        uuid:
-          allOf:
-          - $ref: '#/components/schemas/_types.Uuid'
-      required:
-      - name
-      - start_time_millis
-      - state
-      - uuid
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.IndexName:
+      type: string
     slm._types.Retention:
       type: object
       properties:
@@ -624,8 +647,15 @@ components:
       - expire_after
       - max_count
       - min_count
-    _types.IndexName:
-      type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
     slm._types.Policy:
       type: object
       properties:
@@ -647,18 +677,69 @@ components:
       - name
       - repository
       - schedule
-    _types.Metadata:
-      type: object
-      additionalProperties:
-        type: object
-    _types.AcknowledgedResponseBase:
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    watcher._types.CronExpression:
+      type: string
+    slm._types.SnapshotPolicyStats:
       type: object
       properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
+        policy:
+          type: string
+        snapshots_taken:
+          type: number
+        snapshots_failed:
+          type: number
+        snapshots_deleted:
+          type: number
+        snapshot_deletion_failures:
+          type: number
       required:
-      - acknowledged
+      - policy
+      - snapshots_taken
+      - snapshots_failed
+      - snapshots_deleted
+      - snapshot_deletion_failures
+    _types.VersionNumber:
+      type: number
+    slm._types.Statistics:
+      type: object
+      properties:
+        retention_deletion_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        retention_deletion_time_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        retention_failed:
+          type: number
+        retention_runs:
+          type: number
+        retention_timed_out:
+          type: number
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        total_snapshots_deleted:
+          type: number
+        total_snapshot_deletion_failures:
+          type: number
+        total_snapshots_failed:
+          type: number
+        total_snapshots_taken:
+          type: number
     slm._types.Invocation:
       type: object
       properties:
@@ -671,22 +752,6 @@ components:
       required:
       - snapshot_name
       - time
-    _types.Id:
-      type: string
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    _types.Name:
-      type: string
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
     slm._types.Configuration:
       type: object
       properties:
@@ -719,60 +784,44 @@ components:
           description: If false, the entire snapshot will fail if one or more indices included in the snapshot do not have all primary shards available.
           default: false
           type: boolean
-    slm._types.Statistics:
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.Name:
+      type: string
+    slm._types.InProgress:
       type: object
       properties:
-        retention_deletion_time:
+        name:
           allOf:
-          - $ref: '#/components/schemas/_types.Duration'
-        retention_deletion_time_millis:
+          - $ref: '#/components/schemas/_types.Name'
+        start_time_millis:
           allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-        retention_failed:
-          type: number
-        retention_runs:
-          type: number
-        retention_timed_out:
-          type: number
-        policy:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        state:
+          type: string
+        uuid:
           allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        total_snapshots_deleted:
-          type: number
-        total_snapshot_deletion_failures:
-          type: number
-        total_snapshots_failed:
-          type: number
-        total_snapshots_taken:
-          type: number
-    watcher._types.CronExpression:
-      type: string
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+          - $ref: '#/components/schemas/_types.Uuid'
+      required:
+      - name
+      - start_time_millis
+      - state
+      - uuid
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    _types.Names:
       oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    _types.Indices:
-      oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
+      - $ref: '#/components/schemas/_types.Name'
       - type: array
         items:
-          $ref: '#/components/schemas/_types.IndexName'
-    _types.LifecycleOperationMode:
-      type: string
-      enum:
-      - RUNNING
-      - STOPPING
-      - STOPPED
+          $ref: '#/components/schemas/_types.Name'
     slm._types.SnapshotLifecycle:
       type: object
       properties:
@@ -817,75 +866,26 @@ components:
       - policy
       - version
       - stats
-    _types.Uuid:
-      type: string
-    _types.DurationValueUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    _types.Names:
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    _types.Indices:
       oneOf:
-      - $ref: '#/components/schemas/_types.Name'
+      - $ref: '#/components/schemas/_types.IndexName'
       - type: array
         items:
-          $ref: '#/components/schemas/_types.Name'
-    _types.VersionNumber:
-      type: number
-    slm._types.SnapshotPolicyStats:
-      type: object
-      properties:
-        policy:
-          type: string
-        snapshots_taken:
-          type: number
-        snapshots_failed:
-          type: number
-        snapshots_deleted:
-          type: number
-        snapshot_deletion_failures:
-          type: number
-      required:
-      - policy
-      - snapshots_taken
-      - snapshots_failed
-      - snapshots_deleted
-      - snapshot_deletion_failures
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
-  parameters:
-    slm.get_lifecycle-policy_id:
-      in: path
-      name: policy_id
-      description: A comma-separated list of snapshot lifecycle policy identifiers.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Names'
-      style: simple
-    slm.get_lifecycle-timeout:
-      in: query
-      name: timeout
-      description: 'The period to wait for a response.
-
-        If no response is received before the timeout expires, the request fails and returns an error.'
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
-    slm.get_lifecycle-master_timeout:
-      in: query
-      name: master_timeout
-      description: 'The period to wait for a connection to the master node.
-
-        If no response is received before the timeout expires, the request fails and returns an error.'
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
+          $ref: '#/components/schemas/_types.IndexName'
+    _types.Uuid:
+      type: string
+    _types.Id:
+      type: string
+    _types.LifecycleOperationMode:
+      type: string
+      enum:
+      - RUNNING
+      - STOPPING
+      - STOPPED
   responses:
     slm.get_lifecycle-200:
       description: ''

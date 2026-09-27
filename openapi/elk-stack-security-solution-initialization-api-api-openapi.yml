@@ -112,7 +112,17 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Solution_Initialization_API_CreateListIndicesReadyResult:
+    Security_Solution_Initialization_API_InitializationFlowId:
+      description: Identifier for an initialization flow.
+      enum:
+      - create-list-indices
+      - security-data-views
+      - init-prebuilt-rules
+      - init-endpoint-protection
+      - init-ai-prompts
+      - init-detection-rule-monitoring
+      type: string
+    Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
       type: object
       properties:
         status:
@@ -121,6 +131,36 @@ components:
           type: string
       required:
       - status
+    Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
+      type: object
+      properties:
+        payload:
+          type: object
+          properties:
+            alertDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            attackDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            defaultDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            kibanaDataViews:
+              items:
+                $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+              type: array
+            signalIndexName:
+              type: string
+          required:
+          - defaultDataView
+          - alertDataView
+          - kibanaDataViews
+          - signalIndexName
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+      - payload
     Security_Solution_Initialization_API_InitializationFlowErrorResult:
       type: object
       properties:
@@ -135,7 +175,7 @@ components:
       required:
       - status
       - error
-    Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
+    Security_Solution_Initialization_API_CreateListIndicesReadyResult:
       type: object
       properties:
         status:
@@ -196,46 +236,6 @@ components:
       required:
       - status
       - payload
-    Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
-      type: object
-      properties:
-        payload:
-          type: object
-          properties:
-            alertDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            attackDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            defaultDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            kibanaDataViews:
-              items:
-                $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-              type: array
-            signalIndexName:
-              type: string
-          required:
-          - defaultDataView
-          - alertDataView
-          - kibanaDataViews
-          - signalIndexName
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
-      - payload
-    Security_Solution_Initialization_API_InitializationFlowId:
-      description: Identifier for an initialization flow.
-      enum:
-      - create-list-indices
-      - security-data-views
-      - init-prebuilt-rules
-      - init-endpoint-protection
-      - init-ai-prompts
-      - init-detection-rule-monitoring
-      type: string
     Security_Solution_Initialization_API_DataViewPayload:
       type: object
       properties:

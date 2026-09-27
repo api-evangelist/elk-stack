@@ -1438,18 +1438,190 @@ paths:
         name: product_name
 components:
   schemas:
+    _types.Id:
+      type: string
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    connector._types.ConnectorCustomScheduling:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/connector._types.CustomScheduling'
+    connector._types.RegexValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - regex
+        constraint:
+          type: string
+      required:
+      - type
+      - constraint
+    connector._types.CustomSchedulingConfigurationOverrides:
+      type: object
+      properties:
+        max_crawl_depth:
+          type: number
+        sitemap_discovery_disabled:
+          type: boolean
+        domain_allowlist:
+          type: array
+          items:
+            type: string
+        sitemap_urls:
+          type: array
+          items:
+            type: string
+        seed_urls:
+          type: array
+          items:
+            type: string
+    connector._types.SyncRulesFeature:
+      type: object
+      properties:
+        advanced:
+          description: Indicates whether advanced sync rules are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        basic:
+          description: Indicates whether basic sync rules are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    connector._types.Validation:
+      discriminator:
+        propertyName: type
+        mapping:
+          greater_than: '#/components/schemas/connector._types.GreaterThanValidation'
+          included_in: '#/components/schemas/connector._types.IncludedInValidation'
+          less_than: '#/components/schemas/connector._types.LessThanValidation'
+          list_type: '#/components/schemas/connector._types.ListTypeValidation'
+          regex: '#/components/schemas/connector._types.RegexValidation'
+      oneOf:
+      - $ref: '#/components/schemas/connector._types.LessThanValidation'
+      - $ref: '#/components/schemas/connector._types.GreaterThanValidation'
+      - $ref: '#/components/schemas/connector._types.ListTypeValidation'
+      - $ref: '#/components/schemas/connector._types.IncludedInValidation'
+      - $ref: '#/components/schemas/connector._types.RegexValidation'
+    connector._types.DisplayType:
+      type: string
+      enum:
+      - textbox
+      - textarea
+      - numeric
+      - toggle
+      - dropdown
+    connector._types.IncludedInValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - included_in
+        constraint:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - type
+      - constraint
+    connector._types.ConnectorConfigProperties:
+      type: object
+      properties:
+        category:
+          type: string
+        default_value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+        depends_on:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.Dependency'
+        display:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.DisplayType'
+        label:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.SelectOption'
+        order:
+          type: number
+        placeholder:
+          type: string
+        required:
+          type: boolean
+        sensitive:
+          type: boolean
+        tooltip:
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        type:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorFieldType'
+        ui_restrictions:
+          type: array
+          items:
+            type: string
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.Validation'
+        value:
+          type: object
+      required:
+      - default_value
+      - depends_on
+      - display
+      - label
+      - options
+      - required
+      - sensitive
+      - value
+    connector._types.SyncJobConnectorReference:
+      type: object
+      properties:
+        configuration:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorConfiguration'
+        filtering:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        index_name:
+          type: string
+        language:
+          type: string
+        pipeline:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.IngestPipelineParams'
+        service_type:
+          type: string
+        sync_cursor:
+          type: object
+      required:
+      - configuration
+      - filtering
+      - id
+      - index_name
+      - service_type
     _types.IndexName:
       type: string
-    _types.ScalarValue:
-      description: A scalar value.
-      oneOf:
-      - type: number
-      - type: number
-      - type: string
-      - type: boolean
-      - type:
-        - string
-        - 'null'
     connector._types.GreaterThanValidation:
       type: object
       properties:
@@ -1462,106 +1634,25 @@ components:
       required:
       - type
       - constraint
-    _types.Metadata:
-      type: object
-      additionalProperties:
-        type: object
-    _types.AcknowledgedResponseBase:
-      type: object
-      properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
-      required:
-      - acknowledged
-    connector._types.CustomScheduling:
-      type: object
-      properties:
-        configuration_overrides:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.CustomSchedulingConfigurationOverrides'
-        enabled:
-          type: boolean
-        interval:
-          type: string
-        last_synced:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        name:
-          type: string
-      required:
-      - configuration_overrides
-      - enabled
-      - interval
-      - name
-    _types.Id:
-      type: string
-    connector._types.FilteringAdvancedSnippet:
-      type: object
-      properties:
-        created_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        updated_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        value:
-          type: object
-      required:
-      - value
-    connector._types.Dependency:
-      type: object
-      properties:
-        field:
-          type: string
-        value:
-          allOf:
-          - $ref: '#/components/schemas/_types.ScalarValue'
-      required:
-      - field
-      - value
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    connector._types.IngestPipelineParams:
-      type: object
-      properties:
-        extract_binary_content:
-          type: boolean
-        name:
-          type: string
-        reduce_whitespace:
-          type: boolean
-        run_ml_inference:
-          type: boolean
-      required:
-      - extract_binary_content
-      - name
-      - reduce_whitespace
-      - run_ml_inference
-    connector._types.SyncJobTriggerMethod:
-      type: string
-      enum:
-      - on_demand
-      - scheduled
-    connector._types.FilteringRulesValidation:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/connector._types.FilteringValidation'
-        state:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringValidationState'
-      required:
-      - errors
-      - state
-    _types.Name:
-      type: string
-    _types.Field:
-      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
-      type: string
+    _types.ScalarValue:
+      description: A scalar value.
+      oneOf:
+      - type: number
+      - type: number
+      - type: string
+      - type: boolean
+      - type:
+        - string
+        - 'null'
+    _spec_utils.NullValue:
+      description: 'A `null` value that is to be interpreted as an actual value, unless other uses of `null` that are equivalent
+
+        to a missing value. It is used for exemple in settings, where using the `NullValue` for a setting will reset
+
+        it to its default value.'
+      type:
+      - string
+      - 'null'
     _types.DateTime:
       description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
 
@@ -1583,18 +1674,76 @@ components:
         incremental:
           allOf:
           - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
-    connector._types.ListTypeValidation:
+    connector._types.ConnectorStatus:
+      type: string
+      enum:
+      - created
+      - needs_configuration
+      - configured
+      - connected
+      - error
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    connector._types.SelectOption:
       type: object
       properties:
-        type:
+        label:
           type: string
-          enum:
-          - list_type
-        constraint:
+        value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - label
+      - value
+    connector._types.FilteringRuleRule:
+      type: string
+      enum:
+      - contains
+      - ends_with
+      - equals
+      - regex
+      - starts_with
+      - '>'
+      - <
+    connector._types.FeatureEnabled:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
+    connector._types.CustomScheduling:
+      type: object
+      properties:
+        configuration_overrides:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.CustomSchedulingConfigurationOverrides'
+        enabled:
+          type: boolean
+        interval:
+          type: string
+        last_synced:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        name:
           type: string
       required:
-      - type
-      - constraint
+      - configuration_overrides
+      - enabled
+      - interval
+      - name
     connector._types.FilteringValidation:
       type: object
       properties:
@@ -1609,27 +1758,181 @@ components:
       required:
       - ids
       - messages
-    _types.Result:
-      type: string
-      enum:
-      - created
-      - updated
-      - deleted
-      - not_found
-      - noop
+    connector._types.FilteringAdvancedSnippet:
+      type: object
+      properties:
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        updated_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        value:
+          type: object
+      required:
+      - value
+    connector._types.FilteringConfig:
+      type: object
+      properties:
+        active:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+        domain:
+          type: string
+        draft:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+      required:
+      - active
+      - draft
     connector._types.FilteringPolicy:
       type: string
       enum:
       - exclude
       - include
-    connector._types.ConnectorStatus:
+    connector._types.SyncStatus:
       type: string
       enum:
-      - created
-      - needs_configuration
-      - configured
-      - connected
+      - canceling
+      - canceled
+      - completed
       - error
+      - in_progress
+      - pending
+      - suspended
+    connector._types.ListTypeValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - list_type
+        constraint:
+          type: string
+      required:
+      - type
+      - constraint
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.Name:
+      type: string
+    connector._types.FilteringRules:
+      type: object
+      properties:
+        advanced_snippet:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringAdvancedSnippet'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.FilteringRule'
+        validation:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRulesValidation'
+      required:
+      - advanced_snippet
+      - rules
+      - validation
+    connector._types.SyncJobTriggerMethod:
+      type: string
+      enum:
+      - on_demand
+      - scheduled
+    connector._types.FilteringRule:
+      type: object
+      properties:
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        field:
+          allOf:
+          - $ref: '#/components/schemas/_types.Field'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        order:
+          type: number
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringPolicy'
+        rule:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRuleRule'
+        updated_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        value:
+          type: string
+      required:
+      - field
+      - id
+      - order
+      - policy
+      - rule
+      - value
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    connector._types.FilteringRulesValidation:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.FilteringValidation'
+        state:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringValidationState'
+      required:
+      - errors
+      - state
+    connector._types.ConnectorFieldType:
+      type: string
+      enum:
+      - str
+      - int
+      - list
+      - bool
+    connector._types.IngestPipelineParams:
+      type: object
+      properties:
+        extract_binary_content:
+          type: boolean
+        name:
+          type: string
+        reduce_whitespace:
+          type: boolean
+        run_ml_inference:
+          type: boolean
+      required:
+      - extract_binary_content
+      - name
+      - reduce_whitespace
+      - run_ml_inference
+    connector._types.SyncJobType:
+      type: string
+      enum:
+      - full
+      - incremental
+      - access_control
+    connector._types.LessThanValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - less_than
+        constraint:
+          type: number
+      required:
+      - type
+      - constraint
     connector._types.ConnectorSyncJob:
       type: object
       properties:
@@ -1694,140 +1997,17 @@ components:
       - status
       - total_document_count
       - trigger_method
-    connector._types.FilteringRule:
-      type: object
-      properties:
-        created_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        field:
-          allOf:
-          - $ref: '#/components/schemas/_types.Field'
-        id:
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        order:
-          type: number
-        policy:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringPolicy'
-        rule:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRuleRule'
-        updated_at:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        value:
-          type: string
-      required:
-      - field
-      - id
-      - order
-      - policy
-      - rule
-      - value
-    connector._types.ConnectorConfiguration:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/connector._types.ConnectorConfigProperties'
-    connector._types.ConnectorFieldType:
-      type: string
-      enum:
-      - str
-      - int
-      - list
-      - bool
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    connector._types.SelectOption:
-      type: object
-      properties:
-        label:
-          type: string
-        value:
-          allOf:
-          - $ref: '#/components/schemas/_types.ScalarValue'
-      required:
-      - label
-      - value
-    connector._types.FilteringValidationState:
-      type: string
-      enum:
-      - edited
-      - invalid
-      - valid
-    connector._types.Validation:
-      discriminator:
-        propertyName: type
-        mapping:
-          greater_than: '#/components/schemas/connector._types.GreaterThanValidation'
-          included_in: '#/components/schemas/connector._types.IncludedInValidation'
-          less_than: '#/components/schemas/connector._types.LessThanValidation'
-          list_type: '#/components/schemas/connector._types.ListTypeValidation'
-          regex: '#/components/schemas/connector._types.RegexValidation'
-      oneOf:
-      - $ref: '#/components/schemas/connector._types.LessThanValidation'
-      - $ref: '#/components/schemas/connector._types.GreaterThanValidation'
-      - $ref: '#/components/schemas/connector._types.ListTypeValidation'
-      - $ref: '#/components/schemas/connector._types.IncludedInValidation'
-      - $ref: '#/components/schemas/connector._types.RegexValidation'
-    connector._types.FeatureEnabled:
+    connector._types.ConnectorScheduling:
       type: object
       properties:
         enabled:
           type: boolean
+        interval:
+          description: The interval is expressed using the crontab syntax
+          type: string
       required:
       - enabled
-    _spec_utils.NullValue:
-      description: 'A `null` value that is to be interpreted as an actual value, unless other uses of `null` that are equivalent
-
-        to a missing value. It is used for exemple in settings, where using the `NullValue` for a setting will reset
-
-        it to its default value.'
-      type:
-      - string
-      - 'null'
-    connector._types.SyncRulesFeature:
-      type: object
-      properties:
-        advanced:
-          description: Indicates whether advanced sync rules are enabled.
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
-        basic:
-          description: Indicates whether basic sync rules are enabled.
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
-    _types.Indices:
-      oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.IndexName'
-    connector._types.RegexValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - regex
-        constraint:
-          type: string
-      required:
-      - type
-      - constraint
+      - interval
     connector._types.ConnectorFeatures:
       type: object
       properties:
@@ -1846,78 +2026,22 @@ components:
         sync_rules:
           allOf:
           - $ref: '#/components/schemas/connector._types.SyncRulesFeature'
-    connector._types.LessThanValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - less_than
-        constraint:
-          type: number
-      required:
-      - type
-      - constraint
-    connector._types.SyncStatus:
-      type: string
-      enum:
-      - canceling
-      - canceled
-      - completed
-      - error
-      - in_progress
-      - pending
-      - suspended
-    connector._types.FilteringConfig:
-      type: object
-      properties:
-        active:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRules'
-        domain:
-          type: string
-        draft:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRules'
-      required:
-      - active
-      - draft
-    connector._types.DisplayType:
-      type: string
-      enum:
-      - textbox
-      - textarea
-      - numeric
-      - toggle
-      - dropdown
-    connector._types.ConnectorCustomScheduling:
+    _types.Names:
+      oneOf:
+      - $ref: '#/components/schemas/_types.Name'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.Name'
+    connector._types.ConnectorConfiguration:
       type: object
       additionalProperties:
-        $ref: '#/components/schemas/connector._types.CustomScheduling'
-    connector._types.FilteringRuleRule:
+        $ref: '#/components/schemas/connector._types.ConnectorConfigProperties'
+    connector._types.FilteringValidationState:
       type: string
       enum:
-      - contains
-      - ends_with
-      - equals
-      - regex
-      - starts_with
-      - '>'
-      - <
-    connector._types.IncludedInValidation:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - included_in
-        constraint:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ScalarValue'
-      required:
-      - type
-      - constraint
+      - edited
+      - invalid
+      - valid
     connector._types.Connector:
       type: object
       properties:
@@ -2016,154 +2140,40 @@ components:
       - scheduling
       - status
       - sync_now
-    connector._types.CustomSchedulingConfigurationOverrides:
-      type: object
-      properties:
-        max_crawl_depth:
-          type: number
-        sitemap_discovery_disabled:
-          type: boolean
-        domain_allowlist:
-          type: array
-          items:
-            type: string
-        sitemap_urls:
-          type: array
-          items:
-            type: string
-        seed_urls:
-          type: array
-          items:
-            type: string
-    connector._types.SyncJobConnectorReference:
-      type: object
-      properties:
-        configuration:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.ConnectorConfiguration'
-        filtering:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRules'
-        id:
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        index_name:
-          type: string
-        language:
-          type: string
-        pipeline:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.IngestPipelineParams'
-        service_type:
-          type: string
-        sync_cursor:
-          type: object
-      required:
-      - configuration
-      - filtering
-      - id
-      - index_name
-      - service_type
-    connector._types.SyncJobType:
+    _types.Field:
+      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
       type: string
-      enum:
-      - full
-      - incremental
-      - access_control
-    _types.Names:
+    _types.Indices:
       oneOf:
-      - $ref: '#/components/schemas/_types.Name'
+      - $ref: '#/components/schemas/_types.IndexName'
       - type: array
         items:
-          $ref: '#/components/schemas/_types.Name'
-    connector._types.ConnectorConfigProperties:
+          $ref: '#/components/schemas/_types.IndexName'
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    connector._types.Dependency:
       type: object
       properties:
-        category:
+        field:
           type: string
-        default_value:
+        value:
           allOf:
           - $ref: '#/components/schemas/_types.ScalarValue'
-        depends_on:
-          type: array
-          items:
-            $ref: '#/components/schemas/connector._types.Dependency'
-        display:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.DisplayType'
-        label:
-          type: string
-        options:
-          type: array
-          items:
-            $ref: '#/components/schemas/connector._types.SelectOption'
-        order:
-          type: number
-        placeholder:
-          type: string
-        required:
-          type: boolean
-        sensitive:
-          type: boolean
-        tooltip:
-          oneOf:
-          - type: string
-          - type:
-            - string
-            - 'null'
-        type:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.ConnectorFieldType'
-        ui_restrictions:
-          type: array
-          items:
-            type: string
-        validations:
-          type: array
-          items:
-            $ref: '#/components/schemas/connector._types.Validation'
-        value:
-          type: object
       required:
-      - default_value
-      - depends_on
-      - display
-      - label
-      - options
-      - required
-      - sensitive
+      - field
       - value
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
-    connector._types.ConnectorScheduling:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-        interval:
-          description: The interval is expressed using the crontab syntax
-          type: string
-      required:
-      - enabled
-      - interval
-    connector._types.FilteringRules:
-      type: object
-      properties:
-        advanced_snippet:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringAdvancedSnippet'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/connector._types.FilteringRule'
-        validation:
-          allOf:
-          - $ref: '#/components/schemas/connector._types.FilteringRulesValidation'
-      required:
-      - advanced_snippet
-      - rules
-      - validation
+  parameters:
+    connector.put-connector_id:
+      in: path
+      name: connector_id
+      description: The unique identifier of the connector to be created or updated. ID is auto-generated if not provided.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Id'
+      style: simple
   responses:
     connector.put-200:
       description: ''
@@ -2184,16 +2194,6 @@ components:
           examples:
             ConnectorPutResponseExample1:
               value: "{\n  \"result\": \"created\",\n  \"id\": \"my-connector\"\n}"
-  parameters:
-    connector.put-connector_id:
-      in: path
-      name: connector_id
-      description: The unique identifier of the connector to be created or updated. ID is auto-generated if not provided.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Id'
-      style: simple
   requestBodies:
     connector.put:
       content:

@@ -485,67 +485,6 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.IndexName:
-      type: string
-    _types.ShardFailure:
-      type: object
-      properties:
-        index:
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-        node:
-          type: string
-        reason:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        shard:
-          type: number
-        status:
-          type: string
-        primary:
-          type: boolean
-      required:
-      - reason
-    synonyms._types.SynonymString:
-      type: string
-    indices.reload_search_analyzers.ReloadResult:
-      type: object
-      properties:
-        reload_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadDetails'
-        _shards:
-          allOf:
-          - $ref: '#/components/schemas/_types.ShardStatistics'
-      required:
-      - reload_details
-      - _shards
-    _types.Result:
-      type: string
-      enum:
-      - created
-      - updated
-      - deleted
-      - not_found
-      - noop
-    indices.reload_search_analyzers.ReloadDetails:
-      type: object
-      properties:
-        index:
-          type: string
-        reloaded_analyzers:
-          type: array
-          items:
-            type: string
-        reloaded_node_ids:
-          type: array
-          items:
-            type: string
-      required:
-      - index
-      - reloaded_analyzers
-      - reloaded_node_ids
     synonyms._types.SynonymRule:
       type: object
       properties:
@@ -576,8 +515,8 @@ components:
       required:
       - synonyms_set
       - count
-    _types.uint:
-      type: number
+    synonyms._types.SynonymString:
+      type: string
     synonyms._types.SynonymsUpdateResult:
       type: object
       properties:
@@ -593,24 +532,38 @@ components:
           - $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadResult'
       required:
       - result
-    synonyms._types.SynonymRuleRead:
+    indices.reload_search_analyzers.ReloadResult:
       type: object
       properties:
-        id:
-          description: 'The identifier for the synonym rule.
-
-            If you do not specify a synonym rule ID when you create a rule, an identifier is created automatically by Elasticsearch.'
+        reload_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/indices.reload_search_analyzers.ReloadDetails'
+        _shards:
           allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        synonyms:
-          externalDocs:
-            url: https://www.elastic.co/docs/reference/text-analysis/analysis-synonym-graph-tokenfilter#analysis-synonym-graph-define-synonyms
-          description: The synonyms that conform the synonym rule in Solr format.
-          allOf:
-          - $ref: '#/components/schemas/synonyms._types.SynonymString'
+          - $ref: '#/components/schemas/_types.ShardStatistics'
       required:
-      - id
-      - synonyms
+      - reload_details
+      - _shards
+    _types.ShardFailure:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        node:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        shard:
+          type: number
+        status:
+          type: string
+        primary:
+          type: boolean
+      required:
+      - reason
     _types.AcknowledgedResponseBase:
       type: object
       properties:
@@ -619,7 +572,32 @@ components:
           type: boolean
       required:
       - acknowledged
-    _types.Id:
+    indices.reload_search_analyzers.ReloadDetails:
+      type: object
+      properties:
+        index:
+          type: string
+        reloaded_analyzers:
+          type: array
+          items:
+            type: string
+        reloaded_node_ids:
+          type: array
+          items:
+            type: string
+      required:
+      - index
+      - reloaded_analyzers
+      - reloaded_node_ids
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    _types.IndexName:
       type: string
     _types.ErrorCause:
       description: 'Cause and details about a request failure. This class defines the properties common to all error types.
@@ -679,3 +657,25 @@ components:
       - failed
       - successful
       - total
+    _types.Id:
+      type: string
+    _types.uint:
+      type: number
+    synonyms._types.SynonymRuleRead:
+      type: object
+      properties:
+        id:
+          description: 'The identifier for the synonym rule.
+
+            If you do not specify a synonym rule ID when you create a rule, an identifier is created automatically by Elasticsearch.'
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        synonyms:
+          externalDocs:
+            url: https://www.elastic.co/docs/reference/text-analysis/analysis-synonym-graph-tokenfilter#analysis-synonym-graph-define-synonyms
+          description: The synonyms that conform the synonym rule in Solr format.
+          allOf:
+          - $ref: '#/components/schemas/synonyms._types.SynonymString'
+      required:
+      - id
+      - synonyms

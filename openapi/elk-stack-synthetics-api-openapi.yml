@@ -1104,6 +1104,88 @@ paths:
         name: product_name
 components:
   schemas:
+    Synthetics_postParameterResponse:
+      title: Post parameter response
+      type: object
+      properties:
+        description:
+          description: A description of the parameter.
+          type: string
+        id:
+          description: The unique identifier for the parameter.
+          type: string
+        key:
+          description: The parameter key.
+          type: string
+        share_across_spaces:
+          description: Indicates whether the parameter is shared across spaces.
+          type: boolean
+        tags:
+          description: An array of tags associated with the parameter.
+          items:
+            type: string
+          type: array
+        value:
+          description: The value associated with the parameter.
+          type: string
+    Synthetics_tcpMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          host:
+            description: 'The host to monitor; it can be an IP address or a hostname. The host can include the port using a colon, for example "example.com:9200".
+
+              '
+            type: string
+          proxy_url:
+            description: 'The URL of the SOCKS5 proxy to use when connecting to the server. The value must be a URL with a scheme of `socks5://`. If the SOCKS5 proxy server requires client authentication, then a username and password can be embedded in the URL. When using a proxy, hostnames are resolved on the proxy server instead of on the client. You can change this behavior by setting the `proxy_use_local_resolver` option.
+
+              '
+            type: string
+          proxy_use_local_resolver:
+            default: false
+            description: 'Specify that hostnames are resolved locally instead of being resolved on the proxy server. If `false`, name resolution occurs on the proxy server.
+
+              '
+            type: boolean
+          ssl:
+            description: 'The TLS/SSL connection settings for use with the HTTPS endpoint. If you don''t specify settings, the system defaults are used.
+
+              '
+            type: object
+          type:
+            description: The monitor type.
+            enum:
+            - tcp
+            type: string
+        required:
+        - host
+        - type
+      title: TCP monitor fields
+    Synthetics_icmpMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          host:
+            description: The host to ping.
+            type: string
+          type:
+            description: The monitor type.
+            enum:
+            - icmp
+            type: string
+          wait:
+            default: 1
+            description: The wait time in seconds.
+            type: number
+        required:
+        - host
+        - type
+      title: ICMP monitor fields
     Synthetics_httpMonitorFields:
       allOf:
       - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
@@ -1201,217 +1283,6 @@ components:
         - type
         - url
       title: HTTP monitor fields
-    Synthetics_parameterRequest:
-      title: Parameter request
-      type: object
-      properties:
-        description:
-          description: A description of the parameter.
-          type: string
-        key:
-          description: The key of the parameter.
-          type: string
-        share_across_spaces:
-          description: Specify whether the parameter should be shared across spaces.
-          type: boolean
-        tags:
-          description: An array of tags to categorize the parameter.
-          items:
-            type: string
-          type: array
-        value:
-          description: The value associated with the parameter.
-          type: string
-      required:
-      - key
-      - value
-    Synthetics_getPrivateLocation:
-      additionalProperties: true
-      properties:
-        agentPolicyId:
-          description: The ID of the agent policy associated with the private location.
-          type: string
-        geo:
-          description: Geographic coordinates (WGS84) for the location.
-          type: object
-          properties:
-            lat:
-              description: The latitude of the location.
-              type: number
-            lon:
-              description: The longitude of the location.
-              type: number
-          required:
-          - lat
-          - lon
-        id:
-          description: The unique identifier of the private location.
-          type: string
-        isInvalid:
-          description: 'Indicates whether the location is invalid. If `true`, the location is invalid, which means the agent policy associated with the location is deleted.
-
-            '
-          type: boolean
-        label:
-          description: A label for the private location.
-          type: string
-        namespace:
-          description: The namespace of the location, which is the same as the namespace of the agent policy associated with the location.
-          type: string
-      title: Post a private location
-      type: object
-    Synthetics_postParameterResponse:
-      title: Post parameter response
-      type: object
-      properties:
-        description:
-          description: A description of the parameter.
-          type: string
-        id:
-          description: The unique identifier for the parameter.
-          type: string
-        key:
-          description: The parameter key.
-          type: string
-        share_across_spaces:
-          description: Indicates whether the parameter is shared across spaces.
-          type: boolean
-        tags:
-          description: An array of tags associated with the parameter.
-          items:
-            type: string
-          type: array
-        value:
-          description: The value associated with the parameter.
-          type: string
-    Synthetics_icmpMonitorFields:
-      allOf:
-      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
-      - additionalProperties: true
-        type: object
-        properties:
-          host:
-            description: The host to ping.
-            type: string
-          type:
-            description: The monitor type.
-            enum:
-            - icmp
-            type: string
-          wait:
-            default: 1
-            description: The wait time in seconds.
-            type: number
-        required:
-        - host
-        - type
-      title: ICMP monitor fields
-    Synthetics_getParameterResponse:
-      title: Get parameter response
-      type: object
-      properties:
-        description:
-          description: 'The description of the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
-
-            '
-          type: string
-        id:
-          description: The unique identifier of the parameter.
-          type: string
-        key:
-          description: The key of the parameter.
-          type: string
-        namespaces:
-          description: 'The namespaces associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
-
-            '
-          items:
-            type: string
-          type: array
-        tags:
-          description: 'An array of tags associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
-
-            '
-          items:
-            type: string
-          type: array
-        value:
-          description: "The value associated with the parameter. It will be included in the response if the user has write permissions.  \n"
-          type: string
-    Synthetics_browserMonitorFields:
-      allOf:
-      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
-      - additionalProperties: true
-        type: object
-        properties:
-          ignore_https_errors:
-            default: false
-            description: Ignore HTTPS errors.
-            type: boolean
-          inline_script:
-            description: The inline script.
-            type: string
-          playwright_options:
-            description: Playwright options.
-            type: object
-          screenshots:
-            default: 'on'
-            description: The screenshot option.
-            enum:
-            - 'on'
-            - 'off'
-            - only-on-failure
-            type: string
-          synthetics_args:
-            description: Synthetics agent CLI arguments.
-            items:
-              type: string
-            type: array
-          type:
-            description: The monitor type.
-            enum:
-            - browser
-            type: string
-        required:
-        - inline_script
-        - type
-      title: Browser monitor fields
-    Synthetics_tcpMonitorFields:
-      allOf:
-      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
-      - additionalProperties: true
-        type: object
-        properties:
-          host:
-            description: 'The host to monitor; it can be an IP address or a hostname. The host can include the port using a colon, for example "example.com:9200".
-
-              '
-            type: string
-          proxy_url:
-            description: 'The URL of the SOCKS5 proxy to use when connecting to the server. The value must be a URL with a scheme of `socks5://`. If the SOCKS5 proxy server requires client authentication, then a username and password can be embedded in the URL. When using a proxy, hostnames are resolved on the proxy server instead of on the client. You can change this behavior by setting the `proxy_use_local_resolver` option.
-
-              '
-            type: string
-          proxy_use_local_resolver:
-            default: false
-            description: 'Specify that hostnames are resolved locally instead of being resolved on the proxy server. If `false`, name resolution occurs on the proxy server.
-
-              '
-            type: boolean
-          ssl:
-            description: 'The TLS/SSL connection settings for use with the HTTPS endpoint. If you don''t specify settings, the system defaults are used.
-
-              '
-            type: object
-          type:
-            description: The monitor type.
-            enum:
-            - tcp
-            type: string
-        required:
-        - host
-        - type
-      title: TCP monitor fields
     Synthetics_commonMonitorFields:
       title: Common monitor fields
       type: object
@@ -1515,6 +1386,97 @@ components:
           type: number
       required:
       - name
+    Synthetics_parameterRequest:
+      title: Parameter request
+      type: object
+      properties:
+        description:
+          description: A description of the parameter.
+          type: string
+        key:
+          description: The key of the parameter.
+          type: string
+        share_across_spaces:
+          description: Specify whether the parameter should be shared across spaces.
+          type: boolean
+        tags:
+          description: An array of tags to categorize the parameter.
+          items:
+            type: string
+          type: array
+        value:
+          description: The value associated with the parameter.
+          type: string
+      required:
+      - key
+      - value
+    Synthetics_getParameterResponse:
+      title: Get parameter response
+      type: object
+      properties:
+        description:
+          description: 'The description of the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          type: string
+        id:
+          description: The unique identifier of the parameter.
+          type: string
+        key:
+          description: The key of the parameter.
+          type: string
+        namespaces:
+          description: 'The namespaces associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          items:
+            type: string
+          type: array
+        tags:
+          description: 'An array of tags associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          items:
+            type: string
+          type: array
+        value:
+          description: "The value associated with the parameter. It will be included in the response if the user has write permissions.  \n"
+          type: string
+    Synthetics_getPrivateLocation:
+      additionalProperties: true
+      properties:
+        agentPolicyId:
+          description: The ID of the agent policy associated with the private location.
+          type: string
+        geo:
+          description: Geographic coordinates (WGS84) for the location.
+          type: object
+          properties:
+            lat:
+              description: The latitude of the location.
+              type: number
+            lon:
+              description: The longitude of the location.
+              type: number
+          required:
+          - lat
+          - lon
+        id:
+          description: The unique identifier of the private location.
+          type: string
+        isInvalid:
+          description: 'Indicates whether the location is invalid. If `true`, the location is invalid, which means the agent policy associated with the location is deleted.
+
+            '
+          type: boolean
+        label:
+          description: A label for the private location.
+          type: string
+        namespace:
+          description: The namespace of the location, which is the same as the namespace of the agent policy associated with the location.
+          type: string
+      title: Post a private location
+      type: object
     Synthetics_monitorWarning:
       title: Monitor warning
       type: object
@@ -1530,6 +1492,44 @@ components:
           items:
             type: string
           type: array
+    Synthetics_browserMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          ignore_https_errors:
+            default: false
+            description: Ignore HTTPS errors.
+            type: boolean
+          inline_script:
+            description: The inline script.
+            type: string
+          playwright_options:
+            description: Playwright options.
+            type: object
+          screenshots:
+            default: 'on'
+            description: The screenshot option.
+            enum:
+            - 'on'
+            - 'off'
+            - only-on-failure
+            type: string
+          synthetics_args:
+            description: Synthetics agent CLI arguments.
+            items:
+              type: string
+            type: array
+          type:
+            description: The monitor type.
+            enum:
+            - browser
+            type: string
+        required:
+        - inline_script
+        - type
+      title: Browser monitor fields
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

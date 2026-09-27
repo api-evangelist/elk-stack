@@ -112,6 +112,32 @@ paths:
         required: true
 components:
   schemas:
+    AccountUpdateRequest:
+      type: object
+      properties:
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: A request to update an account
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    AccountTrustSettings:
+      type: object
+      required:
+      - trust_all
+      properties:
+        trust_all:
+          type: boolean
+          description: If true, all clusters in this account will by default trust all other clusters in the same account
+      description: Settings related to the level of trust of the clusters in this account
     BasicFailedReplyElement:
       type: object
       required:
@@ -141,32 +167,6 @@ components:
           description: Settings related to the level of trust of the clusters in this account
           $ref: '#/components/schemas/AccountTrustSettings'
       description: An account is the entity that owns deployments, and it is accessed by users. Accounts are isolated from each other.
-    AccountTrustSettings:
-      type: object
-      required:
-      - trust_all
-      properties:
-        trust_all:
-          type: boolean
-          description: If true, all clusters in this account will by default trust all other clusters in the same account
-      description: Settings related to the level of trust of the clusters in this account
-    AccountUpdateRequest:
-      type: object
-      properties:
-        trust:
-          description: Settings related to the level of trust of the clusters in this account
-          $ref: '#/components/schemas/AccountTrustSettings'
-      description: A request to update an account
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

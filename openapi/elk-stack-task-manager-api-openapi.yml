@@ -49,16 +49,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Task_manager_health_APIs_workload:
-      description: 'This object summarizes the work load across the cluster, including the tasks in the system, their types, and current status.
-
-        '
-      type: object
-    Task_manager_health_APIs_configuration:
-      description: 'This object summarizes the current configuration of Task Manager. This includes dynamic configurations that change over time, such as `poll_interval` and `max_workers`, which can adjust in reaction to changing load on the system.
-
-        '
-      type: object
     Task_manager_health_APIs_health_response:
       title: Task health response properties
       type: object
@@ -88,6 +78,16 @@ components:
           type: string
         timestamp:
           type: string
+    Task_manager_health_APIs_configuration:
+      description: 'This object summarizes the current configuration of Task Manager. This includes dynamic configurations that change over time, such as `poll_interval` and `max_workers`, which can adjust in reaction to changing load on the system.
+
+        '
+      type: object
+    Task_manager_health_APIs_workload:
+      description: 'This object summarizes the work load across the cluster, including the tasks in the system, their types, and current status.
+
+        '
+      type: object
   examples:
     Task_manager_health_APIs_health_200response:
       description: A successful response from `GET api/task_manager/_health`.

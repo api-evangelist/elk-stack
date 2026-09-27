@@ -1,5 +1,5 @@
 aid: elk-stack
-name: Elastic Stack (ELK Stack)
+name: Elastic Stack
 description: >-
   The Elastic Stack (formerly known as the ELK Stack) is the collection of
   open-source products from Elastic — Elasticsearch, Logstash, Kibana, and
@@ -53,7 +53,7 @@ tags:
   - Security
   - Vector Database
   - SIEM
-  - Machine-Learning
+  - Machine Learning
 tags_raw:
   - Analytics
   - Logging
@@ -64,6 +64,7 @@ tags_raw:
   - Vector Database
   - SIEM
   - Machine Learning
+  - Machine-Learning
 created: '2024-01-01'
 modified: '2026-08-27'
 url: https://www.elastic.co/elastic-stack/
@@ -1880,9 +1881,10 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
-  - Machine-Learning
+  - Machine Learning
   tags_raw:
   - ml
+  - Machine-Learning
   properties:
   - type: OpenAPI
     url: openapi/elk-stack-ml-api-openapi.yml
@@ -3059,9 +3061,11 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - Spaces
   - Space
   tags_raw:
   - Spaces
+  - Space
   properties:
   - type: OpenAPI
     url: openapi/elk-stack-spaces-api-openapi.yml
@@ -3665,6 +3669,16 @@ apis:
     url: https://github.com/elastic/kibana
   - type: ToolCrosswalk
     url: mcp/elk-stack-tool-crosswalk.yml
+- aid: elk-stack:elk-stack-index-api
+  name: Elastic Stack Index API
+  description: The Index API from Elastic Stack — 3 operation(s) for index.
+  humanURL: https://www.elastic.co/docs/api/doc/cloud/
+  baseURL: https://api.elastic-cloud.com/api/v1
+  tags:
+  - Index
+  properties:
+  - type: OpenAPI
+    url: openapi/elk-stack-index-api-openapi.yml
 common:
   - type: License
     name: Apache-2.0

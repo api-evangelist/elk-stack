@@ -8034,54 +8034,94 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_alerting_error_response:
+    Kibana_HTTP_APIs_alerting_ack_alert_action:
       additionalProperties: false
       type: object
       properties:
-        code:
-          description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
+        action_type:
+          description: Acknowledges an alert.
+          enum:
+          - ack
           type: string
-        details:
-          additionalProperties: {}
-          description: Optional structured context (e.g., validation field errors, conflict resource IDs).
-          type: object
-        error:
-          description: A short human-readable summary of the error category (e.g., "Not Found", "Bad Request"). Subject to change without notice. Do not parse or rely on its content.
-          type: string
-        message:
-          description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
-          type: string
-      required:
-      - code
-      - error
-      - message
-    Kibana_HTTP_APIs_alerting_bulk_get_rules_request:
-      additionalProperties: false
-      type: object
-      properties:
-        ids:
-          description: Rule identifiers to retrieve. The response preserved this order.
-          items:
-            description: A rule identifier.
-            maxLength: 150
-            minLength: 1
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-      required:
-      - ids
-    Kibana_HTTP_APIs_alerting_new_ack_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
         episode_id:
           description: The episode identifier for the alert to acknowledge.
           maxLength: 150
           minLength: 1
           type: string
       required:
+      - action_type
       - episode_id
+    Kibana_HTTP_APIs_alerting_workflow_action_policy_destination:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          description: The workflow connector identifier.
+          maxLength: 150
+          minLength: 1
+          type: string
+        type:
+          description: The destination type.
+          enum:
+          - workflow
+          type: string
+      required:
+      - type
+      - id
+    Kibana_HTTP_APIs_alerting_alert_action:
+      description: 'Request body for creating a single alert action. One of: ack, unack, assign, tag, snooze, unsnooze, activate, deactivate.'
+      discriminator:
+        mapping:
+          ack: '#/components/schemas/Kibana_HTTP_APIs_alerting_ack_alert_action'
+          activate: '#/components/schemas/Kibana_HTTP_APIs_alerting_activate_alert_action'
+          assign: '#/components/schemas/Kibana_HTTP_APIs_alerting_assign_alert_action'
+          deactivate: '#/components/schemas/Kibana_HTTP_APIs_alerting_deactivate_alert_action'
+          snooze: '#/components/schemas/Kibana_HTTP_APIs_alerting_snooze_alert_action'
+          tag: '#/components/schemas/Kibana_HTTP_APIs_alerting_tag_alert_action'
+          unack: '#/components/schemas/Kibana_HTTP_APIs_alerting_unack_alert_action'
+          unsnooze: '#/components/schemas/Kibana_HTTP_APIs_alerting_unsnooze_alert_action'
+        propertyName: action_type
+      oneOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_ack_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_unack_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_assign_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_tag_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_snooze_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_unsnooze_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_activate_alert_action'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_deactivate_alert_action'
+    Kibana_HTTP_APIs_alerting_unsnooze_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Removes snooze from an alert.
+          enum:
+          - unsnooze
+          type: string
+      required:
+      - action_type
+    Kibana_HTTP_APIs_alerting_new_unsnooze_alert_action:
+      additionalProperties: false
+      type: object
+      properties: {}
+    Kibana_HTTP_APIs_alerting_activate_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Activates an alert.
+          enum:
+          - activate
+          type: string
+        reason:
+          description: Reason for activating the alert.
+          maxLength: 1024
+          minLength: 1
+          type: string
+      required:
+      - action_type
+      - reason
     Kibana_HTTP_APIs_alerting_new_rule:
       additionalProperties: false
       type: object
@@ -8202,88 +8242,6 @@ components:
           type: array
       required:
       - rules
-    Kibana_HTTP_APIs_alerting_unack_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Removes acknowledgement from an alert.
-          enum:
-          - unack
-          type: string
-        episode_id:
-          description: The episode identifier for the alert to unacknowledge.
-          maxLength: 150
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - episode_id
-    Kibana_HTTP_APIs_alerting_alert_action:
-      description: 'Request body for creating a single alert action. One of: ack, unack, assign, tag, snooze, unsnooze, activate, deactivate.'
-      discriminator:
-        mapping:
-          ack: '#/components/schemas/Kibana_HTTP_APIs_alerting_ack_alert_action'
-          activate: '#/components/schemas/Kibana_HTTP_APIs_alerting_activate_alert_action'
-          assign: '#/components/schemas/Kibana_HTTP_APIs_alerting_assign_alert_action'
-          deactivate: '#/components/schemas/Kibana_HTTP_APIs_alerting_deactivate_alert_action'
-          snooze: '#/components/schemas/Kibana_HTTP_APIs_alerting_snooze_alert_action'
-          tag: '#/components/schemas/Kibana_HTTP_APIs_alerting_tag_alert_action'
-          unack: '#/components/schemas/Kibana_HTTP_APIs_alerting_unack_alert_action'
-          unsnooze: '#/components/schemas/Kibana_HTTP_APIs_alerting_unsnooze_alert_action'
-        propertyName: action_type
-      oneOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_ack_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_unack_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_assign_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_tag_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_snooze_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_unsnooze_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_activate_alert_action'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_deactivate_alert_action'
-    Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_response:
-      additionalProperties: false
-      description: Action policies that match a given rule, grouped by match category.
-      type: object
-      properties:
-        items:
-          description: The list of matched action policies.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_matched_action_policy'
-          type: array
-        total:
-          description: Total number of action policies in the space. If greater than the number evaluated, the match results may be incomplete.
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-      required:
-      - items
-      - total
-    Kibana_HTTP_APIs_alerting_rule_executions_response:
-      additionalProperties: false
-      type: object
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_execution'
-          type: array
-        page:
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
-        per_page:
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
-        total:
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-      required:
-      - items
-      - total
-      - page
-      - per_page
     Kibana_HTTP_APIs_alerting_rule_response:
       additionalProperties: false
       type: object
@@ -8424,333 +8382,60 @@ components:
       - created_at
       - updated_by
       - updated_at
-    Kibana_HTTP_APIs_alerting_rule_execution:
+    Kibana_HTTP_APIs_alerting_rule_grouping:
       additionalProperties: false
+      description: Grouping configuration.
       type: object
       properties:
-        ended_at:
-          type: string
-        error:
-          additionalProperties: false
-          type:
-          - object
-          - 'null'
-          properties:
-            message:
-              type: string
-            stack_trace:
-              type:
-              - string
-              - 'null'
-          required:
-          - message
-          - stack_trace
-        id:
-          type: string
-        outcome:
-          enum:
-          - success
-          - failure
-          type: string
-        reason:
-          type:
-          - string
-          - 'null'
-        rule:
-          additionalProperties: false
-          type: object
-          properties:
-            id:
-              type: string
-            version:
-              maximum: 9007199254740991
-              minimum: -9007199254740991
-              type:
-              - integer
-              - 'null'
-          required:
-          - id
-          - version
-        space_id:
-          type: string
-        started_at:
-          type: string
-        timings:
-          additionalProperties: false
-          type: object
-          properties:
-            duration:
-              maximum: 9007199254740991
-              minimum: 0
-              type: integer
-            scheduled_delay:
-              maximum: 9007199254740991
-              minimum: -9007199254740991
-              type: integer
-          required:
-          - duration
-          - scheduled_delay
-      required:
-      - id
-      - rule
-      - space_id
-      - started_at
-      - ended_at
-      - timings
-      - outcome
-      - reason
-      - error
-    Kibana_HTTP_APIs_alerting_update_action_policy:
-      additionalProperties: false
-      type: object
-      properties:
-        description:
-          description: A description of the action policy.
-          maxLength: 1024
-          type: string
-        destinations:
-          description: The list of destinations. At least one is required.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_destination'
-          maxItems: 10
-          minItems: 1
-          type: array
-        group_by:
-          description: The fields used to group alerts.
+        fields:
+          description: Fields to group alerts by, e.g. ["host.name", "service.name"]. Should match ES|QL GROUP BY fields.
           items:
             maxLength: 256
             minLength: 1
             type: string
           maxItems: 16
-          type:
-          - array
-          - 'null'
-        grouping_mode:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_grouping_mode'
-          description: The grouping mode for alert notifications.
-        matcher:
-          description: A KQL query string to match alerts.
-          maxLength: 4096
-          type:
-          - string
-          - 'null'
-        name:
-          description: The name of the action policy.
+          type: array
+      required:
+      - fields
+    Kibana_HTTP_APIs_alerting_rule_artifact:
+      additionalProperties: false
+      type: object
+      properties:
+        data:
+          additionalProperties: {}
+          description: Structured artifact data.
+          type: object
+        id:
+          description: Artifact identifier.
           maxLength: 256
           minLength: 1
           type: string
-        tags:
-          description: Tags for categorizing the action policy.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type:
-          - array
-          - 'null'
-        throttle:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_throttle'
-          description: The throttle configuration for notifications.
-        version:
-          description: The current version of the action policy, used for optimistic concurrency control.
-          maxLength: 256
+        type:
+          description: Artifact type.
+          maxLength: 128
           minLength: 1
           type: string
       required:
-      - version
-    Kibana_HTTP_APIs_alerting_bulk_dry_run_response:
-      additionalProperties: false
-      description: Dry-run preview returned by a by-query bulk endpoint when `force` is false.
-      type: object
-      properties:
-        match_count:
-          description: 'Total number of resources matching the query. A dry run never fails on size, but if this exceeds 10000, re-sending the same query with `force: true` is rejected with `BULK_QUERY_MATCH_LIMIT_EXCEEDED`; narrow the query before executing.'
-          maximum: 9007199254740991
-          minimum: 0
-          type: integer
-        sample:
-          description: Sample of matching resource IDs (up to 100) for spot-checking before executing.
-          items:
-            type: string
-          maxItems: 100
-          type: array
-      required:
-      - match_count
-      - sample
-    Kibana_HTTP_APIs_alerting_action_policy_list_response:
-      additionalProperties: false
-      description: Paginated list of action policies.
-      type: object
-      properties:
-        items:
-          description: The list of action policies.
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_response'
-          type: array
-        page:
-          description: The current page number.
-          type: number
-        per_page:
-          description: The number of action policies per page.
-          type: number
-        total:
-          description: The total number of action policies matching the query.
-          type: number
-      required:
-      - items
-      - total
-      - page
-      - per_page
-    Kibana_HTTP_APIs_alerting_new_tag_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        tags:
-          description: List of tags to add to the alert.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type: array
-      required:
-      - tags
-    Kibana_HTTP_APIs_alerting_bulk_create_alert_actions_request:
-      description: Request body for bulk create alert actions. Array of 1 to 100 actions, each with group_hash and action payload.
-      items:
-        $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item'
-      maxItems: 100
-      minItems: 1
-      type: array
-    Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item:
-      allOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_alert_action'
-      - additionalProperties: false
-        description: Alert action payload with group identifier for bulk requests.
-        type: object
-        properties:
-          group_hash:
-            description: Hash identifying the alert group to apply the action to.
-            maxLength: 256
-            minLength: 1
-            type: string
-        required:
-        - group_hash
-    Kibana_HTTP_APIs_alerting_activate_alert_action:
+      - id
+      - type
+      - data
+    Kibana_HTTP_APIs_alerting_deactivate_alert_action:
       additionalProperties: false
       type: object
       properties:
         action_type:
-          description: Activates an alert.
+          description: Deactivates an alert.
           enum:
-          - activate
+          - deactivate
           type: string
-        reason:
-          description: Reason for activating the alert.
-          maxLength: 1024
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - reason
-    Kibana_HTTP_APIs_alerting_rule_tags_response:
-      additionalProperties: false
-      description: All unique tags across rules.
-      type: object
-      properties:
-        tags:
-          description: The list of unique tags.
-          items:
-            type: string
-          type: array
-      required:
-      - tags
-    Kibana_HTTP_APIs_alerting_new_deactivate_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
         reason:
           description: Reason for deactivating the alert.
           maxLength: 1024
           minLength: 1
           type: string
       required:
+      - action_type
       - reason
-    Kibana_HTTP_APIs_alerting_bulk_by_ids_request:
-      additionalProperties: false
-      type: object
-      properties:
-        ids:
-          description: Explicit list of IDs to operate on.
-          items:
-            maxLength: 150
-            minLength: 1
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-      required:
-      - ids
-    Kibana_HTTP_APIs_alerting_rule_schedule:
-      additionalProperties: false
-      description: Execution schedule configuration.
-      type: object
-      properties:
-        every:
-          description: Execution interval, e.g. 1m, 5m, 1h.
-          type: string
-        lookback:
-          description: Lookback window for the query, e.g. 5m, 1h. Can also be expressed in ES|QL.
-          type: string
-      required:
-      - every
-    Kibana_HTTP_APIs_alerting_tag_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Adds tags to an alert.
-          enum:
-          - tag
-          type: string
-        tags:
-          description: List of tags to add to the alert.
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          type: array
-      required:
-      - action_type
-      - tags
-    Kibana_HTTP_APIs_alerting_assign_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Assigns an alerting episode to a user, or clears the assignee when null.
-          enum:
-          - assign
-          type: string
-        assignee_uid:
-          description: User profile UID of the assignee, or null to remove the assignee from the episode.
-          maxLength: 256
-          type:
-          - string
-          - 'null'
-        episode_id:
-          description: The episode identifier to assign.
-          maxLength: 150
-          minLength: 1
-          type: string
-      required:
-      - action_type
-      - episode_id
-      - assignee_uid
     Kibana_HTTP_APIs_alerting_snooze_action_policy_request:
       additionalProperties: false
       type: object
@@ -8808,191 +8493,39 @@ components:
       - per_page
       - total_events
       - search_matches
-    Kibana_HTTP_APIs_alerting_policy_execution_history_item:
+    Kibana_HTTP_APIs_alerting_action_policy_destination:
+      description: An action policy destination configuration.
+      discriminator:
+        mapping:
+          workflow: '#/components/schemas/Kibana_HTTP_APIs_alerting_workflow_action_policy_destination'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_workflow_action_policy_destination'
+    Kibana_HTTP_APIs_alerting_rule_executions_response:
       additionalProperties: false
       type: object
       properties:
-        action_group_count:
-          type: number
-        dispatched_at:
-          type: string
-        episode_count:
-          type: number
-        episodes:
-          description: Episode ids referenced by this event, bounded to MAX_EMBEDDED_EPISODES_PER_ITEM. Use `episode_count` for the true total.
+        items:
           items:
-            type: object
-            properties:
-              id:
-                type: string
-            required:
-            - id
-          maxItems: 50
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_execution'
           type: array
-        error:
-          additionalProperties: false
-          type: object
-          properties:
-            message:
-              type: string
-          required:
-          - message
-        failure_reason:
-          enum:
-          - missing_api_key
-          - workflow_not_found
-          - workflow_disabled
-          - schedule_error
-          type: string
-        outcome:
-          enum:
-          - dispatched
-          - throttled
-          - dispatch_failed
-          type: string
-        policy:
-          additionalProperties: false
-          type: object
-          properties:
-            id:
-              type: string
-            name:
-              type:
-              - string
-              - 'null'
-          required:
-          - id
-        rules:
-          description: Rules referenced by this event, bounded to MAX_EMBEDDED_RULES_PER_ITEM. When a search or rule filter narrows the match, this array is intersected with the matched subset server-side. Use `total_rule_count` for the full count.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type:
-                - string
-                - 'null'
-            required:
-            - id
-          maxItems: 20
-          type: array
-        total_rule_count:
-          description: Total number of rules referenced by this event after search / rule-filter narrowing. May exceed `rules.length` when the embedded array is truncated to the cap.
-          type: number
-        workflows:
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type:
-                - string
-                - 'null'
-            required:
-            - id
-          maxItems: 100
-          type: array
+        page:
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
+        per_page:
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
+        total:
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
       required:
-      - dispatched_at
-      - policy
-      - outcome
-      - episode_count
-      - action_group_count
-      - rules
-      - total_rule_count
-      - workflows
-    Kibana_HTTP_APIs_alerting_composed_rule_query:
-      additionalProperties: false
-      description: 'Composed query: a shared base with appendable breach and recovery segments.'
-      type: object
-      properties:
-        base:
-          description: Base ES|QL query. Time filters are applied automatically via the lookback window.
-          maxLength: 10000
-          minLength: 1
-          type: string
-        breach:
-          additionalProperties: false
-          description: Breach detection configuration. Omit to treat every base row as a breach.
-          type: object
-          properties:
-            segment:
-              description: A clause appended to the end of the rule's ES|QL query. Required in breach blocks.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - segment
-        format:
-          enum:
-          - composed
-          type: string
-        recovery:
-          additionalProperties: false
-          description: Recovery query segment. Required when recovery_strategy is "query".
-          type: object
-          properties:
-            segment:
-              description: Appendable ES|QL segment for recovery detection.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - segment
-      required:
-      - format
-      - base
-    Kibana_HTTP_APIs_alerting_bulk_by_query_request:
-      additionalProperties: false
-      type: object
-      properties:
-        filter:
-          description: 'KQL filter string to match target resources. At most 10000 matching resources are processed per request. Cannot be empty; to target every resource use `match_all: true`.'
-          maxLength: 4096
-          minLength: 1
-          type: string
-        force:
-          default: false
-          description: When true, executes the operation. When false (default), returns a dry-run preview with `match_count` and a `sample` of matching resource IDs so the client can verify before committing.
-          type: boolean
-        match_all:
-          description: When true, targets every resource. Requires an explicit opt-in. Omitted by default.
-          enum:
-          - true
-          type: boolean
-        search:
-          description: 'Free-text search string matched against the resource-defined searchable fields. Cannot be empty; to target every resource use `match_all: true`.'
-          maxLength: 256
-          minLength: 1
-          type: string
-    Kibana_HTTP_APIs_alerting_rule_grouping:
-      additionalProperties: false
-      description: Grouping configuration.
-      type: object
-      properties:
-        fields:
-          description: Fields to group alerts by, e.g. ["host.name", "service.name"]. Should match ES|QL GROUP BY fields.
-          items:
-            maxLength: 256
-            minLength: 1
-            type: string
-          maxItems: 16
-          type: array
-      required:
-      - fields
-    Kibana_HTTP_APIs_alerting_new_activate_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        reason:
-          description: Reason for activating the alert.
-          maxLength: 1024
-          minLength: 1
-          type: string
-      required:
-      - reason
+      - items
+      - total
+      - page
+      - per_page
     Kibana_HTTP_APIs_alerting_action_policy_throttle:
       additionalProperties: false
       type: object
@@ -9021,69 +8554,55 @@ components:
             - every_time
             type: string
           description: The throttle strategy.
-    Kibana_HTTP_APIs_alerting_action_policy_grouping_mode:
-      anyOf:
-      - description: one notification per alert episode lifecycle (default).
-        enum:
-        - per_episode
-        type: string
-      - description: a single notification for all matching episodes.
-        enum:
-        - all
-        type: string
-      - description: group by specified `groupBy` fields.
-        enum:
-        - per_field
-        type: string
-      description: 'The grouping mode: per_episode groups by episode lifecycle, all sends a single notification for all alerts, per_field groups by the specified fields.'
-    Kibana_HTTP_APIs_alerting_standalone_rule_query:
+    Kibana_HTTP_APIs_alerting_bulk_by_query_request:
       additionalProperties: false
-      description: 'Standalone queries: independent full queries for breach, recovery, and no_data.'
       type: object
       properties:
-        breach:
-          additionalProperties: false
-          description: Breach detection configuration (required).
-          type: object
-          properties:
-            query:
-              description: Full ES|QL query for breach detection (required).
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - query
-        format:
-          enum:
-          - standalone
+        filter:
+          description: 'KQL filter string to match target resources. At most 10000 matching resources are processed per request. Cannot be empty; to target every resource use `match_all: true`.'
+          maxLength: 4096
+          minLength: 1
           type: string
-        no_data:
-          additionalProperties: false
-          description: No-data detection query. Required when no_data_strategy is not "none".
-          type: object
-          properties:
-            query:
-              description: Full ES|QL query that detects presence of data.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - query
-        recovery:
-          additionalProperties: false
-          description: Recovery query. Required when recovery_strategy is "query".
-          type: object
-          properties:
-            query:
-              description: Full ES|QL query for recovery detection.
-              maxLength: 10000
-              minLength: 1
-              type: string
-          required:
-          - query
+        force:
+          default: false
+          description: When true, executes the operation. When false (default), returns a dry-run preview with `match_count` and a `sample` of matching resource IDs so the client can verify before committing.
+          type: boolean
+        match_all:
+          description: When true, targets every resource. Requires an explicit opt-in. Omitted by default.
+          enum:
+          - true
+          type: boolean
+        search:
+          description: 'Free-text search string matched against the resource-defined searchable fields. Cannot be empty; to target every resource use `match_all: true`.'
+          maxLength: 256
+          minLength: 1
+          type: string
+    Kibana_HTTP_APIs_alerting_unack_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Removes acknowledgement from an alert.
+          enum:
+          - unack
+          type: string
+        episode_id:
+          description: The episode identifier for the alert to unacknowledge.
+          maxLength: 150
+          minLength: 1
+          type: string
       required:
-      - format
-      - breach
+      - action_type
+      - episode_id
+    Kibana_HTTP_APIs_alerting_new_snooze_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        expiry:
+          description: ISO datetime when snooze should expire.
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+          type: string
     Kibana_HTTP_APIs_alerting_new_action_policy:
       additionalProperties: false
       type: object
@@ -9134,27 +8653,51 @@ components:
       - name
       - description
       - destinations
-    Kibana_HTTP_APIs_alerting_bulk_snooze_action_policies_request:
+    Kibana_HTTP_APIs_alerting_rule_response_metadata:
       additionalProperties: false
       type: object
       properties:
-        ids:
-          description: Explicit list of IDs to operate on.
+        builder_type:
+          description: Identifies the rule builder that authored this rule (e.g. "threshold"). Absent for rules authored directly in ES|QL.
+          maxLength: 64
+          type: string
+        description:
+          description: Human-readable description of the rule.
+          maxLength: 1024
+          type: string
+        name:
+          description: Rule name (must be unique within the space).
+          maxLength: 256
+          minLength: 1
+          type: string
+        owner:
+          description: Owner of the rule.
+          maxLength: 256
+          type: string
+        tags:
+          description: Tags for categorization, e.g. ["production", "infra"].
           items:
-            maxLength: 150
+            maxLength: 128
             minLength: 1
             type: string
-          maxItems: 100
+          maxItems: 20
           minItems: 1
           type: array
-        snoozed_until:
-          description: The ISO datetime until which the targeted action policies should be snoozed.
-          format: date-time
-          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
-          type: string
+        version:
+          description: Monotonically increasing integer number representing a rule configuration version, incremented on every change. Used on generated rule events as `rule.version`.
+          maximum: 9007199254740991
+          minimum: 1
+          type: integer
       required:
-      - ids
-      - snoozed_until
+      - name
+      - version
+    Kibana_HTTP_APIs_alerting_bulk_create_alert_actions_request:
+      description: Request body for bulk create alert actions. Array of 1 to 100 actions, each with group_hash and action payload.
+      items:
+        $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item'
+      maxItems: 100
+      minItems: 1
+      type: array
     Kibana_HTTP_APIs_alerting_new_assign_alert_action:
       additionalProperties: false
       type: object
@@ -9173,17 +8716,121 @@ components:
       required:
       - episode_id
       - assignee_uid
-    Kibana_HTTP_APIs_alerting_new_unack_alert_action:
+    Kibana_HTTP_APIs_alerting_error_response:
       additionalProperties: false
       type: object
       properties:
-        episode_id:
-          description: The episode identifier for the alert to unacknowledge.
-          maxLength: 150
-          minLength: 1
+        code:
+          description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
+          type: string
+        details:
+          additionalProperties: {}
+          description: Optional structured context (e.g., validation field errors, conflict resource IDs).
+          type: object
+        error:
+          description: A short human-readable summary of the error category (e.g., "Not Found", "Bad Request"). Subject to change without notice. Do not parse or rely on its content.
+          type: string
+        message:
+          description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
           type: string
       required:
-      - episode_id
+      - code
+      - error
+      - message
+    Kibana_HTTP_APIs_alerting_rule_metadata:
+      additionalProperties: false
+      description: Rule metadata.
+      type: object
+      properties:
+        builder_type:
+          description: Identifies the rule builder that authored this rule (e.g. "threshold"). Absent for rules authored directly in ES|QL.
+          maxLength: 64
+          type: string
+        description:
+          description: Human-readable description of the rule.
+          maxLength: 1024
+          type: string
+        name:
+          description: Rule name (must be unique within the space).
+          maxLength: 256
+          minLength: 1
+          type: string
+        owner:
+          description: Owner of the rule.
+          maxLength: 256
+          type: string
+        tags:
+          description: Tags for categorization, e.g. ["production", "infra"].
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          minItems: 1
+          type: array
+      required:
+      - name
+    Kibana_HTTP_APIs_alerting_composed_rule_query:
+      additionalProperties: false
+      description: 'Composed query: a shared base with appendable breach and recovery segments.'
+      type: object
+      properties:
+        base:
+          description: Base ES|QL query. Time filters are applied automatically via the lookback window.
+          maxLength: 10000
+          minLength: 1
+          type: string
+        breach:
+          additionalProperties: false
+          description: Breach detection configuration. Omit to treat every base row as a breach.
+          type: object
+          properties:
+            segment:
+              description: A clause appended to the end of the rule's ES|QL query. Required in breach blocks.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - segment
+        format:
+          enum:
+          - composed
+          type: string
+        recovery:
+          additionalProperties: false
+          description: Recovery query segment. Required when recovery_strategy is "query".
+          type: object
+          properties:
+            segment:
+              description: Appendable ES|QL segment for recovery detection.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - segment
+      required:
+      - format
+      - base
+    Kibana_HTTP_APIs_alerting_tag_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Adds tags to an alert.
+          enum:
+          - tag
+          type: string
+        tags:
+          description: List of tags to add to the alert.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type: array
+      required:
+      - action_type
+      - tags
     Kibana_HTTP_APIs_alerting_update_rule:
       additionalProperties: false
       type: object
@@ -9320,10 +8967,60 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-    Kibana_HTTP_APIs_alerting_new_unsnooze_alert_action:
+    Kibana_HTTP_APIs_alerting_new_unack_alert_action:
       additionalProperties: false
       type: object
-      properties: {}
+      properties:
+        episode_id:
+          description: The episode identifier for the alert to unacknowledge.
+          maxLength: 150
+          minLength: 1
+          type: string
+      required:
+      - episode_id
+    Kibana_HTTP_APIs_alerting_bulk_dry_run_response:
+      additionalProperties: false
+      description: Dry-run preview returned by a by-query bulk endpoint when `force` is false.
+      type: object
+      properties:
+        match_count:
+          description: 'Total number of resources matching the query. A dry run never fails on size, but if this exceeds 10000, re-sending the same query with `force: true` is rejected with `BULK_QUERY_MATCH_LIMIT_EXCEEDED`; narrow the query before executing.'
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        sample:
+          description: Sample of matching resource IDs (up to 100) for spot-checking before executing.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+      required:
+      - match_count
+      - sample
+    Kibana_HTTP_APIs_alerting_new_activate_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        reason:
+          description: Reason for activating the alert.
+          maxLength: 1024
+          minLength: 1
+          type: string
+      required:
+      - reason
+    Kibana_HTTP_APIs_alerting_rule_schedule:
+      additionalProperties: false
+      description: Execution schedule configuration.
+      type: object
+      properties:
+        every:
+          description: Execution interval, e.g. 1m, 5m, 1h.
+          type: string
+        lookback:
+          description: Lookback window for the query, e.g. 5m, 1h. Can also be expressed in ES|QL.
+          type: string
+      required:
+      - every
     Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_request:
       additionalProperties: false
       type: object
@@ -9350,39 +9047,156 @@ components:
                 type: string
               maxItems: 100
               type: array
-    Kibana_HTTP_APIs_alerting_rule_metadata:
+    Kibana_HTTP_APIs_alerting_rule_query:
+      description: Detection query configuration.
+      discriminator:
+        mapping:
+          composed: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
+          standalone: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
+        propertyName: format
+      oneOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
+    Kibana_HTTP_APIs_alerting_action_policy_grouping_mode:
+      anyOf:
+      - description: one notification per alert episode lifecycle (default).
+        enum:
+        - per_episode
+        type: string
+      - description: a single notification for all matching episodes.
+        enum:
+        - all
+        type: string
+      - description: group by specified `groupBy` fields.
+        enum:
+        - per_field
+        type: string
+      description: 'The grouping mode: per_episode groups by episode lifecycle, all sends a single notification for all alerts, per_field groups by the specified fields.'
+    Kibana_HTTP_APIs_alerting_bulk_get_rules_request:
       additionalProperties: false
-      description: Rule metadata.
       type: object
       properties:
-        builder_type:
-          description: Identifies the rule builder that authored this rule (e.g. "threshold"). Absent for rules authored directly in ES|QL.
-          maxLength: 64
-          type: string
-        description:
-          description: Human-readable description of the rule.
-          maxLength: 1024
-          type: string
-        name:
-          description: Rule name (must be unique within the space).
-          maxLength: 256
-          minLength: 1
-          type: string
-        owner:
-          description: Owner of the rule.
-          maxLength: 256
-          type: string
-        tags:
-          description: Tags for categorization, e.g. ["production", "infra"].
+        ids:
+          description: Rule identifiers to retrieve. The response preserved this order.
           items:
-            maxLength: 128
+            description: A rule identifier.
+            maxLength: 150
             minLength: 1
             type: string
-          maxItems: 20
+          maxItems: 100
           minItems: 1
           type: array
       required:
-      - name
+      - ids
+    Kibana_HTTP_APIs_alerting_bulk_create_alert_action_item:
+      allOf:
+      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_alert_action'
+      - additionalProperties: false
+        description: Alert action payload with group identifier for bulk requests.
+        type: object
+        properties:
+          group_hash:
+            description: Hash identifying the alert group to apply the action to.
+            maxLength: 256
+            minLength: 1
+            type: string
+        required:
+        - group_hash
+    Kibana_HTTP_APIs_alerting_policy_execution_history_item:
+      additionalProperties: false
+      type: object
+      properties:
+        action_group_count:
+          type: number
+        dispatched_at:
+          type: string
+        episode_count:
+          type: number
+        episodes:
+          description: Episode ids referenced by this event, bounded to MAX_EMBEDDED_EPISODES_PER_ITEM. Use `episode_count` for the true total.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+            required:
+            - id
+          maxItems: 50
+          type: array
+        error:
+          additionalProperties: false
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+          - message
+        failure_reason:
+          enum:
+          - missing_api_key
+          - workflow_not_found
+          - workflow_disabled
+          - schedule_error
+          type: string
+        outcome:
+          enum:
+          - dispatched
+          - throttled
+          - dispatch_failed
+          type: string
+        policy:
+          additionalProperties: false
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type:
+              - string
+              - 'null'
+          required:
+          - id
+        rules:
+          description: Rules referenced by this event, bounded to MAX_EMBEDDED_RULES_PER_ITEM. When a search or rule filter narrows the match, this array is intersected with the matched subset server-side. Use `total_rule_count` for the full count.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type:
+                - string
+                - 'null'
+            required:
+            - id
+          maxItems: 20
+          type: array
+        total_rule_count:
+          description: Total number of rules referenced by this event after search / rule-filter narrowing. May exceed `rules.length` when the embedded array is truncated to the cap.
+          type: number
+        workflows:
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type:
+                - string
+                - 'null'
+            required:
+            - id
+          maxItems: 100
+          type: array
+      required:
+      - dispatched_at
+      - policy
+      - outcome
+      - episode_count
+      - action_group_count
+      - rules
+      - total_rule_count
+      - workflows
     Kibana_HTTP_APIs_alerting_matched_action_policy:
       additionalProperties: false
       description: An action policy that matches a rule, along with the reason it matched.
@@ -9400,73 +9214,63 @@ components:
       required:
       - actionPolicy
       - category
-    Kibana_HTTP_APIs_alerting_rule_query:
-      description: Detection query configuration.
-      discriminator:
-        mapping:
-          composed: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
-          standalone: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
-        propertyName: format
-      oneOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_composed_rule_query'
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_standalone_rule_query'
-    Kibana_HTTP_APIs_alerting_snooze_alert_action:
+    Kibana_HTTP_APIs_alerting_rule_list_response:
       additionalProperties: false
+      description: Paginated list of rules.
       type: object
       properties:
-        action_type:
-          description: Snoozes an alert.
-          enum:
-          - snooze
-          type: string
-        expiry:
-          description: ISO datetime when snooze should expire.
-          format: date-time
-          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
-          type: string
+        items:
+          description: The list of rules.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_response'
+          type: array
+        page:
+          description: The current page number.
+          type: number
+        per_page:
+          description: The number of rules per page.
+          type: number
+        total:
+          description: The total number of rules matching the query.
+          type: number
       required:
-      - action_type
-    Kibana_HTTP_APIs_alerting_bulk_operation_response:
+      - items
+      - total
+      - page
+      - per_page
+    Kibana_HTTP_APIs_alerting_match_action_policies_for_rule_response:
       additionalProperties: false
-      description: Result of an executed bulk operation.
+      description: Action policies that match a given rule, grouped by match category.
       type: object
       properties:
-        affected_count:
-          description: Number of resources the operation successfully touched.
+        items:
+          description: The list of matched action policies.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_matched_action_policy'
+          type: array
+        total:
+          description: Total number of action policies in the space. If greater than the number evaluated, the match results may be incomplete.
           maximum: 9007199254740991
           minimum: 0
           type: integer
-        errors:
-          description: Errors encountered during the operation.
+      required:
+      - items
+      - total
+    Kibana_HTTP_APIs_alerting_bulk_by_ids_request:
+      additionalProperties: false
+      type: object
+      properties:
+        ids:
+          description: Explicit list of IDs to operate on.
           items:
-            type: object
-            properties:
-              error:
-                type: object
-                properties:
-                  code:
-                    description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
-                    type: string
-                  details:
-                    additionalProperties: {}
-                    description: Optional structured context (e.g., validation field errors, conflict resource IDs).
-                    type: object
-                  message:
-                    description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
-                    type: string
-                required:
-                - code
-                - message
-              id:
-                description: The identifier of the resource that failed.
-                type: string
-            required:
-            - id
-            - error
+            maxLength: 150
+            minLength: 1
+            type: string
+          maxItems: 100
+          minItems: 1
           type: array
       required:
-      - affected_count
-      - errors
+      - ids
     Kibana_HTTP_APIs_alerting_action_policy_response:
       additionalProperties: false
       type: object
@@ -9599,169 +9403,365 @@ components:
       - created_at
       - updated_by
       - updated_at
-    Kibana_HTTP_APIs_alerting_rule_response_metadata:
-      additionalProperties: false
-      type: object
-      properties:
-        builder_type:
-          description: Identifies the rule builder that authored this rule (e.g. "threshold"). Absent for rules authored directly in ES|QL.
-          maxLength: 64
-          type: string
-        description:
-          description: Human-readable description of the rule.
-          maxLength: 1024
-          type: string
-        name:
-          description: Rule name (must be unique within the space).
-          maxLength: 256
-          minLength: 1
-          type: string
-        owner:
-          description: Owner of the rule.
-          maxLength: 256
-          type: string
-        tags:
-          description: Tags for categorization, e.g. ["production", "infra"].
-          items:
-            maxLength: 128
-            minLength: 1
-            type: string
-          maxItems: 20
-          minItems: 1
-          type: array
-        version:
-          description: Monotonically increasing integer number representing a rule configuration version, incremented on every change. Used on generated rule events as `rule.version`.
-          maximum: 9007199254740991
-          minimum: 1
-          type: integer
-      required:
-      - name
-      - version
-    Kibana_HTTP_APIs_alerting_ack_alert_action:
+    Kibana_HTTP_APIs_alerting_snooze_alert_action:
       additionalProperties: false
       type: object
       properties:
         action_type:
-          description: Acknowledges an alert.
+          description: Snoozes an alert.
           enum:
-          - ack
+          - snooze
           type: string
+        expiry:
+          description: ISO datetime when snooze should expire.
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+          type: string
+      required:
+      - action_type
+    Kibana_HTTP_APIs_alerting_assign_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        action_type:
+          description: Assigns an alerting episode to a user, or clears the assignee when null.
+          enum:
+          - assign
+          type: string
+        assignee_uid:
+          description: User profile UID of the assignee, or null to remove the assignee from the episode.
+          maxLength: 256
+          type:
+          - string
+          - 'null'
         episode_id:
-          description: The episode identifier for the alert to acknowledge.
+          description: The episode identifier to assign.
           maxLength: 150
           minLength: 1
           type: string
       required:
       - action_type
       - episode_id
-    Kibana_HTTP_APIs_alerting_action_policy_destination:
-      description: An action policy destination configuration.
-      discriminator:
-        mapping:
-          workflow: '#/components/schemas/Kibana_HTTP_APIs_alerting_workflow_action_policy_destination'
-        propertyName: type
-      oneOf:
-      - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_workflow_action_policy_destination'
-    Kibana_HTTP_APIs_alerting_rule_list_response:
+      - assignee_uid
+    Kibana_HTTP_APIs_alerting_rule_execution:
       additionalProperties: false
-      description: Paginated list of rules.
+      type: object
+      properties:
+        ended_at:
+          type: string
+        error:
+          additionalProperties: false
+          type:
+          - object
+          - 'null'
+          properties:
+            message:
+              type: string
+            stack_trace:
+              type:
+              - string
+              - 'null'
+          required:
+          - message
+          - stack_trace
+        id:
+          type: string
+        outcome:
+          enum:
+          - success
+          - failure
+          type: string
+        reason:
+          type:
+          - string
+          - 'null'
+        rule:
+          additionalProperties: false
+          type: object
+          properties:
+            id:
+              type: string
+            version:
+              maximum: 9007199254740991
+              minimum: -9007199254740991
+              type:
+              - integer
+              - 'null'
+          required:
+          - id
+          - version
+        space_id:
+          type: string
+        started_at:
+          type: string
+        timings:
+          additionalProperties: false
+          type: object
+          properties:
+            duration:
+              maximum: 9007199254740991
+              minimum: 0
+              type: integer
+            scheduled_delay:
+              maximum: 9007199254740991
+              minimum: -9007199254740991
+              type: integer
+          required:
+          - duration
+          - scheduled_delay
+      required:
+      - id
+      - rule
+      - space_id
+      - started_at
+      - ended_at
+      - timings
+      - outcome
+      - reason
+      - error
+    Kibana_HTTP_APIs_alerting_new_ack_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        episode_id:
+          description: The episode identifier for the alert to acknowledge.
+          maxLength: 150
+          minLength: 1
+          type: string
+      required:
+      - episode_id
+    Kibana_HTTP_APIs_alerting_update_action_policy:
+      additionalProperties: false
+      type: object
+      properties:
+        description:
+          description: A description of the action policy.
+          maxLength: 1024
+          type: string
+        destinations:
+          description: The list of destinations. At least one is required.
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_destination'
+          maxItems: 10
+          minItems: 1
+          type: array
+        group_by:
+          description: The fields used to group alerts.
+          items:
+            maxLength: 256
+            minLength: 1
+            type: string
+          maxItems: 16
+          type:
+          - array
+          - 'null'
+        grouping_mode:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_grouping_mode'
+          description: The grouping mode for alert notifications.
+        matcher:
+          description: A KQL query string to match alerts.
+          maxLength: 4096
+          type:
+          - string
+          - 'null'
+        name:
+          description: The name of the action policy.
+          maxLength: 256
+          minLength: 1
+          type: string
+        tags:
+          description: Tags for categorizing the action policy.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type:
+          - array
+          - 'null'
+        throttle:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_throttle'
+          description: The throttle configuration for notifications.
+        version:
+          description: The current version of the action policy, used for optimistic concurrency control.
+          maxLength: 256
+          minLength: 1
+          type: string
+      required:
+      - version
+    Kibana_HTTP_APIs_alerting_standalone_rule_query:
+      additionalProperties: false
+      description: 'Standalone queries: independent full queries for breach, recovery, and no_data.'
+      type: object
+      properties:
+        breach:
+          additionalProperties: false
+          description: Breach detection configuration (required).
+          type: object
+          properties:
+            query:
+              description: Full ES|QL query for breach detection (required).
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - query
+        format:
+          enum:
+          - standalone
+          type: string
+        no_data:
+          additionalProperties: false
+          description: No-data detection query. Required when no_data_strategy is not "none".
+          type: object
+          properties:
+            query:
+              description: Full ES|QL query that detects presence of data.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - query
+        recovery:
+          additionalProperties: false
+          description: Recovery query. Required when recovery_strategy is "query".
+          type: object
+          properties:
+            query:
+              description: Full ES|QL query for recovery detection.
+              maxLength: 10000
+              minLength: 1
+              type: string
+          required:
+          - query
+      required:
+      - format
+      - breach
+    Kibana_HTTP_APIs_alerting_bulk_operation_response:
+      additionalProperties: false
+      description: Result of an executed bulk operation.
+      type: object
+      properties:
+        affected_count:
+          description: Number of resources the operation successfully touched.
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        errors:
+          description: Errors encountered during the operation.
+          items:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  code:
+                    description: A stable, machine-readable error code (e.g., "RULE_NOT_FOUND", "INVALID_SCHEDULE"). Safe for clients to branch on.
+                    type: string
+                  details:
+                    additionalProperties: {}
+                    description: Optional structured context (e.g., validation field errors, conflict resource IDs).
+                    type: object
+                  message:
+                    description: A human-friendly explanation of the error. Subject to change without notice. Do not parse or rely on its content.
+                    type: string
+                required:
+                - code
+                - message
+              id:
+                description: The identifier of the resource that failed.
+                type: string
+            required:
+            - id
+            - error
+          type: array
+      required:
+      - affected_count
+      - errors
+    Kibana_HTTP_APIs_alerting_new_tag_alert_action:
+      additionalProperties: false
+      type: object
+      properties:
+        tags:
+          description: List of tags to add to the alert.
+          items:
+            maxLength: 128
+            minLength: 1
+            type: string
+          maxItems: 20
+          type: array
+      required:
+      - tags
+    Kibana_HTTP_APIs_alerting_action_policy_list_response:
+      additionalProperties: false
+      description: Paginated list of action policies.
       type: object
       properties:
         items:
-          description: The list of rules.
+          description: The list of action policies.
           items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_rule_response'
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_alerting_action_policy_response'
           type: array
         page:
           description: The current page number.
           type: number
         per_page:
-          description: The number of rules per page.
+          description: The number of action policies per page.
           type: number
         total:
-          description: The total number of rules matching the query.
+          description: The total number of action policies matching the query.
           type: number
       required:
       - items
       - total
       - page
       - per_page
-    Kibana_HTTP_APIs_alerting_new_snooze_alert_action:
+    Kibana_HTTP_APIs_alerting_rule_tags_response:
       additionalProperties: false
+      description: All unique tags across rules.
       type: object
       properties:
-        expiry:
-          description: ISO datetime when snooze should expire.
-          format: date-time
-          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
-          type: string
-    Kibana_HTTP_APIs_alerting_rule_artifact:
-      additionalProperties: false
-      type: object
-      properties:
-        data:
-          additionalProperties: {}
-          description: Structured artifact data.
-          type: object
-        id:
-          description: Artifact identifier.
-          maxLength: 256
-          minLength: 1
-          type: string
-        type:
-          description: Artifact type.
-          maxLength: 128
-          minLength: 1
-          type: string
+        tags:
+          description: The list of unique tags.
+          items:
+            type: string
+          type: array
       required:
-      - id
-      - type
-      - data
-    Kibana_HTTP_APIs_alerting_workflow_action_policy_destination:
+      - tags
+    Kibana_HTTP_APIs_alerting_new_deactivate_alert_action:
       additionalProperties: false
       type: object
       properties:
-        id:
-          description: The workflow connector identifier.
-          maxLength: 150
-          minLength: 1
-          type: string
-        type:
-          description: The destination type.
-          enum:
-          - workflow
-          type: string
-      required:
-      - type
-      - id
-    Kibana_HTTP_APIs_alerting_deactivate_alert_action:
-      additionalProperties: false
-      type: object
-      properties:
-        action_type:
-          description: Deactivates an alert.
-          enum:
-          - deactivate
-          type: string
         reason:
           description: Reason for deactivating the alert.
           maxLength: 1024
           minLength: 1
           type: string
       required:
-      - action_type
       - reason
-    Kibana_HTTP_APIs_alerting_unsnooze_alert_action:
+    Kibana_HTTP_APIs_alerting_bulk_snooze_action_policies_request:
       additionalProperties: false
       type: object
       properties:
-        action_type:
-          description: Removes snooze from an alert.
-          enum:
-          - unsnooze
+        ids:
+          description: Explicit list of IDs to operate on.
+          items:
+            maxLength: 150
+            minLength: 1
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        snoozed_until:
+          description: The ISO datetime until which the targeted action policies should be snoozed.
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
           type: string
       required:
-      - action_type
+      - ids
+      - snoozed_until
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

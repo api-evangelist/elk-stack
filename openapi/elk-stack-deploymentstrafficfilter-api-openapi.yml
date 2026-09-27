@@ -603,6 +603,16 @@ paths:
         tag: Deployments - Traffic Filter - Associations
 components:
   schemas:
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     TrafficFilterRulesetRequest:
       type: object
       required:
@@ -633,17 +643,6 @@ components:
           items:
             $ref: '#/components/schemas/TrafficFilterRule'
       description: The specification for traffic filter ruleset.
-    TrafficFilterRulesets:
-      type: object
-      required:
-      - rulesets
-      properties:
-        rulesets:
-          type: array
-          description: List of traffic filter rules
-          items:
-            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
-      description: The container for a set of traffic filter rulesets.
     EmptyResponse:
       type: object
     TrafficFilterRulesetInfo:
@@ -696,46 +695,26 @@ components:
           format: int32
           description: Total number of associations. This includes associations the user does not have permission to view.Returned only when include_associations query parameter is true
       description: The container for a set of traffic filter rules.
-    BasicFailedReplyElement:
+    TrafficFilterRulesetResponse:
       type: object
       required:
-      - code
-      - message
+      - id
       properties:
-        code:
+        id:
           type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    TrafficFilterEgressRule:
+          description: The new ruleset ID
+      description: The response after you create a new ruleset.
+    TrafficFilterRulesets:
       type: object
       required:
-      - protocol
-      - target
+      - rulesets
       properties:
-        target:
-          type: string
-          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
-        ports:
+        rulesets:
           type: array
-          description: A list of target ports for an egress rule
+          description: List of traffic filter rules
           items:
-            type: integer
-            format: int32
-        protocol:
-          type: string
-          description: The target protocol for an egress rule
-          enum:
-          - all
-          - tcp
-          - udp
-      description: The rule detail for a traffic filter egress rule.
+            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
+      description: The container for a set of traffic filter rulesets.
     TrafficFilterRule:
       type: object
       properties:
@@ -764,55 +743,6 @@ components:
           description: An egress traffic filter rule
           $ref: '#/components/schemas/TrafficFilterEgressRule'
       description: The container for a traffic filter rule.
-    TrafficFilterRulesetResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The new ruleset ID
-      description: The response after you create a new ruleset.
-    RulesetAssociations:
-      type: object
-      required:
-      - associations
-      - total_associations
-      properties:
-        associations:
-          type: array
-          description: List of associations
-          items:
-            $ref: '#/components/schemas/FilterAssociation'
-        total_associations:
-          type: integer
-          format: int32
-          description: Total number of associations. This includes associations the user does not have permission to view.
-      description: The configuration settings for the traffic filter.
-    TrafficFilterClaimedLinkIds:
-      type: object
-      required:
-      - claimed_link_ids
-      properties:
-        claimed_link_ids:
-          type: array
-          description: List of traffic filter claimed link id
-          items:
-            $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
-      description: The container for a set of traffic filter claimed link id.
-    FilterAssociation:
-      type: object
-      required:
-      - entity_type
-      - id
-      properties:
-        entity_type:
-          type: string
-          description: Type of the traffic filter ruleset association, such as 'deployment', 'cluster'
-        id:
-          type: string
-          description: ID of the entity, such as the deployment ID or Elasticsearch cluster ID.
-      description: The association with a ruleset or user auth token for a deployment, template, or product.
     TrafficFilterClaimedLinkIdInfo:
       type: object
       required:
@@ -830,26 +760,51 @@ components:
         region:
           type: string
           description: The claimed link id can be used only for traffic filter in the specific region
-    BasicFailedReply:
+    BasicFailedReplyElement:
       type: object
       required:
-      - errors
+      - code
+      - message
       properties:
-        errors:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    TrafficFilterSettings:
-      type: object
-      required:
-      - rulesets
-      properties:
-        rulesets:
-          type: array
-          description: IDs of the traffic filter rulesets
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
+    FilterAssociation:
+      type: object
+      required:
+      - entity_type
+      - id
+      properties:
+        entity_type:
+          type: string
+          description: Type of the traffic filter ruleset association, such as 'deployment', 'cluster'
+        id:
+          type: string
+          description: ID of the entity, such as the deployment ID or Elasticsearch cluster ID.
+      description: The association with a ruleset or user auth token for a deployment, template, or product.
+    RulesetAssociations:
+      type: object
+      required:
+      - associations
+      - total_associations
+      properties:
+        associations:
+          type: array
+          description: List of associations
+          items:
+            $ref: '#/components/schemas/FilterAssociation'
+        total_associations:
+          type: integer
+          format: int32
+          description: Total number of associations. This includes associations the user does not have permission to view.
       description: The configuration settings for the traffic filter.
     TrafficFilterClaimedLinkIdRequest:
       type: object
@@ -869,6 +824,51 @@ components:
           type: string
           description: The claimed link id can be used only for traffic filter in the specific region
       description: The specification for traffic filter claimed link id.
+    TrafficFilterEgressRule:
+      type: object
+      required:
+      - protocol
+      - target
+      properties:
+        target:
+          type: string
+          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
+        ports:
+          type: array
+          description: A list of target ports for an egress rule
+          items:
+            type: integer
+            format: int32
+        protocol:
+          type: string
+          description: The target protocol for an egress rule
+          enum:
+          - all
+          - tcp
+          - udp
+      description: The rule detail for a traffic filter egress rule.
+    TrafficFilterClaimedLinkIds:
+      type: object
+      required:
+      - claimed_link_ids
+      properties:
+        claimed_link_ids:
+          type: array
+          description: List of traffic filter claimed link id
+          items:
+            $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
+      description: The container for a set of traffic filter claimed link id.
+    TrafficFilterSettings:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: IDs of the traffic filter rulesets
+          items:
+            type: string
+      description: The configuration settings for the traffic filter.
   securitySchemes:
     apiKey:
       type: apiKey

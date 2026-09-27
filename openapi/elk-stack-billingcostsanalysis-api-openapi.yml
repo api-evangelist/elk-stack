@@ -614,6 +614,48 @@ paths:
         tag: Billing Costs Analysis
 components:
   schemas:
+    ChartItems:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          description: The list of chart item
+          items:
+            $ref: '#/components/schemas/ChartItem'
+      description: A collection of ChartItems
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    Dimension:
+      type: object
+      required:
+      - cost
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of the billing dimension
+          enum:
+          - capacity
+          - data_in
+          - data_internode
+          - data_out
+          - storage_api
+          - storage_bytes
+        cost:
+          type: number
+          format: double
+          description: The cost of the billing dimension
+      description: Billing dimension
     DtsDimensionCosts:
       type: object
       required:
@@ -660,6 +702,49 @@ components:
           items:
             $ref: '#/components/schemas/DeploymentCosts'
       description: Costs associated to a set of deployments for an organization. All of the costs are expressed in Elastic Consumption Unit (ECU).
+    ChartItemValue:
+      type: object
+      required:
+      - id
+      - name
+      - value
+      properties:
+        id:
+          type: string
+          description: The id of chart item value
+        name:
+          type: string
+          description: The name of the chart item value
+        value:
+          type: number
+          format: double
+          description: The actual value of the chart item value
+      description: A ChartItem value
+    DeploymentCosts:
+      type: object
+      required:
+      - costs
+      - deployment_id
+      - deployment_name
+      - hourly_rate
+      properties:
+        deployment_id:
+          type: string
+          description: Elasticsearch deployment id
+        deployment_name:
+          type: string
+          description: Elasticsearch deployment name
+        costs:
+          description: Costs associated to the deployment
+          $ref: '#/components/schemas/Costs'
+        hourly_rate:
+          type: number
+          format: double
+          description: Price per hour
+        period:
+          description: Period
+          $ref: '#/components/schemas/Period'
+      description: Detailed costs for a deployment for an organization. All of the costs are expressed in Elastic Consumption Unit (ECU).
     Period:
       type: object
       required:
@@ -675,38 +760,20 @@ components:
           format: date-time
           description: End
       description: Period
-    ChartItems:
+    DtsQuantity:
       type: object
       required:
-      - data
+      - formatted_value
+      - value
       properties:
-        data:
-          type: array
-          description: The list of chart item
-          items:
-            $ref: '#/components/schemas/ChartItem'
-      description: A collection of ChartItems
-    Dimension:
-      type: object
-      required:
-      - cost
-      - type
-      properties:
-        type:
+        value:
+          type: integer
+          format: int64
+          description: Raw quantity
+        formatted_value:
           type: string
-          description: The type of the billing dimension
-          enum:
-          - capacity
-          - data_in
-          - data_internode
-          - data_out
-          - storage_api
-          - storage_bytes
-        cost:
-          type: number
-          format: double
-          description: The cost of the billing dimension
-      description: Billing dimension
+          description: Quantity in human readable format
+      description: DTS quantity
     BasicFailedReplyElement:
       type: object
       required:
@@ -724,6 +791,100 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
+    Costs:
+      type: object
+      required:
+      - dimensions
+      - total
+      properties:
+        total:
+          type: number
+          format: double
+          description: Total costs
+        dimensions:
+          type: array
+          description: A collection of billing details by dimension.
+          items:
+            $ref: '#/components/schemas/Dimension'
+      description: Costs overview for an organization. All of the costs, credits, trials are expressed in Elastic Consumption Unit (ECU).
+    ItemsCosts:
+      type: object
+      required:
+      - costs
+      - data_transfer_and_storage
+      - resources
+      properties:
+        costs:
+          description: Costs for the Elastic Cloud resources
+          $ref: '#/components/schemas/Costs'
+        data_transfer_and_storage:
+          type: array
+          description: List of the detailed costs associated to the Data Transfer and Storage (DTS) dimensions
+          items:
+            $ref: '#/components/schemas/DtsDimensionCosts'
+        resources:
+          type: array
+          description: Costs of the list of resources
+          items:
+            $ref: '#/components/schemas/ItemCosts'
+      description: Costs associated to a set of Elastic Cloud resources for an organization. All of the costs are expressed in Elastic Consumption Unit (ECU).
+    Balance:
+      type: object
+      required:
+      - available
+      - line_items
+      - remaining
+      properties:
+        available:
+          type: number
+          format: double
+          description: Available balance
+        remaining:
+          type: number
+          format: double
+          description: Remaining balance
+        line_items:
+          type: array
+          description: A collection of order line items for for an organization
+          items:
+            $ref: '#/components/schemas/SimplifiedLineItem'
+      description: The available balance for an organization
+    DtsRate:
+      type: object
+      required:
+      - formatted_value
+      - value
+      properties:
+        value:
+          type: number
+          format: double
+          description: Raw rate
+        formatted_value:
+          type: string
+          description: Rate in human readable format
+      description: DTS Rate
+    CostsOverview:
+      type: object
+      required:
+      - costs
+      - hourly_rate
+      - trials
+      properties:
+        costs:
+          description: Costs for the organization
+          $ref: '#/components/schemas/Costs'
+        trials:
+          type: number
+          format: double
+          description: Trial costs for the organization
+        hourly_rate:
+          type: number
+          format: double
+          description: Hourly rate applied.
+        balance:
+          description: Balance for the organization
+          $ref: '#/components/schemas/Balance'
+      description: The top level costs overview for an organization. All of the costs, credits, trials are expressed in Elastic Consumption Unit (ECU).
     ItemCosts:
       type: object
       required:
@@ -772,27 +933,22 @@ components:
           type: string
           description: Stock Keeping Unit (SKU)
       description: Detailed costs associated to an Elastic Cloud Resource for an organization. All of the costs are expressed in Elastic Consumption Unit (ECU).
-    ItemsCosts:
+    ChartItem:
       type: object
       required:
-      - costs
-      - data_transfer_and_storage
-      - resources
+      - timestamp
+      - values
       properties:
-        costs:
-          description: Costs for the Elastic Cloud resources
-          $ref: '#/components/schemas/Costs'
-        data_transfer_and_storage:
+        timestamp:
+          type: integer
+          format: int64
+          description: Axis X position
+        values:
           type: array
-          description: List of the detailed costs associated to the Data Transfer and Storage (DTS) dimensions
+          description: the collection of values to plot the chart item
           items:
-            $ref: '#/components/schemas/DtsDimensionCosts'
-        resources:
-          type: array
-          description: Costs of the list of resources
-          items:
-            $ref: '#/components/schemas/ItemCosts'
-      description: Costs associated to a set of Elastic Cloud resources for an organization. All of the costs are expressed in Elastic Consumption Unit (ECU).
+            $ref: '#/components/schemas/ChartItemValue'
+      description: Chart Item
     SimplifiedLineItem:
       type: object
       required:
@@ -822,162 +978,6 @@ components:
           format: date-time
           description: Expiration of the line item
       description: Line Item
-    Balance:
-      type: object
-      required:
-      - available
-      - line_items
-      - remaining
-      properties:
-        available:
-          type: number
-          format: double
-          description: Available balance
-        remaining:
-          type: number
-          format: double
-          description: Remaining balance
-        line_items:
-          type: array
-          description: A collection of order line items for for an organization
-          items:
-            $ref: '#/components/schemas/SimplifiedLineItem'
-      description: The available balance for an organization
-    DtsRate:
-      type: object
-      required:
-      - formatted_value
-      - value
-      properties:
-        value:
-          type: number
-          format: double
-          description: Raw rate
-        formatted_value:
-          type: string
-          description: Rate in human readable format
-      description: DTS Rate
-    DtsQuantity:
-      type: object
-      required:
-      - formatted_value
-      - value
-      properties:
-        value:
-          type: integer
-          format: int64
-          description: Raw quantity
-        formatted_value:
-          type: string
-          description: Quantity in human readable format
-      description: DTS quantity
-    ChartItemValue:
-      type: object
-      required:
-      - id
-      - name
-      - value
-      properties:
-        id:
-          type: string
-          description: The id of chart item value
-        name:
-          type: string
-          description: The name of the chart item value
-        value:
-          type: number
-          format: double
-          description: The actual value of the chart item value
-      description: A ChartItem value
-    DeploymentCosts:
-      type: object
-      required:
-      - costs
-      - deployment_id
-      - deployment_name
-      - hourly_rate
-      properties:
-        deployment_id:
-          type: string
-          description: Elasticsearch deployment id
-        deployment_name:
-          type: string
-          description: Elasticsearch deployment name
-        costs:
-          description: Costs associated to the deployment
-          $ref: '#/components/schemas/Costs'
-        hourly_rate:
-          type: number
-          format: double
-          description: Price per hour
-        period:
-          description: Period
-          $ref: '#/components/schemas/Period'
-      description: Detailed costs for a deployment for an organization. All of the costs are expressed in Elastic Consumption Unit (ECU).
-    ChartItem:
-      type: object
-      required:
-      - timestamp
-      - values
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Axis X position
-        values:
-          type: array
-          description: the collection of values to plot the chart item
-          items:
-            $ref: '#/components/schemas/ChartItemValue'
-      description: Chart Item
-    CostsOverview:
-      type: object
-      required:
-      - costs
-      - hourly_rate
-      - trials
-      properties:
-        costs:
-          description: Costs for the organization
-          $ref: '#/components/schemas/Costs'
-        trials:
-          type: number
-          format: double
-          description: Trial costs for the organization
-        hourly_rate:
-          type: number
-          format: double
-          description: Hourly rate applied.
-        balance:
-          description: Balance for the organization
-          $ref: '#/components/schemas/Balance'
-      description: The top level costs overview for an organization. All of the costs, credits, trials are expressed in Elastic Consumption Unit (ECU).
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    Costs:
-      type: object
-      required:
-      - dimensions
-      - total
-      properties:
-        total:
-          type: number
-          format: double
-          description: Total costs
-        dimensions:
-          type: array
-          description: A collection of billing details by dimension.
-          items:
-            $ref: '#/components/schemas/Dimension'
-      description: Costs overview for an organization. All of the costs, credits, trials are expressed in Elastic Consumption Unit (ECU).
   securitySchemes:
     apiKey:
       type: apiKey
