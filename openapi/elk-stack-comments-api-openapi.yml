@@ -387,6 +387,23 @@ paths:
         tag: Comments
 components:
   schemas:
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
     CommentWithMeta:
       type: object
       required:
@@ -400,8 +417,6 @@ components:
           description: The metadata
           $ref: '#/components/schemas/Metadata'
       description: A persisted Comment along with its metadata
-    EmptyResponse:
-      type: object
     BasicFailedReply:
       type: object
       required:
@@ -412,6 +427,45 @@ components:
           description: A list of errors that occurred in the failing request
           items:
             $ref: '#/components/schemas/BasicFailedReplyElement'
+    CommentCreateRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: The message for the Comment.
+      description: A request for creating a new Comment
+    Comment:
+      type: object
+      required:
+      - id
+      - message
+      - user_id
+      properties:
+        id:
+          type: string
+          description: The id of this Comment
+        user_id:
+          type: string
+          description: The user id of the user who wrote this Comment
+        message:
+          type: string
+          description: The message content of this Comment
+      description: A persisted Comment
+    EmptyResponse:
+      type: object
+    CommentsWithMetas:
+      type: object
+      required:
+      - values
+      properties:
+        values:
+          type: array
+          description: The list of comments
+          items:
+            $ref: '#/components/schemas/CommentWithMeta'
+      description: A list of persisted Comments
     Metadata:
       type: object
       required:
@@ -431,60 +485,6 @@ components:
           type: string
           description: Version
       description: Metadata of an entity
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    Comment:
-      type: object
-      required:
-      - id
-      - message
-      - user_id
-      properties:
-        id:
-          type: string
-          description: The id of this Comment
-        user_id:
-          type: string
-          description: The user id of the user who wrote this Comment
-        message:
-          type: string
-          description: The message content of this Comment
-      description: A persisted Comment
-    CommentCreateRequest:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: The message for the Comment.
-      description: A request for creating a new Comment
-    CommentsWithMetas:
-      type: object
-      required:
-      - values
-      properties:
-        values:
-          type: array
-          description: The list of comments
-          items:
-            $ref: '#/components/schemas/CommentWithMeta'
-      description: A list of persisted Comments
     CommentUpdateRequest:
       type: object
       required:

@@ -428,16 +428,6 @@ paths:
         tag: Deployments - Extensions
 components:
   schemas:
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
     Extension:
       type: object
       required:
@@ -480,8 +470,23 @@ components:
           description: The extension file metadata.
           $ref: '#/components/schemas/ExtensionFileMetadata'
       description: An API extension. It represents clusters' plugins and bundles
-    EmptyResponse:
+    BasicFailedReplyElement:
       type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
     UpdateExtensionRequest:
       type: object
       required:
@@ -508,34 +513,16 @@ components:
           type: string
           description: The Elasticsearch version.
       description: The body of a request to update an extension
-    BasicFailedReplyElement:
+    BasicFailedReply:
       type: object
       required:
-      - code
-      - message
+      - errors
       properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
+        errors:
           type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          description: A list of errors that occurred in the failing request
           items:
-            type: string
-    Extensions:
-      type: object
-      required:
-      - extensions
-      properties:
-        extensions:
-          type: array
-          description: The list of extensions.
-          items:
-            $ref: '#/components/schemas/Extension'
-      description: A collection of extensions
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     ExtensionFileMetadata:
       type: object
       properties:
@@ -551,6 +538,19 @@ components:
           type: string
           format: uri
           description: The temporary URL to download the extension file. Usable for verification.
+    Extensions:
+      type: object
+      required:
+      - extensions
+      properties:
+        extensions:
+          type: array
+          description: The list of extensions.
+          items:
+            $ref: '#/components/schemas/Extension'
+      description: A collection of extensions
+    EmptyResponse:
+      type: object
     CreateExtensionRequest:
       type: object
       required:

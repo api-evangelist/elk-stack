@@ -748,6 +748,538 @@ paths:
         name: product_name
 components:
   schemas:
+    Kibana_HTTP_APIs_update_output_logstash:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          type: boolean
+        is_default_monitoring:
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - logstash
+          type: string
+      title: update_output_logstash
+      type: object
+    Kibana_HTTP_APIs_update_output_remote_elasticsearch:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          type: boolean
+        is_default_monitoring:
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        kibana_api_key:
+          type:
+          - string
+          - 'null'
+        kibana_url:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            service_token:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        service_token:
+          type:
+          - string
+          - 'null'
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        sync_integrations:
+          type: boolean
+        sync_uninstalled_integrations:
+          type: boolean
+        type:
+          enum:
+          - remote_elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      title: update_output_remote_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_new_output_remote_elasticsearch:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        kibana_api_key:
+          type:
+          - string
+          - 'null'
+        kibana_url:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            service_token:
+              anyOf:
+              - additionalProperties: false
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        service_token:
+          type:
+          - string
+          - 'null'
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        sync_integrations:
+          type: boolean
+        sync_uninstalled_integrations:
+          type: boolean
+        type:
+          enum:
+          - remote_elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: new_output_remote_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_output_shipper:
+      additionalProperties: false
+      properties:
+        compression_level:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_compression_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_encryption_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_max_size:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_path:
+          default: null
+          type:
+          - string
+          - 'null'
+        loadbalance:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        max_batch_bytes:
+          default: null
+          type:
+          - number
+          - 'null'
+        mem_queue_events:
+          default: null
+          type:
+          - number
+          - 'null'
+        queue_flush_timeout:
+          default: null
+          type:
+          - number
+          - 'null'
+      title: output_shipper
+      type: object
+    Kibana_HTTP_APIs_output_response_shipper:
+      additionalProperties: true
+      properties:
+        compression_level:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_compression_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_encryption_enabled:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        disk_queue_max_size:
+          default: null
+          type:
+          - number
+          - 'null'
+        disk_queue_path:
+          default: null
+          type:
+          - string
+          - 'null'
+        loadbalance:
+          default: null
+          type:
+          - boolean
+          - 'null'
+        max_batch_bytes:
+          default: null
+          type:
+          - number
+          - 'null'
+        mem_queue_events:
+          default: null
+          type:
+          - number
+          - 'null'
+        queue_flush_timeout:
+          default: null
+          type:
+          - number
+          - 'null'
+      title: output_response_shipper
+      type: object
+    Kibana_HTTP_APIs_new_output_logstash:
+      additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - logstash
+          type: string
+      required:
+      - name
+      - type
+      - hosts
+      title: new_output_logstash
+      type: object
     Kibana_HTTP_APIs_update_output_kafka:
       additionalProperties: false
       properties:
@@ -1252,890 +1784,6 @@ components:
           - 'null'
       title: update_output_elasticsearch
       type: object
-    Kibana_HTTP_APIs_update_output_remote_elasticsearch:
-      additionalProperties: false
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            format: uri
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          type: boolean
-        is_default_monitoring:
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        kibana_api_key:
-          type:
-          - string
-          - 'null'
-        kibana_url:
-          type:
-          - string
-          - 'null'
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        preset:
-          enum:
-          - balanced
-          - custom
-          - throughput
-          - scale
-          - latency
-          type: string
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: false
-          type: object
-          properties:
-            service_token:
-              anyOf:
-              - additionalProperties: false
-                type: object
-                properties:
-                  hash:
-                    type: string
-                  id:
-                    type: string
-                required:
-                - id
-              - type: string
-            ssl:
-              additionalProperties: false
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: false
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        service_token:
-          type:
-          - string
-          - 'null'
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
-        sync_integrations:
-          type: boolean
-        sync_uninstalled_integrations:
-          type: boolean
-        type:
-          enum:
-          - remote_elasticsearch
-          type: string
-        write_to_logs_streams:
-          type:
-          - boolean
-          - 'null'
-      title: update_output_remote_elasticsearch
-      type: object
-    Kibana_HTTP_APIs_output_response_shipper:
-      additionalProperties: true
-      properties:
-        compression_level:
-          default: null
-          type:
-          - number
-          - 'null'
-        disk_queue_compression_enabled:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        disk_queue_enabled:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        disk_queue_encryption_enabled:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        disk_queue_max_size:
-          default: null
-          type:
-          - number
-          - 'null'
-        disk_queue_path:
-          default: null
-          type:
-          - string
-          - 'null'
-        loadbalance:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        max_batch_bytes:
-          default: null
-          type:
-          - number
-          - 'null'
-        mem_queue_events:
-          default: null
-          type:
-          - number
-          - 'null'
-        queue_flush_timeout:
-          default: null
-          type:
-          - number
-          - 'null'
-      title: output_response_shipper
-      type: object
-    Kibana_HTTP_APIs_output_shipper:
-      additionalProperties: false
-      properties:
-        compression_level:
-          default: null
-          type:
-          - number
-          - 'null'
-        disk_queue_compression_enabled:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        disk_queue_enabled:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        disk_queue_encryption_enabled:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        disk_queue_max_size:
-          default: null
-          type:
-          - number
-          - 'null'
-        disk_queue_path:
-          default: null
-          type:
-          - string
-          - 'null'
-        loadbalance:
-          default: null
-          type:
-          - boolean
-          - 'null'
-        max_batch_bytes:
-          default: null
-          type:
-          - number
-          - 'null'
-        mem_queue_events:
-          default: null
-          type:
-          - number
-          - 'null'
-        queue_flush_timeout:
-          default: null
-          type:
-          - number
-          - 'null'
-      title: output_shipper
-      type: object
-    Kibana_HTTP_APIs_output_response_elasticsearch:
-      additionalProperties: true
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            format: uri
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          default: false
-          type: boolean
-        is_default_monitoring:
-          default: false
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        preset:
-          enum:
-          - balanced
-          - custom
-          - throughput
-          - scale
-          - latency
-          type: string
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: true
-          type: object
-          properties:
-            ssl:
-              additionalProperties: true
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: true
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
-        type:
-          enum:
-          - elasticsearch
-          type: string
-        write_to_logs_streams:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - name
-      - type
-      - hosts
-      title: output_response_elasticsearch
-      type: object
-    Kibana_HTTP_APIs_new_output_elasticsearch:
-      additionalProperties: false
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            format: uri
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          default: false
-          type: boolean
-        is_default_monitoring:
-          default: false
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        preset:
-          enum:
-          - balanced
-          - custom
-          - throughput
-          - scale
-          - latency
-          type: string
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: false
-          type: object
-          properties:
-            ssl:
-              additionalProperties: false
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: false
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
-        type:
-          enum:
-          - elasticsearch
-          type: string
-        write_to_logs_streams:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - name
-      - type
-      - hosts
-      title: new_output_elasticsearch
-      type: object
-    Kibana_HTTP_APIs_output_response_logstash:
-      additionalProperties: true
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          default: false
-          type: boolean
-        is_default_monitoring:
-          default: false
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: true
-          type: object
-          properties:
-            ssl:
-              additionalProperties: true
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: true
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
-        type:
-          enum:
-          - logstash
-          type: string
-      required:
-      - name
-      - type
-      - hosts
-      title: output_response_logstash
-      type: object
-    Kibana_HTTP_APIs_new_output_remote_elasticsearch:
-      additionalProperties: false
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            format: uri
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          default: false
-          type: boolean
-        is_default_monitoring:
-          default: false
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        kibana_api_key:
-          type:
-          - string
-          - 'null'
-        kibana_url:
-          type:
-          - string
-          - 'null'
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        preset:
-          enum:
-          - balanced
-          - custom
-          - throughput
-          - scale
-          - latency
-          type: string
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: false
-          type: object
-          properties:
-            service_token:
-              anyOf:
-              - additionalProperties: false
-                type: object
-                properties:
-                  hash:
-                    type: string
-                  id:
-                    type: string
-                required:
-                - id
-              - type: string
-            ssl:
-              additionalProperties: false
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: false
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        service_token:
-          type:
-          - string
-          - 'null'
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
-        sync_integrations:
-          type: boolean
-        sync_uninstalled_integrations:
-          type: boolean
-        type:
-          enum:
-          - remote_elasticsearch
-          type: string
-        write_to_logs_streams:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - name
-      - type
-      - hosts
-      title: new_output_remote_elasticsearch
-      type: object
-    Kibana_HTTP_APIs_output_response_remote_elasticsearch:
-      additionalProperties: true
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            format: uri
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          default: false
-          type: boolean
-        is_default_monitoring:
-          default: false
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        kibana_api_key:
-          type:
-          - string
-          - 'null'
-        kibana_url:
-          type:
-          - string
-          - 'null'
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        preset:
-          enum:
-          - balanced
-          - custom
-          - throughput
-          - scale
-          - latency
-          type: string
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: true
-          type: object
-          properties:
-            service_token:
-              anyOf:
-              - additionalProperties: true
-                type: object
-                properties:
-                  hash:
-                    type: string
-                  id:
-                    type: string
-                required:
-                - id
-              - type: string
-            ssl:
-              additionalProperties: true
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: true
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        service_token:
-          type:
-          - string
-          - 'null'
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
-        sync_integrations:
-          type: boolean
-        sync_uninstalled_integrations:
-          type: boolean
-        type:
-          enum:
-          - remote_elasticsearch
-          type: string
-        write_to_logs_streams:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - name
-      - type
-      - hosts
-      title: output_response_remote_elasticsearch
-      type: object
-    Kibana_HTTP_APIs_output_ssl:
-      additionalProperties: false
-      properties:
-        certificate:
-          type: string
-        certificate_authorities:
-          items:
-            type: string
-          maxItems: 10
-          type: array
-        key:
-          type: string
-        verification_mode:
-          enum:
-          - full
-          - none
-          - certificate
-          - strict
-          type: string
-      title: output_ssl
-      type: object
-    Kibana_HTTP_APIs_update_output_logstash:
-      additionalProperties: false
-      properties:
-        allow_edit:
-          items:
-            type: string
-          maxItems: 1000
-          type: array
-        ca_sha256:
-          type:
-          - string
-          - 'null'
-        ca_trusted_fingerprint:
-          type:
-          - string
-          - 'null'
-        config_yaml:
-          type:
-          - string
-          - 'null'
-        hosts:
-          items:
-            type: string
-          maxItems: 100
-          minItems: 1
-          type: array
-        id:
-          type: string
-        is_default:
-          type: boolean
-        is_default_monitoring:
-          type: boolean
-        is_internal:
-          type: boolean
-        is_preconfigured:
-          type: boolean
-        name:
-          type: string
-        otel_disable_beatsauth:
-          type:
-          - boolean
-          - 'null'
-        otel_exporter_config_yaml:
-          type:
-          - string
-          - 'null'
-        proxy_id:
-          type:
-          - string
-          - 'null'
-        secrets:
-          additionalProperties: false
-          type: object
-          properties:
-            ssl:
-              additionalProperties: false
-              type: object
-              properties:
-                key:
-                  anyOf:
-                  - additionalProperties: false
-                    type: object
-                    properties:
-                      hash:
-                        type: string
-                      id:
-                        type: string
-                    required:
-                    - id
-                  - type: string
-        shipper:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
-        ssl:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
-        type:
-          enum:
-          - logstash
-          type: string
-      title: update_output_logstash
-      type: object
     Kibana_HTTP_APIs_output_response_kafka:
       additionalProperties: true
       properties:
@@ -2342,6 +1990,135 @@ components:
       - auth_type
       title: output_response_kafka
       type: object
+    Kibana_HTTP_APIs_output_response_remote_elasticsearch:
+      additionalProperties: true
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        kibana_api_key:
+          type:
+          - string
+          - 'null'
+        kibana_url:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: true
+          type: object
+          properties:
+            service_token:
+              anyOf:
+              - additionalProperties: true
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - id
+              - type: string
+            ssl:
+              additionalProperties: true
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        service_token:
+          type:
+          - string
+          - 'null'
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
+        sync_integrations:
+          type: boolean
+        sync_uninstalled_integrations:
+          type: boolean
+        type:
+          enum:
+          - remote_elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: output_response_remote_elasticsearch
+      type: object
     Kibana_HTTP_APIs_output_response_ssl:
       additionalProperties: true
       properties:
@@ -2363,8 +2140,109 @@ components:
           type: string
       title: output_response_ssl
       type: object
-    Kibana_HTTP_APIs_new_output_logstash:
+    Kibana_HTTP_APIs_new_output_elasticsearch:
       additionalProperties: false
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: false
+          type: object
+          properties:
+            ssl:
+              additionalProperties: false
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+        type:
+          enum:
+          - elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: new_output_elasticsearch
+      type: object
+    Kibana_HTTP_APIs_output_response_logstash:
+      additionalProperties: true
       properties:
         allow_edit:
           items:
@@ -2416,16 +2294,16 @@ components:
           - string
           - 'null'
         secrets:
-          additionalProperties: false
+          additionalProperties: true
           type: object
           properties:
             ssl:
-              additionalProperties: false
+              additionalProperties: true
               type: object
               properties:
                 key:
                   anyOf:
-                  - additionalProperties: false
+                  - additionalProperties: true
                     type: object
                     properties:
                       hash:
@@ -2437,10 +2315,10 @@ components:
                   - type: string
         shipper:
           allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_shipper'
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
         ssl:
           allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_ssl'
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
         type:
           enum:
           - logstash
@@ -2449,7 +2327,129 @@ components:
       - name
       - type
       - hosts
-      title: new_output_logstash
+      title: output_response_logstash
+      type: object
+    Kibana_HTTP_APIs_output_ssl:
+      additionalProperties: false
+      properties:
+        certificate:
+          type: string
+        certificate_authorities:
+          items:
+            type: string
+          maxItems: 10
+          type: array
+        key:
+          type: string
+        verification_mode:
+          enum:
+          - full
+          - none
+          - certificate
+          - strict
+          type: string
+      title: output_ssl
+      type: object
+    Kibana_HTTP_APIs_output_response_elasticsearch:
+      additionalProperties: true
+      properties:
+        allow_edit:
+          items:
+            type: string
+          maxItems: 1000
+          type: array
+        ca_sha256:
+          type:
+          - string
+          - 'null'
+        ca_trusted_fingerprint:
+          type:
+          - string
+          - 'null'
+        config_yaml:
+          type:
+          - string
+          - 'null'
+        hosts:
+          items:
+            format: uri
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        id:
+          type: string
+        is_default:
+          default: false
+          type: boolean
+        is_default_monitoring:
+          default: false
+          type: boolean
+        is_internal:
+          type: boolean
+        is_preconfigured:
+          type: boolean
+        name:
+          type: string
+        otel_disable_beatsauth:
+          type:
+          - boolean
+          - 'null'
+        otel_exporter_config_yaml:
+          type:
+          - string
+          - 'null'
+        preset:
+          enum:
+          - balanced
+          - custom
+          - throughput
+          - scale
+          - latency
+          type: string
+        proxy_id:
+          type:
+          - string
+          - 'null'
+        secrets:
+          additionalProperties: true
+          type: object
+          properties:
+            ssl:
+              additionalProperties: true
+              type: object
+              properties:
+                key:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - id
+                  - type: string
+        shipper:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_shipper'
+        ssl:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_output_response_ssl'
+        type:
+          enum:
+          - elasticsearch
+          type: string
+        write_to_logs_streams:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - name
+      - type
+      - hosts
+      title: output_response_elasticsearch
       type: object
   securitySchemes:
     apiKeyAuth:

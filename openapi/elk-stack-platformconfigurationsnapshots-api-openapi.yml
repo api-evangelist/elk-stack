@@ -128,18 +128,6 @@ paths:
         tag: Platform - Repository - CRUD
 components:
   schemas:
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    EmptyResponse:
-      type: object
     BasicFailedReplyElement:
       type: object
       required:
@@ -157,20 +145,6 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    RepositoryConfig:
-      type: object
-      required:
-      - config
-      - repository_name
-      properties:
-        repository_name:
-          type: string
-          description: Elasticsearch snapshot repository name
-        config:
-          type: object
-          description: Elasticsearch configuration JSON for a snapshot repository
-          properties: {}
-      description: The snapshot repository configuration.
     SnapshotRepositoryConfiguration:
       type: object
       required:
@@ -185,6 +159,16 @@ components:
           description: Elasticsearch repository configuration settings JSON. See [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html) for more information
           properties: {}
       description: The configuration for an Elasticsearch snapshot repository.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     RepositoryConfigs:
       type: object
       required:
@@ -196,6 +180,22 @@ components:
           items:
             $ref: '#/components/schemas/RepositoryConfig'
       description: A list of snapshot repository configurations.
+    RepositoryConfig:
+      type: object
+      required:
+      - config
+      - repository_name
+      properties:
+        repository_name:
+          type: string
+          description: Elasticsearch snapshot repository name
+        config:
+          type: object
+          description: Elasticsearch configuration JSON for a snapshot repository
+          properties: {}
+      description: The snapshot repository configuration.
+    EmptyResponse:
+      type: object
   securitySchemes:
     apiKey:
       type: apiKey

@@ -103,16 +103,6 @@ paths:
         required: true
 components:
   schemas:
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
     TelemetryConfigRequest:
       type: object
       required:
@@ -148,6 +138,16 @@ components:
           type: boolean
           description: Whether ECE telemetry is enabled
       description: The current ECE telemetry configuration
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

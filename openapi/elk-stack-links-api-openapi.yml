@@ -751,92 +751,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_LinksItemResponse:
-      additionalProperties: false
-      description: Response containing a links library item with metadata.
-      type: object
-      properties:
-        data:
-          additionalProperties: false
-          type: object
-          properties:
-            description:
-              type: string
-            layout:
-              description: Whether to display the links in a horizontal or vertical layout.
-              enum:
-              - horizontal
-              - vertical
-              type: string
-            links:
-              description: The list of links to display.
-              items:
-                discriminator:
-                  mapping:
-                    dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
-                    externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
-                  propertyName: type
-                oneOf:
-                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
-                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
-              maxItems: 100
-              type: array
-            tags:
-              default: []
-              description: Tag IDs associated with this library item.
-              items:
-                maxLength: 250
-                type: string
-              maxItems: 1000
-              type: array
-            title:
-              type: string
-          required:
-          - links
-          - title
-        id:
-          description: The unique ID of the links library item, as returned by the create or search endpoints.
-          maxLength: 250
-          type: string
-        meta:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-as-code-meta'
-      required:
-      - id
-      - data
-      - meta
-    Kibana_HTTP_APIs_kbn-link-type-externalLink:
-      additionalProperties: false
-      description: Link type. Set to externalLink for a URL outside Kibana.
-      type: object
-      properties:
-        destination:
-          description: The external URL to link to.
-          type: string
-        label:
-          description: The label of the link displayed in the UI.
-          type: string
-        options:
-          additionalProperties: false
-          default:
-            encode_url: true
-            open_in_new_tab: true
-          type: object
-          properties:
-            encode_url:
-              default: true
-              description: Whether to escape the URL with percent encoding
-              type: boolean
-            open_in_new_tab:
-              default: true
-              description: Whether to open this link in a new tab when clicked.
-              type: boolean
-        type:
-          enum:
-          - externalLink
-          type: string
-      required:
-      - type
-      - destination
     Kibana_HTTP_APIs_kbn-as-code-meta:
       additionalProperties: false
       type: object
@@ -900,6 +814,92 @@ components:
       required:
       - type
       - destination
+    Kibana_HTTP_APIs_kbn-link-type-externalLink:
+      additionalProperties: false
+      description: Link type. Set to externalLink for a URL outside Kibana.
+      type: object
+      properties:
+        destination:
+          description: The external URL to link to.
+          type: string
+        label:
+          description: The label of the link displayed in the UI.
+          type: string
+        options:
+          additionalProperties: false
+          default:
+            encode_url: true
+            open_in_new_tab: true
+          type: object
+          properties:
+            encode_url:
+              default: true
+              description: Whether to escape the URL with percent encoding
+              type: boolean
+            open_in_new_tab:
+              default: true
+              description: Whether to open this link in a new tab when clicked.
+              type: boolean
+        type:
+          enum:
+          - externalLink
+          type: string
+      required:
+      - type
+      - destination
+    Kibana_HTTP_APIs_LinksItemResponse:
+      additionalProperties: false
+      description: Response containing a links library item with metadata.
+      type: object
+      properties:
+        data:
+          additionalProperties: false
+          type: object
+          properties:
+            description:
+              type: string
+            layout:
+              description: Whether to display the links in a horizontal or vertical layout.
+              enum:
+              - horizontal
+              - vertical
+              type: string
+            links:
+              description: The list of links to display.
+              items:
+                discriminator:
+                  mapping:
+                    dashboardLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                    externalLink: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+                  propertyName: type
+                oneOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-link-type-externalLink'
+              maxItems: 100
+              type: array
+            tags:
+              default: []
+              description: Tag IDs associated with this library item.
+              items:
+                maxLength: 250
+                type: string
+              maxItems: 1000
+              type: array
+            title:
+              type: string
+          required:
+          - links
+          - title
+        id:
+          description: The unique ID of the links library item, as returned by the create or search endpoints.
+          maxLength: 250
+          type: string
+        meta:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_kbn-as-code-meta'
+      required:
+      - id
+      - data
+      - meta
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

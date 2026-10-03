@@ -203,14 +203,6 @@ paths:
       - content: Kibana
         name: product_name
 components:
-  parameters:
-    Short_URL_APIs_idParam:
-      description: The identifier for the short URL.
-      in: path
-      name: id
-      required: true
-      schema:
-        type: string
   schemas:
     Short_URL_APIs_urlResponse:
       type: object
@@ -246,6 +238,14 @@ components:
 
             '
           type: string
+  parameters:
+    Short_URL_APIs_idParam:
+      description: The identifier for the short URL.
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

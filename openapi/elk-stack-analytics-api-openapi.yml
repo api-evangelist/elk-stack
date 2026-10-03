@@ -156,6 +156,27 @@ paths:
         name: product_name
 components:
   schemas:
+    _types.IndexName:
+      type: string
+    _types.Name:
+      type: string
+    search_application._types.AnalyticsCollection:
+      type: object
+      properties:
+        event_data_stream:
+          description: Data stream for the collection.
+          allOf:
+          - $ref: '#/components/schemas/search_application._types.EventDataStream'
+      required:
+      - event_data_stream
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
     search_application.put_behavioral_analytics.AnalyticsAcknowledgeResponseBase:
       allOf:
       - $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
@@ -167,25 +188,12 @@ components:
             - $ref: '#/components/schemas/_types.Name'
         required:
         - name
-    _types.AcknowledgedResponseBase:
-      type: object
-      properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
-      required:
-      - acknowledged
-    search_application._types.AnalyticsCollection:
-      type: object
-      properties:
-        event_data_stream:
-          description: Data stream for the collection.
-          allOf:
-          - $ref: '#/components/schemas/search_application._types.EventDataStream'
-      required:
-      - event_data_stream
-    _types.Name:
+    search_application._types.EventType:
       type: string
+      enum:
+      - page_view
+      - search
+      - search_click
     search_application._types.EventDataStream:
       type: object
       properties:
@@ -194,14 +202,18 @@ components:
           - $ref: '#/components/schemas/_types.IndexName'
       required:
       - name
-    search_application._types.EventType:
-      type: string
-      enum:
-      - page_view
-      - search
-      - search_click
-    _types.IndexName:
-      type: string
+  parameters:
+    search_application.get_behavioral_analytics-name:
+      in: path
+      name: name
+      description: A list of analytics collections to limit the returned information
+      required: true
+      deprecated: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/_types.Name'
+      style: simple
   responses:
     search_application.get_behavioral_analytics-200:
       description: ''
@@ -215,15 +227,3 @@ components:
             BehavioralAnalyticsGetResponseExample1:
               description: A successful response from `GET _application/analytics/my*`
               value: "{\n  \"my_analytics_collection\": {\n      \"event_data_stream\": {\n          \"name\": \"behavioral_analytics-events-my_analytics_collection\"\n      }\n  },\n  \"my_analytics_collection2\": {\n      \"event_data_stream\": {\n          \"name\": \"behavioral_analytics-events-my_analytics_collection2\"\n      }\n  }\n}"
-  parameters:
-    search_application.get_behavioral_analytics-name:
-      in: path
-      name: name
-      description: A list of analytics collections to limit the returned information
-      required: true
-      deprecated: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/_types.Name'
-      style: simple

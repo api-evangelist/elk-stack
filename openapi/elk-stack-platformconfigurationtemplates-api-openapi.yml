@@ -37,21 +37,45 @@ paths:
         tag: Templates - Deployments - Global
 components:
   schemas:
-    EmptyResponse:
-      type: object
-    KibanaDeeplink:
+    GlobalDeploymentTemplateRegion:
       type: object
       required:
-      - semver
-      - uri
+      - deployment_template_id
+      - region_id
+      - versions
       properties:
-        semver:
+        region_id:
           type: string
-          description: Semver condition when to apply the URI.
-        uri:
+          description: The region identifier.
+        deployment_template_id:
           type: string
-          description: URI to which the user should be directed.
-      description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
+          description: The (region-specific) ID of the deployment template.
+        versions:
+          type: array
+          description: Versions supported in this region.
+          items:
+            type: string
+        kibana_deeplink:
+          type: array
+          description: The Kibana Deeplink for this type of deployment.
+          items:
+            $ref: '#/components/schemas/KibanaDeeplink'
+      description: Region-specific details about a template.
+    MetadataItem:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The metadata field name
+        value:
+          type: string
+          description: The metadata value
+      description: The key-value pair.
+    EmptyResponse:
+      type: object
     GlobalDeploymentTemplateInfo:
       type: object
       required:
@@ -84,43 +108,19 @@ components:
           items:
             $ref: '#/components/schemas/GlobalDeploymentTemplateRegion'
       description: The top-level model for global (regionless) templates.
-    MetadataItem:
+    KibanaDeeplink:
       type: object
       required:
-      - key
-      - value
+      - semver
+      - uri
       properties:
-        key:
+        semver:
           type: string
-          description: The metadata field name
-        value:
+          description: Semver condition when to apply the URI.
+        uri:
           type: string
-          description: The metadata value
-      description: The key-value pair.
-    GlobalDeploymentTemplateRegion:
-      type: object
-      required:
-      - deployment_template_id
-      - region_id
-      - versions
-      properties:
-        region_id:
-          type: string
-          description: The region identifier.
-        deployment_template_id:
-          type: string
-          description: The (region-specific) ID of the deployment template.
-        versions:
-          type: array
-          description: Versions supported in this region.
-          items:
-            type: string
-        kibana_deeplink:
-          type: array
-          description: The Kibana Deeplink for this type of deployment.
-          items:
-            $ref: '#/components/schemas/KibanaDeeplink'
-      description: Region-specific details about a template.
+          description: URI to which the user should be directed.
+      description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
   securitySchemes:
     apiKey:
       type: apiKey

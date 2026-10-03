@@ -73,9 +73,15 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.Name:
+      type: string
+    _types.Uuid:
+      type: string
+    _types.VersionString:
+      type: string
     _types.DateTime:
       description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
 
@@ -85,9 +91,6 @@ components:
       oneOf:
       - type: string
       - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
     _types.ElasticsearchVersionInfo:
       type: object
       properties:
@@ -136,9 +139,6 @@ components:
       - minimum_index_compatibility_version
       - minimum_wire_compatibility_version
       - number
-    _types.Name:
-      type: string
-    _types.VersionString:
-      type: string
-    _types.Uuid:
-      type: string
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'

@@ -3284,181 +3284,157 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_delete_package_response:
+    Kibana_HTTP_APIs_get_installed_packages_response:
       additionalProperties: false
       properties:
         items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_installed_package'
+          maxItems: 10000
+          type: array
+        searchAfter:
           items:
             anyOf:
-            - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
-            - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
-          maxItems: 10000
+            - type: string
+            - type: number
+            - type: boolean
+            - {}
+          maxItems: 2
           type: array
+        total:
+          type: number
       required:
       - items
-      title: delete_package_response
+      - total
+      title: get_installed_packages_response
       type: object
-    Kibana_HTTP_APIs_get_stats_response:
-      additionalProperties: false
-      properties:
-        response:
-          additionalProperties: false
-          type: object
-          properties:
-            agent_policy_count:
-              type: number
-            package_policy_count:
-              type: number
-          required:
-          - agent_policy_count
-          - package_policy_count
-      required:
-      - response
-      title: get_stats_response
-      type: object
-    Kibana_HTTP_APIs_package_info_deprecation_info:
-      additionalProperties: true
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: package_info_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_install_package_response:
-      additionalProperties: false
-      properties:
-        _meta:
-          additionalProperties: false
-          type: object
-          properties:
-            install_source:
-              type: string
-            name:
-              type: string
-          required:
-          - install_source
-          - name
-        items:
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
-            - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
-          maxItems: 10000
-          type: array
-      required:
-      - items
-      - _meta
-      title: install_package_response
-      type: object
-    Kibana_HTTP_APIs_get_categories_response:
-      additionalProperties: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_category_summary_item'
-          maxItems: 10000
-          type: array
-      required:
-      - items
-      title: get_categories_response
-      type: object
-    Kibana_HTTP_APIs_rollback_package_response:
-      additionalProperties: false
-      properties:
-        success:
-          type: boolean
-        version:
-          type: string
-      required:
-      - version
-      - success
-      title: rollback_package_response
-      type: object
-    Kibana_HTTP_APIs_install_kibana_assets_request:
+    Kibana_HTTP_APIs_bulk_uninstall_packages_request:
       additionalProperties: false
       properties:
         force:
+          default: false
           type: boolean
-        space_ids:
-          description: When provided, assets are installed in the specified spaces instead of the current space.
+        packages:
           items:
-            type: string
-          maxItems: 100
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              version:
+                type: string
+            required:
+            - name
+            - version
+          maxItems: 1000
           minItems: 1
           type: array
-      title: install_kibana_assets_request
-      type: object
-    Kibana_HTTP_APIs_package_icon:
-      additionalProperties: false
-      properties:
-        dark_mode:
-          type: boolean
-        path:
-          type: string
-        size:
-          type: string
-        src:
-          type: string
-        title:
-          type: string
-        type:
-          type: string
       required:
-      - src
-      title: package_icon
+      - packages
+      title: bulk_uninstall_packages_request
       type: object
-    Kibana_HTTP_APIs_get_packages_response:
+    Kibana_HTTP_APIs_get_limited_packages_response:
       additionalProperties: false
       properties:
         items:
           items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_list_item'
+            type: string
           maxItems: 10000
           type: array
       required:
       - items
-      title: get_packages_response
+      title: get_limited_packages_response
       type: object
-    Kibana_HTTP_APIs_package_info_kibana_asset_reference:
-      additionalProperties: true
+    Kibana_HTTP_APIs_bulk_install_packages_from_registry_request:
+      additionalProperties: false
       properties:
-        deferred:
+        allow_outdated_version:
+          default: false
+          description: When true, allow installing a version older than the latest available. Bypasses only the out-of-date version check.
           type: boolean
+        force:
+          default: false
+          type: boolean
+        packages:
+          items:
+            anyOf:
+            - type: string
+            - additionalProperties: false
+              type: object
+              properties:
+                name:
+                  type: string
+                prerelease:
+                  type: boolean
+                version:
+                  type: string
+              required:
+              - name
+              - version
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_install_packages_from_registry_request
+      type: object
+    Kibana_HTTP_APIs_get_one_bulk_operation_packages_response:
+      additionalProperties: false
+      properties:
+        error:
+          additionalProperties: false
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+          - message
+        results:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              error:
+                additionalProperties: false
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+              name:
+                type: string
+              success:
+                type: boolean
+            required:
+            - name
+            - success
+          maxItems: 10000
+          type: array
+        status:
+          type: string
+      required:
+      - status
+      title: get_one_bulk_operation_packages_response
+      type: object
+    Kibana_HTTP_APIs_category_summary_item:
+      additionalProperties: false
+      properties:
+        count:
+          type: number
         id:
           type: string
-        originId:
+        parent_id:
           type: string
-        type:
-          anyOf:
-          - enum:
-            - dashboard
-            - lens
-            - visualization
-            - search
-            - index-pattern
-            - map
-            - ml-module
-            - security-rule
-            - csp-rule-template
-            - osquery-pack-asset
-            - osquery-saved-query
-            - tag
-            type: string
-          - type: string
+        parent_title:
+          type: string
+        title:
+          type: string
       required:
       - id
-      - type
-      title: package_info_kibana_asset_reference
+      - title
+      - count
+      title: category_summary_item
       type: object
     Kibana_HTTP_APIs_get_package_info:
       additionalProperties: true
@@ -3713,6 +3689,974 @@ components:
       - assets
       title: get_package_info
       type: object
+    Kibana_HTTP_APIs_create_custom_integration_request:
+      additionalProperties: false
+      properties:
+        datasets:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                enum:
+                - logs
+                - metrics
+                - traces
+                - synthetics
+                - profiles
+                type: string
+            required:
+            - name
+            - type
+          maxItems: 10
+          type: array
+        force:
+          type: boolean
+        integrationName:
+          type: string
+      required:
+      - integrationName
+      - datasets
+      title: create_custom_integration_request
+      type: object
+    Kibana_HTTP_APIs_package_info_kibana_asset_reference:
+      additionalProperties: true
+      properties:
+        deferred:
+          type: boolean
+        id:
+          type: string
+        originId:
+          type: string
+        type:
+          anyOf:
+          - enum:
+            - dashboard
+            - lens
+            - visualization
+            - search
+            - index-pattern
+            - map
+            - ml-module
+            - security-rule
+            - csp-rule-template
+            - osquery-pack-asset
+            - osquery-saved-query
+            - tag
+            type: string
+          - type: string
+      required:
+      - id
+      - type
+      title: package_info_kibana_asset_reference
+      type: object
+    Kibana_HTTP_APIs_bulk_upgrade_packages_request:
+      additionalProperties: false
+      properties:
+        force:
+          default: false
+          type: boolean
+        packages:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              version:
+                type: string
+            required:
+            - name
+          maxItems: 1000
+          minItems: 1
+          type: array
+        prerelease:
+          type: boolean
+        upgrade_package_policies:
+          default: false
+          type: boolean
+      required:
+      - packages
+      title: bulk_upgrade_packages_request
+      type: object
+    Kibana_HTTP_APIs_review_upgrade_request:
+      additionalProperties: false
+      properties:
+        action:
+          enum:
+          - accept
+          - decline
+          - pending
+          type: string
+        target_version:
+          type: string
+      required:
+      - action
+      - target_version
+      title: review_upgrade_request
+      type: object
+    Kibana_HTTP_APIs_update_package_request:
+      additionalProperties: false
+      properties:
+        keepPoliciesUpToDate:
+          type: boolean
+        namespace_customization_enabled_for:
+          description: Namespaces for which namespace-level customization is enabled on this package.
+          items:
+            maxLength: 100
+            type: string
+          maxItems: 100
+          type: array
+        namespace_customization_settings:
+          additionalProperties:
+            additionalProperties: true
+            type: object
+            properties:
+              ilm_policy:
+                maxLength: 1024
+                minLength: 1
+                type: string
+          description: Per-namespace managed settings (for example, ILM policy) for this package. Keyed by namespace name.
+          type: object
+      title: update_package_request
+      type: object
+    Kibana_HTTP_APIs_install_package_response:
+      additionalProperties: false
+      properties:
+        _meta:
+          additionalProperties: false
+          type: object
+          properties:
+            install_source:
+              type: string
+            name:
+              type: string
+          required:
+          - install_source
+          - name
+        items:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      - _meta
+      title: install_package_response
+      type: object
+    Kibana_HTTP_APIs_reauthorize_transform_request:
+      additionalProperties: false
+      properties:
+        transforms:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              transformId:
+                type: string
+            required:
+            - transformId
+          maxItems: 1000
+          type: array
+      required:
+      - transforms
+      title: reauthorize_transform_request
+      type: object
+    Kibana_HTTP_APIs_delete_package_datastream_assets_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+      title: delete_package_datastream_assets_response
+      type: object
+    Kibana_HTTP_APIs_get_inputs_response:
+      additionalProperties: false
+      properties:
+        connectors:
+          additionalProperties: {}
+          type: object
+        exporters:
+          additionalProperties: {}
+          type: object
+        extensions:
+          additionalProperties: {}
+          type: object
+        inputs:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              id:
+                type: string
+              streams:
+                items:
+                  additionalProperties: true
+                  type: object
+                  properties:
+                    data_stream:
+                      additionalProperties: true
+                      type: object
+                      properties:
+                        dataset:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - dataset
+                    id:
+                      type: string
+                  required:
+                  - id
+                  - data_stream
+                maxItems: 10000
+                type: array
+              type:
+                type: string
+            required:
+            - id
+            - type
+          maxItems: 10000
+          type: array
+        processors:
+          additionalProperties: {}
+          type: object
+        receivers:
+          additionalProperties: {}
+          type: object
+        service:
+          additionalProperties: false
+          type: object
+          properties:
+            extensions:
+              items:
+                type: string
+              maxItems: 1000
+              type: array
+            pipelines:
+              additionalProperties:
+                additionalProperties: false
+                type: object
+                properties:
+                  exporters:
+                    items:
+                      type: string
+                    maxItems: 1000
+                    type: array
+                  processors:
+                    items:
+                      type: string
+                    maxItems: 1000
+                    type: array
+                  receivers:
+                    items:
+                      type: string
+                    maxItems: 1000
+                    type: array
+              type: object
+      required:
+      - inputs
+      title: get_inputs_response
+      type: object
+    Kibana_HTTP_APIs_es_asset_reference:
+      additionalProperties: false
+      properties:
+        customDataStreamOriginDataset:
+          type: string
+        customDataStreamOriginType:
+          type: string
+        deferred:
+          type: boolean
+        id:
+          type: string
+        type:
+          enum:
+          - index
+          - index_template
+          - component_template
+          - ingest_pipeline
+          - ilm_policy
+          - data_stream_ilm_policy
+          - transform
+          - ml_model
+          - knowledge_base
+          - esql_view
+          type: string
+        version:
+          type: string
+      required:
+      - id
+      - type
+      title: es_asset_reference
+      type: object
+    Kibana_HTTP_APIs_install_kibana_assets_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+      title: install_kibana_assets_response
+      type: object
+    Kibana_HTTP_APIs_get_verification_key_id_response:
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      title: get_verification_key_id_response
+      type: object
+    Kibana_HTTP_APIs_package_info_es_asset_reference:
+      additionalProperties: true
+      properties:
+        customDataStreamOriginDataset:
+          type: string
+        customDataStreamOriginType:
+          type: string
+        deferred:
+          type: boolean
+        id:
+          type: string
+        type:
+          enum:
+          - index
+          - index_template
+          - component_template
+          - ingest_pipeline
+          - ilm_policy
+          - data_stream_ilm_policy
+          - transform
+          - ml_model
+          - knowledge_base
+          - esql_view
+          type: string
+        version:
+          type: string
+      required:
+      - id
+      - type
+      title: package_info_es_asset_reference
+      type: object
+    Kibana_HTTP_APIs_get_stats_response:
+      additionalProperties: false
+      properties:
+        response:
+          additionalProperties: false
+          type: object
+          properties:
+            agent_policy_count:
+              type: number
+            package_policy_count:
+              type: number
+          required:
+          - agent_policy_count
+          - package_policy_count
+      required:
+      - response
+      title: get_stats_response
+      type: object
+    Kibana_HTTP_APIs_bulk_install_packages_response_item_error:
+      additionalProperties: false
+      properties:
+        error:
+          anyOf:
+          - type: string
+          - {}
+        name:
+          type: string
+        statusCode:
+          type: number
+      required:
+      - name
+      - statusCode
+      title: bulk_install_packages_response_item_error
+      type: object
+    Kibana_HTTP_APIs_bulk_rollback_packages_response:
+      additionalProperties: false
+      properties:
+        taskId:
+          type: string
+      required:
+      - taskId
+      title: bulk_rollback_packages_response
+      type: object
+    Kibana_HTTP_APIs_get_dependencies_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              title:
+                type: string
+              version:
+                type: string
+            required:
+            - name
+            - version
+            - title
+          maxItems: 1000
+          type: array
+      required:
+      - items
+      title: get_dependencies_response
+      type: object
+    Kibana_HTTP_APIs_bulk_install_packages_response_item_success:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        result:
+          additionalProperties: false
+          type: object
+          properties:
+            assets:
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
+                - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
+              maxItems: 10000
+              type: array
+            error: {}
+            installSource:
+              type: string
+            installType:
+              type: string
+            status:
+              enum:
+              - installed
+              - already_installed
+              type: string
+          required:
+          - error
+          - installType
+        version:
+          type: string
+      required:
+      - name
+      - version
+      - result
+      title: bulk_install_packages_response_item_success
+      type: object
+    Kibana_HTTP_APIs_install_rule_assets_request:
+      additionalProperties: false
+      properties:
+        force:
+          type: boolean
+      title: install_rule_assets_request
+      type: object
+    Kibana_HTTP_APIs_bulk_rollback_packages_request:
+      additionalProperties: false
+      properties:
+        packages:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                description: Package name to rollback
+                type: string
+            required:
+            - name
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_rollback_packages_request
+      type: object
+    Kibana_HTTP_APIs_bulk_upgrade_packages_response:
+      additionalProperties: false
+      properties:
+        taskId:
+          type: string
+      required:
+      - taskId
+      title: bulk_upgrade_packages_response
+      type: object
+    Kibana_HTTP_APIs_package_info_installation_info:
+      additionalProperties: true
+      properties:
+        additional_spaces_installed_kibana:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_kibana_asset_reference'
+            maxItems: 100
+            type: array
+          type: object
+        created_at:
+          type: string
+        experimental_data_stream_features:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              data_stream:
+                maxLength: 1024
+                type: string
+              features:
+                additionalProperties: true
+                type: object
+                properties:
+                  doc_value_only_numeric:
+                    type: boolean
+                  doc_value_only_other:
+                    type: boolean
+                  synthetic_source:
+                    type: boolean
+                  tsdb:
+                    type: boolean
+            required:
+            - data_stream
+            - features
+          maxItems: 100
+          type: array
+        install_format_schema_version:
+          type: string
+        install_source:
+          enum:
+          - registry
+          - upload
+          - bundled
+          - custom
+          type: string
+        install_status:
+          enum:
+          - installed
+          - installing
+          - install_failed
+          type: string
+        installed_es:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_es_asset_reference'
+          maxItems: 10000
+          type: array
+        installed_kibana:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_kibana_asset_reference'
+          maxItems: 10000
+          type: array
+        installed_kibana_space_id:
+          type: string
+        is_rollback_ttl_expired:
+          type: boolean
+        latest_executed_state:
+          additionalProperties: true
+          type: object
+          properties:
+            error:
+              type: string
+            name:
+              type: string
+            started_at:
+              type: string
+        latest_install_failed_attempts:
+          items:
+            additionalProperties: true
+            type: object
+            properties:
+              created_at:
+                type: string
+              error:
+                additionalProperties: true
+                type: object
+                properties:
+                  message:
+                    type: string
+                  name:
+                    type: string
+                  stack:
+                    type: string
+                required:
+                - name
+                - message
+              missing_assets:
+                items:
+                  additionalProperties: true
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - id
+                  - type
+                maxItems: 10000
+                type: array
+              target_version:
+                type: string
+            required:
+            - created_at
+            - target_version
+            - error
+          maxItems: 10
+          type: array
+        name:
+          type: string
+        namespaces:
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        previous_version:
+          type:
+          - string
+          - 'null'
+        rolled_back:
+          type: boolean
+        type:
+          type: string
+        updated_at:
+          type: string
+        verification_key_id:
+          type:
+          - string
+          - 'null'
+        verification_status:
+          enum:
+          - unverified
+          - verified
+          - unknown
+          type: string
+        version:
+          type: string
+      required:
+      - type
+      - installed_kibana
+      - installed_es
+      - name
+      - version
+      - install_status
+      - install_source
+      - verification_status
+      title: package_info_installation_info
+      type: object
+    Kibana_HTTP_APIs_get_packages_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_list_item'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_packages_response
+      type: object
+    Kibana_HTTP_APIs_get_bulk_assets_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              appLink:
+                type: string
+              attributes:
+                additionalProperties: false
+                type: object
+                properties:
+                  description:
+                    type: string
+                  engine:
+                    enum:
+                    - v1
+                    - v2
+                    type: string
+                  service:
+                    type: string
+                  title:
+                    type: string
+              id:
+                type: string
+              type:
+                type: string
+              updatedAt:
+                type: string
+            required:
+            - id
+            - type
+            - attributes
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_bulk_assets_response
+      type: object
+    Kibana_HTTP_APIs_bulk_namespace_customization_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              error:
+                type: string
+              name:
+                type: string
+              namespace_customization_enabled_for:
+                description: 'The opt-in list on the package. Returned whenever the package is installed: the new list on success, or the unchanged list when the request is rejected (for example, because of a namespace-prefix restriction).'
+                items:
+                  type: string
+                maxItems: 100
+                type: array
+              success:
+                type: boolean
+              warnings:
+                items:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    baseTemplateName:
+                      maxLength: 1000
+                      type: string
+                    conflictingTemplates:
+                      items:
+                        additionalProperties: false
+                        type: object
+                        properties:
+                          conflictType:
+                            enum:
+                            - overrides_fleet
+                            - blocked_by_same_priority
+                            - overridden_by_fleet
+                            type: string
+                          name:
+                            maxLength: 1000
+                            type: string
+                          priority:
+                            type: number
+                        required:
+                        - name
+                        - priority
+                        - conflictType
+                      maxItems: 100
+                      type: array
+                    dataStreamName:
+                      maxLength: 1000
+                      type: string
+                    namespace:
+                      maxLength: 255
+                      type: string
+                    nsTemplateName:
+                      maxLength: 1000
+                      type: string
+                  required:
+                  - dataStreamName
+                  - namespace
+                  - baseTemplateName
+                  - nsTemplateName
+                  - conflictingTemplates
+                maxItems: 100
+                type: array
+            required:
+            - name
+            - success
+          maxItems: 1000
+          type: array
+      required:
+      - items
+      title: bulk_namespace_customization_response
+      type: object
+    Kibana_HTTP_APIs_install_package_from_registry_request:
+      additionalProperties: false
+      properties:
+        allow_outdated_version:
+          default: false
+          description: When true, allow installing a version older than the latest available. Bypasses only the out-of-date version check.
+          type: boolean
+        force:
+          default: false
+          type: boolean
+        ignore_constraints:
+          default: false
+          type: boolean
+      title: install_package_from_registry_request
+      type: object
+    Kibana_HTTP_APIs_bulk_namespace_customization_request:
+      additionalProperties: false
+      properties:
+        disable:
+          description: Namespaces to disable namespace-level customization for on each package.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        enable:
+          description: Namespaces to enable namespace-level customization for on each package.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+        packages:
+          description: Package names to apply the customization changes to.
+          items:
+            type: string
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - packages
+      title: bulk_namespace_customization_request
+      type: object
+    Kibana_HTTP_APIs_package_metadata:
+      additionalProperties: false
+      properties:
+        has_policies:
+          type: boolean
+      required:
+      - has_policies
+      title: package_metadata
+      type: object
+    Kibana_HTTP_APIs_package_info_conditions_deprecation_info:
+      additionalProperties: true
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
+      required:
+      - description
+      title: package_info_conditions_deprecation_info
+      type: object
+    Kibana_HTTP_APIs_get_categories_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_category_summary_item'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: get_categories_response
+      type: object
+    Kibana_HTTP_APIs_kibana_asset_reference:
+      additionalProperties: false
+      properties:
+        deferred:
+          type: boolean
+        id:
+          type: string
+        originId:
+          type: string
+        type:
+          anyOf:
+          - enum:
+            - dashboard
+            - lens
+            - visualization
+            - search
+            - index-pattern
+            - map
+            - ml-module
+            - security-rule
+            - csp-rule-template
+            - osquery-pack-asset
+            - osquery-saved-query
+            - tag
+            type: string
+          - type: string
+      required:
+      - id
+      - type
+      title: kibana_asset_reference
+      type: object
+    Kibana_HTTP_APIs_get_bulk_assets_request:
+      additionalProperties: false
+      properties:
+        assetIds:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+            required:
+            - id
+            - type
+          maxItems: 10000
+          type: array
+      required:
+      - assetIds
+      title: get_bulk_assets_request
+      type: object
+    Kibana_HTTP_APIs_rollback_package_response:
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+        version:
+          type: string
+      required:
+      - version
+      - success
+      title: rollback_package_response
+      type: object
+    Kibana_HTTP_APIs_installed_package:
+      additionalProperties: false
+      properties:
+        dataStreams:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                type: string
+              title:
+                type: string
+            required:
+            - name
+            - title
+          maxItems: 10000
+          type: array
+        description:
+          type: string
+        icons:
+          items:
+            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_icon'
+          maxItems: 100
+          type: array
+        name:
+          type: string
+        rolledBack:
+          type: boolean
+        status:
+          type: string
+        title:
+          type: string
+        version:
+          type: string
+      required:
+      - name
+      - version
+      - status
+      - dataStreams
+      title: installed_package
+      type: object
     Kibana_HTTP_APIs_package_list_item:
       additionalProperties: true
       properties:
@@ -3920,380 +4864,48 @@ components:
       - id
       title: package_list_item
       type: object
-    Kibana_HTTP_APIs_es_asset_reference:
+    Kibana_HTTP_APIs_install_kibana_assets_request:
       additionalProperties: false
       properties:
-        customDataStreamOriginDataset:
-          type: string
-        customDataStreamOriginType:
-          type: string
-        deferred:
-          type: boolean
-        id:
-          type: string
-        type:
-          enum:
-          - index
-          - index_template
-          - component_template
-          - ingest_pipeline
-          - ilm_policy
-          - data_stream_ilm_policy
-          - transform
-          - ml_model
-          - knowledge_base
-          - esql_view
-          type: string
-        version:
-          type: string
-      required:
-      - id
-      - type
-      title: es_asset_reference
-      type: object
-    Kibana_HTTP_APIs_bulk_install_packages_response_item_success:
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-        result:
-          additionalProperties: false
-          type: object
-          properties:
-            assets:
-              items:
-                anyOf:
-                - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
-                - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
-              maxItems: 10000
-              type: array
-            error: {}
-            installSource:
-              type: string
-            installType:
-              type: string
-            status:
-              enum:
-              - installed
-              - already_installed
-              type: string
-          required:
-          - error
-          - installType
-        version:
-          type: string
-      required:
-      - name
-      - version
-      - result
-      title: bulk_install_packages_response_item_success
-      type: object
-    Kibana_HTTP_APIs_bulk_rollback_packages_request:
-      additionalProperties: false
-      properties:
-        packages:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                description: Package name to rollback
-                type: string
-            required:
-            - name
-          maxItems: 1000
-          minItems: 1
-          type: array
-      required:
-      - packages
-      title: bulk_rollback_packages_request
-      type: object
-    Kibana_HTTP_APIs_get_limited_packages_response:
-      additionalProperties: false
-      properties:
-        items:
-          items:
-            type: string
-          maxItems: 10000
-          type: array
-      required:
-      - items
-      title: get_limited_packages_response
-      type: object
-    Kibana_HTTP_APIs_create_custom_integration_request:
-      additionalProperties: false
-      properties:
-        datasets:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              type:
-                enum:
-                - logs
-                - metrics
-                - traces
-                - synthetics
-                - profiles
-                type: string
-            required:
-            - name
-            - type
-          maxItems: 10
-          type: array
         force:
           type: boolean
-        integrationName:
-          type: string
-      required:
-      - integrationName
-      - datasets
-      title: create_custom_integration_request
-      type: object
-    Kibana_HTTP_APIs_get_dependencies_response:
-      additionalProperties: false
-      properties:
-        items:
+        space_ids:
+          description: When provided, assets are installed in the specified spaces instead of the current space.
           items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              title:
-                type: string
-              version:
-                type: string
-            required:
-            - name
-            - version
-            - title
-          maxItems: 1000
-          type: array
-      required:
-      - items
-      title: get_dependencies_response
-      type: object
-    Kibana_HTTP_APIs_bulk_install_packages_from_registry_response:
-      additionalProperties: false
-      properties:
-        items:
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_response_item_success'
-            - $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_response_item_error'
-          maxItems: 10000
-          type: array
-      required:
-      - items
-      title: bulk_install_packages_from_registry_response
-      type: object
-    Kibana_HTTP_APIs_bulk_rollback_packages_response:
-      additionalProperties: false
-      properties:
-        taskId:
-          type: string
-      required:
-      - taskId
-      title: bulk_rollback_packages_response
-      type: object
-    Kibana_HTTP_APIs_get_verification_key_id_response:
-      additionalProperties: false
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-      required:
-      - id
-      title: get_verification_key_id_response
-      type: object
-    Kibana_HTTP_APIs_install_kibana_assets_response:
-      additionalProperties: false
-      properties:
-        success:
-          type: boolean
-      required:
-      - success
-      title: install_kibana_assets_response
-      type: object
-    Kibana_HTTP_APIs_package_info_es_asset_reference:
-      additionalProperties: true
-      properties:
-        customDataStreamOriginDataset:
-          type: string
-        customDataStreamOriginType:
-          type: string
-        deferred:
-          type: boolean
-        id:
-          type: string
-        type:
-          enum:
-          - index
-          - index_template
-          - component_template
-          - ingest_pipeline
-          - ilm_policy
-          - data_stream_ilm_policy
-          - transform
-          - ml_model
-          - knowledge_base
-          - esql_view
-          type: string
-        version:
-          type: string
-      required:
-      - id
-      - type
-      title: package_info_es_asset_reference
-      type: object
-    Kibana_HTTP_APIs_update_package_request:
-      additionalProperties: false
-      properties:
-        keepPoliciesUpToDate:
-          type: boolean
-        namespace_customization_enabled_for:
-          description: Namespaces for which namespace-level customization is enabled on this package.
-          items:
-            maxLength: 100
             type: string
           maxItems: 100
+          minItems: 1
           type: array
-        namespace_customization_settings:
+      title: install_kibana_assets_request
+      type: object
+    Kibana_HTTP_APIs_package_info_deprecation_info:
+      additionalProperties: true
+      properties:
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
           additionalProperties:
-            additionalProperties: true
-            type: object
-            properties:
-              ilm_policy:
-                maxLength: 1024
-                minLength: 1
-                type: string
-          description: Per-namespace managed settings (for example, ILM policy) for this package. Keyed by namespace name.
+            maxLength: 1024
+            type: string
           type: object
-      title: update_package_request
-      type: object
-    Kibana_HTTP_APIs_bulk_uninstall_packages_request:
-      additionalProperties: false
-      properties:
-        force:
-          default: false
-          type: boolean
-        packages:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              version:
-                type: string
-            required:
-            - name
-            - version
-          maxItems: 1000
-          minItems: 1
-          type: array
-      required:
-      - packages
-      title: bulk_uninstall_packages_request
-      type: object
-    Kibana_HTTP_APIs_review_upgrade_request:
-      additionalProperties: false
-      properties:
-        action:
-          enum:
-          - accept
-          - decline
-          - pending
-          type: string
-        target_version:
+        since:
+          maxLength: 50
           type: string
       required:
-      - action
-      - target_version
-      title: review_upgrade_request
+      - description
+      title: package_info_deprecation_info
       type: object
-    Kibana_HTTP_APIs_bulk_upgrade_packages_request:
+    Kibana_HTTP_APIs_get_info_response:
       additionalProperties: false
       properties:
-        force:
-          default: false
-          type: boolean
-        packages:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              version:
-                type: string
-            required:
-            - name
-          maxItems: 1000
-          minItems: 1
-          type: array
-        prerelease:
-          type: boolean
-        upgrade_package_policies:
-          default: false
-          type: boolean
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_get_package_info'
+        metadata:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_metadata'
       required:
-      - packages
-      title: bulk_upgrade_packages_request
-      type: object
-    Kibana_HTTP_APIs_review_upgrade_response:
-      additionalProperties: false
-      properties:
-        success:
-          type: boolean
-      required:
-      - success
-      title: review_upgrade_response
-      type: object
-    Kibana_HTTP_APIs_get_bulk_assets_response:
-      additionalProperties: false
-      properties:
-        items:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              appLink:
-                type: string
-              attributes:
-                additionalProperties: false
-                type: object
-                properties:
-                  description:
-                    type: string
-                  engine:
-                    enum:
-                    - v1
-                    - v2
-                    type: string
-                  service:
-                    type: string
-                  title:
-                    type: string
-              id:
-                type: string
-              type:
-                type: string
-              updatedAt:
-                type: string
-            required:
-            - id
-            - type
-            - attributes
-          maxItems: 10000
-          type: array
-      required:
-      - items
-      title: get_bulk_assets_response
+      - item
+      title: get_info_response
       type: object
     Kibana_HTTP_APIs_update_package_response:
       additionalProperties: false
@@ -4351,180 +4963,6 @@ components:
       - item
       title: update_package_response
       type: object
-    Kibana_HTTP_APIs_bulk_install_packages_response_item_error:
-      additionalProperties: false
-      properties:
-        error:
-          anyOf:
-          - type: string
-          - {}
-        name:
-          type: string
-        statusCode:
-          type: number
-      required:
-      - name
-      - statusCode
-      title: bulk_install_packages_response_item_error
-      type: object
-    Kibana_HTTP_APIs_package_info_installation_info:
-      additionalProperties: true
-      properties:
-        additional_spaces_installed_kibana:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_kibana_asset_reference'
-            maxItems: 100
-            type: array
-          type: object
-        created_at:
-          type: string
-        experimental_data_stream_features:
-          items:
-            additionalProperties: true
-            type: object
-            properties:
-              data_stream:
-                maxLength: 1024
-                type: string
-              features:
-                additionalProperties: true
-                type: object
-                properties:
-                  doc_value_only_numeric:
-                    type: boolean
-                  doc_value_only_other:
-                    type: boolean
-                  synthetic_source:
-                    type: boolean
-                  tsdb:
-                    type: boolean
-            required:
-            - data_stream
-            - features
-          maxItems: 100
-          type: array
-        install_format_schema_version:
-          type: string
-        install_source:
-          enum:
-          - registry
-          - upload
-          - bundled
-          - custom
-          type: string
-        install_status:
-          enum:
-          - installed
-          - installing
-          - install_failed
-          type: string
-        installed_es:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_es_asset_reference'
-          maxItems: 10000
-          type: array
-        installed_kibana:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_info_kibana_asset_reference'
-          maxItems: 10000
-          type: array
-        installed_kibana_space_id:
-          type: string
-        is_rollback_ttl_expired:
-          type: boolean
-        latest_executed_state:
-          additionalProperties: true
-          type: object
-          properties:
-            error:
-              type: string
-            name:
-              type: string
-            started_at:
-              type: string
-        latest_install_failed_attempts:
-          items:
-            additionalProperties: true
-            type: object
-            properties:
-              created_at:
-                type: string
-              error:
-                additionalProperties: true
-                type: object
-                properties:
-                  message:
-                    type: string
-                  name:
-                    type: string
-                  stack:
-                    type: string
-                required:
-                - name
-                - message
-              missing_assets:
-                items:
-                  additionalProperties: true
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    type:
-                      type: string
-                  required:
-                  - id
-                  - type
-                maxItems: 10000
-                type: array
-              target_version:
-                type: string
-            required:
-            - created_at
-            - target_version
-            - error
-          maxItems: 10
-          type: array
-        name:
-          type: string
-        namespaces:
-          items:
-            type: string
-          maxItems: 100
-          type: array
-        previous_version:
-          type:
-          - string
-          - 'null'
-        rolled_back:
-          type: boolean
-        type:
-          type: string
-        updated_at:
-          type: string
-        verification_key_id:
-          type:
-          - string
-          - 'null'
-        verification_status:
-          enum:
-          - unverified
-          - verified
-          - unknown
-          type: string
-        version:
-          type: string
-      required:
-      - type
-      - installed_kibana
-      - installed_es
-      - name
-      - version
-      - install_status
-      - install_source
-      - verification_status
-      title: package_info_installation_info
-      type: object
     Kibana_HTTP_APIs_package_info_icon:
       additionalProperties: true
       properties:
@@ -4544,499 +4982,61 @@ components:
       - src
       title: package_info_icon
       type: object
-    Kibana_HTTP_APIs_install_rule_assets_request:
-      additionalProperties: false
-      properties:
-        force:
-          type: boolean
-      title: install_rule_assets_request
-      type: object
-    Kibana_HTTP_APIs_install_package_from_registry_request:
-      additionalProperties: false
-      properties:
-        allow_outdated_version:
-          default: false
-          description: When true, allow installing a version older than the latest available. Bypasses only the out-of-date version check.
-          type: boolean
-        force:
-          default: false
-          type: boolean
-        ignore_constraints:
-          default: false
-          type: boolean
-      title: install_package_from_registry_request
-      type: object
-    Kibana_HTTP_APIs_bulk_install_packages_from_registry_request:
-      additionalProperties: false
-      properties:
-        allow_outdated_version:
-          default: false
-          description: When true, allow installing a version older than the latest available. Bypasses only the out-of-date version check.
-          type: boolean
-        force:
-          default: false
-          type: boolean
-        packages:
-          items:
-            anyOf:
-            - type: string
-            - additionalProperties: false
-              type: object
-              properties:
-                name:
-                  type: string
-                prerelease:
-                  type: boolean
-                version:
-                  type: string
-              required:
-              - name
-              - version
-          maxItems: 1000
-          minItems: 1
-          type: array
-      required:
-      - packages
-      title: bulk_install_packages_from_registry_request
-      type: object
-    Kibana_HTTP_APIs_get_one_bulk_operation_packages_response:
-      additionalProperties: false
-      properties:
-        error:
-          additionalProperties: false
-          type: object
-          properties:
-            message:
-              type: string
-          required:
-          - message
-        results:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              error:
-                additionalProperties: false
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                - message
-              name:
-                type: string
-              success:
-                type: boolean
-            required:
-            - name
-            - success
-          maxItems: 10000
-          type: array
-        status:
-          type: string
-      required:
-      - status
-      title: get_one_bulk_operation_packages_response
-      type: object
-    Kibana_HTTP_APIs_package_metadata:
-      additionalProperties: false
-      properties:
-        has_policies:
-          type: boolean
-      required:
-      - has_policies
-      title: package_metadata
-      type: object
-    Kibana_HTTP_APIs_installed_package:
-      additionalProperties: false
-      properties:
-        dataStreams:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                type: string
-              title:
-                type: string
-            required:
-            - name
-            - title
-          maxItems: 10000
-          type: array
-        description:
-          type: string
-        icons:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_package_icon'
-          maxItems: 100
-          type: array
-        name:
-          type: string
-        rolledBack:
-          type: boolean
-        status:
-          type: string
-        title:
-          type: string
-        version:
-          type: string
-      required:
-      - name
-      - version
-      - status
-      - dataStreams
-      title: installed_package
-      type: object
-    Kibana_HTTP_APIs_package_info_conditions_deprecation_info:
-      additionalProperties: true
-      properties:
-        description:
-          maxLength: 4096
-          type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
-          maxLength: 50
-          type: string
-      required:
-      - description
-      title: package_info_conditions_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_get_inputs_response:
-      additionalProperties: false
-      properties:
-        connectors:
-          additionalProperties: {}
-          type: object
-        exporters:
-          additionalProperties: {}
-          type: object
-        extensions:
-          additionalProperties: {}
-          type: object
-        inputs:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              id:
-                type: string
-              streams:
-                items:
-                  additionalProperties: true
-                  type: object
-                  properties:
-                    data_stream:
-                      additionalProperties: true
-                      type: object
-                      properties:
-                        dataset:
-                          type: string
-                        type:
-                          type: string
-                      required:
-                      - dataset
-                    id:
-                      type: string
-                  required:
-                  - id
-                  - data_stream
-                maxItems: 10000
-                type: array
-              type:
-                type: string
-            required:
-            - id
-            - type
-          maxItems: 10000
-          type: array
-        processors:
-          additionalProperties: {}
-          type: object
-        receivers:
-          additionalProperties: {}
-          type: object
-        service:
-          additionalProperties: false
-          type: object
-          properties:
-            extensions:
-              items:
-                type: string
-              maxItems: 1000
-              type: array
-            pipelines:
-              additionalProperties:
-                additionalProperties: false
-                type: object
-                properties:
-                  exporters:
-                    items:
-                      type: string
-                    maxItems: 1000
-                    type: array
-                  processors:
-                    items:
-                      type: string
-                    maxItems: 1000
-                    type: array
-                  receivers:
-                    items:
-                      type: string
-                    maxItems: 1000
-                    type: array
-              type: object
-      required:
-      - inputs
-      title: get_inputs_response
-      type: object
-    Kibana_HTTP_APIs_bulk_upgrade_packages_response:
-      additionalProperties: false
-      properties:
-        taskId:
-          type: string
-      required:
-      - taskId
-      title: bulk_upgrade_packages_response
-      type: object
-    Kibana_HTTP_APIs_kibana_asset_reference:
-      additionalProperties: false
-      properties:
-        deferred:
-          type: boolean
-        id:
-          type: string
-        originId:
-          type: string
-        type:
-          anyOf:
-          - enum:
-            - dashboard
-            - lens
-            - visualization
-            - search
-            - index-pattern
-            - map
-            - ml-module
-            - security-rule
-            - csp-rule-template
-            - osquery-pack-asset
-            - osquery-saved-query
-            - tag
-            type: string
-          - type: string
-      required:
-      - id
-      - type
-      title: kibana_asset_reference
-      type: object
-    Kibana_HTTP_APIs_category_summary_item:
-      additionalProperties: false
-      properties:
-        count:
-          type: number
-        id:
-          type: string
-        parent_id:
-          type: string
-        parent_title:
-          type: string
-        title:
-          type: string
-      required:
-      - id
-      - title
-      - count
-      title: category_summary_item
-      type: object
-    Kibana_HTTP_APIs_get_bulk_assets_request:
-      additionalProperties: false
-      properties:
-        assetIds:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              id:
-                type: string
-              type:
-                type: string
-            required:
-            - id
-            - type
-          maxItems: 10000
-          type: array
-      required:
-      - assetIds
-      title: get_bulk_assets_request
-      type: object
-    Kibana_HTTP_APIs_delete_package_datastream_assets_response:
+    Kibana_HTTP_APIs_review_upgrade_response:
       additionalProperties: false
       properties:
         success:
           type: boolean
       required:
       - success
-      title: delete_package_datastream_assets_response
+      title: review_upgrade_response
       type: object
-    Kibana_HTTP_APIs_bulk_namespace_customization_request:
+    Kibana_HTTP_APIs_package_icon:
       additionalProperties: false
       properties:
-        disable:
-          description: Namespaces to disable namespace-level customization for on each package.
-          items:
-            type: string
-          maxItems: 100
-          type: array
-        enable:
-          description: Namespaces to enable namespace-level customization for on each package.
-          items:
-            type: string
-          maxItems: 100
-          type: array
-        packages:
-          description: Package names to apply the customization changes to.
-          items:
-            type: string
-          maxItems: 1000
-          minItems: 1
-          type: array
+        dark_mode:
+          type: boolean
+        path:
+          type: string
+        size:
+          type: string
+        src:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
       required:
-      - packages
-      title: bulk_namespace_customization_request
+      - src
+      title: package_icon
       type: object
-    Kibana_HTTP_APIs_reauthorize_transform_request:
-      additionalProperties: false
-      properties:
-        transforms:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              transformId:
-                type: string
-            required:
-            - transformId
-          maxItems: 1000
-          type: array
-      required:
-      - transforms
-      title: reauthorize_transform_request
-      type: object
-    Kibana_HTTP_APIs_bulk_namespace_customization_response:
+    Kibana_HTTP_APIs_bulk_install_packages_from_registry_response:
       additionalProperties: false
       properties:
         items:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              error:
-                type: string
-              name:
-                type: string
-              namespace_customization_enabled_for:
-                description: 'The opt-in list on the package. Returned whenever the package is installed: the new list on success, or the unchanged list when the request is rejected (for example, because of a namespace-prefix restriction).'
-                items:
-                  type: string
-                maxItems: 100
-                type: array
-              success:
-                type: boolean
-              warnings:
-                items:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    baseTemplateName:
-                      maxLength: 1000
-                      type: string
-                    conflictingTemplates:
-                      items:
-                        additionalProperties: false
-                        type: object
-                        properties:
-                          conflictType:
-                            enum:
-                            - overrides_fleet
-                            - blocked_by_same_priority
-                            - overridden_by_fleet
-                            type: string
-                          name:
-                            maxLength: 1000
-                            type: string
-                          priority:
-                            type: number
-                        required:
-                        - name
-                        - priority
-                        - conflictType
-                      maxItems: 100
-                      type: array
-                    dataStreamName:
-                      maxLength: 1000
-                      type: string
-                    namespace:
-                      maxLength: 255
-                      type: string
-                    nsTemplateName:
-                      maxLength: 1000
-                      type: string
-                  required:
-                  - dataStreamName
-                  - namespace
-                  - baseTemplateName
-                  - nsTemplateName
-                  - conflictingTemplates
-                maxItems: 100
-                type: array
-            required:
-            - name
-            - success
-          maxItems: 1000
-          type: array
-      required:
-      - items
-      title: bulk_namespace_customization_response
-      type: object
-    Kibana_HTTP_APIs_get_info_response:
-      additionalProperties: false
-      properties:
-        item:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_get_package_info'
-        metadata:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_package_metadata'
-      required:
-      - item
-      title: get_info_response
-      type: object
-    Kibana_HTTP_APIs_get_installed_packages_response:
-      additionalProperties: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Kibana_HTTP_APIs_installed_package'
-          maxItems: 10000
-          type: array
-        searchAfter:
           items:
             anyOf:
-            - type: string
-            - type: number
-            - type: boolean
-            - {}
-          maxItems: 2
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_response_item_success'
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_bulk_install_packages_response_item_error'
+          maxItems: 10000
           type: array
-        total:
-          type: number
       required:
       - items
-      - total
-      title: get_installed_packages_response
+      title: bulk_install_packages_from_registry_response
+      type: object
+    Kibana_HTTP_APIs_delete_package_response:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_kibana_asset_reference'
+            - $ref: '#/components/schemas/Kibana_HTTP_APIs_es_asset_reference'
+          maxItems: 10000
+          type: array
+      required:
+      - items
+      title: delete_package_response
       type: object
   securitySchemes:
     apiKeyAuth:

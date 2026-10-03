@@ -630,102 +630,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_maintenance_window_scope:
-      additionalProperties: false
-      properties:
-        alerting:
-          additionalProperties: false
-          type: object
-          properties:
-            query:
-              additionalProperties: false
-              type: object
-              properties:
-                kql:
-                  description: A filter written in Kibana Query Language (KQL). Only alerts matching this query will be suppressed by the maintenance window.
-                  type: string
-              required:
-              - kql
-          required:
-          - query
-      required:
-      - alerting
-      title: maintenance_window_scope
-      type: object
-    Kibana_HTTP_APIs_maintenance_window_schedule_recurring_response:
-      additionalProperties: false
-      properties:
-        end:
-          description: 'The end date of a recurring schedule, provided in ISO 8601 format and set to the UTC timezone. For example: `2025-04-01T00:00:00.000Z`.'
-          type: string
-        every:
-          description: 'The interval and frequency of a recurring schedule. It allows values in `<integer><unit>` format. `<unit>` is one of `d`, `w`, `M`, or `y` for days, weeks, months, years. For example: `15d`, `2w`, `3m`, `1y`.'
-          type: string
-        occurrences:
-          description: The total number of recurrences of the schedule.
-          type: number
-        onMonth:
-          description: The specific months for a recurring schedule. Valid values are 1-12.
-          items:
-            type: number
-          maxItems: 12
-          type: array
-        onMonthDay:
-          description: The specific days of the month for a recurring schedule. Valid values are 1-31.
-          items:
-            type: number
-          maxItems: 31
-          type: array
-        onWeekDay:
-          description: The specific days of the week (`[MO,TU,WE,TH,FR,SA,SU]`) or nth day of month (`[+1MO, -3FR, +2WE, -4SA, -5SU]`) for a recurring schedule.
-          items:
-            maxLength: 10
-            type: string
-          maxItems: 77
-          type: array
-      title: maintenance_window_schedule_recurring_response
-      type: object
-    Kibana_HTTP_APIs_maintenance_window_schedule_request:
-      additionalProperties: false
-      properties:
-        duration:
-          description: 'The duration of the schedule. It allows values in `<integer><unit>` format. `<unit>` is one of `d`, `h`, `m`, or `s` for hours, minutes, seconds. For example: `1d`, `5h`, `30m`, `5000s`.'
-          maxLength: 100
-          type: string
-        recurring:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_schedule_recurring_request'
-        start:
-          description: 'The start date and time of the schedule, provided in ISO 8601 format and set to the UTC timezone. For example: `2025-03-12T12:00:00.000Z`.'
-          maxLength: 100
-          type: string
-        timezone:
-          description: The timezone of the schedule. The default timezone is UTC.
-          maxLength: 64
-          type: string
-      required:
-      - start
-      - duration
-      title: maintenance_window_schedule_request
-      type: object
-    Kibana_HTTP_APIs_maintenance_window_schedule_response:
-      additionalProperties: false
-      properties:
-        duration:
-          description: 'The duration of the schedule. It allows values in `<integer><unit>` format. `<unit>` is one of `d`, `h`, `m`, or `s` for hours, minutes, seconds. For example: `1d`, `5h`, `30m`, `5000s`.'
-          type: string
-        recurring:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_schedule_recurring_response'
-        start:
-          description: 'The start date and time of the schedule, provided in ISO 8601 format and set to the UTC timezone. For example: `2025-03-12T12:00:00.000Z`.'
-          type: string
-        timezone:
-          description: The timezone of the schedule. The default timezone is UTC.
-          type: string
-      required:
-      - start
-      - duration
-      title: maintenance_window_schedule_response
-      type: object
     Kibana_HTTP_APIs_maintenance_window_response:
       additionalProperties: false
       properties:
@@ -809,6 +713,71 @@ components:
       - maintenanceWindows
       title: find_maintenance_windows_response
       type: object
+    Kibana_HTTP_APIs_update_maintenance_window:
+      additionalProperties: false
+      properties:
+        enabled:
+          description: Whether the current maintenance window is enabled. Disabled maintenance windows do not suppress notifications.
+          type: boolean
+        schedule:
+          additionalProperties: false
+          type: object
+          properties:
+            custom:
+              $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_schedule_request'
+          required:
+          - custom
+        scope:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_scope'
+        title:
+          description: The name of the maintenance window. While this name does not have to be unique, a distinctive name can help you identify a specific maintenance window.
+          type: string
+      title: update_maintenance_window
+      type: object
+    Kibana_HTTP_APIs_maintenance_window_scope:
+      additionalProperties: false
+      properties:
+        alerting:
+          additionalProperties: false
+          type: object
+          properties:
+            query:
+              additionalProperties: false
+              type: object
+              properties:
+                kql:
+                  description: A filter written in Kibana Query Language (KQL). Only alerts matching this query will be suppressed by the maintenance window.
+                  type: string
+              required:
+              - kql
+          required:
+          - query
+      required:
+      - alerting
+      title: maintenance_window_scope
+      type: object
+    Kibana_HTTP_APIs_maintenance_window_schedule_request:
+      additionalProperties: false
+      properties:
+        duration:
+          description: 'The duration of the schedule. It allows values in `<integer><unit>` format. `<unit>` is one of `d`, `h`, `m`, or `s` for hours, minutes, seconds. For example: `1d`, `5h`, `30m`, `5000s`.'
+          maxLength: 100
+          type: string
+        recurring:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_schedule_recurring_request'
+        start:
+          description: 'The start date and time of the schedule, provided in ISO 8601 format and set to the UTC timezone. For example: `2025-03-12T12:00:00.000Z`.'
+          maxLength: 100
+          type: string
+        timezone:
+          description: The timezone of the schedule. The default timezone is UTC.
+          maxLength: 64
+          type: string
+      required:
+      - start
+      - duration
+      title: maintenance_window_schedule_request
+      type: object
     Kibana_HTTP_APIs_new_maintenance_window:
       additionalProperties: false
       properties:
@@ -833,26 +802,57 @@ components:
       - schedule
       title: new_maintenance_window
       type: object
-    Kibana_HTTP_APIs_update_maintenance_window:
+    Kibana_HTTP_APIs_maintenance_window_schedule_response:
       additionalProperties: false
       properties:
-        enabled:
-          description: Whether the current maintenance window is enabled. Disabled maintenance windows do not suppress notifications.
-          type: boolean
-        schedule:
-          additionalProperties: false
-          type: object
-          properties:
-            custom:
-              $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_schedule_request'
-          required:
-          - custom
-        scope:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_scope'
-        title:
-          description: The name of the maintenance window. While this name does not have to be unique, a distinctive name can help you identify a specific maintenance window.
+        duration:
+          description: 'The duration of the schedule. It allows values in `<integer><unit>` format. `<unit>` is one of `d`, `h`, `m`, or `s` for hours, minutes, seconds. For example: `1d`, `5h`, `30m`, `5000s`.'
           type: string
-      title: update_maintenance_window
+        recurring:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_maintenance_window_schedule_recurring_response'
+        start:
+          description: 'The start date and time of the schedule, provided in ISO 8601 format and set to the UTC timezone. For example: `2025-03-12T12:00:00.000Z`.'
+          type: string
+        timezone:
+          description: The timezone of the schedule. The default timezone is UTC.
+          type: string
+      required:
+      - start
+      - duration
+      title: maintenance_window_schedule_response
+      type: object
+    Kibana_HTTP_APIs_maintenance_window_schedule_recurring_response:
+      additionalProperties: false
+      properties:
+        end:
+          description: 'The end date of a recurring schedule, provided in ISO 8601 format and set to the UTC timezone. For example: `2025-04-01T00:00:00.000Z`.'
+          type: string
+        every:
+          description: 'The interval and frequency of a recurring schedule. It allows values in `<integer><unit>` format. `<unit>` is one of `d`, `w`, `M`, or `y` for days, weeks, months, years. For example: `15d`, `2w`, `3m`, `1y`.'
+          type: string
+        occurrences:
+          description: The total number of recurrences of the schedule.
+          type: number
+        onMonth:
+          description: The specific months for a recurring schedule. Valid values are 1-12.
+          items:
+            type: number
+          maxItems: 12
+          type: array
+        onMonthDay:
+          description: The specific days of the month for a recurring schedule. Valid values are 1-31.
+          items:
+            type: number
+          maxItems: 31
+          type: array
+        onWeekDay:
+          description: The specific days of the week (`[MO,TU,WE,TH,FR,SA,SU]`) or nth day of month (`[+1MO, -3FR, +2WE, -4SA, -5SU]`) for a recurring schedule.
+          items:
+            maxLength: 10
+            type: string
+          maxItems: 77
+          type: array
+      title: maintenance_window_schedule_recurring_response
       type: object
     Kibana_HTTP_APIs_maintenance_window_schedule_recurring_request:
       additionalProperties: false

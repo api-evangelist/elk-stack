@@ -331,19 +331,22 @@ paths:
         kibana_url:
           default: localhost:5601
 components:
+  parameters:
+    logstash.get_pipeline-id:
+      in: path
+      name: id
+      description: A comma-separated list of pipeline identifiers.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Ids'
+      style: simple
   schemas:
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.Id:
+      type: string
     logstash._types.PipelineMetadata:
       type: object
       properties:
@@ -354,45 +357,21 @@ components:
       required:
       - type
       - version
-    logstash._types.PipelineSettings:
-      type: object
-      properties:
-        pipeline.workers:
-          description: The number of workers that will, in parallel, execute the filter and output stages of the pipeline.
-          type: number
-        pipeline.batch.size:
-          description: The maximum number of events an individual worker thread will collect from inputs before attempting to execute its filters and outputs.
-          type: number
-        pipeline.batch.delay:
-          description: When creating pipeline event batches, how long in milliseconds to wait for each event before dispatching an undersized batch to pipeline workers.
-          type: number
-        queue.type:
-          description: The internal queuing model to use for event buffering.
-          type: string
-        queue.max_bytes:
-          description: 'The total capacity of the queue (`queue.type: persisted`) in number of bytes.'
-          type: string
-        queue.checkpoint.writes:
-          description: 'The maximum number of written events before forcing a checkpoint when persistent queues are enabled (`queue.type: persisted`).'
-          type: number
-      required:
-      - pipeline.workers
-      - pipeline.batch.size
-      - pipeline.batch.delay
-      - queue.type
-      - queue.max_bytes
-      - queue.checkpoint.writes
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
     _types.Ids:
       oneOf:
       - $ref: '#/components/schemas/_types.Id'
       - type: array
         items:
           $ref: '#/components/schemas/_types.Id'
-    _types.Id:
-      type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
     logstash._types.Pipeline:
       type: object
       properties:
@@ -436,6 +415,37 @@ components:
       - pipeline_metadata
       - pipeline_settings
       - username
+    logstash._types.PipelineSettings:
+      type: object
+      properties:
+        pipeline.workers:
+          description: The number of workers that will, in parallel, execute the filter and output stages of the pipeline.
+          type: number
+        pipeline.batch.size:
+          description: The maximum number of events an individual worker thread will collect from inputs before attempting to execute its filters and outputs.
+          type: number
+        pipeline.batch.delay:
+          description: When creating pipeline event batches, how long in milliseconds to wait for each event before dispatching an undersized batch to pipeline workers.
+          type: number
+        queue.type:
+          description: The internal queuing model to use for event buffering.
+          type: string
+        queue.max_bytes:
+          description: 'The total capacity of the queue (`queue.type: persisted`) in number of bytes.'
+          type: string
+        queue.checkpoint.writes:
+          description: 'The maximum number of written events before forcing a checkpoint when persistent queues are enabled (`queue.type: persisted`).'
+          type: number
+      required:
+      - pipeline.workers
+      - pipeline.batch.size
+      - pipeline.batch.delay
+      - queue.type
+      - queue.max_bytes
+      - queue.checkpoint.writes
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
   responses:
     logstash.get_pipeline-200:
       description: ''
@@ -451,16 +461,6 @@ components:
 
                 '
               value: "{\n  \"my_pipeline\": {\n    \"description\": \"Sample pipeline for illustration purposes\",\n    \"last_modified\": \"2021-01-02T02:50:51.250Z\",\n    \"pipeline_metadata\": {\n      \"type\": \"logstash_pipeline\",\n      \"version\": \"1\"\n    },\n    \"username\": \"elastic\",\n    \"pipeline\": \"input {}\\\\n filter { grok {} }\\\\n output {}\",\n    \"pipeline_settings\": {\n      \"pipeline.workers\": 1,\n      \"pipeline.batch.size\": 125,\n      \"pipeline.batch.delay\": 50,\n      \"queue.type\": \"memory\",\n      \"queue.max_bytes\": \"1gb\",\n      \"queue.checkpoint.writes\": 1024\n    }\n  }\n}"
-  parameters:
-    logstash.get_pipeline-id:
-      in: path
-      name: id
-      description: A comma-separated list of pipeline identifiers.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Ids'
-      style: simple
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

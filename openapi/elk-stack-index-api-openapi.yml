@@ -1,11 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Elk Stack Index API
+  title: Elasticsearch REST Index API
+  description: The Elasticsearch REST API exposes the core operations of the distributed search and analytics engine at the heart of the Elastic Stack. It allows clients to manage indices, ingest and retrieve documents, run search and aggregation queries, inspect cluster and node health, and operate snapshots and ingest pipelines.
   version: 1.0.0
   contact:
     name: Elastic
     url: https://www.elastic.co
-  description: 'Operations tagged Index across 2 of this provider''s published API definitions: elk-stack-openapi.yml, elk-stack-index-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: http://localhost:9200
   description: Default local Elasticsearch endpoint
@@ -43,16 +43,6 @@ paths:
       responses:
         '200':
           description: Index deleted
-    servers:
-    - url: http://localhost:9200
-      description: Default local Elasticsearch endpoint
-    - url: https://{host}:{port}
-      description: Self-hosted or Elastic Cloud cluster endpoint
-      variables:
-        host:
-          default: localhost
-        port:
-          default: '9200'
   /{index}/_mapping:
     get:
       summary: Get index mappings
@@ -64,16 +54,6 @@ paths:
       responses:
         '200':
           description: Index mappings
-    servers:
-    - url: http://localhost:9200
-      description: Default local Elasticsearch endpoint
-    - url: https://{host}:{port}
-      description: Self-hosted or Elastic Cloud cluster endpoint
-      variables:
-        host:
-          default: localhost
-        port:
-          default: '9200'
   /{index}/_settings:
     put:
       summary: Update index settings
@@ -91,16 +71,6 @@ paths:
       responses:
         '200':
           description: Settings updated
-    servers:
-    - url: http://localhost:9200
-      description: Default local Elasticsearch endpoint
-    - url: https://{host}:{port}
-      description: Self-hosted or Elastic Cloud cluster endpoint
-      variables:
-        host:
-          default: localhost
-        port:
-          default: '9200'
 components:
   parameters:
     IndexName:
@@ -119,9 +89,3 @@ components:
       in: header
       name: Authorization
       description: ApiKey <base64-encoded-id:api_key>
-x-refined-from:
-- elk-stack-openapi.yml
-- elk-stack-index-api-openapi.yml
-x-elastic:
-  curl:
-    auth: '-H "Authorization: ApiKey $ECE_API_KEY"'

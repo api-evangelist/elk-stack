@@ -1128,6 +1128,115 @@ components:
         value:
           description: The value associated with the parameter.
           type: string
+    Synthetics_browserMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          ignore_https_errors:
+            default: false
+            description: Ignore HTTPS errors.
+            type: boolean
+          inline_script:
+            description: The inline script.
+            type: string
+          playwright_options:
+            description: Playwright options.
+            type: object
+          screenshots:
+            default: 'on'
+            description: The screenshot option.
+            enum:
+            - 'on'
+            - 'off'
+            - only-on-failure
+            type: string
+          synthetics_args:
+            description: Synthetics agent CLI arguments.
+            items:
+              type: string
+            type: array
+          type:
+            description: The monitor type.
+            enum:
+            - browser
+            type: string
+        required:
+        - inline_script
+        - type
+      title: Browser monitor fields
+    Synthetics_getParameterResponse:
+      title: Get parameter response
+      type: object
+      properties:
+        description:
+          description: 'The description of the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          type: string
+        id:
+          description: The unique identifier of the parameter.
+          type: string
+        key:
+          description: The key of the parameter.
+          type: string
+        namespaces:
+          description: 'The namespaces associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          items:
+            type: string
+          type: array
+        tags:
+          description: 'An array of tags associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
+
+            '
+          items:
+            type: string
+          type: array
+        value:
+          description: "The value associated with the parameter. It will be included in the response if the user has write permissions.  \n"
+          type: string
+    Synthetics_parameterRequest:
+      title: Parameter request
+      type: object
+      properties:
+        description:
+          description: A description of the parameter.
+          type: string
+        key:
+          description: The key of the parameter.
+          type: string
+        share_across_spaces:
+          description: Specify whether the parameter should be shared across spaces.
+          type: boolean
+        tags:
+          description: An array of tags to categorize the parameter.
+          items:
+            type: string
+          type: array
+        value:
+          description: The value associated with the parameter.
+          type: string
+      required:
+      - key
+      - value
+    Synthetics_monitorWarning:
+      title: Monitor warning
+      type: object
+      properties:
+        message:
+          description: A human-readable warning message.
+          type: string
+        monitorId:
+          description: The monitor ID associated with the warning.
+          type: string
+        publicLocationIds:
+          description: The public location IDs associated with the warning.
+          items:
+            type: string
+          type: array
     Synthetics_tcpMonitorFields:
       allOf:
       - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
@@ -1164,125 +1273,6 @@ components:
         - host
         - type
       title: TCP monitor fields
-    Synthetics_icmpMonitorFields:
-      allOf:
-      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
-      - additionalProperties: true
-        type: object
-        properties:
-          host:
-            description: The host to ping.
-            type: string
-          type:
-            description: The monitor type.
-            enum:
-            - icmp
-            type: string
-          wait:
-            default: 1
-            description: The wait time in seconds.
-            type: number
-        required:
-        - host
-        - type
-      title: ICMP monitor fields
-    Synthetics_httpMonitorFields:
-      allOf:
-      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
-      - additionalProperties: true
-        type: object
-        properties:
-          check:
-            description: The check request settings.
-            type: object
-            properties:
-              request:
-                description: An optional request to send to the remote host.
-                type: object
-                properties:
-                  body:
-                    description: Optional request body content.
-                    type: string
-                  headers:
-                    description: 'A dictionary of additional HTTP headers to send. By default, Synthetics will set the User-Agent header to identify itself.
-
-                      '
-                    type: object
-                  method:
-                    description: The HTTP method to use.
-                    enum:
-                    - HEAD
-                    - GET
-                    - POST
-                    - OPTIONS
-                    type: string
-              response:
-                additionalProperties: true
-                description: The expected response.
-                type: object
-                properties:
-                  body:
-                    type: object
-                  headers:
-                    description: A dictionary of expected HTTP headers. If the header is not found, the check fails.
-                    type: object
-          ipv4:
-            default: true
-            description: If `true`, ping using the ipv4 protocol.
-            type: boolean
-          ipv6:
-            default: true
-            description: If `true`, ping using the ipv6 protocol.
-            type: boolean
-          max_redirects:
-            default: 0
-            description: The maximum number of redirects to follow.
-            type: number
-          mode:
-            default: any
-            description: 'The mode of the monitor. If it is `all`, the monitor pings all resolvable IPs for a hostname. If it is `any`, the monitor pings only one IP address for a hostname. If you''re using a DNS-load balancer and want to ping every IP address for the specified hostname, you should use `all`.
-
-              '
-            enum:
-            - all
-            - any
-            type: string
-          password:
-            description: 'The password for authenticating with the server. The credentials are passed with the request.
-
-              '
-            type: string
-          proxy_headers:
-            description: Additional headers to send to proxies during CONNECT requests.
-            type: object
-          proxy_url:
-            description: The URL of the proxy to use for this monitor.
-            type: string
-          response:
-            description: Controls the indexing of the HTTP response body contents to the `http.response.body.contents field`.
-            type: object
-          ssl:
-            description: 'The TLS/SSL connection settings for use with the HTTPS endpoint. If you don''t specify settings, the system defaults are used.
-
-              '
-            type: object
-          type:
-            description: The monitor type.
-            enum:
-            - http
-            type: string
-          url:
-            description: The URL to monitor.
-            type: string
-          username:
-            description: 'The username for authenticating with the server. The credentials are passed with the request.
-
-              '
-            type: string
-        required:
-        - type
-        - url
-      title: HTTP monitor fields
     Synthetics_commonMonitorFields:
       title: Common monitor fields
       type: object
@@ -1386,62 +1376,6 @@ components:
           type: number
       required:
       - name
-    Synthetics_parameterRequest:
-      title: Parameter request
-      type: object
-      properties:
-        description:
-          description: A description of the parameter.
-          type: string
-        key:
-          description: The key of the parameter.
-          type: string
-        share_across_spaces:
-          description: Specify whether the parameter should be shared across spaces.
-          type: boolean
-        tags:
-          description: An array of tags to categorize the parameter.
-          items:
-            type: string
-          type: array
-        value:
-          description: The value associated with the parameter.
-          type: string
-      required:
-      - key
-      - value
-    Synthetics_getParameterResponse:
-      title: Get parameter response
-      type: object
-      properties:
-        description:
-          description: 'The description of the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
-
-            '
-          type: string
-        id:
-          description: The unique identifier of the parameter.
-          type: string
-        key:
-          description: The key of the parameter.
-          type: string
-        namespaces:
-          description: 'The namespaces associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
-
-            '
-          items:
-            type: string
-          type: array
-        tags:
-          description: 'An array of tags associated with the parameter. It is included in the response if the user has read-only permissions to the Synthetics app.
-
-            '
-          items:
-            type: string
-          type: array
-        value:
-          description: "The value associated with the parameter. It will be included in the response if the user has write permissions.  \n"
-          type: string
     Synthetics_getPrivateLocation:
       additionalProperties: true
       properties:
@@ -1477,59 +1411,125 @@ components:
           type: string
       title: Post a private location
       type: object
-    Synthetics_monitorWarning:
-      title: Monitor warning
-      type: object
-      properties:
-        message:
-          description: A human-readable warning message.
-          type: string
-        monitorId:
-          description: The monitor ID associated with the warning.
-          type: string
-        publicLocationIds:
-          description: The public location IDs associated with the warning.
-          items:
-            type: string
-          type: array
-    Synthetics_browserMonitorFields:
+    Synthetics_httpMonitorFields:
       allOf:
       - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
       - additionalProperties: true
         type: object
         properties:
-          ignore_https_errors:
-            default: false
-            description: Ignore HTTPS errors.
-            type: boolean
-          inline_script:
-            description: The inline script.
-            type: string
-          playwright_options:
-            description: Playwright options.
+          check:
+            description: The check request settings.
             type: object
-          screenshots:
-            default: 'on'
-            description: The screenshot option.
+            properties:
+              request:
+                description: An optional request to send to the remote host.
+                type: object
+                properties:
+                  body:
+                    description: Optional request body content.
+                    type: string
+                  headers:
+                    description: 'A dictionary of additional HTTP headers to send. By default, Synthetics will set the User-Agent header to identify itself.
+
+                      '
+                    type: object
+                  method:
+                    description: The HTTP method to use.
+                    enum:
+                    - HEAD
+                    - GET
+                    - POST
+                    - OPTIONS
+                    type: string
+              response:
+                additionalProperties: true
+                description: The expected response.
+                type: object
+                properties:
+                  body:
+                    type: object
+                  headers:
+                    description: A dictionary of expected HTTP headers. If the header is not found, the check fails.
+                    type: object
+          ipv4:
+            default: true
+            description: If `true`, ping using the ipv4 protocol.
+            type: boolean
+          ipv6:
+            default: true
+            description: If `true`, ping using the ipv6 protocol.
+            type: boolean
+          max_redirects:
+            default: 0
+            description: The maximum number of redirects to follow.
+            type: number
+          mode:
+            default: any
+            description: 'The mode of the monitor. If it is `all`, the monitor pings all resolvable IPs for a hostname. If it is `any`, the monitor pings only one IP address for a hostname. If you''re using a DNS-load balancer and want to ping every IP address for the specified hostname, you should use `all`.
+
+              '
             enum:
-            - 'on'
-            - 'off'
-            - only-on-failure
+            - all
+            - any
             type: string
-          synthetics_args:
-            description: Synthetics agent CLI arguments.
-            items:
-              type: string
-            type: array
+          password:
+            description: 'The password for authenticating with the server. The credentials are passed with the request.
+
+              '
+            type: string
+          proxy_headers:
+            description: Additional headers to send to proxies during CONNECT requests.
+            type: object
+          proxy_url:
+            description: The URL of the proxy to use for this monitor.
+            type: string
+          response:
+            description: Controls the indexing of the HTTP response body contents to the `http.response.body.contents field`.
+            type: object
+          ssl:
+            description: 'The TLS/SSL connection settings for use with the HTTPS endpoint. If you don''t specify settings, the system defaults are used.
+
+              '
+            type: object
           type:
             description: The monitor type.
             enum:
-            - browser
+            - http
+            type: string
+          url:
+            description: The URL to monitor.
+            type: string
+          username:
+            description: 'The username for authenticating with the server. The credentials are passed with the request.
+
+              '
             type: string
         required:
-        - inline_script
         - type
-      title: Browser monitor fields
+        - url
+      title: HTTP monitor fields
+    Synthetics_icmpMonitorFields:
+      allOf:
+      - $ref: '#/components/schemas/Synthetics_commonMonitorFields'
+      - additionalProperties: true
+        type: object
+        properties:
+          host:
+            description: The host to ping.
+            type: string
+          type:
+            description: The monitor type.
+            enum:
+            - icmp
+            type: string
+          wait:
+            default: 1
+            description: The wait time in seconds.
+            type: number
+        required:
+        - host
+        - type
+      title: ICMP monitor fields
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

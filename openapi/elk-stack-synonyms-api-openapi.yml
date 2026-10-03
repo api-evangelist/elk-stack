@@ -485,6 +485,10 @@ paths:
         name: product_name
 components:
   schemas:
+    _types.IndexName:
+      type: string
+    synonyms._types.SynonymString:
+      type: string
     synonyms._types.SynonymRule:
       type: object
       properties:
@@ -502,20 +506,7 @@ components:
           - $ref: '#/components/schemas/synonyms._types.SynonymString'
       required:
       - synonyms
-    synonyms.get_synonyms_sets.SynonymsSetItem:
-      type: object
-      properties:
-        synonyms_set:
-          description: Synonyms set identifier
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        count:
-          description: Number of synonym rules that the synonym set contains
-          type: number
-      required:
-      - synonyms_set
-      - count
-    synonyms._types.SynonymString:
+    _types.Id:
       type: string
     synonyms._types.SynonymsUpdateResult:
       type: object
@@ -545,25 +536,45 @@ components:
       required:
       - reload_details
       - _shards
-    _types.ShardFailure:
+    _types.ShardStatistics:
       type: object
       properties:
-        index:
+        failed:
+          description: The number of shards the operation or search attempted to run on but failed.
           allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-        node:
-          type: string
-        reason:
+          - $ref: '#/components/schemas/_types.uint'
+        successful:
+          description: The number of shards the operation or search succeeded on.
           allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        shard:
-          type: number
-        status:
-          type: string
-        primary:
-          type: boolean
+          - $ref: '#/components/schemas/_types.uint'
+        total:
+          description: The number of shards the operation or search will run on overall.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ShardFailure'
+        skipped:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
       required:
-      - reason
+      - failed
+      - successful
+      - total
+    synonyms.get_synonyms_sets.SynonymsSetItem:
+      type: object
+      properties:
+        synonyms_set:
+          description: Synonyms set identifier
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        count:
+          description: Number of synonym rules that the synonym set contains
+          type: number
+      required:
+      - synonyms_set
+      - count
     _types.AcknowledgedResponseBase:
       type: object
       properties:
@@ -589,16 +600,6 @@ components:
       - index
       - reloaded_analyzers
       - reloaded_node_ids
-    _types.Result:
-      type: string
-      enum:
-      - created
-      - updated
-      - deleted
-      - not_found
-      - noop
-    _types.IndexName:
-      type: string
     _types.ErrorCause:
       description: 'Cause and details about a request failure. This class defines the properties common to all error types.
 
@@ -631,36 +632,6 @@ components:
             $ref: '#/components/schemas/_types.ErrorCause'
       required:
       - type
-    _types.ShardStatistics:
-      type: object
-      properties:
-        failed:
-          description: The number of shards the operation or search attempted to run on but failed.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        successful:
-          description: The number of shards the operation or search succeeded on.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        total:
-          description: The number of shards the operation or search will run on overall.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        failures:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ShardFailure'
-        skipped:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-      required:
-      - failed
-      - successful
-      - total
-    _types.Id:
-      type: string
-    _types.uint:
-      type: number
     synonyms._types.SynonymRuleRead:
       type: object
       properties:
@@ -679,3 +650,32 @@ components:
       required:
       - id
       - synonyms
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    _types.ShardFailure:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        node:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        shard:
+          type: number
+        status:
+          type: string
+        primary:
+          type: boolean
+      required:
+      - reason
+    _types.uint:
+      type: number

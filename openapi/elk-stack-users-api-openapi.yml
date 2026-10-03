@@ -366,69 +366,24 @@ paths:
         required: true
 components:
   schemas:
-    BasicFailedReply:
+    UserSecurityRealm:
       type: object
       required:
-      - errors
+      - id
+      - type
       properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    EmptyResponse:
-      type: object
-    UserMetadata:
-      type: object
-      properties:
-        created_by:
+        type:
           type: string
-          description: The Id of the user that created this user
-        created_at:
+          description: The type of the security realm
+          enum:
+          - native
+          - ldap
+          - saml
+          - active_directory
+        id:
           type: string
-          format: date-time
-          description: The date and time when the user was created
-        updated_by:
-          type: string
-          description: The Id of the user that last updated this user
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was last updated
-        first_login_at:
-          type: string
-          format: date-time
-          description: The date and time when the user first logged in
-        last_login_at:
-          type: string
-          format: date-time
-          description: The date and time when the user last logged in
-      description: Metadata for a user
-    User:
-      type: object
-      required:
-      - security
-      - user_name
-      properties:
-        user_name:
-          type: string
-          description: The user's identifier
-        security:
-          description: The user's security information
-          $ref: '#/components/schemas/UserSecurity'
-        metadata:
-          description: The users metadata
-          $ref: '#/components/schemas/UserMetadata'
-        full_name:
-          type: string
-          description: The user's optional full name
-        email:
-          type: string
-          description: The user's optional email address
-        builtin:
-          type: boolean
-          description: True if the user is a built-in read-only user
-      description: An API user
+          description: The identifier for the security realm
+      description: The security realm the user belongs to
     ElevatedPermissions:
       type: object
       required:
@@ -459,24 +414,31 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    UserSecurityRealm:
+    User:
       type: object
       required:
-      - id
-      - type
+      - security
+      - user_name
       properties:
-        type:
+        user_name:
           type: string
-          description: The type of the security realm
-          enum:
-          - native
-          - ldap
-          - saml
-          - active_directory
-        id:
+          description: The user's identifier
+        security:
+          description: The user's security information
+          $ref: '#/components/schemas/UserSecurity'
+        metadata:
+          description: The users metadata
+          $ref: '#/components/schemas/UserMetadata'
+        full_name:
           type: string
-          description: The identifier for the security realm
-      description: The security realm the user belongs to
+          description: The user's optional full name
+        email:
+          type: string
+          description: The user's optional email address
+        builtin:
+          type: boolean
+          description: True if the user is a built-in read-only user
+      description: An API user
     UserList:
       type: object
       required:
@@ -488,6 +450,18 @@ components:
           items:
             $ref: '#/components/schemas/User'
       description: A collection of users
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
     UserSecurity:
       type: object
       properties:
@@ -514,6 +488,32 @@ components:
           description: The user's security realm
           $ref: '#/components/schemas/UserSecurityRealm'
       description: A user's security information
+    UserMetadata:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: The Id of the user that created this user
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was created
+        updated_by:
+          type: string
+          description: The Id of the user that last updated this user
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was last updated
+        first_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user first logged in
+        last_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user last logged in
+      description: Metadata for a user
   securitySchemes:
     apiKey:
       type: apiKey

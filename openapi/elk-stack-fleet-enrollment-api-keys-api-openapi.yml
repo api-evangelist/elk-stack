@@ -495,6 +495,72 @@ paths:
         name: product_name
 components:
   schemas:
+    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_request:
+      additionalProperties: false
+      properties:
+        forceDelete:
+          default: false
+          description: When false (default), invalidate the API key and mark the token as inactive. When true, also delete the token document.
+          type: boolean
+        includeHidden:
+          default: false
+          description: When true, allow deletion of hidden enrollment tokens (managed/agentless policies). Defaults to false.
+          type: boolean
+        kuery:
+          description: KQL query to select enrollment tokens to delete.
+          type: string
+        tokenIds:
+          description: List of enrollment token IDs to delete.
+          items:
+            type: string
+          maxItems: 10000
+          type: array
+      title: bulk_delete_enrollment_api_keys_request
+      type: object
+    Kibana_HTTP_APIs_delete_enrollment_api_key_response:
+      additionalProperties: false
+      properties:
+        action:
+          enum:
+          - deleted
+          type: string
+      required:
+      - action
+      title: delete_enrollment_api_key_response
+      type: object
+    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_response:
+      additionalProperties: false
+      properties:
+        action:
+          type: string
+        count:
+          type: number
+        errorCount:
+          type: number
+        successCount:
+          type: number
+      required:
+      - action
+      - count
+      - successCount
+      - errorCount
+      title: bulk_delete_enrollment_api_keys_response
+      type: object
+    Kibana_HTTP_APIs_new_enrollment_api_key:
+      additionalProperties: false
+      properties:
+        expiration:
+          description: The expiration time for the enrollment token, expressed as a duration (for example, 30d, 24h, 90m). By default, enrollment tokens never expire.
+          maxLength: 20
+          type: string
+        name:
+          type: string
+        policy_id:
+          type: string
+      required:
+      - policy_id
+      title: new_enrollment_api_key
+      type: object
     Kibana_HTTP_APIs_enrollment_api_key:
       additionalProperties: false
       properties:
@@ -539,64 +605,6 @@ components:
       - item
       title: enrollment_api_key_response
       type: object
-    Kibana_HTTP_APIs_new_enrollment_api_key:
-      additionalProperties: false
-      properties:
-        expiration:
-          description: The expiration time for the enrollment token, expressed as a duration (for example, 30d, 24h, 90m). By default, enrollment tokens never expire.
-          maxLength: 20
-          type: string
-        name:
-          type: string
-        policy_id:
-          type: string
-      required:
-      - policy_id
-      title: new_enrollment_api_key
-      type: object
-    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_response:
-      additionalProperties: false
-      properties:
-        action:
-          type: string
-        count:
-          type: number
-        errorCount:
-          type: number
-        successCount:
-          type: number
-      required:
-      - action
-      - count
-      - successCount
-      - errorCount
-      title: bulk_delete_enrollment_api_keys_response
-      type: object
-    Kibana_HTTP_APIs_delete_enrollment_api_key_response:
-      additionalProperties: false
-      properties:
-        action:
-          enum:
-          - deleted
-          type: string
-      required:
-      - action
-      title: delete_enrollment_api_key_response
-      type: object
-    Kibana_HTTP_APIs_create_enrollment_api_key_response:
-      additionalProperties: false
-      properties:
-        action:
-          enum:
-          - created
-          type: string
-        item:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_enrollment_api_key'
-      required:
-      - item
-      - action
-      title: create_enrollment_api_key_response
-      type: object
     Kibana_HTTP_APIs_get_enrollment_api_keys_response:
       additionalProperties: false
       properties:
@@ -625,27 +633,19 @@ components:
       - list
       title: get_enrollment_api_keys_response
       type: object
-    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_request:
+    Kibana_HTTP_APIs_create_enrollment_api_key_response:
       additionalProperties: false
       properties:
-        forceDelete:
-          default: false
-          description: When false (default), invalidate the API key and mark the token as inactive. When true, also delete the token document.
-          type: boolean
-        includeHidden:
-          default: false
-          description: When true, allow deletion of hidden enrollment tokens (managed/agentless policies). Defaults to false.
-          type: boolean
-        kuery:
-          description: KQL query to select enrollment tokens to delete.
+        action:
+          enum:
+          - created
           type: string
-        tokenIds:
-          description: List of enrollment token IDs to delete.
-          items:
-            type: string
-          maxItems: 10000
-          type: array
-      title: bulk_delete_enrollment_api_keys_request
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_enrollment_api_key'
+      required:
+      - item
+      - action
+      title: create_enrollment_api_key_response
       type: object
   securitySchemes:
     apiKeyAuth:

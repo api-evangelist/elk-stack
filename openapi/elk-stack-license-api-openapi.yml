@@ -410,42 +410,30 @@ paths:
       - content: Elasticsearch
         name: product_name
 components:
-  parameters:
-    license.post-master_timeout:
-      in: query
-      name: master_timeout
-      description: The period to wait for a connection to the master node.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
-    license.post-timeout:
-      in: query
-      name: timeout
-      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
-    license.post-acknowledge:
-      in: query
-      name: acknowledge
-      description: 'To update a license, you must accept the acknowledge messages and set this parameter to `true`.
-
-        In particular, if you are upgrading or downgrading a license, you must acknowlege the feature changes.'
-      deprecated: false
-      schema:
-        default: false
-        type: boolean
-      style: form
+  responses:
+    license.post-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              acknowledge:
+                allOf:
+                - $ref: '#/components/schemas/license.post.Acknowledgement'
+              acknowledged:
+                type: boolean
+              license_status:
+                allOf:
+                - $ref: '#/components/schemas/license._types.LicenseStatus'
+            required:
+            - acknowledged
+            - license_status
+          examples:
+            PostLicenseResponseExample1:
+              description: If you update to a basic license and you previously had a license with more features, you receive this type of response. You must re-submit the API request and set the `acknowledge` parameter to `true`.
+              value: "{\n  \"acknowledged\": false,\n  \"license_status\": \"valid\",\n  \"acknowledge\": {\n    \"message\": \"\\\"\\\"\\\"This license update requires acknowledgement. To acknowledge the license, please read the following messages and update the license again, this time with the \\\"acknowledge=true\\\" parameter:\\\"\\\"\\\"\",\n    \"watcher\": [\n      \"Watcher will be disabled\"\n    ],\n    \"logstash\": [\n      \"Logstash will no longer poll for centrally-managed pipelines\"\n    ],\n    \"security\": [\n      \"The following X-Pack security functionality will be disabled ...\"\n    ]\n  }\n}"
   schemas:
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
     license._types.LicenseStatus:
       type: string
       enum:
@@ -453,23 +441,35 @@ components:
       - valid
       - invalid
       - expired
-    _types.AcknowledgedResponseBase:
+    license.post.Acknowledgement:
       type: object
       properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
+        license:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
       required:
-      - acknowledged
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+      - license
+      - message
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    license._types.LicenseType:
+      type: string
+      enum:
+      - missing
+      - trial
+      - basic
+      - standard
+      - dev
+      - silver
+      - gold
+      - platinum
+      - enterprise
+    _types.Uuid:
+      type: string
     license.get.LicenseInformation:
       type: object
       properties:
@@ -535,23 +535,14 @@ components:
       - type
       - uid
       - start_date_in_millis
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
     license._types.License:
       type: object
       properties:
@@ -591,55 +582,32 @@ components:
       - signature
       - type
       - uid
-    license._types.LicenseType:
-      type: string
-      enum:
-      - missing
-      - trial
-      - basic
-      - standard
-      - dev
-      - silver
-      - gold
-      - platinum
-      - enterprise
-    _types.Uuid:
-      type: string
-    license.post.Acknowledgement:
-      type: object
-      properties:
-        license:
-          type: array
-          items:
-            type: string
-        message:
-          type: string
-      required:
-      - license
-      - message
-  responses:
-    license.post-200:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              acknowledge:
-                allOf:
-                - $ref: '#/components/schemas/license.post.Acknowledgement'
-              acknowledged:
-                type: boolean
-              license_status:
-                allOf:
-                - $ref: '#/components/schemas/license._types.LicenseStatus'
-            required:
-            - acknowledged
-            - license_status
-          examples:
-            PostLicenseResponseExample1:
-              description: If you update to a basic license and you previously had a license with more features, you receive this type of response. You must re-submit the API request and set the `acknowledge` parameter to `true`.
-              value: "{\n  \"acknowledged\": false,\n  \"license_status\": \"valid\",\n  \"acknowledge\": {\n    \"message\": \"\\\"\\\"\\\"This license update requires acknowledgement. To acknowledge the license, please read the following messages and update the license again, this time with the \\\"acknowledge=true\\\" parameter:\\\"\\\"\\\"\",\n    \"watcher\": [\n      \"Watcher will be disabled\"\n    ],\n    \"logstash\": [\n      \"Logstash will no longer poll for centrally-managed pipelines\"\n    ],\n    \"security\": [\n      \"The following X-Pack security functionality will be disabled ...\"\n    ]\n  }\n}"
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
   requestBodies:
     license.post:
       content:
@@ -661,3 +629,35 @@ components:
 
                 '
               value: "{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
+  parameters:
+    license.post-timeout:
+      in: query
+      name: timeout
+      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    license.post-acknowledge:
+      in: query
+      name: acknowledge
+      description: 'To update a license, you must accept the acknowledge messages and set this parameter to `true`.
+
+        In particular, if you are upgrading or downgrading a license, you must acknowlege the feature changes.'
+      deprecated: false
+      schema:
+        default: false
+        type: boolean
+      style: form
+    license.post-master_timeout:
+      in: query
+      name: master_timeout
+      description: The period to wait for a connection to the master node.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form

@@ -78,13 +78,13 @@ components:
           type: string
         timestamp:
           type: string
-    Task_manager_health_APIs_configuration:
-      description: 'This object summarizes the current configuration of Task Manager. This includes dynamic configurations that change over time, such as `poll_interval` and `max_workers`, which can adjust in reaction to changing load on the system.
+    Task_manager_health_APIs_workload:
+      description: 'This object summarizes the work load across the cluster, including the tasks in the system, their types, and current status.
 
         '
       type: object
-    Task_manager_health_APIs_workload:
-      description: 'This object summarizes the work load across the cluster, including the tasks in the system, their types, and current status.
+    Task_manager_health_APIs_configuration:
+      description: 'This object summarizes the current configuration of Task Manager. This includes dynamic configurations that change over time, such as `poll_interval` and `max_workers`, which can adjust in reaction to changing load on the system.
 
         '
       type: object

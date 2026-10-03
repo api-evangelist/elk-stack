@@ -112,25 +112,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Solution_Initialization_API_InitializationFlowId:
-      description: Identifier for an initialization flow.
-      enum:
-      - create-list-indices
-      - security-data-views
-      - init-prebuilt-rules
-      - init-endpoint-protection
-      - init-ai-prompts
-      - init-detection-rule-monitoring
-      type: string
-    Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
-      type: object
-      properties:
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
     Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
       type: object
       properties:
@@ -175,6 +156,40 @@ components:
       required:
       - status
       - error
+    Security_Solution_Initialization_API_DataViewPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        patternList:
+          items:
+            type: string
+          type: array
+        title:
+          type: string
+      required:
+      - id
+      - title
+      - patternList
+    Security_Solution_Initialization_API_InitializationFlowId:
+      description: Identifier for an initialization flow.
+      enum:
+      - create-list-indices
+      - security-data-views
+      - init-prebuilt-rules
+      - init-endpoint-protection
+      - init-ai-prompts
+      - init-detection-rule-monitoring
+      type: string
+    Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
+      type: object
+      properties:
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
     Security_Solution_Initialization_API_CreateListIndicesReadyResult:
       type: object
       properties:
@@ -184,6 +199,30 @@ components:
           type: string
       required:
       - status
+    Security_Solution_Initialization_API_PackageInstallReadyResult:
+      type: object
+      properties:
+        payload:
+          type: object
+          properties:
+            install_status:
+              description: Fleet package installation status (e.g., installed, already_installed).
+              type: string
+            name:
+              type: string
+            version:
+              type: string
+          required:
+          - name
+          - version
+          - install_status
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+      - payload
     Security_Solution_Initialization_API_InitializationFlowsResult:
       description: Per-flow results. Only requested flows appear in the response, so all properties are optional. Each flow is either a typed ready result or an error result.
       type: object
@@ -212,45 +251,6 @@ components:
           oneOf:
           - $ref: '#/components/schemas/Security_Solution_Initialization_API_SecurityDataViewsReadyResult'
           - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
-    Security_Solution_Initialization_API_PackageInstallReadyResult:
-      type: object
-      properties:
-        payload:
-          type: object
-          properties:
-            install_status:
-              description: Fleet package installation status (e.g., installed, already_installed).
-              type: string
-            name:
-              type: string
-            version:
-              type: string
-          required:
-          - name
-          - version
-          - install_status
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
-      - payload
-    Security_Solution_Initialization_API_DataViewPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        patternList:
-          items:
-            type: string
-          type: array
-        title:
-          type: string
-      required:
-      - id
-      - title
-      - patternList
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

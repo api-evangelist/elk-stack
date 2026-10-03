@@ -196,175 +196,7 @@ paths:
       - content: Kibana
         name: product_name
 components:
-  examples:
-    APM_UI_annotation_object_post_request1:
-      description: Run `POST /api/apm/services/{serviceName}/annotation` to create a deployment annotation for a service.
-      value:
-        '@timestamp': '2024-01-15T12:00:00.000Z'
-        message: Deployment 1.2.0
-        service:
-          environment: production
-          version: 1.2.0
-        tags:
-        - apm
-        - deployment
-    APM_UI_error_404_response:
-      description: An example of a 404 Not Found response, returned when the requested resource does not exist or the feature is not available on the current deployment.
-      value:
-        error: Not Found
-        message: Not Found
-        statusCode: 404
-    APM_UI_annotation_object_post_200_response1:
-      description: An example of a successful response from `POST /api/apm/services/opbeans-java/annotation`, which creates an annotation for a service named `opbeans-java`.
-      value:
-        _id: Lc9I93EBh6DbmkeV7nFX
-        _index: observability-annotations
-        _primary_term: 1
-        _seq_no: 12
-        _source:
-          '@timestamp': '2020-05-08T10:31:30.452Z'
-          annotation:
-            type: deployment
-          event:
-            created: '2020-05-09T02:34:43.937Z'
-          message: Deployment 1.2
-          service:
-            name: opbeans-java
-            version: '1.2'
-          tags:
-          - apm
-          - elastic.co
-          - customer
-        _version: 1
-        found: true
-    APM_UI_error_500_response:
-      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
-      value:
-        error: Internal Server Error
-        message: An internal server error occurred. Check the Kibana server logs for details.
-        statusCode: 500
-    APM_UI_annotation_search_get_200_response1:
-      description: An example of a successful response from `GET /api/apm/services/{serviceName}/annotation/search`, which returns the annotations associated with a service over the given time range.
-      value:
-        annotations:
-        - '@timestamp': 1735689600000
-          id: opbeans-node@2.0.0
-          text: opbeans-node@2.0.0
-          type: version
-        - '@timestamp': 1736294400000
-          id: opbeans-node@2.1.0
-          text: opbeans-node@2.1.0
-          type: version
-    APM_UI_error_400_response:
-      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
-      value:
-        error: Bad Request
-        message: '[request body]: expected value of type [string] but got [undefined]'
-        statusCode: 400
-    APM_UI_error_401_response:
-      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
-      value:
-        error: Unauthorized
-        message: '[security_exception]: missing authentication credentials for REST request'
-        statusCode: 401
-    APM_UI_error_403_response:
-      description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
-      value:
-        error: Forbidden
-        message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
-        statusCode: 403
   schemas:
-    APM_UI_500_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Internal Server Error
-          type: string
-        message:
-          description: Error message
-          type: string
-        statusCode:
-          description: Error status code
-          example: 500
-          type: number
-    APM_UI_400_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Not Found
-          type: string
-        message:
-          description: Error message
-          example: Not Found
-          type: string
-        statusCode:
-          description: Error status code
-          example: 400
-          type: number
-    APM_UI_401_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Unauthorized
-          type: string
-        message:
-          description: Error message
-          type: string
-        statusCode:
-          description: Error status code
-          example: 401
-          type: number
-    APM_UI_404_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Not Found
-          type: string
-        message:
-          description: Error message
-          example: Not Found
-          type: string
-        statusCode:
-          description: Error status code
-          example: 404
-          type: number
-    APM_UI_403_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Forbidden
-          type: string
-        message:
-          description: Error message
-          type: string
-        statusCode:
-          description: Error status code
-          example: 403
-          type: number
-    APM_UI_annotation_search_response:
-      type: object
-      properties:
-        annotations:
-          description: Annotations
-          items:
-            type: object
-            properties:
-              '@timestamp':
-                type: number
-              id:
-                type: string
-              text:
-                type: string
-              type:
-                enum:
-                - version
-                type: string
-          type: array
     APM_UI_create_annotation_response:
       type: object
       properties:
@@ -407,6 +239,83 @@ components:
               items:
                 type: string
               type: array
+    APM_UI_500_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Internal Server Error
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 500
+          type: number
+    APM_UI_annotation_search_response:
+      type: object
+      properties:
+        annotations:
+          description: Annotations
+          items:
+            type: object
+            properties:
+              '@timestamp':
+                type: number
+              id:
+                type: string
+              text:
+                type: string
+              type:
+                enum:
+                - version
+                type: string
+          type: array
+    APM_UI_404_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Found
+          type: string
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 404
+          type: number
+    APM_UI_403_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Forbidden
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 403
+          type: number
+    APM_UI_400_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Not Found
+          type: string
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+        statusCode:
+          description: Error status code
+          example: 400
+          type: number
     APM_UI_create_annotation_object:
       type: object
       properties:
@@ -438,7 +347,106 @@ components:
       required:
       - '@timestamp'
       - service
+    APM_UI_401_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Unauthorized
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 401
+          type: number
+  examples:
+    APM_UI_error_400_response:
+      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
+      value:
+        error: Bad Request
+        message: '[request body]: expected value of type [string] but got [undefined]'
+        statusCode: 400
+    APM_UI_error_404_response:
+      description: An example of a 404 Not Found response, returned when the requested resource does not exist or the feature is not available on the current deployment.
+      value:
+        error: Not Found
+        message: Not Found
+        statusCode: 404
+    APM_UI_error_401_response:
+      description: An example of a 401 Unauthorized response, returned when the request is missing valid authentication credentials.
+      value:
+        error: Unauthorized
+        message: '[security_exception]: missing authentication credentials for REST request'
+        statusCode: 401
+    APM_UI_annotation_search_get_200_response1:
+      description: An example of a successful response from `GET /api/apm/services/{serviceName}/annotation/search`, which returns the annotations associated with a service over the given time range.
+      value:
+        annotations:
+        - '@timestamp': 1735689600000
+          id: opbeans-node@2.0.0
+          text: opbeans-node@2.0.0
+          type: version
+        - '@timestamp': 1736294400000
+          id: opbeans-node@2.1.0
+          text: opbeans-node@2.1.0
+          type: version
+    APM_UI_annotation_object_post_request1:
+      description: Run `POST /api/apm/services/{serviceName}/annotation` to create a deployment annotation for a service.
+      value:
+        '@timestamp': '2024-01-15T12:00:00.000Z'
+        message: Deployment 1.2.0
+        service:
+          environment: production
+          version: 1.2.0
+        tags:
+        - apm
+        - deployment
+    APM_UI_error_403_response:
+      description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
+      value:
+        error: Forbidden
+        message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
+        statusCode: 403
+    APM_UI_error_500_response:
+      description: An example of a 500 Internal Server Error response, returned when an unexpected error occurs while processing the request.
+      value:
+        error: Internal Server Error
+        message: An internal server error occurred. Check the Kibana server logs for details.
+        statusCode: 500
+    APM_UI_annotation_object_post_200_response1:
+      description: An example of a successful response from `POST /api/apm/services/opbeans-java/annotation`, which creates an annotation for a service named `opbeans-java`.
+      value:
+        _id: Lc9I93EBh6DbmkeV7nFX
+        _index: observability-annotations
+        _primary_term: 1
+        _seq_no: 12
+        _source:
+          '@timestamp': '2020-05-08T10:31:30.452Z'
+          annotation:
+            type: deployment
+          event:
+            created: '2020-05-09T02:34:43.937Z'
+          message: Deployment 1.2
+          service:
+            name: opbeans-java
+            version: '1.2'
+          tags:
+          - apm
+          - elastic.co
+          - customer
+        _version: 1
+        found: true
   parameters:
+    APM_UI_kbn_xsrf:
+      description: A required header to protect against CSRF attacks
+      in: header
+      name: kbn-xsrf
+      required: true
+      schema:
+        example: 'true'
+        type: string
     APM_UI_elastic_api_version:
       description: The version of the API to use
       in: header
@@ -448,14 +456,6 @@ components:
         default: '2023-10-31'
         enum:
         - '2023-10-31'
-        type: string
-    APM_UI_kbn_xsrf:
-      description: A required header to protect against CSRF attacks
-      in: header
-      name: kbn-xsrf
-      required: true
-      schema:
-        example: 'true'
         type: string
   securitySchemes:
     apiKeyAuth:

@@ -419,15 +419,12 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.NodeIds:
-      oneOf:
-      - $ref: '#/components/schemas/_types.NodeId'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.NodeId'
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
+    tasks._types.GroupBy:
+      type: string
+      enum:
+      - nodes
+      - parents
+      - none
     tasks._types.TaskInfos:
       oneOf:
       - type: array
@@ -436,155 +433,13 @@ components:
       - type: object
         additionalProperties:
           $ref: '#/components/schemas/tasks._types.ParentTaskInfo'
-    tasks._types.GroupBy:
-      type: string
-      enum:
-      - nodes
-      - parents
-      - none
-    tasks._types.ParentTaskInfo:
-      allOf:
-      - $ref: '#/components/schemas/tasks._types.TaskInfo'
-      - type: object
-        properties:
-          children:
-            type: array
-            items:
-              $ref: '#/components/schemas/tasks._types.TaskInfo'
-    _types.DurationValueUnitNanos:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitNanos'
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    _types.ErrorCause:
-      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
-
-        Additional details are also provided, that depend on the error type.'
-      type: object
-      properties:
-        type:
-          description: The type of error
-          type: string
-        reason:
-          description: A human-readable explanation of the error, in English.
-          oneOf:
-          - type: string
-          - type:
-            - string
-            - 'null'
-        stack_trace:
-          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
-          type: string
-        caused_by:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        root_cause:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-        suppressed:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-      required:
-      - type
     _types.TransportAddress:
       type: string
     _types.NodeId:
       type: string
-    _types.TaskId:
-      type: string
-    tasks._types.NodeTasks:
-      type: object
-      properties:
-        name:
-          allOf:
-          - $ref: '#/components/schemas/_types.NodeId'
-        transport_address:
-          allOf:
-          - $ref: '#/components/schemas/_types.TransportAddress'
-        host:
-          allOf:
-          - $ref: '#/components/schemas/_types.Host'
-        ip:
-          allOf:
-          - $ref: '#/components/schemas/_types.Ip'
-        roles:
-          type: array
-          items:
-            type: string
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-        tasks:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/tasks._types.TaskInfo'
-      required:
-      - tasks
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
-    tasks._types.TaskListResponseBase:
-      type: object
-      properties:
-        node_failures:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-        task_failures:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.TaskFailure'
-        nodes:
-          description: Task information grouped by node, if `group_by` was set to `node` (the default).
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/tasks._types.NodeTasks'
-        tasks:
-          description: 'Either a flat list of tasks if `group_by` was set to `none`, or grouped by parents if
-
-            `group_by` was set to `parents`.'
-          allOf:
-          - $ref: '#/components/schemas/tasks._types.TaskInfos'
-    _types.Ip:
-      type: string
-    _types.TaskFailure:
-      type: object
-      properties:
-        task_id:
-          type: number
-        node_id:
-          allOf:
-          - $ref: '#/components/schemas/_types.NodeId'
-        status:
-          type: string
-        reason:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-      required:
-      - task_id
-      - node_id
-      - status
-      - reason
-    _types.UnitNanos:
-      description: Time unit for nanoseconds
-      type: number
-    _types.Host:
-      type: string
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
     tasks._types.TaskInfo:
       type: object
       properties:
@@ -657,9 +512,164 @@ components:
       - running_time_in_nanos
       - start_time_in_millis
       - type
+    _types.ErrorCause:
+      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
+
+        Additional details are also provided, that depend on the error type.'
+      type: object
+      properties:
+        type:
+          description: The type of error
+          type: string
+        reason:
+          description: A human-readable explanation of the error, in English.
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        stack_trace:
+          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
+          type: string
+        caused_by:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        root_cause:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        suppressed:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - type
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    _types.UnitNanos:
+      description: Time unit for nanoseconds
+      type: number
+    _types.Host:
+      type: string
+    _types.NodeIds:
+      oneOf:
+      - $ref: '#/components/schemas/_types.NodeId'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.NodeId'
+    tasks._types.TaskListResponseBase:
+      type: object
+      properties:
+        node_failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        task_failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.TaskFailure'
+        nodes:
+          description: Task information grouped by node, if `group_by` was set to `node` (the default).
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/tasks._types.NodeTasks'
+        tasks:
+          description: 'Either a flat list of tasks if `group_by` was set to `none`, or grouped by parents if
+
+            `group_by` was set to `parents`.'
+          allOf:
+          - $ref: '#/components/schemas/tasks._types.TaskInfos'
+    tasks._types.NodeTasks:
+      type: object
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.NodeId'
+        transport_address:
+          allOf:
+          - $ref: '#/components/schemas/_types.TransportAddress'
+        host:
+          allOf:
+          - $ref: '#/components/schemas/_types.Host'
+        ip:
+          allOf:
+          - $ref: '#/components/schemas/_types.Ip'
+        roles:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+        tasks:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/tasks._types.TaskInfo'
+      required:
+      - tasks
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.TaskFailure:
+      type: object
+      properties:
+        task_id:
+          type: number
+        node_id:
+          allOf:
+          - $ref: '#/components/schemas/_types.NodeId'
+        status:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - task_id
+      - node_id
+      - status
+      - reason
     _types.Id:
       type: string
+    _types.TaskId:
+      type: string
+    tasks._types.ParentTaskInfo:
+      allOf:
+      - $ref: '#/components/schemas/tasks._types.TaskInfo'
+      - type: object
+        properties:
+          children:
+            type: array
+            items:
+              $ref: '#/components/schemas/tasks._types.TaskInfo'
+    _types.Ip:
+      type: string
+    _types.DurationValueUnitNanos:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitNanos'
   parameters:
+    tasks.cancel-nodes:
+      in: query
+      name: nodes
+      description: A comma-separated list of node IDs or names that is used to limit the request.
+      deprecated: false
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
     tasks.cancel-parent_task_id:
       in: query
       name: parent_task_id
@@ -677,25 +687,6 @@ components:
       schema:
         $ref: '#/components/schemas/_types.TaskId'
       style: simple
-    tasks.cancel-wait_for_completion:
-      in: query
-      name: wait_for_completion
-      description: If true, the request blocks until all found tasks are complete.
-      deprecated: false
-      schema:
-        default: false
-        type: boolean
-      style: form
-    tasks.cancel-nodes:
-      in: query
-      name: nodes
-      description: A comma-separated list of node IDs or names that is used to limit the request.
-      deprecated: false
-      schema:
-        type: array
-        items:
-          type: string
-      style: form
     tasks.cancel-actions:
       in: query
       name: actions
@@ -707,6 +698,15 @@ components:
         - type: array
           items:
             type: string
+      style: form
+    tasks.cancel-wait_for_completion:
+      in: query
+      name: wait_for_completion
+      description: If true, the request blocks until all found tasks are complete.
+      deprecated: false
+      schema:
+        default: false
+        type: boolean
       style: form
   responses:
     tasks.cancel-200:

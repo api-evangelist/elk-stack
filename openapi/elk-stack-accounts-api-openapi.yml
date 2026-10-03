@@ -112,13 +112,23 @@ paths:
         required: true
 components:
   schemas:
-    AccountUpdateRequest:
+    BasicFailedReplyElement:
       type: object
+      required:
+      - code
+      - message
       properties:
-        trust:
-          description: Settings related to the level of trust of the clusters in this account
-          $ref: '#/components/schemas/AccountTrustSettings'
-      description: A request to update an account
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
     BasicFailedReply:
       type: object
       required:
@@ -138,23 +148,13 @@ components:
           type: boolean
           description: If true, all clusters in this account will by default trust all other clusters in the same account
       description: Settings related to the level of trust of the clusters in this account
-    BasicFailedReplyElement:
+    AccountUpdateRequest:
       type: object
-      required:
-      - code
-      - message
       properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: A request to update an account
     AccountResponse:
       type: object
       required:

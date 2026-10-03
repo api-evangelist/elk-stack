@@ -157,18 +157,23 @@ paths:
         required: true
 components:
   schemas:
-    BasicFailedReply:
+    BasicFailedReplyElement:
       type: object
       required:
-      - errors
+      - code
+      - message
       properties:
-        errors:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: A list of errors that occurred in the failing request
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    EmptyResponse:
-      type: object
+            type: string
     OrganizationRoleAssignment:
       type: object
       required:
@@ -187,100 +192,16 @@ components:
           items:
             type: string
       description: Assignment for a role with organization scope.
-    ProjectRoleAssignments:
-      type: object
-      properties:
-        elasticsearch:
-          type: array
-          description: The Elasticsearch project-scoped role assignments to set
-          items:
-            $ref: '#/components/schemas/ProjectRoleAssignment'
-        observability:
-          type: array
-          description: The Observability project-scoped role assignments to set
-          items:
-            $ref: '#/components/schemas/ProjectRoleAssignment'
-        security:
-          type: array
-          description: The Security project-scoped role assignments to set
-          items:
-            $ref: '#/components/schemas/ProjectRoleAssignment'
-        workplaceai:
-          type: array
-          description: The WorkplaceAI project-scoped role assignments to set
-          items:
-            $ref: '#/components/schemas/ProjectRoleAssignment'
-        vectordb:
-          type: array
-          description: The VectorDB project-scoped role assignments to set
-          items:
-            $ref: '#/components/schemas/ProjectRoleAssignment'
-      description: Assignments for roles with project scope.
-    BasicFailedReplyElement:
+    BasicFailedReply:
       type: object
       required:
-      - code
-      - message
+      - errors
       properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
+        errors:
           type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          description: A list of errors that occurred in the failing request
           items:
-            type: string
-    DeploymentRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        all:
-          type: boolean
-          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
-        deployment_ids:
-          type: array
-          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
-          items:
-            type: string
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
-          items:
-            type: string
-      description: Assignment for a role with deployment scope.
-    RoleAssignments:
-      type: object
-      properties:
-        platform:
-          type: array
-          description: Assignments for roles with platform scope.
-          items:
-            $ref: '#/components/schemas/PlatformRoleAssignment'
-        organization:
-          type: array
-          description: Assignments for roles with organization scope.
-          items:
-            $ref: '#/components/schemas/OrganizationRoleAssignment'
-        deployment:
-          type: array
-          description: Assignments for roles with deployment scope.
-          items:
-            $ref: '#/components/schemas/DeploymentRoleAssignment'
-        project:
-          description: Assignments for roles with project scope.
-          $ref: '#/components/schemas/ProjectRoleAssignments'
-      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     ProjectRoleAssignment:
       type: object
       required:
@@ -316,6 +237,85 @@ components:
           type: string
           description: The ID of the role that is assigned.
       description: Assignment for a role with platform scope.
+    ProjectRoleAssignments:
+      type: object
+      properties:
+        elasticsearch:
+          type: array
+          description: The Elasticsearch project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        observability:
+          type: array
+          description: The Observability project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        security:
+          type: array
+          description: The Security project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        workplaceai:
+          type: array
+          description: The WorkplaceAI project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+        vectordb:
+          type: array
+          description: The VectorDB project-scoped role assignments to set
+          items:
+            $ref: '#/components/schemas/ProjectRoleAssignment'
+      description: Assignments for roles with project scope.
+    EmptyResponse:
+      type: object
+    RoleAssignments:
+      type: object
+      properties:
+        platform:
+          type: array
+          description: Assignments for roles with platform scope.
+          items:
+            $ref: '#/components/schemas/PlatformRoleAssignment'
+        organization:
+          type: array
+          description: Assignments for roles with organization scope.
+          items:
+            $ref: '#/components/schemas/OrganizationRoleAssignment'
+        deployment:
+          type: array
+          description: Assignments for roles with deployment scope.
+          items:
+            $ref: '#/components/schemas/DeploymentRoleAssignment'
+        project:
+          description: Assignments for roles with project scope.
+          $ref: '#/components/schemas/ProjectRoleAssignments'
+      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+    DeploymentRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
+        deployment_ids:
+          type: array
+          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with deployment scope.
   securitySchemes:
     apiKey:
       type: apiKey
