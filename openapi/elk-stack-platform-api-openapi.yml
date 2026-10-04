@@ -158,32 +158,66 @@ paths:
         tag: Platform - Configuration - Security - Extra Certificates - CRUD
 components:
   schemas:
-    CoordinatorsSummary:
+    ZookeeperNodeInfo:
       type: object
       required:
+      - id
+      - state
+      properties:
+        id:
+          type: string
+          description: Identifier of this ZooKeeper node
+        state:
+          type: string
+          description: State of the ZooKeeper node
+          enum:
+          - connected
+          - suspended
+          - reconnected
+          - lost
+          - read_only
+      description: Information about a ZooKeeper node.
+    RegionInfo:
+      type: object
+      required:
+      - allocators
+      - constructors
+      - container_sets_status
       - coordinators
+      - proxies
+      - region_id
+      - resources
+      - runners
+      - zookeeper_states
       properties:
+        region_id:
+          type: string
+          description: Identifier of this region
+        zookeeper_states:
+          description: Information about the Zookeeper state
+          $ref: '#/components/schemas/ZookeeperSummary'
+        allocators:
+          description: Information about allocators
+          $ref: '#/components/schemas/AllocatorsSummary'
+        runners:
+          description: Information about runners
+          $ref: '#/components/schemas/RunnersSummary'
+        proxies:
+          description: Information about proxies
+          $ref: '#/components/schemas/ProxiesSummary'
+        container_sets_status:
+          description: Information about container sets
+          $ref: '#/components/schemas/ContainerSetsSummary'
+        constructors:
+          description: Information about constructors
+          $ref: '#/components/schemas/ConstructorOverview'
         coordinators:
-          type: array
-          description: Summarized information on each coordinator
-          items:
-            $ref: '#/components/schemas/CoordinatorSummary'
-      description: Summarized information about coordinators.
-    AllocatorsSummary:
-      type: object
-      required:
-      - healthy
-      - zone_summaries
-      properties:
-        healthy:
-          type: boolean
-          description: Whether all allocators are healthy
-        zone_summaries:
-          type: array
-          description: Summarized information on allocators in each zone
-          items:
-            $ref: '#/components/schemas/AllocatorsZoneSummary'
-      description: Summarized information about allocators.
+          description: Information about coordinators
+          $ref: '#/components/schemas/CoordinatorsSummary'
+        resources:
+          description: Information about resources
+          $ref: '#/components/schemas/PlatformResourcesSummary'
+      description: Information about a region.
     ConstructorHealthStatus:
       type: object
       required:
@@ -197,51 +231,6 @@ components:
           type: boolean
           description: Whether the constructor is in maintenance mode
       description: The health status of the constructor.
-    PublicCertChainCollection:
-      type: object
-      required:
-      - certs
-      properties:
-        certs:
-          type: object
-          description: The map of extra certificate ids to their public certificate chains
-          additionalProperties:
-            $ref: '#/components/schemas/PublicCertChain'
-      description: Collections of public certificate chains for all the defined extra certificates
-    CoordinatorSummary:
-      type: object
-      required:
-      - attributes
-      - client_port
-      - election_port
-      - leader_port
-      - name
-      - public_hostname
-      properties:
-        name:
-          type: string
-          description: Name of this coordinator
-        public_hostname:
-          type: string
-          description: Public hostname of this coordinator
-        leader_port:
-          type: integer
-          format: int32
-          description: Leader port of this coordinator
-        election_port:
-          type: integer
-          format: int32
-          description: Election port of this coordinator
-        client_port:
-          type: integer
-          format: int32
-          description: Client port of this coordinator
-        attributes:
-          type: object
-          description: Attributes of this coordinator
-          additionalProperties:
-            type: string
-      description: Summarized information about a coordinator.
     PlatformServiceImageInfo:
       type: object
       required:
@@ -267,133 +256,6 @@ components:
           example: sha256:04a5be1ab07de64269ffa52da26044e0ecc36fa1164e7914468e69d65a2090d4
           description: Image hash code
       description: The docker image that is used to run a service.
-    ConstructorInfo:
-      type: object
-      required:
-      - constructor_id
-      - status
-      properties:
-        status:
-          $ref: '#/components/schemas/ConstructorHealthStatus'
-        constructor_id:
-          type: string
-          description: Identifier for this constructor
-      description: Information about the constructor.
-    PlatformResourcesSummary:
-      type: object
-      required:
-      - account_count
-      - available_count
-      - healthy
-      - minimum_available_count
-      - missing_count
-      - used_count
-      properties:
-        healthy:
-          type: boolean
-          description: Whether all resources are healthy
-        available_count:
-          type: integer
-          format: int32
-          description: Number of available resources
-        used_count:
-          type: integer
-          format: int32
-          description: Number of used resources
-        missing_count:
-          type: integer
-          format: int32
-          description: Number of missing resources
-        minimum_available_count:
-          type: integer
-          format: int32
-          description: Minimum number of available resources
-        account_count:
-          type: integer
-          format: int32
-          description: Number of accounts
-      description: Information about resources.
-    ConstructorOverview:
-      type: object
-      required:
-      - constructors
-      properties:
-        constructors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConstructorInfo'
-      description: The overview information for the installed constructors.
-    ContainerSetSummary:
-      type: object
-      required:
-      - container_set_id
-      - containers_created_count
-      - containers_expected_running_count
-      - containers_running_count
-      - containers_started_count
-      - healthy
-      - hidden
-      properties:
-        container_set_id:
-          type: string
-          description: The identifier for this container set
-        healthy:
-          type: boolean
-          description: Whether the container set is healthy
-        hidden:
-          type: boolean
-          description: True if the container set is hidden
-        containers_created_count:
-          type: integer
-          format: int32
-          description: Number of containers created in this container set
-        containers_started_count:
-          type: integer
-          format: int32
-          description: Number of containers started in this container set
-        containers_running_count:
-          type: integer
-          format: int32
-          description: Number of containers running in this container set
-        containers_expected_running_count:
-          type: integer
-          format: int32
-          description: Expected number of running containers in this container set
-      description: Summarized information about a container set
-    PlatformInfo:
-      type: object
-      required:
-      - eula_accepted
-      - phone_home_enabled
-      - regions
-      - services
-      - unreachable_regions
-      - version
-      properties:
-        version:
-          type: string
-          description: Platform version
-        services:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlatformServiceInfo'
-        phone_home_enabled:
-          type: boolean
-          description: Is the phone-home service, which returns anonymized usage statistics to Elastic, enabled
-        eula_accepted:
-          type: boolean
-          description: Indicates if the End User License Agreement been accepted
-        regions:
-          type: array
-          description: Information on regions
-          items:
-            $ref: '#/components/schemas/RegionInfo'
-        unreachable_regions:
-          type: array
-          description: Information on currently unreachable regions
-          items:
-            $ref: '#/components/schemas/UnreachableRegionInfo'
-      description: Information about the platform.
     ProxiesSummary:
       type: object
       required:
@@ -419,117 +281,17 @@ components:
           items:
             $ref: '#/components/schemas/ProxySummary'
       description: Summarized information about proxies.
-    ZookeeperNodeInfo:
+    PublicCertChainCollection:
       type: object
       required:
-      - id
-      - state
+      - certs
       properties:
-        id:
-          type: string
-          description: Identifier of this ZooKeeper node
-        state:
-          type: string
-          description: State of the ZooKeeper node
-          enum:
-          - connected
-          - suspended
-          - reconnected
-          - lost
-          - read_only
-      description: Information about a ZooKeeper node.
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    ContainerSetsSummary:
-      type: object
-      required:
-      - healthy
-      - healthy_container_sets_count
-      - unhealthy_container_sets
-      - unhealthy_container_sets_count
-      properties:
-        healthy:
-          type: boolean
-          description: Whether all container sets are healthy
-        healthy_container_sets_count:
-          type: integer
-          format: int32
-          description: Number of healthy container sets
-        unhealthy_container_sets_count:
-          type: integer
-          format: int32
-          description: Number of unhealthy container sets
-        unhealthy_container_sets:
-          type: array
-          description: Summarized information about unhealthy container sets
-          items:
-            $ref: '#/components/schemas/ContainerSetSummary'
-      description: Summarized information about container sets
-    PlatformServiceInfo:
-      type: object
-      required:
-      - image
-      - type
-      properties:
-        type:
-          type: string
-          description: Name of service
-        image:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlatformServiceImageInfo'
-      description: The platform service information.
-    EmptyResponse:
-      type: object
-    ZookeeperSummary:
-      type: object
-      required:
-      - states
-      properties:
-        states:
-          type: array
-          description: Information about the nodes
-          items:
-            $ref: '#/components/schemas/ZookeeperNodeInfo'
-      description: Information about the ZooKeeper state.
-    ProxySummary:
-      type: object
-      required:
-      - healthy
-      - proxy_id
-      properties:
-        proxy_id:
-          type: string
-          description: The proxy identifier
-        healthy:
-          type: boolean
-          description: Whether this proxy is healthy
-      description: Summarized information about a proxy.
+        certs:
+          type: object
+          description: The map of extra certificate ids to their public certificate chains
+          additionalProperties:
+            $ref: '#/components/schemas/PublicCertChain'
+      description: Collections of public certificate chains for all the defined extra certificates
     AllocatorsZoneSummary:
       type: object
       required:
@@ -579,6 +341,305 @@ components:
           format: int32
           description: Number of instances across all allocators in the region
       description: Summary of the allocators for the specified zone.
+    ConstructorInfo:
+      type: object
+      required:
+      - constructor_id
+      - status
+      properties:
+        status:
+          $ref: '#/components/schemas/ConstructorHealthStatus'
+        constructor_id:
+          type: string
+          description: Identifier for this constructor
+      description: Information about the constructor.
+    UnreachableRegionInfo:
+      type: object
+      required:
+      - region_id
+      properties:
+        region_id:
+          type: string
+          description: Identifier of this region
+      description: Information about an unreachable region.
+    ContainerSetsSummary:
+      type: object
+      required:
+      - healthy
+      - healthy_container_sets_count
+      - unhealthy_container_sets
+      - unhealthy_container_sets_count
+      properties:
+        healthy:
+          type: boolean
+          description: Whether all container sets are healthy
+        healthy_container_sets_count:
+          type: integer
+          format: int32
+          description: Number of healthy container sets
+        unhealthy_container_sets_count:
+          type: integer
+          format: int32
+          description: Number of unhealthy container sets
+        unhealthy_container_sets:
+          type: array
+          description: Summarized information about unhealthy container sets
+          items:
+            $ref: '#/components/schemas/ContainerSetSummary'
+      description: Summarized information about container sets
+    AllocatorsSummary:
+      type: object
+      required:
+      - healthy
+      - zone_summaries
+      properties:
+        healthy:
+          type: boolean
+          description: Whether all allocators are healthy
+        zone_summaries:
+          type: array
+          description: Summarized information on allocators in each zone
+          items:
+            $ref: '#/components/schemas/AllocatorsZoneSummary'
+      description: Summarized information about allocators.
+    CoordinatorsSummary:
+      type: object
+      required:
+      - coordinators
+      properties:
+        coordinators:
+          type: array
+          description: Summarized information on each coordinator
+          items:
+            $ref: '#/components/schemas/CoordinatorSummary'
+      description: Summarized information about coordinators.
+    ZookeeperSummary:
+      type: object
+      required:
+      - states
+      properties:
+        states:
+          type: array
+          description: Information about the nodes
+          items:
+            $ref: '#/components/schemas/ZookeeperNodeInfo'
+      description: Information about the ZooKeeper state.
+    PlatformServiceInfo:
+      type: object
+      required:
+      - image
+      - type
+      properties:
+        type:
+          type: string
+          description: Name of service
+        image:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformServiceImageInfo'
+      description: The platform service information.
+    ProxySummary:
+      type: object
+      required:
+      - healthy
+      - proxy_id
+      properties:
+        proxy_id:
+          type: string
+          description: The proxy identifier
+        healthy:
+          type: boolean
+          description: Whether this proxy is healthy
+      description: Summarized information about a proxy.
+    ConstructorOverview:
+      type: object
+      required:
+      - constructors
+      properties:
+        constructors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConstructorInfo'
+      description: The overview information for the installed constructors.
+    ContainerSetSummary:
+      type: object
+      required:
+      - container_set_id
+      - containers_created_count
+      - containers_expected_running_count
+      - containers_running_count
+      - containers_started_count
+      - healthy
+      - hidden
+      properties:
+        container_set_id:
+          type: string
+          description: The identifier for this container set
+        healthy:
+          type: boolean
+          description: Whether the container set is healthy
+        hidden:
+          type: boolean
+          description: True if the container set is hidden
+        containers_created_count:
+          type: integer
+          format: int32
+          description: Number of containers created in this container set
+        containers_started_count:
+          type: integer
+          format: int32
+          description: Number of containers started in this container set
+        containers_running_count:
+          type: integer
+          format: int32
+          description: Number of containers running in this container set
+        containers_expected_running_count:
+          type: integer
+          format: int32
+          description: Expected number of running containers in this container set
+      description: Summarized information about a container set
+    CoordinatorSummary:
+      type: object
+      required:
+      - attributes
+      - client_port
+      - election_port
+      - leader_port
+      - name
+      - public_hostname
+      properties:
+        name:
+          type: string
+          description: Name of this coordinator
+        public_hostname:
+          type: string
+          description: Public hostname of this coordinator
+        leader_port:
+          type: integer
+          format: int32
+          description: Leader port of this coordinator
+        election_port:
+          type: integer
+          format: int32
+          description: Election port of this coordinator
+        client_port:
+          type: integer
+          format: int32
+          description: Client port of this coordinator
+        attributes:
+          type: object
+          description: Attributes of this coordinator
+          additionalProperties:
+            type: string
+      description: Summarized information about a coordinator.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    PlatformInfo:
+      type: object
+      required:
+      - eula_accepted
+      - phone_home_enabled
+      - regions
+      - services
+      - unreachable_regions
+      - version
+      properties:
+        version:
+          type: string
+          description: Platform version
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformServiceInfo'
+        phone_home_enabled:
+          type: boolean
+          description: Is the phone-home service, which returns anonymized usage statistics to Elastic, enabled
+        eula_accepted:
+          type: boolean
+          description: Indicates if the End User License Agreement been accepted
+        regions:
+          type: array
+          description: Information on regions
+          items:
+            $ref: '#/components/schemas/RegionInfo'
+        unreachable_regions:
+          type: array
+          description: Information on currently unreachable regions
+          items:
+            $ref: '#/components/schemas/UnreachableRegionInfo'
+      description: Information about the platform.
+    PublicCertChain:
+      type: object
+      required:
+      - chain
+      properties:
+        chain:
+          type: array
+          description: The list of PEM encoded X509 certificates that make up the certificate chain
+          items:
+            type: string
+      description: 'The public portion of the certificate chain that contains the PEM encoded server certificate, intermediate certificates, and the CA certificate. NOTE: The private key, normally included in certificate chains, is omitted.'
+    EmptyResponse:
+      type: object
+    PlatformResourcesSummary:
+      type: object
+      required:
+      - account_count
+      - available_count
+      - healthy
+      - minimum_available_count
+      - missing_count
+      - used_count
+      properties:
+        healthy:
+          type: boolean
+          description: Whether all resources are healthy
+        available_count:
+          type: integer
+          format: int32
+          description: Number of available resources
+        used_count:
+          type: integer
+          format: int32
+          description: Number of used resources
+        missing_count:
+          type: integer
+          format: int32
+          description: Number of missing resources
+        minimum_available_count:
+          type: integer
+          format: int32
+          description: Minimum number of available resources
+        account_count:
+          type: integer
+          format: int32
+          description: Number of accounts
+      description: Information about resources.
     RunnersSummary:
       type: object
       required:
@@ -618,67 +679,6 @@ components:
           format: int32
           description: Total number of containers
       description: Summarized information about the runners.
-    PublicCertChain:
-      type: object
-      required:
-      - chain
-      properties:
-        chain:
-          type: array
-          description: The list of PEM encoded X509 certificates that make up the certificate chain
-          items:
-            type: string
-      description: 'The public portion of the certificate chain that contains the PEM encoded server certificate, intermediate certificates, and the CA certificate. NOTE: The private key, normally included in certificate chains, is omitted.'
-    UnreachableRegionInfo:
-      type: object
-      required:
-      - region_id
-      properties:
-        region_id:
-          type: string
-          description: Identifier of this region
-      description: Information about an unreachable region.
-    RegionInfo:
-      type: object
-      required:
-      - allocators
-      - constructors
-      - container_sets_status
-      - coordinators
-      - proxies
-      - region_id
-      - resources
-      - runners
-      - zookeeper_states
-      properties:
-        region_id:
-          type: string
-          description: Identifier of this region
-        zookeeper_states:
-          description: Information about the Zookeeper state
-          $ref: '#/components/schemas/ZookeeperSummary'
-        allocators:
-          description: Information about allocators
-          $ref: '#/components/schemas/AllocatorsSummary'
-        runners:
-          description: Information about runners
-          $ref: '#/components/schemas/RunnersSummary'
-        proxies:
-          description: Information about proxies
-          $ref: '#/components/schemas/ProxiesSummary'
-        container_sets_status:
-          description: Information about container sets
-          $ref: '#/components/schemas/ContainerSetsSummary'
-        constructors:
-          description: Information about constructors
-          $ref: '#/components/schemas/ConstructorOverview'
-        coordinators:
-          description: Information about coordinators
-          $ref: '#/components/schemas/CoordinatorsSummary'
-        resources:
-          description: Information about resources
-          $ref: '#/components/schemas/PlatformResourcesSummary'
-      description: Information about a region.
   securitySchemes:
     apiKey:
       type: apiKey

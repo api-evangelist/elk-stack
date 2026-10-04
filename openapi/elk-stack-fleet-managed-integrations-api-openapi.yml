@@ -1390,14 +1390,23 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_managed_integration_response:
+    Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info:
       additionalProperties: false
       properties:
-        item:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
+        description:
+          maxLength: 4096
+          type: string
+        replaced_by:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          type: object
+        since:
+          maxLength: 50
+          type: string
       required:
-      - item
-      title: managed_integration_response
+      - description
+      title: simplified_package_policy_stream_deprecation_info
       type: object
     Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info:
       additionalProperties: false
@@ -1417,55 +1426,53 @@ components:
       - description
       title: simplified_package_policy_input_deprecation_info
       type: object
-    Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info:
+    Kibana_HTTP_APIs_package_policy_package:
       additionalProperties: false
       properties:
-        description:
-          maxLength: 4096
+        experimental_data_stream_features:
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              data_stream:
+                maxLength: 1024
+                type: string
+              features:
+                additionalProperties: false
+                type: object
+                properties:
+                  doc_value_only_numeric:
+                    type: boolean
+                  doc_value_only_other:
+                    type: boolean
+                  synthetic_source:
+                    type: boolean
+                  tsdb:
+                    type: boolean
+            required:
+            - data_stream
+            - features
+          maxItems: 100
+          type: array
+        fips_compatible:
+          type: boolean
+        name:
+          description: Package name
+          maxLength: 255
           type: string
-        replaced_by:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          type: object
-        since:
+        requires_root:
+          type: boolean
+        title:
+          maxLength: 255
+          type: string
+        version:
+          description: Package version
           maxLength: 50
           type: string
       required:
-      - description
-      title: simplified_package_policy_stream_deprecation_info
-      type: object
-    Kibana_HTTP_APIs_bulk_upgrade_managed_integration_result:
-      additionalProperties: false
-      properties:
-        body:
-          additionalProperties: false
-          type: object
-          properties:
-            message:
-              description: Error message when the upgrade failed for this policy.
-              maxLength: 4096
-              type: string
-          required:
-          - message
-        id:
-          description: The ID of the managed integration.
-          maxLength: 256
-          type: string
-        name:
-          description: The name of the managed integration.
-          maxLength: 256
-          type: string
-        statusCode:
-          description: HTTP-like status code when the upgrade failed for this policy.
-          type: number
-        success:
-          description: Whether the policy's saved object was upgraded successfully. The live workload is reconciled asynchronously in the background.
-          type: boolean
-      required:
-      - id
-      - success
-      title: bulk_upgrade_managed_integration_result
+      - name
+      - version
+      title: package_policy_package
       type: object
     Kibana_HTTP_APIs_managed_integration_cloud_connector:
       additionalProperties: false
@@ -1500,6 +1507,320 @@ components:
       - policyIds
       title: managed_integration_upgrade_dry_run_request
       type: object
+    Kibana_HTTP_APIs_bulk_upgrade_managed_integration_result:
+      additionalProperties: false
+      properties:
+        body:
+          additionalProperties: false
+          type: object
+          properties:
+            message:
+              description: Error message when the upgrade failed for this policy.
+              maxLength: 4096
+              type: string
+          required:
+          - message
+        id:
+          description: The ID of the managed integration.
+          maxLength: 256
+          type: string
+        name:
+          description: The name of the managed integration.
+          maxLength: 256
+          type: string
+        statusCode:
+          description: HTTP-like status code when the upgrade failed for this policy.
+          type: number
+        success:
+          description: Whether the policy's saved object was upgraded successfully. The live workload is reconciled asynchronously in the background.
+          type: boolean
+      required:
+      - id
+      - success
+      title: bulk_upgrade_managed_integration_result
+      type: object
+    Kibana_HTTP_APIs_managed_integration_response:
+      additionalProperties: false
+      properties:
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
+      required:
+      - item
+      title: managed_integration_response
+      type: object
+    Kibana_HTTP_APIs_managed_integration:
+      additionalProperties: false
+      properties:
+        additional_datastreams_permissions:
+          description: Additional data stream permissions granted to the managed integration.
+          items:
+            maxLength: 256
+            type: string
+          maxItems: 1000
+          type: array
+        cloud_connector:
+          allOf:
+          - $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration_cloud_connector'
+        created_at:
+          description: Creation timestamp (ISO 8601).
+          maxLength: 64
+          type: string
+        created_by:
+          description: User who created the policy.
+          maxLength: 1024
+          type: string
+        description:
+          description: Managed integration description.
+          maxLength: 2048
+          type: string
+        global_data_tags:
+          description: Custom data tags applied to all data produced by this policy.
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              name:
+                description: The name of the custom field.
+                maxLength: 1024
+                type: string
+              value:
+                anyOf:
+                - maxLength: 1024
+                  type: string
+                - type: number
+                description: The value of the custom field.
+            required:
+            - name
+            - value
+          maxItems: 100
+          type: array
+        id:
+          description: Managed integration unique identifier.
+          maxLength: 255
+          type: string
+        inputs:
+          additionalProperties:
+            additionalProperties: false
+            type: object
+            properties:
+              condition:
+                description: Agent condition expression to evaluate whether to apply this input.
+                maxLength: 10000
+                type:
+                - string
+                - 'null'
+              deprecated:
+                $ref: '#/components/schemas/Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info'
+              enabled:
+                description: Enable or disable that input. Defaults to `true` (enabled).
+                type: boolean
+              streams:
+                additionalProperties:
+                  additionalProperties: false
+                  type: object
+                  properties:
+                    condition:
+                      description: Agent condition expression to evaluate whether to apply this stream.
+                      maxLength: 10000
+                      type:
+                      - string
+                      - 'null'
+                    deprecated:
+                      $ref: '#/components/schemas/Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info'
+                    enabled:
+                      description: Enable or disable that stream. Defaults to `true` (enabled).
+                      type: boolean
+                    var_group_selections:
+                      additionalProperties:
+                        maxLength: 1024
+                        type: string
+                      description: Variable group selections. Maps var_group name to the selected option name within that group.
+                      type: object
+                    vars:
+                      additionalProperties:
+                        anyOf:
+                        - maxLength: 10000
+                          type: string
+                        - type: number
+                        - type: boolean
+                        - items:
+                            maxLength: 10000
+                            type: string
+                          maxItems: 100
+                          type: array
+                        - items:
+                            type: number
+                          maxItems: 100
+                          type: array
+                        - additionalProperties: false
+                          type: object
+                          properties:
+                            id:
+                              maxLength: 255
+                              type: string
+                            isSecretRef:
+                              type: boolean
+                          required:
+                          - id
+                          - isSecretRef
+                        default: null
+                      description: Input/stream level variable. Refer to the integration documentation for more information.
+                      type: object
+                description: Input streams. Refer to the integration documentation to know which streams are available.
+                type: object
+              vars:
+                additionalProperties:
+                  anyOf:
+                  - maxLength: 10000
+                    type: string
+                  - type: number
+                  - type: boolean
+                  - items:
+                      maxLength: 10000
+                      type: string
+                    maxItems: 100
+                    type: array
+                  - items:
+                      type: number
+                    maxItems: 100
+                    type: array
+                  - additionalProperties: false
+                    type: object
+                    properties:
+                      id:
+                        maxLength: 255
+                        type: string
+                      isSecretRef:
+                        type: boolean
+                    required:
+                    - id
+                    - isSecretRef
+                  default: null
+                description: Input/stream level variable. Refer to the integration documentation for more information.
+                type: object
+          description: Package policy inputs. Refer to the integration documentation to know which inputs are available.
+          type: object
+        name:
+          description: Managed integration name.
+          maxLength: 255
+          type: string
+        namespace:
+          description: Policy namespace. Defaults to the agent policy namespace.
+          maxLength: 100
+          type: string
+        package:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration_package'
+        updated_at:
+          description: Last update timestamp (ISO 8601).
+          maxLength: 64
+          type: string
+        updated_by:
+          description: User who last updated the policy.
+          maxLength: 1024
+          type: string
+        var_group_selections:
+          additionalProperties:
+            maxLength: 1024
+            type: string
+          description: Variable group selections. Maps var_group name to the selected option name within that group.
+          type: object
+        vars:
+          additionalProperties:
+            anyOf:
+            - maxLength: 10000
+              type: string
+            - type: number
+            - type: boolean
+            - items:
+                maxLength: 10000
+                type: string
+              maxItems: 100
+              type: array
+            - items:
+                type: number
+              maxItems: 100
+              type: array
+            - additionalProperties: false
+              type: object
+              properties:
+                id:
+                  maxLength: 255
+                  type: string
+                isSecretRef:
+                  type: boolean
+              required:
+              - id
+              - isSecretRef
+            default: null
+          description: Input/stream level variable. Refer to the integration documentation for more information.
+          type: object
+      required:
+      - id
+      - name
+      - package
+      - inputs
+      - created_at
+      - created_by
+      - updated_at
+      - updated_by
+      title: managed_integration
+      type: object
+    Kibana_HTTP_APIs_managed_integration_upgrade_dry_run_result:
+      additionalProperties: false
+      properties:
+        body:
+          additionalProperties: false
+          type: object
+          properties:
+            message:
+              description: Error message when the dry-run failed for this policy.
+              maxLength: 4096
+              type: string
+          required:
+          - message
+        currentVersion:
+          description: The current installed package version of the policy.
+          maxLength: 256
+          type: string
+        errors:
+          description: Migration errors encountered while computing the upgrade.
+          items:
+            additionalProperties: false
+            type: object
+            properties:
+              message:
+                description: Human-readable migration error.
+                maxLength: 4096
+                type: string
+            required:
+            - message
+          maxItems: 1000
+          type: array
+        hasErrors:
+          description: Whether the dry-run migration produced any errors.
+          type: boolean
+        id:
+          description: The ID of the managed integration.
+          maxLength: 256
+          type: string
+        name:
+          description: The name of the managed integration.
+          maxLength: 256
+          type: string
+        proposedPolicy:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
+        proposedVersion:
+          description: The package version the policy would be upgraded to.
+          maxLength: 256
+          type: string
+        statusCode:
+          description: HTTP-like status code when the dry-run failed for this policy.
+          type: number
+      required:
+      - id
+      - hasErrors
+      title: managed_integration_upgrade_dry_run_result
+      type: object
     Kibana_HTTP_APIs_bulk_upgrade_managed_integrations_request:
       additionalProperties: false
       properties:
@@ -1513,27 +1834,6 @@ components:
       required:
       - policyIds
       title: bulk_upgrade_managed_integrations_request
-      type: object
-    Kibana_HTTP_APIs_managed_integration_package:
-      additionalProperties: false
-      properties:
-        name:
-          description: Integration package name.
-          maxLength: 255
-          type: string
-        title:
-          description: Integration package display title.
-          maxLength: 255
-          type: string
-        version:
-          description: Integration package version.
-          maxLength: 50
-          type: string
-      required:
-      - name
-      - title
-      - version
-      title: managed_integration_package
       type: object
     Kibana_HTTP_APIs_create_managed_integration_request:
       additionalProperties: false
@@ -1764,326 +2064,26 @@ components:
       - package
       title: create_managed_integration_request
       type: object
-    Kibana_HTTP_APIs_managed_integration_upgrade_dry_run_result:
+    Kibana_HTTP_APIs_managed_integration_package:
       additionalProperties: false
       properties:
-        body:
-          additionalProperties: false
-          type: object
-          properties:
-            message:
-              description: Error message when the dry-run failed for this policy.
-              maxLength: 4096
-              type: string
-          required:
-          - message
-        currentVersion:
-          description: The current installed package version of the policy.
-          maxLength: 256
-          type: string
-        errors:
-          description: Migration errors encountered while computing the upgrade.
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              message:
-                description: Human-readable migration error.
-                maxLength: 4096
-                type: string
-            required:
-            - message
-          maxItems: 1000
-          type: array
-        hasErrors:
-          description: Whether the dry-run migration produced any errors.
-          type: boolean
-        id:
-          description: The ID of the managed integration.
-          maxLength: 256
-          type: string
         name:
-          description: The name of the managed integration.
-          maxLength: 256
-          type: string
-        proposedPolicy:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration'
-        proposedVersion:
-          description: The package version the policy would be upgraded to.
-          maxLength: 256
-          type: string
-        statusCode:
-          description: HTTP-like status code when the dry-run failed for this policy.
-          type: number
-      required:
-      - id
-      - hasErrors
-      title: managed_integration_upgrade_dry_run_result
-      type: object
-    Kibana_HTTP_APIs_managed_integration:
-      additionalProperties: false
-      properties:
-        additional_datastreams_permissions:
-          description: Additional data stream permissions granted to the managed integration.
-          items:
-            maxLength: 256
-            type: string
-          maxItems: 1000
-          type: array
-        cloud_connector:
-          allOf:
-          - $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration_cloud_connector'
-        created_at:
-          description: Creation timestamp (ISO 8601).
-          maxLength: 64
-          type: string
-        created_by:
-          description: User who created the policy.
-          maxLength: 1024
-          type: string
-        description:
-          description: Managed integration description.
-          maxLength: 2048
-          type: string
-        global_data_tags:
-          description: Custom data tags applied to all data produced by this policy.
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              name:
-                description: The name of the custom field.
-                maxLength: 1024
-                type: string
-              value:
-                anyOf:
-                - maxLength: 1024
-                  type: string
-                - type: number
-                description: The value of the custom field.
-            required:
-            - name
-            - value
-          maxItems: 100
-          type: array
-        id:
-          description: Managed integration unique identifier.
+          description: Integration package name.
           maxLength: 255
           type: string
-        inputs:
-          additionalProperties:
-            additionalProperties: false
-            type: object
-            properties:
-              condition:
-                description: Agent condition expression to evaluate whether to apply this input.
-                maxLength: 10000
-                type:
-                - string
-                - 'null'
-              deprecated:
-                $ref: '#/components/schemas/Kibana_HTTP_APIs_simplified_package_policy_input_deprecation_info'
-              enabled:
-                description: Enable or disable that input. Defaults to `true` (enabled).
-                type: boolean
-              streams:
-                additionalProperties:
-                  additionalProperties: false
-                  type: object
-                  properties:
-                    condition:
-                      description: Agent condition expression to evaluate whether to apply this stream.
-                      maxLength: 10000
-                      type:
-                      - string
-                      - 'null'
-                    deprecated:
-                      $ref: '#/components/schemas/Kibana_HTTP_APIs_simplified_package_policy_stream_deprecation_info'
-                    enabled:
-                      description: Enable or disable that stream. Defaults to `true` (enabled).
-                      type: boolean
-                    var_group_selections:
-                      additionalProperties:
-                        maxLength: 1024
-                        type: string
-                      description: Variable group selections. Maps var_group name to the selected option name within that group.
-                      type: object
-                    vars:
-                      additionalProperties:
-                        anyOf:
-                        - maxLength: 10000
-                          type: string
-                        - type: number
-                        - type: boolean
-                        - items:
-                            maxLength: 10000
-                            type: string
-                          maxItems: 100
-                          type: array
-                        - items:
-                            type: number
-                          maxItems: 100
-                          type: array
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            id:
-                              maxLength: 255
-                              type: string
-                            isSecretRef:
-                              type: boolean
-                          required:
-                          - id
-                          - isSecretRef
-                        default: null
-                      description: Input/stream level variable. Refer to the integration documentation for more information.
-                      type: object
-                description: Input streams. Refer to the integration documentation to know which streams are available.
-                type: object
-              vars:
-                additionalProperties:
-                  anyOf:
-                  - maxLength: 10000
-                    type: string
-                  - type: number
-                  - type: boolean
-                  - items:
-                      maxLength: 10000
-                      type: string
-                    maxItems: 100
-                    type: array
-                  - items:
-                      type: number
-                    maxItems: 100
-                    type: array
-                  - additionalProperties: false
-                    type: object
-                    properties:
-                      id:
-                        maxLength: 255
-                        type: string
-                      isSecretRef:
-                        type: boolean
-                    required:
-                    - id
-                    - isSecretRef
-                  default: null
-                description: Input/stream level variable. Refer to the integration documentation for more information.
-                type: object
-          description: Package policy inputs. Refer to the integration documentation to know which inputs are available.
-          type: object
-        name:
-          description: Managed integration name.
-          maxLength: 255
-          type: string
-        namespace:
-          description: Policy namespace. Defaults to the agent policy namespace.
-          maxLength: 100
-          type: string
-        package:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_managed_integration_package'
-        updated_at:
-          description: Last update timestamp (ISO 8601).
-          maxLength: 64
-          type: string
-        updated_by:
-          description: User who last updated the policy.
-          maxLength: 1024
-          type: string
-        var_group_selections:
-          additionalProperties:
-            maxLength: 1024
-            type: string
-          description: Variable group selections. Maps var_group name to the selected option name within that group.
-          type: object
-        vars:
-          additionalProperties:
-            anyOf:
-            - maxLength: 10000
-              type: string
-            - type: number
-            - type: boolean
-            - items:
-                maxLength: 10000
-                type: string
-              maxItems: 100
-              type: array
-            - items:
-                type: number
-              maxItems: 100
-              type: array
-            - additionalProperties: false
-              type: object
-              properties:
-                id:
-                  maxLength: 255
-                  type: string
-                isSecretRef:
-                  type: boolean
-              required:
-              - id
-              - isSecretRef
-            default: null
-          description: Input/stream level variable. Refer to the integration documentation for more information.
-          type: object
-      required:
-      - id
-      - name
-      - package
-      - inputs
-      - created_at
-      - created_by
-      - updated_at
-      - updated_by
-      title: managed_integration
-      type: object
-    Kibana_HTTP_APIs_package_policy_package:
-      additionalProperties: false
-      properties:
-        experimental_data_stream_features:
-          items:
-            additionalProperties: false
-            type: object
-            properties:
-              data_stream:
-                maxLength: 1024
-                type: string
-              features:
-                additionalProperties: false
-                type: object
-                properties:
-                  doc_value_only_numeric:
-                    type: boolean
-                  doc_value_only_other:
-                    type: boolean
-                  synthetic_source:
-                    type: boolean
-                  tsdb:
-                    type: boolean
-            required:
-            - data_stream
-            - features
-          maxItems: 100
-          type: array
-        fips_compatible:
-          type: boolean
-        name:
-          description: Package name
-          maxLength: 255
-          type: string
-        requires_root:
-          type: boolean
         title:
+          description: Integration package display title.
           maxLength: 255
           type: string
         version:
-          description: Package version
+          description: Integration package version.
           maxLength: 50
           type: string
       required:
       - name
+      - title
       - version
-      title: package_policy_package
+      title: managed_integration_package
       type: object
   securitySchemes:
     apiKeyAuth:

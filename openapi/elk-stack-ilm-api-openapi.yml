@@ -707,38 +707,6 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.IndexName:
-      type: string
-    ilm.get_lifecycle.Lifecycle:
-      type: object
-      properties:
-        modified_date:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        policy:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Policy'
-        version:
-          allOf:
-          - $ref: '#/components/schemas/_types.VersionNumber'
-      required:
-      - modified_date
-      - policy
-      - version
-    _types.LifecycleOperationMode:
-      type: string
-      enum:
-      - RUNNING
-      - STOPPING
-      - STOPPED
-    _types.DurationValueUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    ilm._types.DeleteAction:
-      type: object
-      properties:
-        delete_searchable_snapshot:
-          type: boolean
     ilm.explain_lifecycle.LifecycleExplainManaged:
       type: object
       properties:
@@ -831,87 +799,6 @@ components:
       - index
       - managed
       - skip
-    _types.EmptyObject:
-      description: For empty Class assignments
-      type: object
-    ilm._types.WaitForSnapshotAction:
-      type: object
-      properties:
-        policy:
-          type: string
-      required:
-      - policy
-    ilm._types.ShrinkAction:
-      type: object
-      properties:
-        number_of_shards:
-          type: number
-        max_primary_shard_size:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        allow_write_after_shrink:
-          type: boolean
-    ilm.explain_lifecycle.LifecycleExplain:
-      discriminator:
-        propertyName: managed
-        mapping:
-          'false': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
-          'true': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
-      oneOf:
-      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
-      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    ilm._types.Phases:
-      type: object
-      properties:
-        cold:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        delete:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        frozen:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        hot:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        warm:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-    _types.Indices:
-      oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.IndexName'
-    ilm._types.MigrateAction:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-    _types.VersionNumber:
-      type: number
-    _types.ByteSize:
-      oneOf:
-      - type: number
-      - type: string
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
     ilm.move_to_step.StepKey:
       type: object
       properties:
@@ -925,29 +812,83 @@ components:
           type: string
       required:
       - phase
-    ilm._types.SearchableSnapshotAction:
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.VersionNumber:
+      type: number
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    ilm._types.ForceMergeAction:
       type: object
       properties:
-        snapshot_repository:
+        max_num_segments:
+          type: number
+        index_codec:
           type: string
-        force_merge_index:
-          type: boolean
       required:
-      - snapshot_repository
-    _types.Name:
-      type: string
-    _types.Metadata:
-      type: object
-      additionalProperties:
-        type: object
-    _types.AcknowledgedResponseBase:
+      - max_num_segments
+    ilm.explain_lifecycle.LifecycleExplainPhaseExecution:
       type: object
       properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
+        phase_definition:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        modified_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
       required:
-      - acknowledged
+      - policy
+      - version
+      - modified_date_in_millis
+    _types.DurationLarge:
+      description: 'A date histogram interval. Similar to `Duration` with additional units: `w` (week), `M` (month), `q` (quarter) and
+
+        `y` (year)'
+      type: string
+    _types.IndexName:
+      type: string
+    _types.ByteSize:
+      oneOf:
+      - type: number
+      - type: string
+    ilm._types.DeleteAction:
+      type: object
+      properties:
+        delete_searchable_snapshot:
+          type: boolean
+    ilm.get_lifecycle.Lifecycle:
+      type: object
+      properties:
+        modified_date:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Policy'
+        version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+      required:
+      - modified_date
+      - policy
+      - version
     ilm._types.RolloverAction:
       type: object
       properties:
@@ -979,6 +920,32 @@ components:
           type: number
         min_primary_shard_docs:
           type: number
+    _types.Name:
+      type: string
+    ilm._types.Phases:
+      type: object
+      properties:
+        cold:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        delete:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        frozen:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        hot:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        warm:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+    _types.LifecycleOperationMode:
+      type: string
+      enum:
+      - RUNNING
+      - STOPPING
+      - STOPPED
     ilm._types.AllocateAction:
       type: object
       properties:
@@ -998,20 +965,19 @@ components:
           type: object
           additionalProperties:
             type: string
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
+    ilm.explain_lifecycle.LifecycleExplain:
+      discriminator:
+        propertyName: managed
+        mapping:
+          'false': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
+          'true': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
       oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-    _types.DurationLarge:
-      description: 'A date histogram interval. Similar to `Duration` with additional units: `w` (week), `M` (month), `q` (quarter) and
-
-        `y` (year)'
-      type: string
+      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
+      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
     ilm._types.Phase:
       type: object
       properties:
@@ -1021,6 +987,14 @@ components:
         min_age:
           allOf:
           - $ref: '#/components/schemas/_types.Duration'
+    _types.EmptyObject:
+      description: For empty Class assignments
+      type: object
+    ilm._types.MigrateAction:
+      type: object
+      properties:
+        enabled:
+          type: boolean
     ilm._types.DownsampleAction:
       type: object
       properties:
@@ -1032,40 +1006,59 @@ components:
           - $ref: '#/components/schemas/_types.Duration'
       required:
       - fixed_interval
+    ilm._types.WaitForSnapshotAction:
+      type: object
+      properties:
+        policy:
+          type: string
+      required:
+      - policy
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    ilm._types.SetPriorityAction:
+      type: object
+      properties:
+        priority:
+          type: number
+    ilm._types.ShrinkAction:
+      type: object
+      properties:
+        number_of_shards:
+          type: number
+        max_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        allow_write_after_shrink:
+          type: boolean
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
     _types.UnitMillis:
       description: Time unit for milliseconds
       type: number
-    ilm._types.Policy:
-      type: object
-      properties:
-        phases:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phases'
-        _meta:
-          description: Arbitrary metadata that is not automatically generated or used by Elasticsearch.
-          allOf:
-          - $ref: '#/components/schemas/_types.Metadata'
-      required:
-      - phases
-    ilm.explain_lifecycle.LifecycleExplainPhaseExecution:
-      type: object
-      properties:
-        phase_definition:
-          allOf:
-          - $ref: '#/components/schemas/ilm._types.Phase'
-        policy:
-          allOf:
-          - $ref: '#/components/schemas/_types.Name'
-        version:
-          allOf:
-          - $ref: '#/components/schemas/_types.VersionNumber'
-        modified_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-      required:
-      - policy
-      - version
-      - modified_date_in_millis
     ilm.explain_lifecycle.LifecycleExplainUnmanaged:
       type: object
       properties:
@@ -1079,6 +1072,27 @@ components:
       required:
       - index
       - managed
+    ilm._types.SearchableSnapshotAction:
+      type: object
+      properties:
+        snapshot_repository:
+          type: string
+        force_merge_index:
+          type: boolean
+      required:
+      - snapshot_repository
+    ilm._types.Policy:
+      type: object
+      properties:
+        phases:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phases'
+        _meta:
+          description: Arbitrary metadata that is not automatically generated or used by Elasticsearch.
+          allOf:
+          - $ref: '#/components/schemas/_types.Metadata'
+      required:
+      - phases
     ilm._types.Actions:
       type: object
       properties:
@@ -1135,30 +1149,7 @@ components:
           description: 'Phases allowed: delete.'
           allOf:
           - $ref: '#/components/schemas/ilm._types.WaitForSnapshotAction'
-    ilm._types.ForceMergeAction:
-      type: object
-      properties:
-        max_num_segments:
-          type: number
-        index_codec:
-          type: string
-      required:
-      - max_num_segments
-    ilm._types.SetPriorityAction:
-      type: object
-      properties:
-        priority:
-          type: number
   parameters:
-    ilm.get_lifecycle-policy:
-      in: path
-      name: policy
-      description: Identifier for the policy.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Name'
-      style: simple
     ilm.get_lifecycle-timeout:
       in: query
       name: timeout
@@ -1169,6 +1160,15 @@ components:
         allOf:
         - $ref: '#/components/schemas/_types.Duration'
       style: form
+    ilm.get_lifecycle-policy:
+      in: path
+      name: policy
+      description: Identifier for the policy.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Name'
+      style: simple
     ilm.get_lifecycle-master_timeout:
       in: query
       name: master_timeout

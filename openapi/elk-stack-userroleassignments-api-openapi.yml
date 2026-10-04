@@ -157,23 +157,6 @@ paths:
         required: true
 components:
   schemas:
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
     OrganizationRoleAssignment:
       type: object
       required:
@@ -192,16 +175,6 @@ components:
           items:
             type: string
       description: Assignment for a role with organization scope.
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
     ProjectRoleAssignment:
       type: object
       required:
@@ -228,15 +201,6 @@ components:
           items:
             type: string
       description: Assignment for a role with project scope.
-    PlatformRoleAssignment:
-      type: object
-      required:
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-      description: Assignment for a role with platform scope.
     ProjectRoleAssignments:
       type: object
       properties:
@@ -266,8 +230,23 @@ components:
           items:
             $ref: '#/components/schemas/ProjectRoleAssignment'
       description: Assignments for roles with project scope.
-    EmptyResponse:
+    BasicFailedReplyElement:
       type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
     RoleAssignments:
       type: object
       properties:
@@ -290,6 +269,27 @@ components:
           description: Assignments for roles with project scope.
           $ref: '#/components/schemas/ProjectRoleAssignments'
       description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+    PlatformRoleAssignment:
+      type: object
+      required:
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+      description: Assignment for a role with platform scope.
+    EmptyResponse:
+      type: object
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
     DeploymentRoleAssignment:
       type: object
       required:

@@ -410,52 +410,7 @@ paths:
       - content: Elasticsearch
         name: product_name
 components:
-  responses:
-    license.post-200:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              acknowledge:
-                allOf:
-                - $ref: '#/components/schemas/license.post.Acknowledgement'
-              acknowledged:
-                type: boolean
-              license_status:
-                allOf:
-                - $ref: '#/components/schemas/license._types.LicenseStatus'
-            required:
-            - acknowledged
-            - license_status
-          examples:
-            PostLicenseResponseExample1:
-              description: If you update to a basic license and you previously had a license with more features, you receive this type of response. You must re-submit the API request and set the `acknowledge` parameter to `true`.
-              value: "{\n  \"acknowledged\": false,\n  \"license_status\": \"valid\",\n  \"acknowledge\": {\n    \"message\": \"\\\"\\\"\\\"This license update requires acknowledgement. To acknowledge the license, please read the following messages and update the license again, this time with the \\\"acknowledge=true\\\" parameter:\\\"\\\"\\\"\",\n    \"watcher\": [\n      \"Watcher will be disabled\"\n    ],\n    \"logstash\": [\n      \"Logstash will no longer poll for centrally-managed pipelines\"\n    ],\n    \"security\": [\n      \"The following X-Pack security functionality will be disabled ...\"\n    ]\n  }\n}"
   schemas:
-    license._types.LicenseStatus:
-      type: string
-      enum:
-      - active
-      - valid
-      - invalid
-      - expired
-    license.post.Acknowledgement:
-      type: object
-      properties:
-        license:
-          type: array
-          items:
-            type: string
-        message:
-          type: string
-      required:
-      - license
-      - message
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
     license._types.LicenseType:
       type: string
       enum:
@@ -470,6 +425,33 @@ components:
       - enterprise
     _types.Uuid:
       type: string
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    license._types.LicenseStatus:
+      type: string
+      enum:
+      - active
+      - valid
+      - invalid
+      - expired
     license.get.LicenseInformation:
       type: object
       properties:
@@ -535,14 +517,9 @@ components:
       - type
       - uid
       - start_date_in_millis
-    _types.AcknowledgedResponseBase:
-      type: object
-      properties:
-        acknowledged:
-          description: For a successful response, this value is always true. On failure, an exception is returned instead.
-          type: boolean
-      required:
-      - acknowledged
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
     license._types.License:
       type: object
       properties:
@@ -582,15 +559,6 @@ components:
       - signature
       - type
       - uid
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
     _types.Duration:
       externalDocs:
         url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
@@ -605,9 +573,18 @@ components:
       - type: string
         enum:
         - '0'
-    _types.EpochTimeUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
+    license.post.Acknowledgement:
+      type: object
+      properties:
+        license:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+      required:
+      - license
+      - message
   requestBodies:
     license.post:
       content:
@@ -661,3 +638,26 @@ components:
         allOf:
         - $ref: '#/components/schemas/_types.Duration'
       style: form
+  responses:
+    license.post-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              acknowledge:
+                allOf:
+                - $ref: '#/components/schemas/license.post.Acknowledgement'
+              acknowledged:
+                type: boolean
+              license_status:
+                allOf:
+                - $ref: '#/components/schemas/license._types.LicenseStatus'
+            required:
+            - acknowledged
+            - license_status
+          examples:
+            PostLicenseResponseExample1:
+              description: If you update to a basic license and you previously had a license with more features, you receive this type of response. You must re-submit the API request and set the `acknowledge` parameter to `true`.
+              value: "{\n  \"acknowledged\": false,\n  \"license_status\": \"valid\",\n  \"acknowledge\": {\n    \"message\": \"\\\"\\\"\\\"This license update requires acknowledgement. To acknowledge the license, please read the following messages and update the license again, this time with the \\\"acknowledge=true\\\" parameter:\\\"\\\"\\\"\",\n    \"watcher\": [\n      \"Watcher will be disabled\"\n    ],\n    \"logstash\": [\n      \"Logstash will no longer poll for centrally-managed pipelines\"\n    ],\n    \"security\": [\n      \"The following X-Pack security functionality will be disabled ...\"\n    ]\n  }\n}"

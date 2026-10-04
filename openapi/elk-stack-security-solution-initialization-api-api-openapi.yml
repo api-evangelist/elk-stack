@@ -112,6 +112,40 @@ paths:
         name: product_name
 components:
   schemas:
+    Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
+      type: object
+      properties:
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+    Security_Solution_Initialization_API_InitializationFlowId:
+      description: Identifier for an initialization flow.
+      enum:
+      - create-list-indices
+      - security-data-views
+      - init-prebuilt-rules
+      - init-endpoint-protection
+      - init-ai-prompts
+      - init-detection-rule-monitoring
+      type: string
+    Security_Solution_Initialization_API_DataViewPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        patternList:
+          items:
+            type: string
+          type: array
+        title:
+          type: string
+      required:
+      - id
+      - title
+      - patternList
     Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
       type: object
       properties:
@@ -142,54 +176,6 @@ components:
       required:
       - status
       - payload
-    Security_Solution_Initialization_API_InitializationFlowErrorResult:
-      type: object
-      properties:
-        error:
-          type:
-          - string
-          - 'null'
-        status:
-          enum:
-          - error
-          type: string
-      required:
-      - status
-      - error
-    Security_Solution_Initialization_API_DataViewPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        patternList:
-          items:
-            type: string
-          type: array
-        title:
-          type: string
-      required:
-      - id
-      - title
-      - patternList
-    Security_Solution_Initialization_API_InitializationFlowId:
-      description: Identifier for an initialization flow.
-      enum:
-      - create-list-indices
-      - security-data-views
-      - init-prebuilt-rules
-      - init-endpoint-protection
-      - init-ai-prompts
-      - init-detection-rule-monitoring
-      type: string
-    Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
-      type: object
-      properties:
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
     Security_Solution_Initialization_API_CreateListIndicesReadyResult:
       type: object
       properties:
@@ -223,6 +209,20 @@ components:
       required:
       - status
       - payload
+    Security_Solution_Initialization_API_InitializationFlowErrorResult:
+      type: object
+      properties:
+        error:
+          type:
+          - string
+          - 'null'
+        status:
+          enum:
+          - error
+          type: string
+      required:
+      - status
+      - error
     Security_Solution_Initialization_API_InitializationFlowsResult:
       description: Per-flow results. Only requested flows appear in the response, so all properties are optional. Each flow is either a typed ready result or an error result.
       type: object

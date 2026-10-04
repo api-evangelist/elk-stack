@@ -495,27 +495,54 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_request:
+    Kibana_HTTP_APIs_create_enrollment_api_key_response:
       additionalProperties: false
       properties:
-        forceDelete:
-          default: false
-          description: When false (default), invalidate the API key and mark the token as inactive. When true, also delete the token document.
-          type: boolean
-        includeHidden:
-          default: false
-          description: When true, allow deletion of hidden enrollment tokens (managed/agentless policies). Defaults to false.
-          type: boolean
-        kuery:
-          description: KQL query to select enrollment tokens to delete.
+        action:
+          enum:
+          - created
           type: string
-        tokenIds:
-          description: List of enrollment token IDs to delete.
-          items:
-            type: string
-          maxItems: 10000
-          type: array
-      title: bulk_delete_enrollment_api_keys_request
+        item:
+          $ref: '#/components/schemas/Kibana_HTTP_APIs_enrollment_api_key'
+      required:
+      - item
+      - action
+      title: create_enrollment_api_key_response
+      type: object
+    Kibana_HTTP_APIs_enrollment_api_key:
+      additionalProperties: false
+      properties:
+        active:
+          description: When false, the enrollment API key is revoked and cannot be used for enrolling Elastic Agents.
+          type: boolean
+        api_key:
+          description: The enrollment API key (token) used for enrolling Elastic Agents.
+          type: string
+        api_key_id:
+          description: The ID of the API key in the Security API.
+          type: string
+        created_at:
+          type: string
+        expire_at:
+          description: The expiration date of the enrollment token as an ISO 8601 date string. Absent when the token never expires.
+          type: string
+        hidden:
+          type: boolean
+        id:
+          type: string
+        name:
+          description: The name of the enrollment API key.
+          type: string
+        policy_id:
+          description: The ID of the agent policy the Elastic Agent will be enrolled in.
+          type: string
+      required:
+      - id
+      - api_key_id
+      - api_key
+      - active
+      - created_at
+      title: enrollment_api_key
       type: object
     Kibana_HTTP_APIs_delete_enrollment_api_key_response:
       additionalProperties: false
@@ -561,50 +588,6 @@ components:
       - policy_id
       title: new_enrollment_api_key
       type: object
-    Kibana_HTTP_APIs_enrollment_api_key:
-      additionalProperties: false
-      properties:
-        active:
-          description: When false, the enrollment API key is revoked and cannot be used for enrolling Elastic Agents.
-          type: boolean
-        api_key:
-          description: The enrollment API key (token) used for enrolling Elastic Agents.
-          type: string
-        api_key_id:
-          description: The ID of the API key in the Security API.
-          type: string
-        created_at:
-          type: string
-        expire_at:
-          description: The expiration date of the enrollment token as an ISO 8601 date string. Absent when the token never expires.
-          type: string
-        hidden:
-          type: boolean
-        id:
-          type: string
-        name:
-          description: The name of the enrollment API key.
-          type: string
-        policy_id:
-          description: The ID of the agent policy the Elastic Agent will be enrolled in.
-          type: string
-      required:
-      - id
-      - api_key_id
-      - api_key
-      - active
-      - created_at
-      title: enrollment_api_key
-      type: object
-    Kibana_HTTP_APIs_enrollment_api_key_response:
-      additionalProperties: false
-      properties:
-        item:
-          $ref: '#/components/schemas/Kibana_HTTP_APIs_enrollment_api_key'
-      required:
-      - item
-      title: enrollment_api_key_response
-      type: object
     Kibana_HTTP_APIs_get_enrollment_api_keys_response:
       additionalProperties: false
       properties:
@@ -633,19 +616,36 @@ components:
       - list
       title: get_enrollment_api_keys_response
       type: object
-    Kibana_HTTP_APIs_create_enrollment_api_key_response:
+    Kibana_HTTP_APIs_enrollment_api_key_response:
       additionalProperties: false
       properties:
-        action:
-          enum:
-          - created
-          type: string
         item:
           $ref: '#/components/schemas/Kibana_HTTP_APIs_enrollment_api_key'
       required:
       - item
-      - action
-      title: create_enrollment_api_key_response
+      title: enrollment_api_key_response
+      type: object
+    Kibana_HTTP_APIs_bulk_delete_enrollment_api_keys_request:
+      additionalProperties: false
+      properties:
+        forceDelete:
+          default: false
+          description: When false (default), invalidate the API key and mark the token as inactive. When true, also delete the token document.
+          type: boolean
+        includeHidden:
+          default: false
+          description: When true, allow deletion of hidden enrollment tokens (managed/agentless policies). Defaults to false.
+          type: boolean
+        kuery:
+          description: KQL query to select enrollment tokens to delete.
+          type: string
+        tokenIds:
+          description: List of enrollment token IDs to delete.
+          items:
+            type: string
+          maxItems: 10000
+          type: array
+      title: bulk_delete_enrollment_api_keys_request
       type: object
   securitySchemes:
     apiKeyAuth:

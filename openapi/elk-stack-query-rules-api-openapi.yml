@@ -483,80 +483,6 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.IndexName:
-      type: string
-    query_rules.list_rulesets.QueryRulesetListItem:
-      type: object
-      properties:
-        ruleset_id:
-          description: A unique identifier for the ruleset.
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        rule_total_count:
-          description: The number of rules associated with the ruleset.
-          type: number
-        rule_criteria_types_counts:
-          description: 'A map of criteria type (for example, `exact`) to the number of rules of that type.
-
-
-            NOTE: The counts in `rule_criteria_types_counts` may be larger than the value of `rule_total_count` because a rule may have multiple criteria.'
-          type: object
-          additionalProperties:
-            type: number
-        rule_type_counts:
-          description: A map of rule type (for example, `pinned`) to the number of rules of that type.
-          type: object
-          additionalProperties:
-            type: number
-      required:
-      - ruleset_id
-      - rule_total_count
-      - rule_criteria_types_counts
-      - rule_type_counts
-    query_rules._types.QueryRuleCriteriaType:
-      type: string
-      enum:
-      - global
-      - exact
-      - fuzzy
-      - prefix
-      - suffix
-      - contains
-      - lt
-      - lte
-      - gt
-      - gte
-      - always
-    _types.query_dsl.PinnedDoc:
-      type: object
-      properties:
-        _id:
-          description: The unique document ID.
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        _index:
-          description: The index that contains the document.
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-      required:
-      - _id
-    _types.Id:
-      type: string
-    query_rules._types.QueryRuleset:
-      type: object
-      properties:
-        ruleset_id:
-          description: A unique identifier for the ruleset.
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        rules:
-          description: Rules associated with the query ruleset.
-          type: array
-          items:
-            $ref: '#/components/schemas/query_rules._types.QueryRule'
-      required:
-      - ruleset_id
-      - rules
     _types.AcknowledgedResponseBase:
       type: object
       properties:
@@ -565,82 +491,6 @@ components:
           type: boolean
       required:
       - acknowledged
-    _types.Result:
-      type: string
-      enum:
-      - created
-      - updated
-      - deleted
-      - not_found
-      - noop
-    query_rules._types.QueryRule:
-      type: object
-      properties:
-        rule_id:
-          description: A unique identifier for the rule.
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        type:
-          description: 'The type of rule.
-
-            `pinned` will identify and pin specific documents to the top of search results.
-
-            `exclude` will exclude specific documents from search results.'
-          allOf:
-          - $ref: '#/components/schemas/query_rules._types.QueryRuleType'
-        criteria:
-          description: 'The criteria that must be met for the rule to be applied.
-
-            If multiple criteria are specified for a rule, all criteria must be met for the rule to be applied.'
-          oneOf:
-          - $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
-          - type: array
-            items:
-              $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
-        actions:
-          description: 'The actions to take when the rule is matched.
-
-            The format of this action depends on the rule type.'
-          allOf:
-          - $ref: '#/components/schemas/query_rules._types.QueryRuleActions'
-        priority:
-          type: number
-      required:
-      - rule_id
-      - type
-      - criteria
-      - actions
-    query_rules._types.QueryRuleType:
-      type: string
-      enum:
-      - pinned
-      - exclude
-    query_rules._types.QueryRuleActions:
-      type: object
-      properties:
-        ids:
-          description: 'The unique document IDs of the documents to apply the rule to.
-
-            Only one of `ids` or `docs` may be specified and at least one must be specified.'
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.Id'
-        docs:
-          description: 'The documents to apply the rule to.
-
-            Only one of `ids` or `docs` may be specified and at least one must be specified.
-
-            There is a maximum value of 100 documents in a rule.
-
-            You can specify the following attributes for each document:
-
-
-            * `_index`: The index of the document to pin.
-
-            * `_id`: The unique document ID.'
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.query_dsl.PinnedDoc'
     query_rules._types.QueryRuleCriteria:
       type: object
       properties:
@@ -687,6 +537,141 @@ components:
             type: object
       required:
       - type
+    query_rules._types.QueryRuleCriteriaType:
+      type: string
+      enum:
+      - global
+      - exact
+      - fuzzy
+      - prefix
+      - suffix
+      - contains
+      - lt
+      - lte
+      - gt
+      - gte
+      - always
+    query_rules.list_rulesets.QueryRulesetListItem:
+      type: object
+      properties:
+        ruleset_id:
+          description: A unique identifier for the ruleset.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        rule_total_count:
+          description: The number of rules associated with the ruleset.
+          type: number
+        rule_criteria_types_counts:
+          description: 'A map of criteria type (for example, `exact`) to the number of rules of that type.
+
+
+            NOTE: The counts in `rule_criteria_types_counts` may be larger than the value of `rule_total_count` because a rule may have multiple criteria.'
+          type: object
+          additionalProperties:
+            type: number
+        rule_type_counts:
+          description: A map of rule type (for example, `pinned`) to the number of rules of that type.
+          type: object
+          additionalProperties:
+            type: number
+      required:
+      - ruleset_id
+      - rule_total_count
+      - rule_criteria_types_counts
+      - rule_type_counts
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    query_rules._types.QueryRuleActions:
+      type: object
+      properties:
+        ids:
+          description: 'The unique document IDs of the documents to apply the rule to.
+
+            Only one of `ids` or `docs` may be specified and at least one must be specified.'
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.Id'
+        docs:
+          description: 'The documents to apply the rule to.
+
+            Only one of `ids` or `docs` may be specified and at least one must be specified.
+
+            There is a maximum value of 100 documents in a rule.
+
+            You can specify the following attributes for each document:
+
+
+            * `_index`: The index of the document to pin.
+
+            * `_id`: The unique document ID.'
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.query_dsl.PinnedDoc'
+    _types.Id:
+      type: string
+    query_rules._types.QueryRuleset:
+      type: object
+      properties:
+        ruleset_id:
+          description: A unique identifier for the ruleset.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        rules:
+          description: Rules associated with the query ruleset.
+          type: array
+          items:
+            $ref: '#/components/schemas/query_rules._types.QueryRule'
+      required:
+      - ruleset_id
+      - rules
+    query_rules._types.QueryRuleType:
+      type: string
+      enum:
+      - pinned
+      - exclude
+    query_rules._types.QueryRule:
+      type: object
+      properties:
+        rule_id:
+          description: A unique identifier for the rule.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        type:
+          description: 'The type of rule.
+
+            `pinned` will identify and pin specific documents to the top of search results.
+
+            `exclude` will exclude specific documents from search results.'
+          allOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleType'
+        criteria:
+          description: 'The criteria that must be met for the rule to be applied.
+
+            If multiple criteria are specified for a rule, all criteria must be met for the rule to be applied.'
+          oneOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
+          - type: array
+            items:
+              $ref: '#/components/schemas/query_rules._types.QueryRuleCriteria'
+        actions:
+          description: 'The actions to take when the rule is matched.
+
+            The format of this action depends on the rule type.'
+          allOf:
+          - $ref: '#/components/schemas/query_rules._types.QueryRuleActions'
+        priority:
+          type: number
+      required:
+      - rule_id
+      - type
+      - criteria
+      - actions
     query_rules.test.QueryRulesetMatchedRule:
       type: object
       properties:
@@ -701,3 +686,18 @@ components:
       required:
       - ruleset_id
       - rule_id
+    _types.query_dsl.PinnedDoc:
+      type: object
+      properties:
+        _id:
+          description: The unique document ID.
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        _index:
+          description: The index that contains the document.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+      required:
+      - _id
+    _types.IndexName:
+      type: string

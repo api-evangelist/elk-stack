@@ -118,12 +118,6 @@ components:
     APM_UI_fleet_apm_server_schema_200_response1:
       description: An example of a successful response from `POST /api/apm/fleet/apm_server_schema`. The response body is intentionally empty.
       value: {}
-    APM_UI_error_400_response:
-      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
-      value:
-        error: Bad Request
-        message: '[request body]: expected value of type [string] but got [undefined]'
-        statusCode: 400
     APM_UI_error_404_response:
       description: An example of a 404 Not Found response, returned when the requested resource does not exist or the feature is not available on the current deployment.
       value:
@@ -136,6 +130,12 @@ components:
         error: Unauthorized
         message: '[security_exception]: missing authentication credentials for REST request'
         statusCode: 401
+    APM_UI_error_400_response:
+      description: An example of a 400 Bad Request response, returned when the request payload or query parameters fail validation.
+      value:
+        error: Bad Request
+        message: '[request body]: expected value of type [string] but got [undefined]'
+        statusCode: 400
     APM_UI_error_403_response:
       description: An example of a 403 Forbidden response, returned when the authenticated user lacks the required APM and User Experience privileges.
       value:
@@ -143,21 +143,6 @@ components:
         message: Insufficient privileges to perform this action. The APM and User Experience feature requires `all` privileges.
         statusCode: 403
   schemas:
-    APM_UI_404_response:
-      type: object
-      properties:
-        error:
-          description: Error type
-          example: Not Found
-          type: string
-        message:
-          description: Error message
-          example: Not Found
-          type: string
-        statusCode:
-          description: Error status code
-          example: 404
-          type: number
     APM_UI_403_response:
       type: object
       properties:
@@ -171,6 +156,20 @@ components:
         statusCode:
           description: Error status code
           example: 403
+          type: number
+    APM_UI_401_response:
+      type: object
+      properties:
+        error:
+          description: Error type
+          example: Unauthorized
+          type: string
+        message:
+          description: Error message
+          type: string
+        statusCode:
+          description: Error status code
+          example: 401
           type: number
     APM_UI_400_response:
       type: object
@@ -187,19 +186,20 @@ components:
           description: Error status code
           example: 400
           type: number
-    APM_UI_401_response:
+    APM_UI_404_response:
       type: object
       properties:
         error:
           description: Error type
-          example: Unauthorized
+          example: Not Found
           type: string
         message:
           description: Error message
+          example: Not Found
           type: string
         statusCode:
           description: Error status code
-          example: 401
+          example: 404
           type: number
   parameters:
     APM_UI_kbn_xsrf:

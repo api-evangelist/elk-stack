@@ -156,10 +156,6 @@ paths:
         name: product_name
 components:
   schemas:
-    _types.IndexName:
-      type: string
-    _types.Name:
-      type: string
     search_application._types.AnalyticsCollection:
       type: object
       properties:
@@ -177,6 +173,8 @@ components:
           type: boolean
       required:
       - acknowledged
+    _types.Name:
+      type: string
     search_application.put_behavioral_analytics.AnalyticsAcknowledgeResponseBase:
       allOf:
       - $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
@@ -202,6 +200,8 @@ components:
           - $ref: '#/components/schemas/_types.IndexName'
       required:
       - name
+    _types.IndexName:
+      type: string
   parameters:
     search_application.get_behavioral_analytics-name:
       in: path

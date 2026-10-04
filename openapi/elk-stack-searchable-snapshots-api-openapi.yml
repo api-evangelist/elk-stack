@@ -283,204 +283,24 @@ paths:
       - content: Elasticsearch
         name: product_name
 components:
-  schemas:
-    _types.IndexName:
-      type: string
-    searchable_snapshots.cache_stats.Shared:
-      type: object
-      properties:
-        reads:
-          type: number
-        bytes_read_in_bytes:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        writes:
-          type: number
-        bytes_written_in_bytes:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        evictions:
-          type: number
-        num_regions:
-          type: number
-        size_in_bytes:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        region_size_in_bytes:
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-      required:
-      - reads
-      - bytes_read_in_bytes
-      - writes
-      - bytes_written_in_bytes
-      - evictions
-      - num_regions
-      - size_in_bytes
-      - region_size_in_bytes
-    searchable_snapshots._types.StatsLevel:
-      type: string
-      enum:
-      - cluster
-      - indices
-      - shards
-    _types.ShardFailure:
-      type: object
-      properties:
-        index:
-          allOf:
-          - $ref: '#/components/schemas/_types.IndexName'
-        node:
-          type: string
-        reason:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        shard:
-          type: number
-        status:
-          type: string
-        primary:
-          type: boolean
-      required:
-      - reason
-    _types.NodeId:
-      type: string
-    searchable_snapshots.mount.StorageOption:
-      type: string
-      enum:
-      - full_copy
-      - shared_cache
-    _types.ExpandWildcard:
-      type: string
-      enum:
-      - all
-      - open
-      - closed
-      - hidden
-      - none
-    _types.Indices:
-      oneOf:
-      - $ref: '#/components/schemas/_types.IndexName'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.IndexName'
-    _types.ErrorCause:
-      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
-
-        Additional details are also provided, that depend on the error type.'
-      type: object
-      properties:
-        type:
-          description: The type of error
-          type: string
-        reason:
-          description: A human-readable explanation of the error, in English.
-          oneOf:
-          - type: string
-          - type:
-            - string
-            - 'null'
-        stack_trace:
-          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
-          type: string
-        caused_by:
-          allOf:
-          - $ref: '#/components/schemas/_types.ErrorCause'
-        root_cause:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-        suppressed:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ErrorCause'
-      required:
-      - type
-    _types.ByteSize:
-      oneOf:
-      - type: number
-      - type: string
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    _types.ExpandWildcards:
-      oneOf:
-      - $ref: '#/components/schemas/_types.ExpandWildcard'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.ExpandWildcard'
-    _types.Name:
-      type: string
-    _types.ShardStatistics:
-      type: object
-      properties:
-        failed:
-          description: The number of shards the operation or search attempted to run on but failed.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        successful:
-          description: The number of shards the operation or search succeeded on.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        total:
-          description: The number of shards the operation or search will run on overall.
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        failures:
-          type: array
-          items:
-            $ref: '#/components/schemas/_types.ShardFailure'
-        skipped:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-      required:
-      - failed
-      - successful
-      - total
-    _types.NodeIds:
-      oneOf:
-      - $ref: '#/components/schemas/_types.NodeId'
-      - type: array
-        items:
-          $ref: '#/components/schemas/_types.NodeId'
-    searchable_snapshots.mount.MountedSnapshot:
-      type: object
-      properties:
-        snapshot:
-          allOf:
-          - $ref: '#/components/schemas/_types.Name'
-        indices:
-          allOf:
-          - $ref: '#/components/schemas/_types.Indices'
-        shards:
-          allOf:
-          - $ref: '#/components/schemas/_types.ShardStatistics'
-      required:
-      - snapshot
-      - indices
-      - shards
-    searchable_snapshots.cache_stats.Node:
-      type: object
-      properties:
-        shared_cache:
-          allOf:
-          - $ref: '#/components/schemas/searchable_snapshots.cache_stats.Shared'
-      required:
-      - shared_cache
-    _types.uint:
-      type: number
   responses:
+    searchable_snapshots.cache_stats-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nodes:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/searchable_snapshots.cache_stats.Node'
+            required:
+            - nodes
+          examples:
+            CacheStatsResponseExample1:
+              description: A successful response from `GET /_searchable_snapshots/cache/stats`.
+              value: "{\n  \"nodes\" : {\n    \"eerrtBMtQEisohZzxBLUSw\" : {\n      \"shared_cache\" : {\n        \"reads\" : 6051, // The number of cache region read operations. If reads > writes, the difference represents requests successfully served from the cache without accessing the snapshot repository.\n        \"bytes_read_in_bytes\" : 5448829,\n        \"writes\" : 37, // The number of cache region write operations. If reads == writes, every request required fetching data from the snapshot repository into the cache.\n        \"bytes_written_in_bytes\" : 1208320,\n        \"evictions\" : 5, // The number of cache region evictions. A low eviction count indicates the cache is effectively serving requests. Use this metric to evaluate cache sizing.\n        \"num_regions\" : 65536,\n        \"size_in_bytes\" : 1099511627776,\n        \"region_size_in_bytes\" : 16777216 // The size of each cache region. A region is a contiguous byte range stored on local disk.\n      }\n    }\n  }\n}"
     searchable_snapshots.clear_cache-200:
       description: ''
       content:
@@ -501,30 +321,11 @@ components:
             required:
             - stats
             - total
-    searchable_snapshots.cache_stats-200:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              nodes:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/searchable_snapshots.cache_stats.Node'
-            required:
-            - nodes
-          examples:
-            CacheStatsResponseExample1:
-              description: A successful response from `GET /_searchable_snapshots/cache/stats`.
-              value: "{\n  \"nodes\" : {\n    \"eerrtBMtQEisohZzxBLUSw\" : {\n      \"shared_cache\" : {\n        \"reads\" : 6051, // The number of cache region read operations. If reads > writes, the difference represents requests successfully served from the cache without accessing the snapshot repository.\n        \"bytes_read_in_bytes\" : 5448829,\n        \"writes\" : 37, // The number of cache region write operations. If reads == writes, every request required fetching data from the snapshot repository into the cache.\n        \"bytes_written_in_bytes\" : 1208320,\n        \"evictions\" : 5, // The number of cache region evictions. A low eviction count indicates the cache is effectively serving requests. Use this metric to evaluate cache sizing.\n        \"num_regions\" : 65536,\n        \"size_in_bytes\" : 1099511627776,\n        \"region_size_in_bytes\" : 16777216 // The size of each cache region. A region is a contiguous byte range stored on local disk.\n      }\n    }\n  }\n}"
   parameters:
-    searchable_snapshots.clear_cache-index:
+    searchable_snapshots.stats-index:
       in: path
       name: index
-      description: 'A comma-separated list of data streams, indices, and aliases to clear from the cache.
-
-        It supports wildcards (`*`).'
+      description: A comma-separated list of data streams and indices to retrieve statistics for.
       required: true
       deprecated: false
       schema:
@@ -558,25 +359,6 @@ components:
         allOf:
         - $ref: '#/components/schemas/_types.ExpandWildcards'
       style: form
-    searchable_snapshots.stats-level:
-      in: query
-      name: level
-      description: Return stats aggregated at cluster, index or shard level
-      deprecated: false
-      schema:
-        default: indices
-        allOf:
-        - $ref: '#/components/schemas/searchable_snapshots._types.StatsLevel'
-      style: form
-    searchable_snapshots.stats-index:
-      in: path
-      name: index
-      description: A comma-separated list of data streams and indices to retrieve statistics for.
-      required: true
-      deprecated: false
-      schema:
-        $ref: '#/components/schemas/_types.Indices'
-      style: simple
     searchable_snapshots.clear_cache-ignore_unavailable:
       in: query
       name: ignore_unavailable
@@ -589,6 +371,17 @@ components:
       schema:
         type: boolean
       style: form
+    searchable_snapshots.clear_cache-index:
+      in: path
+      name: index
+      description: 'A comma-separated list of data streams, indices, and aliases to clear from the cache.
+
+        It supports wildcards (`*`).'
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Indices'
+      style: simple
     searchable_snapshots.cache_stats-node_id:
       in: path
       name: node_id
@@ -598,3 +391,210 @@ components:
       schema:
         $ref: '#/components/schemas/_types.NodeIds'
       style: simple
+    searchable_snapshots.stats-level:
+      in: query
+      name: level
+      description: Return stats aggregated at cluster, index or shard level
+      deprecated: false
+      schema:
+        default: indices
+        allOf:
+        - $ref: '#/components/schemas/searchable_snapshots._types.StatsLevel'
+      style: form
+  schemas:
+    _types.uint:
+      type: number
+    _types.IndexName:
+      type: string
+    _types.ByteSize:
+      oneOf:
+      - type: number
+      - type: string
+    _types.NodeIds:
+      oneOf:
+      - $ref: '#/components/schemas/_types.NodeId'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.NodeId'
+    _types.Name:
+      type: string
+    searchable_snapshots.cache_stats.Node:
+      type: object
+      properties:
+        shared_cache:
+          allOf:
+          - $ref: '#/components/schemas/searchable_snapshots.cache_stats.Shared'
+      required:
+      - shared_cache
+    _types.ShardFailure:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        node:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        shard:
+          type: number
+        status:
+          type: string
+        primary:
+          type: boolean
+      required:
+      - reason
+    _types.ShardStatistics:
+      type: object
+      properties:
+        failed:
+          description: The number of shards the operation or search attempted to run on but failed.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        successful:
+          description: The number of shards the operation or search succeeded on.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        total:
+          description: The number of shards the operation or search will run on overall.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ShardFailure'
+        skipped:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+      required:
+      - failed
+      - successful
+      - total
+    searchable_snapshots.mount.StorageOption:
+      type: string
+      enum:
+      - full_copy
+      - shared_cache
+    searchable_snapshots._types.StatsLevel:
+      type: string
+      enum:
+      - cluster
+      - indices
+      - shards
+    _types.ExpandWildcard:
+      type: string
+      enum:
+      - all
+      - open
+      - closed
+      - hidden
+      - none
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    _types.ErrorCause:
+      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
+
+        Additional details are also provided, that depend on the error type.'
+      type: object
+      properties:
+        type:
+          description: The type of error
+          type: string
+        reason:
+          description: A human-readable explanation of the error, in English.
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        stack_trace:
+          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
+          type: string
+        caused_by:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        root_cause:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        suppressed:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - type
+    searchable_snapshots.mount.MountedSnapshot:
+      type: object
+      properties:
+        snapshot:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        indices:
+          allOf:
+          - $ref: '#/components/schemas/_types.Indices'
+        shards:
+          allOf:
+          - $ref: '#/components/schemas/_types.ShardStatistics'
+      required:
+      - snapshot
+      - indices
+      - shards
+    searchable_snapshots.cache_stats.Shared:
+      type: object
+      properties:
+        reads:
+          type: number
+        bytes_read_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        writes:
+          type: number
+        bytes_written_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        evictions:
+          type: number
+        num_regions:
+          type: number
+        size_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        region_size_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+      required:
+      - reads
+      - bytes_read_in_bytes
+      - writes
+      - bytes_written_in_bytes
+      - evictions
+      - num_regions
+      - size_in_bytes
+      - region_size_in_bytes
+    _types.ExpandWildcards:
+      oneOf:
+      - $ref: '#/components/schemas/_types.ExpandWildcard'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.ExpandWildcard'
+    _types.NodeId:
+      type: string

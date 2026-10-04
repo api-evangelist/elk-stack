@@ -776,44 +776,6 @@ components:
         version:
           description: Internal version identifier for optimistic concurrency control.
           type: string
-    Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink:
-      additionalProperties: false
-      description: Link type. Set to dashboardLink for a link to another dashboard.
-      type: object
-      properties:
-        destination:
-          description: Linked dashboard saved object ID.
-          type: string
-        label:
-          description: The label of the link displayed in the UI.
-          type: string
-        options:
-          additionalProperties: false
-          default:
-            open_in_new_tab: false
-            use_filters: true
-            use_time_range: true
-          type: object
-          properties:
-            open_in_new_tab:
-              default: false
-              description: When enabled, the dashboard opens in a new browser tab.
-              type: boolean
-            use_filters:
-              default: true
-              description: When enabled, filters are passed to the opening dashboard.
-              type: boolean
-            use_time_range:
-              default: true
-              description: When enabled, time range is passed to the opening dashboard.
-              type: boolean
-        type:
-          enum:
-          - dashboardLink
-          type: string
-      required:
-      - type
-      - destination
     Kibana_HTTP_APIs_kbn-link-type-externalLink:
       additionalProperties: false
       description: Link type. Set to externalLink for a URL outside Kibana.
@@ -900,6 +862,44 @@ components:
       - id
       - data
       - meta
+    Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink:
+      additionalProperties: false
+      description: Link type. Set to dashboardLink for a link to another dashboard.
+      type: object
+      properties:
+        destination:
+          description: Linked dashboard saved object ID.
+          type: string
+        label:
+          description: The label of the link displayed in the UI.
+          type: string
+        options:
+          additionalProperties: false
+          default:
+            open_in_new_tab: false
+            use_filters: true
+            use_time_range: true
+          type: object
+          properties:
+            open_in_new_tab:
+              default: false
+              description: When enabled, the dashboard opens in a new browser tab.
+              type: boolean
+            use_filters:
+              default: true
+              description: When enabled, filters are passed to the opening dashboard.
+              type: boolean
+            use_time_range:
+              default: true
+              description: When enabled, time range is passed to the opening dashboard.
+              type: boolean
+        type:
+          enum:
+          - dashboardLink
+          type: string
+      required:
+      - type
+      - destination
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

@@ -384,36 +384,6 @@ components:
           type: string
           description: The identifier for the security realm
       description: The security realm the user belongs to
-    ElevatedPermissions:
-      type: object
-      required:
-      - enabled
-      properties:
-        enabled:
-          type: boolean
-          description: True if the user has elevated permissions
-        expires_at:
-          type: string
-          format: date-time
-          description: The time at which the user's elevated permissions expire
-      description: A user's elevated permissions status
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
     User:
       type: object
       required:
@@ -439,27 +409,62 @@ components:
           type: boolean
           description: True if the user is a built-in read-only user
       description: An API user
-    UserList:
+    BasicFailedReplyElement:
       type: object
       required:
-      - users
+      - code
+      - message
       properties:
-        users:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: A list of users
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
-            $ref: '#/components/schemas/User'
-      description: A collection of users
-    BasicFailedReply:
+            type: string
+    ElevatedPermissions:
       type: object
       required:
-      - errors
+      - enabled
       properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
+        enabled:
+          type: boolean
+          description: True if the user has elevated permissions
+        expires_at:
+          type: string
+          format: date-time
+          description: The time at which the user's elevated permissions expire
+      description: A user's elevated permissions status
+    UserMetadata:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: The Id of the user that created this user
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was created
+        updated_by:
+          type: string
+          description: The Id of the user that last updated this user
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the user was last updated
+        first_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user first logged in
+        last_login_at:
+          type: string
+          format: date-time
+          description: The date and time when the user last logged in
+      description: Metadata for a user
     EmptyResponse:
       type: object
     UserSecurity:
@@ -488,32 +493,27 @@ components:
           description: The user's security realm
           $ref: '#/components/schemas/UserSecurityRealm'
       description: A user's security information
-    UserMetadata:
+    UserList:
       type: object
+      required:
+      - users
       properties:
-        created_by:
-          type: string
-          description: The Id of the user that created this user
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was created
-        updated_by:
-          type: string
-          description: The Id of the user that last updated this user
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the user was last updated
-        first_login_at:
-          type: string
-          format: date-time
-          description: The date and time when the user first logged in
-        last_login_at:
-          type: string
-          format: date-time
-          description: The date and time when the user last logged in
-      description: Metadata for a user
+        users:
+          type: array
+          description: A list of users
+          items:
+            $ref: '#/components/schemas/User'
+      description: A collection of users
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
   securitySchemes:
     apiKey:
       type: apiKey

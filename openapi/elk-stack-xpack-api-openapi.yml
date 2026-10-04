@@ -257,132 +257,401 @@ paths:
         name: product_name
 components:
   schemas:
-    xpack.usage.MlInferenceDeployments:
+    license._types.LicenseType:
+      type: string
+      enum:
+      - missing
+      - trial
+      - basic
+      - standard
+      - dev
+      - silver
+      - gold
+      - platinum
+      - enterprise
+    xpack.usage.Ilm:
       type: object
       properties:
-        count:
+        policy_count:
           type: number
-        inference_counts:
-          allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-        model_sizes_bytes:
-          allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-        time_ms:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceDeploymentsTimeMs'
+        policy_stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/xpack.usage.IlmPolicyStatistics'
       required:
-      - count
-      - inference_counts
-      - model_sizes_bytes
-      - time_ms
-    xpack.usage.SearchableSnapshots:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          indices_count:
-            type: number
-          full_copy_indices_count:
-            type: number
-          shared_cache_indices_count:
-            type: number
-        required:
-        - indices_count
-    xpack.usage.MlInference:
+      - policy_count
+      - policy_stats
+    _types.Field:
+      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
+      type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    xpack.usage.MlInferenceTrainedModels:
       type: object
       properties:
-        ingest_processors:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessor'
-        trained_models:
+        estimated_operations:
           allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceTrainedModels'
-        deployments:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+        estimated_heap_memory_usage_bytes:
+          allOf:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+        count:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceTrainedModelsCount'
+        _all:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlCounter'
+        model_size_bytes:
           x-state: Generally available; Added in 8.0.0
           allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceDeployments'
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
       required:
-      - ingest_processors
-      - trained_models
-    slm._types.Statistics:
-      type: object
-      properties:
-        retention_deletion_time:
-          allOf:
-          - $ref: '#/components/schemas/_types.Duration'
-        retention_deletion_time_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-        retention_failed:
-          type: number
-        retention_runs:
-          type: number
-        retention_timed_out:
-          type: number
-        policy:
-          allOf:
-          - $ref: '#/components/schemas/_types.Id'
-        total_snapshots_deleted:
-          type: number
-        total_snapshot_deletion_failures:
-          type: number
-        total_snapshots_failed:
-          type: number
-        total_snapshots_taken:
-          type: number
-    _types.ulong:
-      type: number
-    xpack.usage.DataStreams:
+      - _all
+    xpack.usage.DataStreamLifecycleUsage:
+      description: 'Usage statistics for data stream lifecycle (DLM), reported by `_xpack/usage` under `data_lifecycle`.
+
+        Besides `available` and `enabled`, all the following statistics are only present when the feature is enabled.'
       allOf:
       - $ref: '#/components/schemas/xpack.usage.Base'
       - type: object
         properties:
-          data_streams:
+          count:
+            description: The number of data streams that have a lifecycle configured.
             type: number
+          default_rollover_used:
+            description: Whether the default rollover configuration is used by at least one data stream.
+            type: boolean
+          data_retention:
+            description: Statistics about the explicitly configured data retention across data streams.
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleRetentionStats'
+          effective_retention:
+            description: Statistics about the effective retention (configured or derived from global retention) across data streams.
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleEffectiveRetentionStats'
+          frozen_after:
+            description: Statistics about the configured `frozen_after` (searchable snapshot) tier threshold across data streams.
+            x-state: Generally available; Added in 9.5.0
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleRetentionStats'
+          global_retention:
+            description: Statistics about the cluster's global default and maximum retention settings.
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleGlobalRetention'
+    xpack.usage.AnalyticsStatistics:
+      type: object
+      properties:
+        boxplot_usage:
+          type: number
+        cumulative_cardinality_usage:
+          type: number
+        string_stats_usage:
+          type: number
+        top_metrics_usage:
+          type: number
+        t_test_usage:
+          type: number
+        moving_percentiles_usage:
+          type: number
+        normalize_usage:
+          type: number
+        rate_usage:
+          type: number
+        multi_terms_usage:
+          type: number
+      required:
+      - boxplot_usage
+      - cumulative_cardinality_usage
+      - string_stats_usage
+      - top_metrics_usage
+      - t_test_usage
+      - moving_percentiles_usage
+      - normalize_usage
+      - rate_usage
+    xpack.usage.Logging:
+      description: Usage statistics about logging configuration reported by `_xpack/usage`.
+      type: object
+      properties:
+        querylog:
+          description: Search query log configuration.
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.QueryLoggingConfig'
+        esql:
+          description: ES|QL query log configuration.
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.EsqlLoggingConfig'
+      required:
+      - querylog
+      - esql
+    _types.uint:
+      type: number
+    xpack.usage.Archive:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
           indices_count:
             type: number
         required:
-        - data_streams
         - indices_count
-    xpack.usage.DataStreamLifecycleEffectiveRetentionStats:
+    xpack.usage.Audit:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.FeatureToggle'
+      - type: object
+        properties:
+          outputs:
+            type: array
+            items:
+              type: string
+    xpack.usage.DataStreamLifecycleRetentionStats:
       allOf:
       - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleThresholdStats'
       - type: object
         properties:
-          retained_data_streams:
-            description: The number of data streams for which an effective retention applies.
+          configured_data_streams:
+            description: The number of data streams for which this value is configured.
             type: number
         required:
-        - retained_data_streams
-    xpack.info.Feature:
+        - configured_data_streams
+    xpack.usage.FeatureToggle:
       type: object
       properties:
-        available:
-          type: boolean
-        description:
-          type: string
         enabled:
           type: boolean
-        native_code_info:
-          allOf:
-          - $ref: '#/components/schemas/xpack.info.NativeCodeInformation'
       required:
-      - available
       - enabled
-    xpack.usage.EqlFeaturesPipes:
+    xpack.usage.DataStreamLifecycleGlobalRetentionStats:
+      description: The `affected_data_streams` and `retention_millis` fields are only present when this global retention is defined.
       type: object
       properties:
-        pipe_tail:
+        defined:
+          description: Whether this global retention is defined for the cluster.
+          type: boolean
+        affected_data_streams:
+          description: The number of data streams affected by this global retention.
+          type: number
+        retention_millis:
+          description: The global retention period in milliseconds.
+          type: number
+      required:
+      - defined
+    license._types.LicenseStatus:
+      type: string
+      enum:
+      - active
+      - valid
+      - invalid
+      - expired
+    xpack.usage.MlInferenceIngestProcessor:
+      type: object
+      properties:
+        num_docs_processed:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessorCount'
+        pipelines:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlCounter'
+        num_failures:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessorCount'
+        time_ms:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessorCount'
+      required:
+      - num_docs_processed
+      - pipelines
+      - num_failures
+      - time_ms
+    xpack.usage.WatcherActions:
+      type: object
+      properties:
+        actions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/xpack.usage.WatcherActionTotals'
+      required:
+      - actions
+    xpack.usage.IpFilter:
+      type: object
+      properties:
+        http:
+          type: boolean
+        transport:
+          type: boolean
+      required:
+      - http
+      - transport
+    xpack.usage.Flattened:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          field_count:
+            type: number
+        required:
+        - field_count
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
+    xpack.usage.WatcherWatch:
+      type: object
+      properties:
+        input:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/xpack.usage.Counter'
+        condition:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/xpack.usage.Counter'
+        action:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/xpack.usage.Counter'
+        trigger:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.WatcherWatchTrigger'
+      required:
+      - input
+      - trigger
+    xpack.usage.HealthStatistics:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          invocations:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.Invocations'
+        required:
+        - invocations
+    xpack.usage.VectorDbDocument:
+      description: Usage statistics for indices using the `vectordb_document` index mode.
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          indices_count:
+            description: The number of indices using the `vectordb_document` index mode.
+            type: number
+          num_docs:
+            description: The total number of documents held across all `vectordb_document` indices.
+            type: number
+        required:
+        - indices_count
+        - num_docs
+    _types.Id:
+      type: string
+    xpack.usage.Vector:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          dense_vector_dims_avg_count:
+            type: number
+          dense_vector_fields_count:
+            type: number
+          sparse_vector_fields_count:
+            type: number
+        required:
+        - dense_vector_dims_avg_count
+        - dense_vector_fields_count
+    xpack.info.BuildInformation:
+      type: object
+      properties:
+        date:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        hash:
+          type: string
+      required:
+      - date
+      - hash
+    xpack.usage.EqlFeaturesJoin:
+      type: object
+      properties:
+        join_queries_two:
           allOf:
           - $ref: '#/components/schemas/_types.uint'
-        pipe_head:
+        join_queries_three:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_until:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_queries_five_or_more:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_queries_four:
           allOf:
           - $ref: '#/components/schemas/_types.uint'
       required:
-      - pipe_tail
-      - pipe_head
+      - join_queries_two
+      - join_queries_three
+      - join_until
+      - join_queries_five_or_more
+      - join_queries_four
+    xpack.usage.WatcherActionTotals:
+      type: object
+      properties:
+        total:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        total_time_in_ms:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+      required:
+      - total
+      - total_time_in_ms
+    xpack.usage.Watcher:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          execution:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.WatcherActions'
+          watch:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.WatcherWatch'
+          count:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.Counter'
+        required:
+        - execution
+        - watch
+        - count
+    xpack.usage.Monitoring:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          collection_enabled:
+            type: boolean
+          enabled_exporters:
+            type: object
+            additionalProperties:
+              type: number
+        required:
+        - collection_enabled
+        - enabled_exporters
     xpack.usage.GpuNodeStats:
       description: Per-node GPU statistics for vector indexing.
       type: object
@@ -404,16 +673,614 @@ components:
       - memory_in_bytes
       - enabled
       - index_build_count
-    xpack.usage.Base:
+    xpack.usage.MlCounter:
+      type: object
+      properties:
+        count:
+          type: number
+      required:
+      - count
+    xpack.usage.SecurityRolesDls:
+      type: object
+      properties:
+        bit_set_cache:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.SecurityRolesDlsBitSetCache'
+      required:
+      - bit_set_cache
+    xpack.usage.EqlFeaturesSequences:
+      type: object
+      properties:
+        sequence_queries_three:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        sequence_queries_four:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        sequence_queries_two:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        sequence_until:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        sequence_queries_five_or_more:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        sequence_maxspan:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+      required:
+      - sequence_queries_three
+      - sequence_queries_four
+      - sequence_queries_two
+      - sequence_until
+      - sequence_queries_five_or_more
+      - sequence_maxspan
+    xpack.usage.Counter:
+      type: object
+      properties:
+        active:
+          type: number
+        total:
+          type: number
+      required:
+      - active
+      - total
+    xpack.usage.MachineLearning:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          datafeeds:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/xpack.usage.Datafeed'
+          jobs:
+            description: Job usage statistics. The `_all` entry is always present and gathers statistics for all jobs.
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/xpack.usage.JobUsage'
+          node_count:
+            type: number
+          data_frame_analytics_jobs:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobs'
+          inference:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.MlInference'
+        required:
+        - datafeeds
+        - jobs
+        - node_count
+        - data_frame_analytics_jobs
+        - inference
+    xpack.usage.RoleMapping:
+      type: object
+      properties:
+        enabled:
+          type: number
+        size:
+          type: number
+      required:
+      - enabled
+      - size
+    xpack.usage.MlInferenceDeployments:
+      type: object
+      properties:
+        count:
+          type: number
+        inference_counts:
+          allOf:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+        model_sizes_bytes:
+          allOf:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+        time_ms:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceDeploymentsTimeMs'
+      required:
+      - count
+      - inference_counts
+      - model_sizes_bytes
+      - time_ms
+    xpack.usage.MlInference:
+      type: object
+      properties:
+        ingest_processors:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessor'
+        trained_models:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceTrainedModels'
+        deployments:
+          x-state: Generally available; Added in 8.0.0
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlInferenceDeployments'
+      required:
+      - ingest_processors
+      - trained_models
+    xpack.usage.DataStreamLifecycleGlobalRetention:
+      type: object
+      properties:
+        default:
+          description: Statistics about the cluster's default global retention.
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleGlobalRetentionStats'
+        max:
+          description: Statistics about the cluster's maximum global retention.
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleGlobalRetentionStats'
+      required:
+      - default
+      - max
+    xpack.info.XPackCategory:
+      type: string
+      enum:
+      - build
+      - features
+      - license
+    xpack.usage.Analytics:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          stats:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.AnalyticsStatistics'
+        required:
+        - stats
+    xpack.info.NativeCodeInformation:
+      type: object
+      properties:
+        build_hash:
+          type: string
+        version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionString'
+      required:
+      - build_hash
+      - version
+    xpack.usage.MlInferenceTrainedModelsCount:
+      type: object
+      properties:
+        total:
+          type: number
+        prepackaged:
+          type: number
+        other:
+          type: number
+        pass_through:
+          type: number
+        regression:
+          type: number
+        classification:
+          type: number
+        ner:
+          type: number
+        text_embedding:
+          type: number
+      required:
+      - total
+      - prepackaged
+      - other
+    xpack.usage.DataStreamLifecycleEffectiveRetentionStats:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleThresholdStats'
+      - type: object
+        properties:
+          retained_data_streams:
+            description: The number of data streams for which an effective retention applies.
+            type: number
+        required:
+        - retained_data_streams
+    xpack.usage.MlDataFrameAnalyticsJobsAnalysis:
+      type: object
+      properties:
+        classification:
+          type: number
+        outlier_detection:
+          type: number
+        regression:
+          type: number
+    xpack.info.Feature:
       type: object
       properties:
         available:
           type: boolean
+        description:
+          type: string
         enabled:
           type: boolean
+        native_code_info:
+          allOf:
+          - $ref: '#/components/schemas/xpack.info.NativeCodeInformation'
       required:
       - available
       - enabled
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    xpack.usage.Realm:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          name:
+            type: array
+            items:
+              type: string
+          order:
+            type: array
+            items:
+              type: number
+          size:
+            type: array
+            items:
+              type: number
+          cache:
+            type: array
+            items:
+              $ref: '#/components/schemas/xpack.usage.RealmCache'
+          has_authorization_realms:
+            type: array
+            items:
+              type: boolean
+          has_default_username_pattern:
+            type: array
+            items:
+              type: boolean
+          has_truststore:
+            type: array
+            items:
+              type: boolean
+          is_authentication_delegated:
+            type: array
+            items:
+              type: boolean
+    xpack.usage.GpuVectorIndexing:
+      description: GPU vector indexing usage statistics.
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          index_build_count:
+            description: Total GPU index builds across the cluster.
+            type: number
+          nodes_with_gpu:
+            description: Count of data nodes with GPU support.
+            type: number
+          nodes:
+            description: Per-node GPU details including type, memory, enabled status, and build count.
+            type: array
+            items:
+              $ref: '#/components/schemas/xpack.usage.GpuNodeStats'
+        required:
+        - index_build_count
+        - nodes_with_gpu
+        - nodes
+    xpack.usage.SecurityRolesFile:
+      type: object
+      properties:
+        dls:
+          type: boolean
+        fls:
+          type: boolean
+        size:
+          type: number
+      required:
+      - dls
+      - fls
+      - size
+    xpack.usage.Sql:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          features:
+            type: object
+            additionalProperties:
+              type: number
+          queries:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/xpack.usage.Query'
+        required:
+        - features
+        - queries
+    xpack.usage.EqlFeaturesKeys:
+      type: object
+      properties:
+        join_keys_two:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_keys_one:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_keys_three:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_keys_five_or_more:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        join_keys_four:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+      required:
+      - join_keys_two
+      - join_keys_one
+      - join_keys_three
+      - join_keys_five_or_more
+      - join_keys_four
+    xpack.usage.EsqlLoggingConfig:
+      type: object
+      properties:
+        enabled:
+          description: Whether ES|QL query logging is enabled.
+          type: boolean
+        user:
+          description: Whether user information is included in the ES|QL query log.
+          type: boolean
+        thresholds:
+          description: The configured logging thresholds, keyed by threshold name, if any.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/_types.Duration'
+      required:
+      - enabled
+      - user
+    xpack.usage.MlDataFrameAnalyticsJobs:
+      type: object
+      properties:
+        memory_usage:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsMemory'
+        _all:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsCount'
+        analysis_counts:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsAnalysis'
+        stopped:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsCount'
+      required:
+      - _all
+    xpack.usage.Query:
+      type: object
+      properties:
+        count:
+          type: number
+        failed:
+          type: number
+        paging:
+          type: number
+        total:
+          type: number
+    xpack.usage.RuntimeFieldTypes:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          field_types:
+            type: array
+            items:
+              $ref: '#/components/schemas/xpack.usage.RuntimeFieldsType'
+        required:
+        - field_types
+    xpack.usage.SecurityRolesNative:
+      type: object
+      properties:
+        dls:
+          type: boolean
+        fls:
+          type: boolean
+        size:
+          type: number
+      required:
+      - dls
+      - fls
+      - size
+    xpack.usage.EqlFeatures:
+      type: object
+      properties:
+        join:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        joins:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesJoin'
+        keys:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesKeys'
+        event:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        pipes:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesPipes'
+        sequence:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        sequences:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesSequences'
+      required:
+      - join
+      - joins
+      - keys
+      - event
+      - pipes
+      - sequence
+      - sequences
+    xpack.usage.Phase:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+        min_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+      required:
+      - actions
+      - min_age
+    xpack.info.MinimalLicenseInformation:
+      type: object
+      properties:
+        expiry_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        mode:
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseType'
+        status:
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseStatus'
+        type:
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseType'
+        uid:
+          type: string
+      required:
+      - expiry_date_in_millis
+      - mode
+      - status
+      - type
+      - uid
+    xpack.usage.MlInferenceIngestProcessorCount:
+      type: object
+      properties:
+        max:
+          type: number
+        sum:
+          type: number
+        min:
+          type: number
+      required:
+      - max
+      - sum
+      - min
+    xpack.usage.MlDataFrameAnalyticsJobsMemory:
+      type: object
+      properties:
+        peak_usage_bytes:
+          allOf:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+      required:
+      - peak_usage_bytes
+    xpack.usage.SecurityRoles:
+      type: object
+      properties:
+        native:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.SecurityRolesNative'
+        dls:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.SecurityRolesDls'
+        file:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.SecurityRolesFile'
+      required:
+      - native
+      - dls
+      - file
+    xpack.usage.JobUsage:
+      type: object
+      properties:
+        count:
+          type: number
+        created_by:
+          type: object
+          additionalProperties:
+            type: number
+        detectors:
+          allOf:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+        forecasts:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.MlJobForecasts'
+        model_size:
+          allOf:
+          - $ref: '#/components/schemas/ml._types.JobStatistics'
+      required:
+      - count
+      - created_by
+      - detectors
+      - forecasts
+      - model_size
+    xpack.usage.SecurityRolesDlsBitSetCache:
+      type: object
+      properties:
+        count:
+          description: Number of entries in the cache.
+          type: number
+        memory:
+          description: Human-readable amount of memory taken up by the cache.
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        memory_in_bytes:
+          description: Memory taken up by the cache in bytes.
+          allOf:
+          - $ref: '#/components/schemas/_types.ulong'
+        hits:
+          description: Total number of cache hits.
+          x-state: Generally available; Added in 9.2.0
+          type: number
+        misses:
+          description: Total number of cache misses.
+          x-state: Generally available; Added in 9.2.0
+          type: number
+        evictions:
+          description: Total number of cache evictions.
+          x-state: Generally available; Added in 9.2.0
+          type: number
+        hits_time_in_millis:
+          description: Total combined time spent in cache for hits in milliseconds.
+          x-state: Generally available; Added in 9.2.0
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        misses_time_in_millis:
+          description: Total combined time spent in cache for misses in milliseconds.
+          x-state: Generally available; Added in 9.2.0
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+      required:
+      - count
+      - memory_in_bytes
+      - hits
+      - misses
+      - evictions
+      - hits_time_in_millis
+      - misses_time_in_millis
+    xpack.usage.Eql:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          features:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.EqlFeatures'
+          queries:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/xpack.usage.Query'
+        required:
+        - features
+        - queries
+    xpack.usage.Ssl:
+      type: object
+      properties:
+        http:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.FeatureToggle'
+        transport:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.FeatureToggle'
+      required:
+      - http
+      - transport
     xpack.usage.Security:
       allOf:
       - $ref: '#/components/schemas/xpack.usage.Base'
@@ -469,62 +1336,62 @@ components:
         - ssl
         - token_service
         - operator_privileges
-    xpack.info.MinimalLicenseInformation:
-      type: object
-      properties:
-        expiry_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        mode:
-          allOf:
-          - $ref: '#/components/schemas/license._types.LicenseType'
-        status:
-          allOf:
-          - $ref: '#/components/schemas/license._types.LicenseStatus'
-        type:
-          allOf:
-          - $ref: '#/components/schemas/license._types.LicenseType'
-        uid:
-          type: string
-      required:
-      - expiry_date_in_millis
-      - mode
-      - status
-      - type
-      - uid
-    _types.ByteSize:
-      oneOf:
-      - type: number
-      - type: string
-    xpack.usage.Archive:
+    xpack.usage.SearchableSnapshots:
       allOf:
       - $ref: '#/components/schemas/xpack.usage.Base'
       - type: object
         properties:
           indices_count:
             type: number
+          full_copy_indices_count:
+            type: number
+          shared_cache_indices_count:
+            type: number
         required:
         - indices_count
-    xpack.usage.IpFilter:
+    xpack.usage.Datafeed:
       type: object
       properties:
-        http:
-          type: boolean
-        transport:
-          type: boolean
+        count:
+          type: number
       required:
-      - http
-      - transport
-    xpack.usage.FeatureToggle:
+      - count
+    xpack.usage.DataTiers:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          data_warm:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
+          data_frozen:
+            x-state: Generally available; Added in 7.13.0
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
+          data_cold:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
+          data_content:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
+          data_hot:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
+        required:
+        - data_warm
+        - data_cold
+        - data_content
+        - data_hot
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    xpack.usage.Invocations:
       type: object
       properties:
-        enabled:
-          type: boolean
+        total:
+          type: number
       required:
-      - enabled
-    _types.Field:
-      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
-      type: string
+      - total
     xpack.usage.QueryLoggingConfig:
       type: object
       properties:
@@ -545,79 +1412,20 @@ components:
       - enabled
       - user
       - system
-    xpack.usage.Query:
-      type: object
-      properties:
-        count:
-          type: number
-        failed:
-          type: number
-        paging:
-          type: number
-        total:
-          type: number
-    xpack.usage.MlInferenceIngestProcessor:
-      type: object
-      properties:
-        num_docs_processed:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessorCount'
-        pipelines:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlCounter'
-        num_failures:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessorCount'
-        time_ms:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceIngestProcessorCount'
-      required:
-      - num_docs_processed
-      - pipelines
-      - num_failures
-      - time_ms
-    xpack.usage.Analytics:
+    xpack.usage.WatcherWatchTriggerSchedule:
       allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
+      - $ref: '#/components/schemas/xpack.usage.Counter'
       - type: object
         properties:
-          stats:
+          cron:
             allOf:
-            - $ref: '#/components/schemas/xpack.usage.AnalyticsStatistics'
+            - $ref: '#/components/schemas/xpack.usage.Counter'
+          _all:
+            allOf:
+            - $ref: '#/components/schemas/xpack.usage.Counter'
         required:
-        - stats
-    xpack.usage.MlInferenceDeploymentsTimeMs:
-      type: object
-      properties:
-        avg:
-          type: number
-      required:
-      - avg
-    xpack.usage.WatcherActions:
-      type: object
-      properties:
-        actions:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/xpack.usage.WatcherActionTotals'
-      required:
-      - actions
-    xpack.usage.Sql:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          features:
-            type: object
-            additionalProperties:
-              type: number
-          queries:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/xpack.usage.Query'
-        required:
-        - features
-        - queries
+        - cron
+        - _all
     xpack.usage.MlJobForecasts:
       type: object
       properties:
@@ -628,144 +1436,41 @@ components:
       required:
       - total
       - forecasted_jobs
-    xpack.info.XPackCategory:
-      type: string
-      enum:
-      - build
-      - features
-      - license
     _types.EpochTimeUnitMillis:
       allOf:
       - $ref: '#/components/schemas/_types.UnitMillis'
-    xpack.info.NativeCodeInformation:
-      type: object
-      properties:
-        build_hash:
-          type: string
-        version:
-          allOf:
-          - $ref: '#/components/schemas/_types.VersionString'
-      required:
-      - build_hash
-      - version
-    xpack.usage.MlDataFrameAnalyticsJobsMemory:
-      type: object
-      properties:
-        peak_usage_bytes:
-          allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-      required:
-      - peak_usage_bytes
-    xpack.usage.RoleMapping:
-      type: object
-      properties:
-        enabled:
-          type: number
-        size:
-          type: number
-      required:
-      - enabled
-      - size
-    xpack.usage.DataTierPhaseStatistics:
-      type: object
-      properties:
-        node_count:
-          type: number
-        index_count:
-          type: number
-        total_shard_count:
-          type: number
-        primary_shard_count:
-          type: number
-        doc_count:
-          type: number
-        total_size_bytes:
-          type: number
-        primary_size_bytes:
-          type: number
-        primary_shard_size_avg_bytes:
-          type: number
-        primary_shard_size_median_bytes:
-          type: number
-        primary_shard_size_mad_bytes:
-          type: number
-      required:
-      - node_count
-      - index_count
-      - total_shard_count
-      - primary_shard_count
-      - doc_count
-      - total_size_bytes
-      - primary_size_bytes
-      - primary_shard_size_avg_bytes
-      - primary_shard_size_median_bytes
-      - primary_shard_size_mad_bytes
-    xpack.usage.DataStreamLifecycleThresholdStats:
-      description: The `minimum_millis`, `maximum_millis`, and `average_millis` fields are only present when at least one data stream contributes to these statistics.
-      type: object
-      properties:
-        minimum_millis:
-          description: The smallest configured value in milliseconds.
-          type: number
-        maximum_millis:
-          description: The largest configured value in milliseconds.
-          type: number
-        average_millis:
-          description: The average configured value in milliseconds.
-          type: number
-    xpack.usage.Ccr:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          auto_follow_patterns_count:
-            type: number
-          follower_indices_count:
-            type: number
-        required:
-        - auto_follow_patterns_count
-        - follower_indices_count
-    xpack.usage.EsqlLoggingConfig:
-      type: object
-      properties:
-        enabled:
-          description: Whether ES|QL query logging is enabled.
-          type: boolean
-        user:
-          description: Whether user information is included in the ES|QL query log.
-          type: boolean
-        thresholds:
-          description: The configured logging thresholds, keyed by threshold name, if any.
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/_types.Duration'
-      required:
-      - enabled
-      - user
-    _types.VersionString:
-      type: string
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
+    _types.ByteSize:
       oneOf:
+      - type: number
       - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-    xpack.usage.SecurityRolesNative:
+    xpack.usage.RealmCache:
       type: object
       properties:
-        dls:
-          type: boolean
-        fls:
-          type: boolean
         size:
           type: number
       required:
-      - dls
-      - fls
       - size
+    xpack.usage.Base:
+      type: object
+      properties:
+        available:
+          type: boolean
+        enabled:
+          type: boolean
+      required:
+      - available
+      - enabled
+    xpack.usage.IlmPolicyStatistics:
+      type: object
+      properties:
+        indices_managed:
+          type: number
+        phases:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.Phases'
+      required:
+      - indices_managed
+      - phases
     xpack.usage.RuntimeFieldsType:
       type: object
       properties:
@@ -815,57 +1520,102 @@ components:
       - shadowed_count
       - source_max
       - source_total
-    xpack.usage.SecurityRoles:
+    xpack.usage.DataStreams:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          data_streams:
+            type: number
+          indices_count:
+            type: number
+        required:
+        - data_streams
+        - indices_count
+    xpack.usage.WatcherWatchTrigger:
       type: object
       properties:
-        native:
+        schedule:
           allOf:
-          - $ref: '#/components/schemas/xpack.usage.SecurityRolesNative'
-        dls:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.SecurityRolesDls'
-        file:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.SecurityRolesFile'
-      required:
-      - native
-      - dls
-      - file
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
-    xpack.usage.DataStreamLifecycleGlobalRetentionStats:
-      description: The `affected_data_streams` and `retention_millis` fields are only present when this global retention is defined.
-      type: object
-      properties:
-        defined:
-          description: Whether this global retention is defined for the cluster.
-          type: boolean
-        affected_data_streams:
-          description: The number of data streams affected by this global retention.
-          type: number
-        retention_millis:
-          description: The global retention period in milliseconds.
-          type: number
-      required:
-      - defined
-    xpack.usage.MlDataFrameAnalyticsJobs:
-      type: object
-      properties:
-        memory_usage:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsMemory'
+          - $ref: '#/components/schemas/xpack.usage.WatcherWatchTriggerSchedule'
         _all:
           allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsCount'
-        analysis_counts:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsAnalysis'
-        stopped:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobsCount'
+          - $ref: '#/components/schemas/xpack.usage.Counter'
       required:
       - _all
+    xpack.usage.Ccr:
+      allOf:
+      - $ref: '#/components/schemas/xpack.usage.Base'
+      - type: object
+        properties:
+          auto_follow_patterns_count:
+            type: number
+          follower_indices_count:
+            type: number
+        required:
+        - auto_follow_patterns_count
+        - follower_indices_count
+    xpack.usage.DataTierPhaseStatistics:
+      type: object
+      properties:
+        node_count:
+          type: number
+        index_count:
+          type: number
+        total_shard_count:
+          type: number
+        primary_shard_count:
+          type: number
+        doc_count:
+          type: number
+        total_size_bytes:
+          type: number
+        primary_size_bytes:
+          type: number
+        primary_shard_size_avg_bytes:
+          type: number
+        primary_shard_size_median_bytes:
+          type: number
+        primary_shard_size_mad_bytes:
+          type: number
+      required:
+      - node_count
+      - index_count
+      - total_shard_count
+      - primary_shard_count
+      - doc_count
+      - total_size_bytes
+      - primary_size_bytes
+      - primary_shard_size_avg_bytes
+      - primary_shard_size_median_bytes
+      - primary_shard_size_mad_bytes
+    xpack.usage.MlInferenceDeploymentsTimeMs:
+      type: object
+      properties:
+        avg:
+          type: number
+      required:
+      - avg
+    xpack.usage.Phases:
+      type: object
+      properties:
+        cold:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.Phase'
+        delete:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.Phase'
+        frozen:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.Phase'
+        hot:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.Phase'
+        warm:
+          allOf:
+          - $ref: '#/components/schemas/xpack.usage.Phase'
+    _types.VersionString:
+      type: string
     xpack.usage.MlDataFrameAnalyticsJobsCount:
       type: object
       properties:
@@ -873,287 +1623,28 @@ components:
           type: number
       required:
       - count
-    xpack.usage.EqlFeaturesJoin:
-      type: object
-      properties:
-        join_queries_two:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_queries_three:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_until:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_queries_five_or_more:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_queries_four:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-      required:
-      - join_queries_two
-      - join_queries_three
-      - join_until
-      - join_queries_five_or_more
-      - join_queries_four
-    xpack.usage.AnalyticsStatistics:
-      type: object
-      properties:
-        boxplot_usage:
-          type: number
-        cumulative_cardinality_usage:
-          type: number
-        string_stats_usage:
-          type: number
-        top_metrics_usage:
-          type: number
-        t_test_usage:
-          type: number
-        moving_percentiles_usage:
-          type: number
-        normalize_usage:
-          type: number
-        rate_usage:
-          type: number
-        multi_terms_usage:
-          type: number
-      required:
-      - boxplot_usage
-      - cumulative_cardinality_usage
-      - string_stats_usage
-      - top_metrics_usage
-      - t_test_usage
-      - moving_percentiles_usage
-      - normalize_usage
-      - rate_usage
-    xpack.usage.JobUsage:
-      type: object
-      properties:
-        count:
-          type: number
-        created_by:
-          type: object
-          additionalProperties:
-            type: number
-        detectors:
-          allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-        forecasts:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlJobForecasts'
-        model_size:
-          allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-      required:
-      - count
-      - created_by
-      - detectors
-      - forecasts
-      - model_size
-    xpack.usage.Flattened:
+    xpack.usage.Slm:
       allOf:
       - $ref: '#/components/schemas/xpack.usage.Base'
       - type: object
         properties:
-          field_count:
+          policy_count:
             type: number
-        required:
-        - field_count
-    xpack.usage.MlInferenceIngestProcessorCount:
-      type: object
-      properties:
-        max:
-          type: number
-        sum:
-          type: number
-        min:
-          type: number
-      required:
-      - max
-      - sum
-      - min
-    xpack.usage.RuntimeFieldTypes:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          field_types:
-            type: array
-            items:
-              $ref: '#/components/schemas/xpack.usage.RuntimeFieldsType'
-        required:
-        - field_types
-    xpack.usage.SecurityRolesDlsBitSetCache:
-      type: object
-      properties:
-        count:
-          description: Number of entries in the cache.
-          type: number
-        memory:
-          description: Human-readable amount of memory taken up by the cache.
-          allOf:
-          - $ref: '#/components/schemas/_types.ByteSize'
-        memory_in_bytes:
-          description: Memory taken up by the cache in bytes.
-          allOf:
-          - $ref: '#/components/schemas/_types.ulong'
-        hits:
-          description: Total number of cache hits.
-          x-state: Generally available; Added in 9.2.0
-          type: number
-        misses:
-          description: Total number of cache misses.
-          x-state: Generally available; Added in 9.2.0
-          type: number
-        evictions:
-          description: Total number of cache evictions.
-          x-state: Generally available; Added in 9.2.0
-          type: number
-        hits_time_in_millis:
-          description: Total combined time spent in cache for hits in milliseconds.
-          x-state: Generally available; Added in 9.2.0
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-        misses_time_in_millis:
-          description: Total combined time spent in cache for misses in milliseconds.
-          x-state: Generally available; Added in 9.2.0
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-      required:
-      - count
-      - memory_in_bytes
-      - hits
-      - misses
-      - evictions
-      - hits_time_in_millis
-      - misses_time_in_millis
-    xpack.usage.WatcherWatchTriggerSchedule:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Counter'
-      - type: object
-        properties:
-          cron:
+          policy_stats:
             allOf:
-            - $ref: '#/components/schemas/xpack.usage.Counter'
-          _all:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.Counter'
-        required:
-        - cron
-        - _all
-    _types.DurationValueUnitMillis:
-      allOf:
-      - $ref: '#/components/schemas/_types.UnitMillis'
-    xpack.usage.SecurityRolesDls:
+            - $ref: '#/components/schemas/slm._types.Statistics'
+    xpack.usage.DataStreamLifecycleThresholdStats:
+      description: The `minimum_millis`, `maximum_millis`, and `average_millis` fields are only present when at least one data stream contributes to these statistics.
       type: object
       properties:
-        bit_set_cache:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.SecurityRolesDlsBitSetCache'
-      required:
-      - bit_set_cache
-    xpack.usage.MlInferenceTrainedModelsCount:
-      type: object
-      properties:
-        total:
+        minimum_millis:
+          description: The smallest configured value in milliseconds.
           type: number
-        prepackaged:
+        maximum_millis:
+          description: The largest configured value in milliseconds.
           type: number
-        other:
-          type: number
-        pass_through:
-          type: number
-        regression:
-          type: number
-        classification:
-          type: number
-        ner:
-          type: number
-        text_embedding:
-          type: number
-      required:
-      - total
-      - prepackaged
-      - other
-    xpack.usage.RealmCache:
-      type: object
-      properties:
-        size:
-          type: number
-      required:
-      - size
-    xpack.usage.VectorDbDocument:
-      description: Usage statistics for indices using the `vectordb_document` index mode.
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          indices_count:
-            description: The number of indices using the `vectordb_document` index mode.
-            type: number
-          num_docs:
-            description: The total number of documents held across all `vectordb_document` indices.
-            type: number
-        required:
-        - indices_count
-        - num_docs
-    license._types.LicenseStatus:
-      type: string
-      enum:
-      - active
-      - valid
-      - invalid
-      - expired
-    xpack.usage.SecurityRolesFile:
-      type: object
-      properties:
-        dls:
-          type: boolean
-        fls:
-          type: boolean
-        size:
-          type: number
-      required:
-      - dls
-      - fls
-      - size
-    xpack.usage.MachineLearning:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          datafeeds:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/xpack.usage.Datafeed'
-          jobs:
-            description: Job usage statistics. The `_all` entry is always present and gathers statistics for all jobs.
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/xpack.usage.JobUsage'
-          node_count:
-            type: number
-          data_frame_analytics_jobs:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.MlDataFrameAnalyticsJobs'
-          inference:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.MlInference'
-        required:
-        - datafeeds
-        - jobs
-        - node_count
-        - data_frame_analytics_jobs
-        - inference
-    xpack.usage.MlDataFrameAnalyticsJobsAnalysis:
-      type: object
-      properties:
-        classification:
-          type: number
-        outlier_detection:
-          type: number
-        regression:
+        average_millis:
+          description: The average configured value in milliseconds.
           type: number
     xpack.info.Features:
       type: object
@@ -1275,274 +1766,32 @@ components:
       - voting_only
       - watcher
       - archive
-    xpack.usage.GpuVectorIndexing:
-      description: GPU vector indexing usage statistics.
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          index_build_count:
-            description: Total GPU index builds across the cluster.
-            type: number
-          nodes_with_gpu:
-            description: Count of data nodes with GPU support.
-            type: number
-          nodes:
-            description: Per-node GPU details including type, memory, enabled status, and build count.
-            type: array
-            items:
-              $ref: '#/components/schemas/xpack.usage.GpuNodeStats'
-        required:
-        - index_build_count
-        - nodes_with_gpu
-        - nodes
-    xpack.usage.IlmPolicyStatistics:
+    slm._types.Statistics:
       type: object
       properties:
-        indices_managed:
-          type: number
-        phases:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Phases'
-      required:
-      - indices_managed
-      - phases
-    xpack.usage.DataTiers:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          data_warm:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
-          data_frozen:
-            x-state: Generally available; Added in 7.13.0
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
-          data_cold:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
-          data_content:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
-          data_hot:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataTierPhaseStatistics'
-        required:
-        - data_warm
-        - data_cold
-        - data_content
-        - data_hot
-    xpack.usage.Vector:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          dense_vector_dims_avg_count:
-            type: number
-          dense_vector_fields_count:
-            type: number
-          sparse_vector_fields_count:
-            type: number
-        required:
-        - dense_vector_dims_avg_count
-        - dense_vector_fields_count
-    xpack.info.BuildInformation:
-      type: object
-      properties:
-        date:
-          allOf:
-          - $ref: '#/components/schemas/_types.DateTime'
-        hash:
-          type: string
-      required:
-      - date
-      - hash
-    xpack.usage.DataStreamLifecycleRetentionStats:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleThresholdStats'
-      - type: object
-        properties:
-          configured_data_streams:
-            description: The number of data streams for which this value is configured.
-            type: number
-        required:
-        - configured_data_streams
-    xpack.usage.Ilm:
-      type: object
-      properties:
-        policy_count:
-          type: number
-        policy_stats:
-          type: array
-          items:
-            $ref: '#/components/schemas/xpack.usage.IlmPolicyStatistics'
-      required:
-      - policy_count
-      - policy_stats
-    xpack.usage.Audit:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.FeatureToggle'
-      - type: object
-        properties:
-          outputs:
-            type: array
-            items:
-              type: string
-    xpack.usage.Datafeed:
-      type: object
-      properties:
-        count:
-          type: number
-      required:
-      - count
-    xpack.usage.EqlFeaturesSequences:
-      type: object
-      properties:
-        sequence_queries_three:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        sequence_queries_four:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        sequence_queries_two:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        sequence_until:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        sequence_queries_five_or_more:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        sequence_maxspan:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-      required:
-      - sequence_queries_three
-      - sequence_queries_four
-      - sequence_queries_two
-      - sequence_until
-      - sequence_queries_five_or_more
-      - sequence_maxspan
-    _types.uint:
-      type: number
-    xpack.usage.EqlFeatures:
-      type: object
-      properties:
-        join:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        joins:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesJoin'
-        keys:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesKeys'
-        event:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        pipes:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesPipes'
-        sequence:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        sequences:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.EqlFeaturesSequences'
-      required:
-      - join
-      - joins
-      - keys
-      - event
-      - pipes
-      - sequence
-      - sequences
-    license._types.LicenseType:
-      type: string
-      enum:
-      - missing
-      - trial
-      - basic
-      - standard
-      - dev
-      - silver
-      - gold
-      - platinum
-      - enterprise
-    xpack.usage.DataStreamLifecycleGlobalRetention:
-      type: object
-      properties:
-        default:
-          description: Statistics about the cluster's default global retention.
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleGlobalRetentionStats'
-        max:
-          description: Statistics about the cluster's maximum global retention.
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleGlobalRetentionStats'
-      required:
-      - default
-      - max
-    xpack.usage.Phase:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            type: string
-        min_age:
-          allOf:
-          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-      required:
-      - actions
-      - min_age
-    xpack.usage.Counter:
-      type: object
-      properties:
-        active:
-          type: number
-        total:
-          type: number
-      required:
-      - active
-      - total
-    xpack.usage.EqlFeaturesKeys:
-      type: object
-      properties:
-        join_keys_two:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_keys_one:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_keys_three:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_keys_five_or_more:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-        join_keys_four:
-          allOf:
-          - $ref: '#/components/schemas/_types.uint'
-      required:
-      - join_keys_two
-      - join_keys_one
-      - join_keys_three
-      - join_keys_five_or_more
-      - join_keys_four
-    xpack.usage.WatcherActionTotals:
-      type: object
-      properties:
-        total:
+        retention_deletion_time:
           allOf:
           - $ref: '#/components/schemas/_types.Duration'
-        total_time_in_ms:
+        retention_deletion_time_millis:
           allOf:
           - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
-      required:
-      - total
-      - total_time_in_ms
+        retention_failed:
+          type: number
+        retention_runs:
+          type: number
+        retention_timed_out:
+          type: number
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        total_snapshots_deleted:
+          type: number
+        total_snapshot_deletion_failures:
+          type: number
+        total_snapshots_failed:
+          type: number
+        total_snapshots_taken:
+          type: number
     ml._types.JobStatistics:
       type: object
       properties:
@@ -1559,266 +1808,17 @@ components:
       - max
       - min
       - total
-    xpack.usage.MlInferenceTrainedModels:
+    _types.ulong:
+      type: number
+    xpack.usage.EqlFeaturesPipes:
       type: object
       properties:
-        estimated_operations:
+        pipe_tail:
           allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-        estimated_heap_memory_usage_bytes:
+          - $ref: '#/components/schemas/_types.uint'
+        pipe_head:
           allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
-        count:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlInferenceTrainedModelsCount'
-        _all:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.MlCounter'
-        model_size_bytes:
-          x-state: Generally available; Added in 8.0.0
-          allOf:
-          - $ref: '#/components/schemas/ml._types.JobStatistics'
+          - $ref: '#/components/schemas/_types.uint'
       required:
-      - _all
-    xpack.usage.Monitoring:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          collection_enabled:
-            type: boolean
-          enabled_exporters:
-            type: object
-            additionalProperties:
-              type: number
-        required:
-        - collection_enabled
-        - enabled_exporters
-    xpack.usage.MlCounter:
-      type: object
-      properties:
-        count:
-          type: number
-      required:
-      - count
-    xpack.usage.HealthStatistics:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          invocations:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.Invocations'
-        required:
-        - invocations
-    xpack.usage.Invocations:
-      type: object
-      properties:
-        total:
-          type: number
-      required:
-      - total
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
-    xpack.usage.DataStreamLifecycleUsage:
-      description: 'Usage statistics for data stream lifecycle (DLM), reported by `_xpack/usage` under `data_lifecycle`.
-
-        Besides `available` and `enabled`, all the following statistics are only present when the feature is enabled.'
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          count:
-            description: The number of data streams that have a lifecycle configured.
-            type: number
-          default_rollover_used:
-            description: Whether the default rollover configuration is used by at least one data stream.
-            type: boolean
-          data_retention:
-            description: Statistics about the explicitly configured data retention across data streams.
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleRetentionStats'
-          effective_retention:
-            description: Statistics about the effective retention (configured or derived from global retention) across data streams.
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleEffectiveRetentionStats'
-          frozen_after:
-            description: Statistics about the configured `frozen_after` (searchable snapshot) tier threshold across data streams.
-            x-state: Generally available; Added in 9.5.0
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleRetentionStats'
-          global_retention:
-            description: Statistics about the cluster's global default and maximum retention settings.
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.DataStreamLifecycleGlobalRetention'
-    xpack.usage.Ssl:
-      type: object
-      properties:
-        http:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.FeatureToggle'
-        transport:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.FeatureToggle'
-      required:
-      - http
-      - transport
-    xpack.usage.Slm:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          policy_count:
-            type: number
-          policy_stats:
-            allOf:
-            - $ref: '#/components/schemas/slm._types.Statistics'
-    xpack.usage.Eql:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          features:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.EqlFeatures'
-          queries:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/xpack.usage.Query'
-        required:
-        - features
-        - queries
-    xpack.usage.Phases:
-      type: object
-      properties:
-        cold:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Phase'
-        delete:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Phase'
-        frozen:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Phase'
-        hot:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Phase'
-        warm:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Phase'
-    xpack.usage.Watcher:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          execution:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.WatcherActions'
-          watch:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.WatcherWatch'
-          count:
-            allOf:
-            - $ref: '#/components/schemas/xpack.usage.Counter'
-        required:
-        - execution
-        - watch
-        - count
-    xpack.usage.Realm:
-      allOf:
-      - $ref: '#/components/schemas/xpack.usage.Base'
-      - type: object
-        properties:
-          name:
-            type: array
-            items:
-              type: string
-          order:
-            type: array
-            items:
-              type: number
-          size:
-            type: array
-            items:
-              type: number
-          cache:
-            type: array
-            items:
-              $ref: '#/components/schemas/xpack.usage.RealmCache'
-          has_authorization_realms:
-            type: array
-            items:
-              type: boolean
-          has_default_username_pattern:
-            type: array
-            items:
-              type: boolean
-          has_truststore:
-            type: array
-            items:
-              type: boolean
-          is_authentication_delegated:
-            type: array
-            items:
-              type: boolean
-    _types.Id:
-      type: string
-    xpack.usage.Logging:
-      description: Usage statistics about logging configuration reported by `_xpack/usage`.
-      type: object
-      properties:
-        querylog:
-          description: Search query log configuration.
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.QueryLoggingConfig'
-        esql:
-          description: ES|QL query log configuration.
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.EsqlLoggingConfig'
-      required:
-      - querylog
-      - esql
-    xpack.usage.WatcherWatch:
-      type: object
-      properties:
-        input:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/xpack.usage.Counter'
-        condition:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/xpack.usage.Counter'
-        action:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/xpack.usage.Counter'
-        trigger:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.WatcherWatchTrigger'
-      required:
-      - input
-      - trigger
-    xpack.usage.WatcherWatchTrigger:
-      type: object
-      properties:
-        schedule:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.WatcherWatchTriggerSchedule'
-        _all:
-          allOf:
-          - $ref: '#/components/schemas/xpack.usage.Counter'
-      required:
-      - _all
+      - pipe_tail
+      - pipe_head

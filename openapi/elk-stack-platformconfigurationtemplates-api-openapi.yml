@@ -37,6 +37,34 @@ paths:
         tag: Templates - Deployments - Global
 components:
   schemas:
+    KibanaDeeplink:
+      type: object
+      required:
+      - semver
+      - uri
+      properties:
+        semver:
+          type: string
+          description: Semver condition when to apply the URI.
+        uri:
+          type: string
+          description: URI to which the user should be directed.
+      description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
+    MetadataItem:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The metadata field name
+        value:
+          type: string
+          description: The metadata value
+      description: The key-value pair.
+    EmptyResponse:
+      type: object
     GlobalDeploymentTemplateRegion:
       type: object
       required:
@@ -61,21 +89,6 @@ components:
           items:
             $ref: '#/components/schemas/KibanaDeeplink'
       description: Region-specific details about a template.
-    MetadataItem:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-          description: The metadata field name
-        value:
-          type: string
-          description: The metadata value
-      description: The key-value pair.
-    EmptyResponse:
-      type: object
     GlobalDeploymentTemplateInfo:
       type: object
       required:
@@ -108,19 +121,6 @@ components:
           items:
             $ref: '#/components/schemas/GlobalDeploymentTemplateRegion'
       description: The top-level model for global (regionless) templates.
-    KibanaDeeplink:
-      type: object
-      required:
-      - semver
-      - uri
-      properties:
-        semver:
-          type: string
-          description: Semver condition when to apply the URI.
-        uri:
-          type: string
-          description: URI to which the user should be directed.
-      description: Embedded object that contains information for linking into a specific Kibana page configured via the template.
   securitySchemes:
     apiKey:
       type: apiKey

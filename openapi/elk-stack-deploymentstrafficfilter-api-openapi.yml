@@ -603,6 +603,19 @@ paths:
         tag: Deployments - Traffic Filter - Associations
 components:
   schemas:
+    FilterAssociation:
+      type: object
+      required:
+      - entity_type
+      - id
+      properties:
+        entity_type:
+          type: string
+          description: Type of the traffic filter ruleset association, such as 'deployment', 'cluster'
+        id:
+          type: string
+          description: ID of the entity, such as the deployment ID or Elasticsearch cluster ID.
+      description: The association with a ruleset or user auth token for a deployment, template, or product.
     TrafficFilterRulesetInfo:
       type: object
       required:
@@ -670,6 +683,26 @@ components:
         region:
           type: string
           description: The claimed link id can be used only for traffic filter in the specific region
+    TrafficFilterRulesetResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The new ruleset ID
+      description: The response after you create a new ruleset.
+    TrafficFilterSettings:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: IDs of the traffic filter rulesets
+          items:
+            type: string
+      description: The configuration settings for the traffic filter.
     BasicFailedReplyElement:
       type: object
       required:
@@ -687,96 +720,6 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
-    TrafficFilterRulesets:
-      type: object
-      required:
-      - rulesets
-      properties:
-        rulesets:
-          type: array
-          description: List of traffic filter rules
-          items:
-            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
-      description: The container for a set of traffic filter rulesets.
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    TrafficFilterRulesetResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The new ruleset ID
-      description: The response after you create a new ruleset.
-    TrafficFilterEgressRule:
-      type: object
-      required:
-      - protocol
-      - target
-      properties:
-        target:
-          type: string
-          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
-        ports:
-          type: array
-          description: A list of target ports for an egress rule
-          items:
-            type: integer
-            format: int32
-        protocol:
-          type: string
-          description: The target protocol for an egress rule
-          enum:
-          - all
-          - tcp
-          - udp
-      description: The rule detail for a traffic filter egress rule.
-    FilterAssociation:
-      type: object
-      required:
-      - entity_type
-      - id
-      properties:
-        entity_type:
-          type: string
-          description: Type of the traffic filter ruleset association, such as 'deployment', 'cluster'
-        id:
-          type: string
-          description: ID of the entity, such as the deployment ID or Elasticsearch cluster ID.
-      description: The association with a ruleset or user auth token for a deployment, template, or product.
-    TrafficFilterSettings:
-      type: object
-      required:
-      - rulesets
-      properties:
-        rulesets:
-          type: array
-          description: IDs of the traffic filter rulesets
-          items:
-            type: string
-      description: The configuration settings for the traffic filter.
-    EmptyResponse:
-      type: object
-    TrafficFilterClaimedLinkIds:
-      type: object
-      required:
-      - claimed_link_ids
-      properties:
-        claimed_link_ids:
-          type: array
-          description: List of traffic filter claimed link id
-          items:
-            $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
-      description: The container for a set of traffic filter claimed link id.
     RulesetAssociations:
       type: object
       required:
@@ -793,52 +736,8 @@ components:
           format: int32
           description: Total number of associations. This includes associations the user does not have permission to view.
       description: The configuration settings for the traffic filter.
-    TrafficFilterRule:
+    EmptyResponse:
       type: object
-      properties:
-        id:
-          type: string
-          description: The rule ID
-        remote_cluster_org_id:
-          type: string
-          description: The remote cluster organization ID
-        remote_cluster_id:
-          type: string
-          description: The remote cluster ID
-        description:
-          type: string
-          description: Description of the rule
-        source:
-          type: string
-          description: 'Allowed traffic filter source: IP address, CIDR mask, or VPC endpoint ID'
-        azure_endpoint_name:
-          type: string
-          description: Name of the Azure Private Endpoint to allow connections from
-        azure_endpoint_guid:
-          type: string
-          description: Resource GUID of the Azure Private Endpoint to allow connections from
-        egress_rule:
-          description: An egress traffic filter rule
-          $ref: '#/components/schemas/TrafficFilterEgressRule'
-      description: The container for a traffic filter rule.
-    TrafficFilterClaimedLinkIdRequest:
-      type: object
-      required:
-      - region
-      properties:
-        link_id:
-          type: string
-          description: Link id. A GCP private service connect ID or AWS VPC endpoint ID
-        azure_endpoint_name:
-          type: string
-          description: Name of the Azure Private Endpoint to allow connections from
-        azure_endpoint_guid:
-          type: string
-          description: Resource GUID of the Azure Private Endpoint to allow connections from
-        region:
-          type: string
-          description: The claimed link id can be used only for traffic filter in the specific region
-      description: The specification for traffic filter claimed link id.
     TrafficFilterRulesetRequest:
       type: object
       required:
@@ -869,6 +768,107 @@ components:
           items:
             $ref: '#/components/schemas/TrafficFilterRule'
       description: The specification for traffic filter ruleset.
+    TrafficFilterEgressRule:
+      type: object
+      required:
+      - protocol
+      - target
+      properties:
+        target:
+          type: string
+          description: 'Allowed traffic filter egress target: IP address or CIDR mask'
+        ports:
+          type: array
+          description: A list of target ports for an egress rule
+          items:
+            type: integer
+            format: int32
+        protocol:
+          type: string
+          description: The target protocol for an egress rule
+          enum:
+          - all
+          - tcp
+          - udp
+      description: The rule detail for a traffic filter egress rule.
+    TrafficFilterClaimedLinkIdRequest:
+      type: object
+      required:
+      - region
+      properties:
+        link_id:
+          type: string
+          description: Link id. A GCP private service connect ID or AWS VPC endpoint ID
+        azure_endpoint_name:
+          type: string
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        region:
+          type: string
+          description: The claimed link id can be used only for traffic filter in the specific region
+      description: The specification for traffic filter claimed link id.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    TrafficFilterClaimedLinkIds:
+      type: object
+      required:
+      - claimed_link_ids
+      properties:
+        claimed_link_ids:
+          type: array
+          description: List of traffic filter claimed link id
+          items:
+            $ref: '#/components/schemas/TrafficFilterClaimedLinkIdInfo'
+      description: The container for a set of traffic filter claimed link id.
+    TrafficFilterRulesets:
+      type: object
+      required:
+      - rulesets
+      properties:
+        rulesets:
+          type: array
+          description: List of traffic filter rules
+          items:
+            $ref: '#/components/schemas/TrafficFilterRulesetInfo'
+      description: The container for a set of traffic filter rulesets.
+    TrafficFilterRule:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The rule ID
+        remote_cluster_org_id:
+          type: string
+          description: The remote cluster organization ID
+        remote_cluster_id:
+          type: string
+          description: The remote cluster ID
+        description:
+          type: string
+          description: Description of the rule
+        source:
+          type: string
+          description: 'Allowed traffic filter source: IP address, CIDR mask, or VPC endpoint ID'
+        azure_endpoint_name:
+          type: string
+          description: Name of the Azure Private Endpoint to allow connections from
+        azure_endpoint_guid:
+          type: string
+          description: Resource GUID of the Azure Private Endpoint to allow connections from
+        egress_rule:
+          description: An egress traffic filter rule
+          $ref: '#/components/schemas/TrafficFilterEgressRule'
+      description: The container for a traffic filter rule.
   securitySchemes:
     apiKey:
       type: apiKey

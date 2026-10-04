@@ -680,6 +680,126 @@ paths:
         tag: Authentication
 components:
   schemas:
+    ProjectRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
+        project_ids:
+          type: array
+          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with project scope.
+    TokenResponse:
+      type: object
+      required:
+      - session_expiration_time
+      - token
+      properties:
+        token:
+          type: string
+          description: The authorization bearer token that you use in subsequent requests
+        session_expiration_time:
+          type: string
+          format: date-time
+          description: The time that the session token will expire
+      description: The response value after a login without redirect configured, or after elevated permissions are enabled or disabled.
+    ApiKeysResponse:
+      type: object
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          description: The list of API keys.
+          items:
+            $ref: '#/components/schemas/ApiKeyResponse'
+        next_page:
+          type: string
+          description: A cursor to get the next page of results
+      description: The response model for the API keys.
+    LoginState:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The path to which to redirect post login - if not specified then no redirect is performed, instead 200 is returned with the token in the body
+      description: Configure how the API responds after a successful login.
+    DeleteUsersApiKeysRequest:
+      type: object
+      required:
+      - user_api_keys
+      properties:
+        user_api_keys:
+          type: array
+          description: The list of API key IDs.
+          items:
+            $ref: '#/components/schemas/UserApiKey'
+      description: The request payload that deletes the API keys.
+    RoleAssignments:
+      type: object
+      properties:
+        platform:
+          type: array
+          description: Assignments for roles with platform scope.
+          items:
+            $ref: '#/components/schemas/PlatformRoleAssignment'
+        organization:
+          type: array
+          description: Assignments for roles with organization scope.
+          items:
+            $ref: '#/components/schemas/OrganizationRoleAssignment'
+        deployment:
+          type: array
+          description: Assignments for roles with deployment scope.
+          items:
+            $ref: '#/components/schemas/DeploymentRoleAssignment'
+        project:
+          description: Assignments for roles with project scope.
+          $ref: '#/components/schemas/ProjectRoleAssignments'
+      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
+    LoginRequest:
+      type: object
+      required:
+      - password
+      - username
+      properties:
+        username:
+          type: string
+          description: The username part of the login request
+        password:
+          type: string
+          description: The plain text password part of the login request
+        login_state:
+          $ref: '#/components/schemas/LoginState'
+      description: The body of a login request.
+    DeleteApiKeysRequest:
+      type: object
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          description: The list of API key IDs.
+          items:
+            type: string
+      description: The request payload that deletes the API keys.
     ApiKeyResponse:
       type: object
       required:
@@ -714,6 +834,32 @@ components:
           description: The optional roles for the API key. Currently unavailable in self-hosted ECE.
           $ref: '#/components/schemas/RoleAssignments'
       description: The response model for an API key.
+    DeploymentRoleAssignment:
+      type: object
+      required:
+      - organization_id
+      - role_id
+      properties:
+        role_id:
+          type: string
+          description: The ID of the role that is assigned.
+        organization_id:
+          type: string
+          description: The ID of the organization the role is scoped to.
+        all:
+          type: boolean
+          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
+        deployment_ids:
+          type: array
+          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
+          items:
+            type: string
+        application_roles:
+          type: array
+          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
+          items:
+            type: string
+      description: Assignment for a role with deployment scope.
     OrganizationRoleAssignment:
       type: object
       required:
@@ -732,39 +878,6 @@ components:
           items:
             type: string
       description: Assignment for a role with organization scope.
-    LoginState:
-      type: object
-      properties:
-        path:
-          type: string
-          description: The path to which to redirect post login - if not specified then no redirect is performed, instead 200 is returned with the token in the body
-      description: Configure how the API responds after a successful login.
-    ProjectRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        all:
-          type: boolean
-          description: When true, the role applies to all projects in the organization, otherwise the role is scoped to the projects specified in `project_ids`.
-        project_ids:
-          type: array
-          description: The IDs of the projects the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
-          items:
-            type: string
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the project(s) specified in the role assignment.
-          items:
-            type: string
-      description: Assignment for a role with project scope.
     PlatformRoleAssignment:
       type: object
       required:
@@ -774,20 +887,52 @@ components:
           type: string
           description: The ID of the role that is assigned.
       description: Assignment for a role with platform scope.
-    TokenResponse:
+    BasicFailedReplyElement:
       type: object
       required:
-      - session_expiration_time
-      - token
+      - code
+      - message
       properties:
-        token:
+        code:
           type: string
-          description: The authorization bearer token that you use in subsequent requests
-        session_expiration_time:
+          description: A structured code representing the error type that occurred
+        message:
           type: string
-          format: date-time
-          description: The time that the session token will expire
-      description: The response value after a login without redirect configured, or after elevated permissions are enabled or disabled.
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    SsoAuthenticationMethodInfo:
+      type: object
+      required:
+      - name
+      - sso_type
+      - url
+      properties:
+        sso_type:
+          type: string
+          description: Indicates the protocol of the single sign-on method.
+          enum:
+          - saml
+        name:
+          type: string
+          description: The friendly name of the single sign-on method.
+        url:
+          type: string
+          description: The URL to initiate the single sign-on login.
+      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
     ProjectRoleAssignments:
       type: object
       properties:
@@ -817,66 +962,19 @@ components:
           items:
             $ref: '#/components/schemas/ProjectRoleAssignment'
       description: Assignments for roles with project scope.
-    LoginRequest:
+    UserApiKey:
       type: object
       required:
-      - password
-      - username
+      - api_key_id
+      - user_id
       properties:
-        username:
+        user_id:
           type: string
-          description: The username part of the login request
-        password:
+          description: The user ID.
+        api_key_id:
           type: string
-          description: The plain text password part of the login request
-        login_state:
-          $ref: '#/components/schemas/LoginState'
-      description: The body of a login request.
-    SsoAuthenticationMethodInfo:
-      type: object
-      required:
-      - name
-      - sso_type
-      - url
-      properties:
-        sso_type:
-          type: string
-          description: Indicates the protocol of the single sign-on method.
-          enum:
-          - saml
-        name:
-          type: string
-          description: The friendly name of the single sign-on method.
-        url:
-          type: string
-          description: The URL to initiate the single sign-on login.
-      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
-    DeploymentRoleAssignment:
-      type: object
-      required:
-      - organization_id
-      - role_id
-      properties:
-        role_id:
-          type: string
-          description: The ID of the role that is assigned.
-        organization_id:
-          type: string
-          description: The ID of the organization the role is scoped to.
-        all:
-          type: boolean
-          description: When true, the role applies to all deployments in the organization, otherwise the role is scoped to the deployments specified in `deployment_ids`.
-        deployment_ids:
-          type: array
-          description: The IDs of the deployments the role is scoped to. Must be absent if `all` is true, and present if `all` is false.
-          items:
-            type: string
-        application_roles:
-          type: array
-          description: If provided, the user assigned this role assignment will be granted this application role when signing in to the deployment(s) specified in the role assignment.
-          items:
-            type: string
-      description: Assignment for a role with deployment scope.
+          description: The API key ID.
+      description: The model to specify a user and their API key in a delete request.
     CreateApiKeyRequest:
       type: object
       required:
@@ -892,74 +990,8 @@ components:
           description: The optional roles for the API key. Takes the role of the creator if not specified. Currently unavailable in self-hosted ECE.
           $ref: '#/components/schemas/RoleAssignments'
       description: The request payload that creates the API keys.
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    AvailableAuthenticationMethods:
-      type: object
-      required:
-      - openid
-      - password
-      - saml
-      - sso_methods
-      properties:
-        password:
-          type: boolean
-          description: Indicates that username and password authentication is available.
-        saml:
-          type: boolean
-          description: Indicates that SAML single sign-on authentication is available.
-        openid:
-          type: boolean
-          description: '> WARNING
-
-            > This endpoint is deprecated and scheduled to be removed in the next major version. This field is no longer used and will always be false.
-
-
-            '
-        sso_methods:
-          type: array
-          description: Lists details for the available single sign-on methods.
-          items:
-            $ref: '#/components/schemas/SsoAuthenticationMethodInfo'
-      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
     EmptyResponse:
       type: object
-    DeleteUsersApiKeysRequest:
-      type: object
-      required:
-      - user_api_keys
-      properties:
-        user_api_keys:
-          type: array
-          description: The list of API key IDs.
-          items:
-            $ref: '#/components/schemas/UserApiKey'
-      description: The request payload that deletes the API keys.
     AuthenticationInfo:
       type: object
       required:
@@ -990,66 +1022,34 @@ components:
           format: date-time
           description: The UTC time when current authentication will expire. Applies to only token based authentication
       description: A user's authentication info
-    UserApiKey:
+    AvailableAuthenticationMethods:
       type: object
       required:
-      - api_key_id
-      - user_id
+      - openid
+      - password
+      - saml
+      - sso_methods
       properties:
-        user_id:
-          type: string
-          description: The user ID.
-        api_key_id:
-          type: string
-          description: The API key ID.
-      description: The model to specify a user and their API key in a delete request.
-    RoleAssignments:
-      type: object
-      properties:
-        platform:
+        password:
+          type: boolean
+          description: Indicates that username and password authentication is available.
+        saml:
+          type: boolean
+          description: Indicates that SAML single sign-on authentication is available.
+        openid:
+          type: boolean
+          description: '> WARNING
+
+            > This endpoint is deprecated and scheduled to be removed in the next major version. This field is no longer used and will always be false.
+
+
+            '
+        sso_methods:
           type: array
-          description: Assignments for roles with platform scope.
+          description: Lists details for the available single sign-on methods.
           items:
-            $ref: '#/components/schemas/PlatformRoleAssignment'
-        organization:
-          type: array
-          description: Assignments for roles with organization scope.
-          items:
-            $ref: '#/components/schemas/OrganizationRoleAssignment'
-        deployment:
-          type: array
-          description: Assignments for roles with deployment scope.
-          items:
-            $ref: '#/components/schemas/DeploymentRoleAssignment'
-        project:
-          description: Assignments for roles with project scope.
-          $ref: '#/components/schemas/ProjectRoleAssignments'
-      description: Roles assigned to users, API keys or organization invitations. Currently unavailable in self-hosted ECE.
-    DeleteApiKeysRequest:
-      type: object
-      required:
-      - keys
-      properties:
-        keys:
-          type: array
-          description: The list of API key IDs.
-          items:
-            type: string
-      description: The request payload that deletes the API keys.
-    ApiKeysResponse:
-      type: object
-      required:
-      - keys
-      properties:
-        keys:
-          type: array
-          description: The list of API keys.
-          items:
-            $ref: '#/components/schemas/ApiKeyResponse'
-        next_page:
-          type: string
-          description: A cursor to get the next page of results
-      description: The response model for the API keys.
+            $ref: '#/components/schemas/SsoAuthenticationMethodInfo'
+      description: 'Specifies the authentication methods that are enabled on the Elasticsearch cluster. NOTE: When all fields are `false`, only the Platform admin and Platform viewer are available.'
   securitySchemes:
     apiKey:
       type: apiKey
