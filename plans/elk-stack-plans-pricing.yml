@@ -169,3 +169,38 @@ api_request_quota:
     monthly request allowance and no request overage. Constraints on API usage
     are resource constraints (cluster size, thread pools, VCUs), not
     contractual quotas. See rate-limits/elk-stack-rate-limits.yml.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - subscription
+  units: []
+  plans:
+  - name: Standard
+    access: paid
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Gold
+    access: paid
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Platinum
+    access: paid
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enterprise
+    access: paid
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
