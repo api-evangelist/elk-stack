@@ -121,25 +121,6 @@ components:
           type: boolean
           description: If true, all clusters in this account will by default trust all other clusters in the same account
       description: Settings related to the level of trust of the clusters in this account
-    AccountUpdateRequest:
-      type: object
-      properties:
-        trust:
-          description: Settings related to the level of trust of the clusters in this account
-          $ref: '#/components/schemas/AccountTrustSettings'
-      description: A request to update an account
-    AccountResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The account's identifier
-        trust:
-          description: Settings related to the level of trust of the clusters in this account
-          $ref: '#/components/schemas/AccountTrustSettings'
-      description: An account is the entity that owns deployments, and it is accessed by users. Accounts are isolated from each other.
     BasicFailedReplyElement:
       type: object
       required:
@@ -157,6 +138,13 @@ components:
           description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
             type: string
+    AccountUpdateRequest:
+      type: object
+      properties:
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: A request to update an account
     BasicFailedReply:
       type: object
       required:
@@ -167,6 +155,18 @@ components:
           description: A list of errors that occurred in the failing request
           items:
             $ref: '#/components/schemas/BasicFailedReplyElement'
+    AccountResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The account's identifier
+        trust:
+          description: Settings related to the level of trust of the clusters in this account
+          $ref: '#/components/schemas/AccountTrustSettings'
+      description: An account is the entity that owns deployments, and it is accessed by users. Accounts are isolated from each other.
   securitySchemes:
     apiKey:
       type: apiKey

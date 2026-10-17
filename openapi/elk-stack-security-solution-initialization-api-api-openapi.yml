@@ -112,7 +112,59 @@ paths:
         name: product_name
 components:
   schemas:
+    Security_Solution_Initialization_API_InitializationFlowsResult:
+      description: Per-flow results. Only requested flows appear in the response, so all properties are optional. Each flow is either a typed ready result or an error result.
+      type: object
+      properties:
+        create-list-indices:
+          oneOf:
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_CreateListIndicesReadyResult'
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+        init-ai-prompts:
+          oneOf:
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_PackageInstallReadyResult'
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+        init-detection-rule-monitoring:
+          oneOf:
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult'
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+        init-endpoint-protection:
+          oneOf:
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_PackageInstallReadyResult'
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+        init-prebuilt-rules:
+          oneOf:
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_PackageInstallReadyResult'
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+        security-data-views:
+          oneOf:
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_SecurityDataViewsReadyResult'
+          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+    Security_Solution_Initialization_API_DataViewPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        patternList:
+          items:
+            type: string
+          type: array
+        title:
+          type: string
+      required:
+      - id
+      - title
+      - patternList
     Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult:
+      type: object
+      properties:
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+    Security_Solution_Initialization_API_CreateListIndicesReadyResult:
       type: object
       properties:
         status:
@@ -131,60 +183,6 @@ components:
       - init-ai-prompts
       - init-detection-rule-monitoring
       type: string
-    Security_Solution_Initialization_API_DataViewPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        patternList:
-          items:
-            type: string
-          type: array
-        title:
-          type: string
-      required:
-      - id
-      - title
-      - patternList
-    Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
-      type: object
-      properties:
-        payload:
-          type: object
-          properties:
-            alertDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            attackDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            defaultDataView:
-              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-            kibanaDataViews:
-              items:
-                $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
-              type: array
-            signalIndexName:
-              type: string
-          required:
-          - defaultDataView
-          - alertDataView
-          - kibanaDataViews
-          - signalIndexName
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
-      - payload
-    Security_Solution_Initialization_API_CreateListIndicesReadyResult:
-      type: object
-      properties:
-        status:
-          enum:
-          - ready
-          type: string
-      required:
-      - status
     Security_Solution_Initialization_API_PackageInstallReadyResult:
       type: object
       properties:
@@ -223,34 +221,36 @@ components:
       required:
       - status
       - error
-    Security_Solution_Initialization_API_InitializationFlowsResult:
-      description: Per-flow results. Only requested flows appear in the response, so all properties are optional. Each flow is either a typed ready result or an error result.
+    Security_Solution_Initialization_API_SecurityDataViewsReadyResult:
       type: object
       properties:
-        create-list-indices:
-          oneOf:
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_CreateListIndicesReadyResult'
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
-        init-ai-prompts:
-          oneOf:
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_PackageInstallReadyResult'
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
-        init-detection-rule-monitoring:
-          oneOf:
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InstallDetectionEngineRuleMonitoringAssetsReadyResult'
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
-        init-endpoint-protection:
-          oneOf:
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_PackageInstallReadyResult'
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
-        init-prebuilt-rules:
-          oneOf:
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_PackageInstallReadyResult'
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
-        security-data-views:
-          oneOf:
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_SecurityDataViewsReadyResult'
-          - $ref: '#/components/schemas/Security_Solution_Initialization_API_InitializationFlowErrorResult'
+        payload:
+          type: object
+          properties:
+            alertDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            attackDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            defaultDataView:
+              $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+            kibanaDataViews:
+              items:
+                $ref: '#/components/schemas/Security_Solution_Initialization_API_DataViewPayload'
+              type: array
+            signalIndexName:
+              type: string
+          required:
+          - defaultDataView
+          - alertDataView
+          - kibanaDataViews
+          - signalIndexName
+        status:
+          enum:
+          - ready
+          type: string
+      required:
+      - status
+      - payload
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

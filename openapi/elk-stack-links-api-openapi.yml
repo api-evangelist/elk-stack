@@ -751,38 +751,13 @@ paths:
         name: product_name
 components:
   schemas:
-    Kibana_HTTP_APIs_kbn-as-code-meta:
+    Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink:
       additionalProperties: false
-      type: object
-      properties:
-        created_at:
-          description: Timestamp when the object was created (ISO 8601).
-          type: string
-        created_by:
-          description: User profile ID of the user who created the object.
-          type: string
-        managed:
-          description: When `true`, the object is managed by Kibana and cannot be edited by users.
-          type: boolean
-        owner:
-          description: Identifier of the plugin or team that owns this object.
-          type: string
-        updated_at:
-          description: Timestamp when the object was last updated (ISO 8601).
-          type: string
-        updated_by:
-          description: User profile ID of the user who last updated the object.
-          type: string
-        version:
-          description: Internal version identifier for optimistic concurrency control.
-          type: string
-    Kibana_HTTP_APIs_kbn-link-type-externalLink:
-      additionalProperties: false
-      description: Link type. Set to externalLink for a URL outside Kibana.
+      description: Link type. Set to dashboardLink for a link to another dashboard.
       type: object
       properties:
         destination:
-          description: The external URL to link to.
+          description: Linked dashboard saved object ID.
           type: string
         label:
           description: The label of the link displayed in the UI.
@@ -790,21 +765,26 @@ components:
         options:
           additionalProperties: false
           default:
-            encode_url: true
-            open_in_new_tab: true
+            open_in_new_tab: false
+            use_filters: true
+            use_time_range: true
           type: object
           properties:
-            encode_url:
-              default: true
-              description: Whether to escape the URL with percent encoding
-              type: boolean
             open_in_new_tab:
+              default: false
+              description: When enabled, the dashboard opens in a new browser tab.
+              type: boolean
+            use_filters:
               default: true
-              description: Whether to open this link in a new tab when clicked.
+              description: When enabled, filters are passed to the opening dashboard.
+              type: boolean
+            use_time_range:
+              default: true
+              description: When enabled, time range is passed to the opening dashboard.
               type: boolean
         type:
           enum:
-          - externalLink
+          - dashboardLink
           type: string
       required:
       - type
@@ -862,13 +842,13 @@ components:
       - id
       - data
       - meta
-    Kibana_HTTP_APIs_kbn-link-panel-type-dashboardLink:
+    Kibana_HTTP_APIs_kbn-link-type-externalLink:
       additionalProperties: false
-      description: Link type. Set to dashboardLink for a link to another dashboard.
+      description: Link type. Set to externalLink for a URL outside Kibana.
       type: object
       properties:
         destination:
-          description: Linked dashboard saved object ID.
+          description: The external URL to link to.
           type: string
         label:
           description: The label of the link displayed in the UI.
@@ -876,30 +856,50 @@ components:
         options:
           additionalProperties: false
           default:
-            open_in_new_tab: false
-            use_filters: true
-            use_time_range: true
+            encode_url: true
+            open_in_new_tab: true
           type: object
           properties:
+            encode_url:
+              default: true
+              description: Whether to escape the URL with percent encoding
+              type: boolean
             open_in_new_tab:
-              default: false
-              description: When enabled, the dashboard opens in a new browser tab.
-              type: boolean
-            use_filters:
               default: true
-              description: When enabled, filters are passed to the opening dashboard.
-              type: boolean
-            use_time_range:
-              default: true
-              description: When enabled, time range is passed to the opening dashboard.
+              description: Whether to open this link in a new tab when clicked.
               type: boolean
         type:
           enum:
-          - dashboardLink
+          - externalLink
           type: string
       required:
       - type
       - destination
+    Kibana_HTTP_APIs_kbn-as-code-meta:
+      additionalProperties: false
+      type: object
+      properties:
+        created_at:
+          description: Timestamp when the object was created (ISO 8601).
+          type: string
+        created_by:
+          description: User profile ID of the user who created the object.
+          type: string
+        managed:
+          description: When `true`, the object is managed by Kibana and cannot be edited by users.
+          type: boolean
+        owner:
+          description: Identifier of the plugin or team that owns this object.
+          type: string
+        updated_at:
+          description: Timestamp when the object was last updated (ISO 8601).
+          type: string
+        updated_by:
+          description: User profile ID of the user who last updated the object.
+          type: string
+        version:
+          description: Internal version identifier for optimistic concurrency control.
+          type: string
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

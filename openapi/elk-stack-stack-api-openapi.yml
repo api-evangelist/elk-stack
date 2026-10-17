@@ -223,6 +223,21 @@ paths:
         tag: Stack - Versions - CRUD
 components:
   schemas:
+    StackVersionInstanceCapacityConstraint:
+      type: object
+      required:
+      - max
+      - min
+      properties:
+        min:
+          type: integer
+          format: int32
+          description: Min capacity of the instances
+        max:
+          type: integer
+          format: int32
+          description: Max capacity of the instances
+      description: The Elasticsearch instance, Kibana instance, APM Server capacity constraints for an Elastic Stack node type.
     StackVersionMetadata:
       type: object
       properties:
@@ -249,23 +264,152 @@ components:
           type: boolean
           description: Is this a fips stackpack
       description: The metadata for the Elastic Stack.
-    StackVersionApmConfig:
+    NodeTypeResource:
+      type: object
+      required:
+      - description
+      - name
+      - node_type
+      properties:
+        node_type:
+          type: string
+          description: Node type, part of the key for this resource
+        name:
+          type: string
+          description: Node type name
+        description:
+          type: string
+          description: Node type description
+        default_instance_configuration_id:
+          type: string
+          description: Id of the default instance configuration to use for this node type.
+        mandatory:
+          type: boolean
+          description: Flag to specify a node type is mandatory in the corresponding cluster's plan
+      description: Information about the node type.
+    BasicFailedReplyElement:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
+          type: array
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
+          items:
+            type: string
+    StackVersionTemplateInfo:
+      type: object
+      properties:
+        template_version:
+          type: string
+          description: Template version
+          readOnly: true
+        hashes:
+          type: array
+          description: Relative paths of files with SHA-256 hashes that contains the template
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/StackVersionTemplateFileHash'
+      description: The template information for an Elastic Stack version.
+    CompatibleNodeTypesResource:
+      type: object
+      required:
+      - compatible_node_types
+      - node_type
+      properties:
+        node_type:
+          type: string
+          description: Type of this node
+        compatible_node_types:
+          type: array
+          description: Compatible node types for the this node type
+          items:
+            type: string
+        capacity_constraints:
+          description: '> WARNING
+
+            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all node types.
+
+
+            Capacity constraints for the node type'
+          $ref: '#/components/schemas/CapacityConstraintsResource'
+      description: Information about the compatible node types.
+    StackVersionArchiveProcessingError:
+      type: object
+      required:
+      - errors
+      - stack_version
+      properties:
+        stack_version:
+          type: string
+          description: Version of the stack (ie directory name in archive root)
+        errors:
+          $ref: '#/components/schemas/BasicFailedReply'
+      description: Information about the errors that occurred from processing an Elastic Stack version.
+    StackVersionConfigs:
+      type: object
+      required:
+      - stacks
+      properties:
+        stacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/StackVersionConfig'
+      description: The details for multiple Elastic Stack configurations.
+    StackVersionArchiveProcessingResult:
+      type: object
+      required:
+      - errors
+      - stacks
+      properties:
+        stacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/StackVersionConfig'
+        errors:
+          type: array
+          description: 'Errors occurred while processing the Elastic Stack pack. Key: stack version, Value: List of errors'
+          items:
+            $ref: '#/components/schemas/StackVersionArchiveProcessingError'
+      description: The result from processing an archive of an Elastic Stack version.
+    StackVersionElasticsearchConfig:
       type: object
       required:
       - blacklist
+      - default_plugins
       - docker_image
+      - plugins
       properties:
-        version:
-          type: string
-          description: Version of APM
         docker_image:
           type: string
-          description: Docker image for the APM
+          description: Docker image for the Elasticsearch
+        plugins:
+          type: array
+          description: List of available plugins
+          items:
+            type: string
+        default_plugins:
+          type: array
+          description: List of default plugins
+          items:
+            type: string
         blacklist:
           type: array
           description: List of configuration options that cannot be overridden by user settings
           items:
             type: string
+        node_types:
+          type: array
+          description: Node types that are supported by this stack version
+          items:
+            $ref: '#/components/schemas/StackVersionNodeType'
         settings:
           type: object
           description: Settings that are applied to all nodes of this type
@@ -283,7 +427,7 @@ components:
           description: Node types that are compatible with this one
           items:
             type: string
-      description: The APM Server configuration for an Elastic Stack version.
+      description: 'The Elasticsearch configuration for an Elastic Stack version. '
     InstanceTypeResource:
       type: object
       required:
@@ -322,20 +466,50 @@ components:
         default_instance_configuration_id:
           type: string
           description: Id of the default instance configuration to use for this instance type.
-    CompatibleNodeTypesResource:
+    CompatibleVersionResource:
       type: object
       required:
-      - compatible_node_types
-      - node_type
+      - node_types
+      - version
       properties:
-        node_type:
+        version:
           type: string
-          description: Type of this node
-        compatible_node_types:
+          description: Compatible version, the key for this resource
+        node_types:
           type: array
-          description: Compatible node types for the this node type
+          description: Supported node types for the version
+          items:
+            $ref: '#/components/schemas/CompatibleNodeTypesResource'
+        capacity_constraints:
+          description: '> WARNING
+
+            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all versions. When specified its value will be ignored.
+
+
+            Capacity constraints for the version'
+          $ref: '#/components/schemas/CapacityConstraintsResource'
+      description: Information about the compatible version.
+    StackVersionAppSearchConfig:
+      type: object
+      required:
+      - blacklist
+      - docker_image
+      properties:
+        version:
+          type: string
+          description: Version of AppSearch
+        docker_image:
+          type: string
+          description: Docker image for the AppSearch
+        blacklist:
+          type: array
+          description: List of configuration options that cannot be overridden by user settings
           items:
             type: string
+        settings:
+          type: object
+          description: Settings that are applied to all nodes of this type
+          properties: {}
         capacity_constraints:
           description: '> WARNING
 
@@ -343,8 +517,96 @@ components:
 
 
             Capacity constraints for the node type'
-          $ref: '#/components/schemas/CapacityConstraintsResource'
-      description: Information about the compatible node types.
+          $ref: '#/components/schemas/StackVersionInstanceCapacityConstraint'
+        compatible_node_types:
+          type: array
+          description: Node types that are compatible with this one
+          items:
+            type: string
+        node_types:
+          type: array
+          description: Node types that are supported by this stack version
+          items:
+            $ref: '#/components/schemas/StackVersionNodeType'
+      description: AppSearch related configuration of an Elastic Stack version
+    StackVersionConfigPost:
+      type: object
+      required:
+      - elasticsearch
+      - kibana
+      properties:
+        elasticsearch:
+          $ref: '#/components/schemas/StackVersionElasticsearchConfig'
+        kibana:
+          $ref: '#/components/schemas/StackVersionKibanaConfig'
+        apm:
+          $ref: '#/components/schemas/StackVersionApmConfig'
+        integrations_server:
+          $ref: '#/components/schemas/StackVersionIntegrationsServerConfig'
+        appsearch:
+          $ref: '#/components/schemas/StackVersionAppSearchConfig'
+        enterprise_search:
+          $ref: '#/components/schemas/StackVersionEnterpriseSearchConfig'
+        metadata:
+          $ref: '#/components/schemas/StackVersionMetadata'
+        rolling_upgrade_compatible_versions:
+          type: array
+          description: List of versions that can be upgraded to the current version of the stackpack
+          items:
+            type: string
+      description: The configuration for an Elastic Stack version.
+    BasicFailedReply:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          description: A list of errors that occurred in the failing request
+          items:
+            $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
+    StackVersionEnterpriseSearchConfig:
+      type: object
+      required:
+      - blacklist
+      - docker_image
+      properties:
+        version:
+          type: string
+          description: Version of EnterpriseSearch
+        docker_image:
+          type: string
+          description: Docker image for the EnterpriseSearch
+        blacklist:
+          type: array
+          description: List of configuration options that cannot be overridden by user settings
+          items:
+            type: string
+        settings:
+          type: object
+          description: Settings that are applied to all nodes of this type
+          properties: {}
+        capacity_constraints:
+          description: '> WARNING
+
+            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all node types.
+
+
+            Capacity constraints for the node type'
+          $ref: '#/components/schemas/StackVersionInstanceCapacityConstraint'
+        compatible_node_types:
+          type: array
+          description: Node types that are compatible with this one
+          items:
+            type: string
+        node_types:
+          type: array
+          description: Node types that are supported by this stack version
+          items:
+            $ref: '#/components/schemas/StackVersionNodeType'
+      description: EnterpriseSearch related configuration of an Elastic Stack version
     StackVersionKibanaConfig:
       type: object
       required:
@@ -380,199 +642,34 @@ components:
           items:
             type: string
       description: The Kibana configuration for an Elastic Stack version.
-    StackVersionIntegrationsServerConfig:
+    StackVersionTemplateFileHash:
       type: object
       required:
-      - blacklist
-      - docker_image
+      - hash
+      - path
       properties:
-        version:
+        path:
           type: string
-          description: Version of Integrations Server
-        docker_image:
+          description: File path relative to template's root
+        hash:
           type: string
-          description: Docker image for the Integrations Server
-        blacklist:
-          type: array
-          description: List of configuration options that cannot be overridden by user settings
-          items:
-            type: string
-        settings:
-          type: object
-          description: Settings that are applied to all nodes of this type
-          properties: {}
-        capacity_constraints:
-          description: '> WARNING
-
-            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all node types.
-
-
-            Capacity constraints for the node type'
-          $ref: '#/components/schemas/StackVersionInstanceCapacityConstraint'
-        compatible_node_types:
-          type: array
-          description: Node types that are compatible with this one
-          items:
-            type: string
-      description: The Integrations Server configuration for an Elastic Stack version.
-    StackVersionConfigs:
+          description: SHA-256 hash of a file
+      description: The template file hash for an Elastic Stack version.
+    CapacityConstraintsResource:
       type: object
       required:
-      - stacks
+      - max
+      - min
       properties:
-        stacks:
-          type: array
-          items:
-            $ref: '#/components/schemas/StackVersionConfig'
-      description: The details for multiple Elastic Stack configurations.
-    NodeTypeResource:
-      type: object
-      required:
-      - description
-      - name
-      - node_type
-      properties:
-        node_type:
-          type: string
-          description: Node type, part of the key for this resource
-        name:
-          type: string
-          description: Node type name
-        description:
-          type: string
-          description: Node type description
-        default_instance_configuration_id:
-          type: string
-          description: Id of the default instance configuration to use for this node type.
-        mandatory:
-          type: boolean
-          description: Flag to specify a node type is mandatory in the corresponding cluster's plan
-      description: Information about the node type.
-    StackVersionNodeType:
-      type: object
-      required:
-      - description
-      - name
-      - node_type
-      properties:
-        node_type:
-          type: string
-          description: Type of the node (master, data, ...)
-        name:
-          type: string
-          description: Name of the node type
-        description:
-          type: string
-          description: Description of the node type
-        settings:
-          type: object
-          description: Settings that are applied to all nodes of this type
-          properties: {}
-        capacity_constraints:
-          description: '> WARNING
-
-            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all node types.
-
-
-            Capacity constraints for the node type'
-          $ref: '#/components/schemas/StackVersionInstanceCapacityConstraint'
-        compatible_node_types:
-          type: array
-          description: Node types that are compatible with this one
-          items:
-            type: string
-        mandatory:
-          type: boolean
-          description: Flag to specify a node type is mandatory in a cluster's plan
-      description: The configuration for an Elastic Stack node type.
-    StackVersionArchiveProcessingError:
-      type: object
-      required:
-      - errors
-      - stack_version
-      properties:
-        stack_version:
-          type: string
-          description: Version of the stack (ie directory name in archive root)
-        errors:
-          $ref: '#/components/schemas/BasicFailedReply'
-      description: Information about the errors that occurred from processing an Elastic Stack version.
-    StackVersionConfigPost:
-      type: object
-      required:
-      - elasticsearch
-      - kibana
-      properties:
-        elasticsearch:
-          $ref: '#/components/schemas/StackVersionElasticsearchConfig'
-        kibana:
-          $ref: '#/components/schemas/StackVersionKibanaConfig'
-        apm:
-          $ref: '#/components/schemas/StackVersionApmConfig'
-        integrations_server:
-          $ref: '#/components/schemas/StackVersionIntegrationsServerConfig'
-        appsearch:
-          $ref: '#/components/schemas/StackVersionAppSearchConfig'
-        enterprise_search:
-          $ref: '#/components/schemas/StackVersionEnterpriseSearchConfig'
-        metadata:
-          $ref: '#/components/schemas/StackVersionMetadata'
-        rolling_upgrade_compatible_versions:
-          type: array
-          description: List of versions that can be upgraded to the current version of the stackpack
-          items:
-            type: string
-      description: The configuration for an Elastic Stack version.
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
-    BasicFailedReply:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          description: A list of errors that occurred in the failing request
-          items:
-            $ref: '#/components/schemas/BasicFailedReplyElement'
-    CompatibleVersionResource:
-      type: object
-      required:
-      - node_types
-      - version
-      properties:
-        version:
-          type: string
-          description: Compatible version, the key for this resource
-        node_types:
-          type: array
-          description: Supported node types for the version
-          items:
-            $ref: '#/components/schemas/CompatibleNodeTypesResource'
-        capacity_constraints:
-          description: '> WARNING
-
-            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all versions. When specified its value will be ignored.
-
-
-            Capacity constraints for the version'
-          $ref: '#/components/schemas/CapacityConstraintsResource'
-      description: Information about the compatible version.
+        min:
+          type: integer
+          format: int64
+          description: Min capacity
+        max:
+          type: integer
+          format: int64
+          description: Max capacity
+      description: Specifies the maximum and minimum capacity constraints.
     StackVersionConfig:
       type: object
       required:
@@ -624,84 +721,7 @@ components:
           items:
             type: string
       description: The details for an Elastic Stack configuration.
-    StackVersionInstanceCapacityConstraint:
-      type: object
-      required:
-      - max
-      - min
-      properties:
-        min:
-          type: integer
-          format: int32
-          description: Min capacity of the instances
-        max:
-          type: integer
-          format: int32
-          description: Max capacity of the instances
-      description: The Elasticsearch instance, Kibana instance, APM Server capacity constraints for an Elastic Stack node type.
-    StackVersionElasticsearchConfig:
-      type: object
-      required:
-      - blacklist
-      - default_plugins
-      - docker_image
-      - plugins
-      properties:
-        docker_image:
-          type: string
-          description: Docker image for the Elasticsearch
-        plugins:
-          type: array
-          description: List of available plugins
-          items:
-            type: string
-        default_plugins:
-          type: array
-          description: List of default plugins
-          items:
-            type: string
-        blacklist:
-          type: array
-          description: List of configuration options that cannot be overridden by user settings
-          items:
-            type: string
-        node_types:
-          type: array
-          description: Node types that are supported by this stack version
-          items:
-            $ref: '#/components/schemas/StackVersionNodeType'
-        settings:
-          type: object
-          description: Settings that are applied to all nodes of this type
-          properties: {}
-        capacity_constraints:
-          description: '> WARNING
-
-            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all node types.
-
-
-            Capacity constraints for the node type'
-          $ref: '#/components/schemas/StackVersionInstanceCapacityConstraint'
-        compatible_node_types:
-          type: array
-          description: Node types that are compatible with this one
-          items:
-            type: string
-      description: 'The Elasticsearch configuration for an Elastic Stack version. '
-    StackVersionTemplateFileHash:
-      type: object
-      required:
-      - hash
-      - path
-      properties:
-        path:
-          type: string
-          description: File path relative to template's root
-        hash:
-          type: string
-          description: SHA-256 hash of a file
-      description: The template file hash for an Elastic Stack version.
-    StackVersionAppSearchConfig:
+    StackVersionApmConfig:
       type: object
       required:
       - blacklist
@@ -709,10 +729,10 @@ components:
       properties:
         version:
           type: string
-          description: Version of AppSearch
+          description: Version of APM
         docker_image:
           type: string
-          description: Docker image for the AppSearch
+          description: Docker image for the APM
         blacklist:
           type: array
           description: List of configuration options that cannot be overridden by user settings
@@ -735,45 +755,45 @@ components:
           description: Node types that are compatible with this one
           items:
             type: string
-        node_types:
-          type: array
-          description: Node types that are supported by this stack version
-          items:
-            $ref: '#/components/schemas/StackVersionNodeType'
-      description: AppSearch related configuration of an Elastic Stack version
-    EmptyResponse:
-      type: object
-    StackVersionArchiveProcessingResult:
+      description: The APM Server configuration for an Elastic Stack version.
+    StackVersionNodeType:
       type: object
       required:
-      - errors
-      - stacks
+      - description
+      - name
+      - node_type
       properties:
-        stacks:
-          type: array
-          items:
-            $ref: '#/components/schemas/StackVersionConfig'
-        errors:
-          type: array
-          description: 'Errors occurred while processing the Elastic Stack pack. Key: stack version, Value: List of errors'
-          items:
-            $ref: '#/components/schemas/StackVersionArchiveProcessingError'
-      description: The result from processing an archive of an Elastic Stack version.
-    StackVersionTemplateInfo:
-      type: object
-      properties:
-        template_version:
+        node_type:
           type: string
-          description: Template version
-          readOnly: true
-        hashes:
+          description: Type of the node (master, data, ...)
+        name:
+          type: string
+          description: Name of the node type
+        description:
+          type: string
+          description: Description of the node type
+        settings:
+          type: object
+          description: Settings that are applied to all nodes of this type
+          properties: {}
+        capacity_constraints:
+          description: '> WARNING
+
+            > This endpoint is deprecated and scheduled to be removed in the next major version. This field will soon be removed in favor of having a global capacity constraint for all node types.
+
+
+            Capacity constraints for the node type'
+          $ref: '#/components/schemas/StackVersionInstanceCapacityConstraint'
+        compatible_node_types:
           type: array
-          description: Relative paths of files with SHA-256 hashes that contains the template
-          readOnly: true
+          description: Node types that are compatible with this one
           items:
-            $ref: '#/components/schemas/StackVersionTemplateFileHash'
-      description: The template information for an Elastic Stack version.
-    StackVersionEnterpriseSearchConfig:
+            type: string
+        mandatory:
+          type: boolean
+          description: Flag to specify a node type is mandatory in a cluster's plan
+      description: The configuration for an Elastic Stack node type.
+    StackVersionIntegrationsServerConfig:
       type: object
       required:
       - blacklist
@@ -781,10 +801,10 @@ components:
       properties:
         version:
           type: string
-          description: Version of EnterpriseSearch
+          description: Version of Integrations Server
         docker_image:
           type: string
-          description: Docker image for the EnterpriseSearch
+          description: Docker image for the Integrations Server
         blacklist:
           type: array
           description: List of configuration options that cannot be overridden by user settings
@@ -807,27 +827,7 @@ components:
           description: Node types that are compatible with this one
           items:
             type: string
-        node_types:
-          type: array
-          description: Node types that are supported by this stack version
-          items:
-            $ref: '#/components/schemas/StackVersionNodeType'
-      description: EnterpriseSearch related configuration of an Elastic Stack version
-    CapacityConstraintsResource:
-      type: object
-      required:
-      - max
-      - min
-      properties:
-        min:
-          type: integer
-          format: int64
-          description: Min capacity
-        max:
-          type: integer
-          format: int64
-          description: Max capacity
-      description: Specifies the maximum and minimum capacity constraints.
+      description: The Integrations Server configuration for an Elastic Stack version.
   securitySchemes:
     apiKey:
       type: apiKey

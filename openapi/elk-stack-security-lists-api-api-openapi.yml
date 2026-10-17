@@ -2526,50 +2526,6 @@ paths:
         name: product_name
 components:
   schemas:
-    Security_Lists_API_ListItemId:
-      description: Value list item's identifier.
-      example: 54b01cfb-058d-44b9-838c-282be16c91cd
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListVersion:
-      description: The document version number.
-      example: 1
-      minimum: 1
-      type: integer
-    Security_Lists_API_ListItemMetadata:
-      additionalProperties: true
-      description: Placeholder for metadata about the value list item.
-      type: object
-    Security_Lists_API_FindListsCursor:
-      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListVersionId:
-      description: 'The version id, normally returned by the API when the document is retrieved. Use it ensure updates are done against the latest version.
-
-        '
-      example: WzIsMV0=
-      type: string
-    Security_Lists_API_FindListsFilter:
-      example: value:127.0.0.1
-      type: string
-    Security_Lists_API_SiemErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        status_code:
-          type: integer
-      required:
-      - status_code
-      - message
-    Security_Lists_API_ListItemValue:
-      description: The value used to evaluate exceptions.
-      format: nonempty
-      minLength: 1
-      type: string
     Security_Lists_API_ListItem:
       type: object
       properties:
@@ -2621,104 +2577,24 @@ components:
       - created_by
       - updated_at
       - updated_by
-    Security_Lists_API_ListName:
-      description: Value list's name.
-      example: List of bad IPs
-      format: nonempty
-      minLength: 1
-      type: string
-    Security_Lists_API_ListPrivileges:
-      type: object
-      properties:
-        application:
-          additionalProperties:
-            type: boolean
-          type: object
-        cluster:
-          additionalProperties:
-            type: boolean
-          type: object
-        has_all_requested:
-          type: boolean
-        index:
-          additionalProperties:
-            additionalProperties:
-              type: boolean
-            type: object
-          type: object
-        username:
-          type: string
-      required:
-      - username
-      - has_all_requested
-      - cluster
-      - index
-      - application
-    Security_Lists_API_ListType:
-      description: 'Specifies the Elasticsearch data type of excludes the list container holds. Some common examples:
-
-
-        - `keyword`: Many ECS fields are Elasticsearch keywords
-
-        - `ip`: IP addresses
-
-        - `ip_range`: Range of IP addresses (supports IPv4, IPv6, and CIDR notation)
-
-        '
-      enum:
-      - binary
-      - boolean
-      - byte
-      - date
-      - date_nanos
-      - date_range
-      - double
-      - double_range
-      - float
-      - float_range
-      - geo_point
-      - geo_shape
-      - half_float
-      - integer
-      - integer_range
-      - ip
-      - ip_range
-      - keyword
-      - long
-      - long_range
-      - shape
-      - short
-      - text
-      type: string
-    Security_Lists_API_FindListItemsFilter:
-      example: value:127.0.0.1
-      type: string
-    Security_Lists_API_ListMetadata:
-      additionalProperties: true
-      description: Placeholder for metadata about the value list.
-      type: object
-    Security_Lists_API_PlatformErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-        statusCode:
-          type: integer
-      required:
-      - statusCode
-      - error
-      - message
-    Security_Lists_API_FindListItemsCursor:
-      description: Returns the items that come after the last item returned in the previous call (use the `cursor` value returned in the previous call). This parameter uses the `tie_breaker_id` field to ensure all items are sorted and returned correctly.
-      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
-      format: nonempty
-      minLength: 1
-      type: string
     Security_Lists_API_ListId:
       description: Value list's identifier.
       example: 21b01cfb-058d-44b9-838c-282be16c91cd
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListItemValue:
+      description: The value used to evaluate exceptions.
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_ListItemMetadata:
+      additionalProperties: true
+      description: Placeholder for metadata about the value list item.
+      type: object
+    Security_Lists_API_FindListItemsCursor:
+      description: Returns the items that come after the last item returned in the previous call (use the `cursor` value returned in the previous call). This parameter uses the `tie_breaker_id` field to ensure all items are sorted and returned correctly.
+      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
       format: nonempty
       minLength: 1
       type: string
@@ -2779,6 +2655,104 @@ components:
       - created_by
       - updated_at
       - updated_by
+    Security_Lists_API_ListName:
+      description: Value list's name.
+      example: List of bad IPs
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_SiemErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        status_code:
+          type: integer
+      required:
+      - status_code
+      - message
+    Security_Lists_API_ListPrivileges:
+      type: object
+      properties:
+        application:
+          additionalProperties:
+            type: boolean
+          type: object
+        cluster:
+          additionalProperties:
+            type: boolean
+          type: object
+        has_all_requested:
+          type: boolean
+        index:
+          additionalProperties:
+            additionalProperties:
+              type: boolean
+            type: object
+          type: object
+        username:
+          type: string
+      required:
+      - username
+      - has_all_requested
+      - cluster
+      - index
+      - application
+    Security_Lists_API_FindListItemsFilter:
+      example: value:127.0.0.1
+      type: string
+    Security_Lists_API_ListType:
+      description: 'Specifies the Elasticsearch data type of excludes the list container holds. Some common examples:
+
+
+        - `keyword`: Many ECS fields are Elasticsearch keywords
+
+        - `ip`: IP addresses
+
+        - `ip_range`: Range of IP addresses (supports IPv4, IPv6, and CIDR notation)
+
+        '
+      enum:
+      - binary
+      - boolean
+      - byte
+      - date
+      - date_nanos
+      - date_range
+      - double
+      - double_range
+      - float
+      - float_range
+      - geo_point
+      - geo_shape
+      - half_float
+      - integer
+      - integer_range
+      - ip
+      - ip_range
+      - keyword
+      - long
+      - long_range
+      - shape
+      - short
+      - text
+      type: string
+    Security_Lists_API_ListVersionId:
+      description: 'The version id, normally returned by the API when the document is retrieved. Use it ensure updates are done against the latest version.
+
+        '
+      example: WzIsMV0=
+      type: string
+    Security_Lists_API_ListVersion:
+      description: The document version number.
+      example: 1
+      minimum: 1
+      type: integer
+    Security_Lists_API_FindListsCursor:
+      example: WzIwLFsiYjU3Yzc2MmMtMzAzNi00NjVjLTliZmItN2JmYjVlNmU1MTVhIl1d
+      format: nonempty
+      minLength: 1
+      type: string
     Security_Lists_API_ListItemPrivileges:
       type: object
       properties:
@@ -2811,6 +2785,32 @@ components:
       format: nonempty
       minLength: 1
       type: string
+    Security_Lists_API_FindListsFilter:
+      example: value:127.0.0.1
+      type: string
+    Security_Lists_API_ListMetadata:
+      additionalProperties: true
+      description: Placeholder for metadata about the value list.
+      type: object
+    Security_Lists_API_ListItemId:
+      description: Value list item's identifier.
+      example: 54b01cfb-058d-44b9-838c-282be16c91cd
+      format: nonempty
+      minLength: 1
+      type: string
+    Security_Lists_API_PlatformErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        statusCode:
+          type: integer
+      required:
+      - statusCode
+      - error
+      - message
   securitySchemes:
     apiKeyAuth:
       description: 'These APIs use key-based authentication. You must create an API key and use the encoded value in the request header. For example: `Authorization: ApiKey base64AccessApiKey`

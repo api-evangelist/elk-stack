@@ -428,7 +428,7 @@ paths:
         tag: Deployments - Extensions
 components:
   schemas:
-    UpdateExtensionRequest:
+    CreateExtensionRequest:
       type: object
       required:
       - extension_type
@@ -437,7 +437,7 @@ components:
       properties:
         name:
           type: string
-          description: The extension name.
+          description: The extension name. Only ASCII alphanumeric and [_.-] characters allowed
         description:
           type: string
           description: The extension description.
@@ -453,18 +453,39 @@ components:
         version:
           type: string
           description: The Elasticsearch version.
-      description: The body of a request to update an extension
-    Extensions:
+      description: The body of a request to create a new extension
+    BasicFailedReplyElement:
       type: object
       required:
-      - extensions
+      - code
+      - message
       properties:
-        extensions:
+        code:
+          type: string
+          description: A structured code representing the error type that occurred
+        message:
+          type: string
+          description: A human readable message describing the error that occurred
+        fields:
           type: array
-          description: The list of extensions.
+          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
           items:
-            $ref: '#/components/schemas/Extension'
-      description: A collection of extensions
+            type: string
+    ExtensionFileMetadata:
+      type: object
+      properties:
+        last_modified_date:
+          type: string
+          format: date-time
+          description: The date and time the extension was last modified.
+        size:
+          type: integer
+          format: int64
+          description: The extension file size in bytes.
+        url:
+          type: string
+          format: uri
+          description: The temporary URL to download the extension file. Usable for verification.
     Extension:
       type: object
       required:
@@ -507,7 +528,7 @@ components:
           description: The extension file metadata.
           $ref: '#/components/schemas/ExtensionFileMetadata'
       description: An API extension. It represents clusters' plugins and bundles
-    CreateExtensionRequest:
+    UpdateExtensionRequest:
       type: object
       required:
       - extension_type
@@ -516,7 +537,7 @@ components:
       properties:
         name:
           type: string
-          description: The extension name. Only ASCII alphanumeric and [_.-] characters allowed
+          description: The extension name.
         description:
           type: string
           description: The extension description.
@@ -532,41 +553,7 @@ components:
         version:
           type: string
           description: The Elasticsearch version.
-      description: The body of a request to create a new extension
-    ExtensionFileMetadata:
-      type: object
-      properties:
-        last_modified_date:
-          type: string
-          format: date-time
-          description: The date and time the extension was last modified.
-        size:
-          type: integer
-          format: int64
-          description: The extension file size in bytes.
-        url:
-          type: string
-          format: uri
-          description: The temporary URL to download the extension file. Usable for verification.
-    EmptyResponse:
-      type: object
-    BasicFailedReplyElement:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          description: A structured code representing the error type that occurred
-        message:
-          type: string
-          description: A human readable message describing the error that occurred
-        fields:
-          type: array
-          description: If the error can be tied to a specific field or fields in the user request, this lists those fields
-          items:
-            type: string
+      description: The body of a request to update an extension
     BasicFailedReply:
       type: object
       required:
@@ -577,6 +564,19 @@ components:
           description: A list of errors that occurred in the failing request
           items:
             $ref: '#/components/schemas/BasicFailedReplyElement'
+    EmptyResponse:
+      type: object
+    Extensions:
+      type: object
+      required:
+      - extensions
+      properties:
+        extensions:
+          type: array
+          description: The list of extensions.
+          items:
+            $ref: '#/components/schemas/Extension'
+      description: A collection of extensions
   securitySchemes:
     apiKey:
       type: apiKey

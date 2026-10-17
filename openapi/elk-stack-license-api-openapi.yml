@@ -411,18 +411,6 @@ paths:
         name: product_name
 components:
   schemas:
-    license._types.LicenseType:
-      type: string
-      enum:
-      - missing
-      - trial
-      - basic
-      - standard
-      - dev
-      - silver
-      - gold
-      - platinum
-      - enterprise
     _types.Uuid:
       type: string
     _types.AcknowledgedResponseBase:
@@ -433,18 +421,6 @@ components:
           type: boolean
       required:
       - acknowledged
-    _types.UnitMillis:
-      description: Time unit for milliseconds
-      type: number
-    _types.DateTime:
-      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
-
-        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
-
-        representation.'
-      oneOf:
-      - type: string
-      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
     license._types.LicenseStatus:
       type: string
       enum:
@@ -452,6 +428,62 @@ components:
       - valid
       - invalid
       - expired
+    license._types.License:
+      type: object
+      properties:
+        expiry_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issue_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        start_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issued_to:
+          type: string
+        issuer:
+          type: string
+        max_nodes:
+          oneOf:
+          - type: number
+          - type:
+            - string
+            - 'null'
+        max_resource_units:
+          type: number
+        signature:
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseType'
+        uid:
+          type: string
+      required:
+      - expiry_date_in_millis
+      - issue_date_in_millis
+      - issued_to
+      - issuer
+      - signature
+      - type
+      - uid
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      oneOf:
+      - type: string
+      - type: string
+        enum:
+        - '-1'
+      - type: string
+        enum:
+        - '0'
     license.get.LicenseInformation:
       type: object
       properties:
@@ -517,62 +549,30 @@ components:
       - type
       - uid
       - start_date_in_millis
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    license._types.LicenseType:
+      type: string
+      enum:
+      - missing
+      - trial
+      - basic
+      - standard
+      - dev
+      - silver
+      - gold
+      - platinum
+      - enterprise
     _types.EpochTimeUnitMillis:
       allOf:
       - $ref: '#/components/schemas/_types.UnitMillis'
-    license._types.License:
-      type: object
-      properties:
-        expiry_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        issue_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        start_date_in_millis:
-          allOf:
-          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
-        issued_to:
-          type: string
-        issuer:
-          type: string
-        max_nodes:
-          oneOf:
-          - type: number
-          - type:
-            - string
-            - 'null'
-        max_resource_units:
-          type: number
-        signature:
-          type: string
-        type:
-          allOf:
-          - $ref: '#/components/schemas/license._types.LicenseType'
-        uid:
-          type: string
-      required:
-      - expiry_date_in_millis
-      - issue_date_in_millis
-      - issued_to
-      - issuer
-      - signature
-      - type
-      - uid
-    _types.Duration:
-      externalDocs:
-        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
-      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
-
-        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
-      oneOf:
-      - type: string
-      - type: string
-        enum:
-        - '-1'
-      - type: string
-        enum:
-        - '0'
     license.post.Acknowledgement:
       type: object
       properties:
@@ -585,38 +585,7 @@ components:
       required:
       - license
       - message
-  requestBodies:
-    license.post:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              license:
-                allOf:
-                - $ref: '#/components/schemas/license._types.License'
-              licenses:
-                description: A sequence of one or more JSON documents containing the license information.
-                type: array
-                items:
-                  $ref: '#/components/schemas/license._types.License'
-          examples:
-            PostLicenseRequestExample1:
-              description: 'Run `PUT _license` to update to a basic license. NOTE: These values are invalid; you must substitute the appropriate contents from your license file.
-
-                '
-              value: "{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
   parameters:
-    license.post-timeout:
-      in: query
-      name: timeout
-      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
-      deprecated: false
-      schema:
-        default: 30s
-        allOf:
-        - $ref: '#/components/schemas/_types.Duration'
-      style: form
     license.post-acknowledge:
       in: query
       name: acknowledge
@@ -638,6 +607,37 @@ components:
         allOf:
         - $ref: '#/components/schemas/_types.Duration'
       style: form
+    license.post-timeout:
+      in: query
+      name: timeout
+      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+  requestBodies:
+    license.post:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              license:
+                allOf:
+                - $ref: '#/components/schemas/license._types.License'
+              licenses:
+                description: A sequence of one or more JSON documents containing the license information.
+                type: array
+                items:
+                  $ref: '#/components/schemas/license._types.License'
+          examples:
+            PostLicenseRequestExample1:
+              description: 'Run `PUT _license` to update to a basic license. NOTE: These values are invalid; you must substitute the appropriate contents from your license file.
+
+                '
+              value: "{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
   responses:
     license.post-200:
       description: ''
