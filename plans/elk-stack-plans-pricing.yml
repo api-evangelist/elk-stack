@@ -170,7 +170,7 @@ api_request_quota:
     are resource constraints (cluster size, thread pools, VCUs), not
     contractual quotas. See rate-limits/elk-stack-rate-limits.yml.
 x-canonical:
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   vocabulary: engine/economics/plans-canonical.yml
   models:
   - subscription
