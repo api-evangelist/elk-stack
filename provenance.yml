@@ -5,6 +5,9 @@ artifacts:
   agentic-access/elk-stack-agentic-access.yml:
     method: generated
     evidence: declared in the artifact
+  ai-preferences/elk-stack-ai-preferences.yml:
+    method: harvested
+    evidence: declared in the artifact
   asyncapi/elk-stack-webhooks.yml:
     method: searched
     evidence: declared in the artifact
@@ -12,6 +15,12 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   capabilities/elk-stack-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
+  certification/observations-2026-11-11.jsonl:
+    method: unknown
+    evidence: no authorship recorded
+  certification/status.yml:
     method: unknown
     evidence: no authorship recorded
   changelog/elk-stack-changelog.yml:
@@ -68,6 +77,9 @@ artifacts:
   collections/elk-stack.postman_collection.json:
     method: derived
     evidence: openapi/elk-stack
+  compliance/elk-stack-compliance.yml:
+    method: harvested
+    evidence: declared in the artifact
   components/elk-stack-components.yml:
     method: searched
     evidence: declared in the artifact
@@ -77,8 +89,14 @@ artifacts:
   conventions/elk-stack-conventions.yml:
     method: derived
     evidence: declared in the artifact
+  data-license/elk-stack-data-license.yml:
+    method: harvested
+    evidence: declared in the artifact
   data-model/elk-stack-data-model.yml:
     method: derived
+    evidence: declared in the artifact
+  eligibility/elk-stack-eligibility.yml:
+    method: harvested
     evidence: declared in the artifact
   errors/elk-stack-problem-types.yml:
     method: derived
@@ -92,7 +110,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-11-02T082323.yml:
+  kin/checks-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -156,6 +174,9 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-11-02T082323.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/elk-stack-eol.json:
@@ -1059,6 +1080,9 @@ artifacts:
   plans/elk-stack-plans-pricing.yml:
     method: searched
     evidence: declared in the artifact
+  privacy/elk-stack-privacy-policy.yml:
+    method: harvested
+    evidence: declared in the artifact
   rate-limits/elk-stack-rate-limits.yml:
     method: searched
     evidence: declared in the artifact
@@ -1094,6 +1118,9 @@ artifacts:
     evidence: declared in the artifact
   sla/elk-stack-sla.yml:
     method: generated
+    evidence: declared in the artifact
+  terms/elk-stack-terms-of-service.yml:
+    method: harvested
     evidence: declared in the artifact
   well-known/elk-stack-security.txt:
     method: unknown

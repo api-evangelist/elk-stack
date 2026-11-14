@@ -41,7 +41,7 @@ accessModel:
   - rate-limits
   - security
   - sandbox
-  generated: '2026-11-06'
+  generated: '2026-11-13'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/elk-stack.png
 tags:
@@ -2236,8 +2236,6 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
-  - Reindex
-  tags_raw:
   - reindex
   properties:
   - type: OpenAPI
@@ -3514,6 +3512,8 @@ apis:
   humanURL: https://www.elastic.co/docs/api/doc/elasticsearch/
   baseURL: https://{elasticsearch_endpoint}
   tags:
+  - User Role Assignments
+  tags_raw:
   - UserRoleAssignments
   properties:
   - type: OpenAPI
@@ -3785,6 +3785,18 @@ common:
     url: agentic-access/elk-stack-agentic-access.yml
   - type: FinOps
     url: finops/elk-stack-finops.yml
+  - type: UsageTerms
+    url: terms/elk-stack-terms-of-service.yml
+  - type: DataProcessing
+    url: privacy/elk-stack-privacy-policy.yml
+  - type: Attestations
+    url: compliance/elk-stack-compliance.yml
+  - type: Eligibility
+    url: eligibility/elk-stack-eligibility.yml
+  - type: AIPreferences
+    url: ai-preferences/elk-stack-ai-preferences.yml
+  - type: DataLicense
+    url: data-license/elk-stack-data-license.yml
 integrations:
   - name: Become a partner
     url: https://www.elastic.co/partners
